@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.home.DailyMaterialsFragment">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_height="40dp"
+        android:id="@+id/week_select_span"
+        >
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/week_select"
+            android:layout_marginStart="50dp"
+            android:background="@color/white"
+            android:layout_gravity="center_vertical"
+            />
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/icon_drop_down"
+            android:layout_gravity="center_vertical"
+            app:tint="@color/menu_un_select_color"
+            />
+    </LinearLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:layout_width="200dp"
+        android:layout_height="30dp"
+        android:id="@+id/daily_tab_layout"
+        app:tabIndicatorFullWidth="false"
+        android:layout_gravity="center"
+        />
+
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/daily_view_pager"
+        />
+
+</LinearLayout>

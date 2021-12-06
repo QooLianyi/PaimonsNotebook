@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_home"
+        android:icon="@drawable/icon_menu_home"
+        android:title=""
+        />
+
+    <item
+        android:id="@+id/menu_daily_materials"
+        android:icon="@drawable/icon_menu_daily_materials"
+        android:title=""
+        />
+
+    <item
+        android:id="@+id/menu_week_materials"
+        android:icon="@drawable/icon_menu_week_materials"
+        android:title="" />
+
+    <item
+        android:id="@+id/menu_character"
+        android:icon="@drawable/icon_menu_character_boy"
+        android:title="" />
+
+    <item
+        android:id="@+id/menu_weapon"
+        android:icon="@drawable/icon_menu_weapon"
+        android:title="" />
+
+    <item
+        android:id="@+id/menu_map"
+        android:icon="@drawable/icon_menu_map"
+        android:title="" />
+
+    <item
+        android:id="@+id/menu_wish"
+        android:icon="@drawable/icon_menu_wish"
+        android:title="" />
+
+    <item
+        android:id="@+id/menu_search"
+        android:icon="@drawable/icon_menu_search"
+        android:title="" />
+
+    <item
+        android:id="@+id/menu_time_line"
+        android:icon="@drawable/icon_menu_time"
+        android:title="" />
+
+</menu>

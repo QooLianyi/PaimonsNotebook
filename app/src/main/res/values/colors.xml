@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+
+
+    <color name="blue_01">#26C6DA</color>
+    <color name="white">#fff</color>
+    <color name="black">#111</color>
+
+    <color name="black_alpha_80">#CC111111</color>
+    <color name="black_alpha_40">#66111111</color>
+    <color name="black_alpha_10">#1A111111</color>
+    <color name="white_alpha_50">#80FFFFFF</color>
+
+    <color name="white_alpha_0">#00FFFFFF</color>
+
+    <color name="gray_01">#F0F1F5</color>
+    <color name="gray_02">#818387</color>
+
+    <color name="wave_ocean_blue_01">#3BE1FA</color>
+
+    <color name="menu_background_color">#2D2F33</color>
+    <color name="menu_background_color_gray">#4A5265</color>
+    <color name="menu_background_color_dark">#1F1F1F</color>
+
+    <color name="menu_un_select_color">#F4D8A8</color>
+    <color name="menu_un_select_color_02">#D3BC8E</color>
+    <color name="menu_select_color">#fff</color>
+
+    <color name="fragment_background_color">#ECE5D8</color>
+
+    <color name="materials_background_color">#F5F5F5</color>
+    <color name="materials_text_color">#333333</color>
+
+
+</resources>
