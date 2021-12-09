@@ -2,59 +2,126 @@ package com.lianyi.paimonsnotebook.ui.home
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.activity.WeaponDetailActivity
+import com.lianyi.paimonsnotebook.bean.EntityJsonBean
+import com.lianyi.paimonsnotebook.config.CharacterProperty
+import com.lianyi.paimonsnotebook.config.JsonCacheName
+import com.lianyi.paimonsnotebook.config.WeaponType
+import com.lianyi.paimonsnotebook.databinding.FragmentWeaponBinding
+import com.lianyi.paimonsnotebook.databinding.ItemEntityBinding
+import com.lianyi.paimonsnotebook.util.*
+import me.jessyan.autosize.internal.CustomAdapt
+import org.json.JSONArray
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class WeaponFragment : Fragment(R.layout.fragment_weapon),CustomAdapt {
+    lateinit var bind: FragmentWeaponBinding
 
-/**
- * A simple [Fragment] subclass.
- * Use the [WeaponFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class WeaponFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private val weaponList = mutableListOf<EntityJsonBean>()
+    private val weaponShowList = mutableListOf<EntityJsonBean>()
+    val selectWeapon = mutableListOf<Int>()
+    
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        bind = FragmentWeaponBinding.bind(view)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+        val weaponJsonArray = JSONArray(wsp.getString(JsonCacheName.WEAPON_LIST,""))
+
+        weaponJsonArray.toList(weaponList)
+        weaponList.forEach {
+            weaponShowList +=it
+        }
+
+        weaponShowList.sortByDescending { it.star }
+        bind.list.adapter = ReAdapter(weaponShowList,R.layout.item_entity){
+            viewItem, entityJsonBean, position ->
+            val item = ItemEntityBinding.bind(viewItem)
+            item.name.text = entityJsonBean.entity.name
+            loadImage(item.icon,entityJsonBean.entity.iconUrl)
+            item.type.setImageResource(WeaponType.getResourceByType(entityJsonBean.entityType))
+            item.root.setOnClickListener {
+                WeaponDetailActivity.detailInformation = entityJsonBean
+                goA<WeaponDetailActivity>()
+                activity?.overridePendingTransition(R.anim.activity_fade_in,R.anim.activity_fade_out)
+            }
+        }
+        initSelect()
+    }
+
+    private fun notificationUpdate(){
+        weaponShowList.clear()
+        weaponList.forEach { entity->
+            if(selectWeapon.indexOf(entity.entityType)!=-1){
+                weaponShowList += entity
+            }
+        }
+        weaponShowList.sortByDescending { it.star }
+        activity?.runOnUiThread {
+            bind.list.adapter?.notifyDataSetChanged()
+            bind.selectSpan.isEnabled = true
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_weapon, container, false)
+    private fun initSelect(){
+        with(bind){
+
+            selectWeapon += WeaponType.ONE_HAND_SWORD
+            selectWeapon += WeaponType.BOTH_HAND_SWORD
+            selectWeapon += WeaponType.BOW_AND_ARROW
+            selectWeapon += WeaponType.MAGIC_ARTS
+            selectWeapon += WeaponType.SPEAR
+
+            selectTypeOneHandSword.select {
+                if(it)
+                    selectWeapon.add(WeaponType.ONE_HAND_SWORD)
+                else
+                    selectWeapon.remove(WeaponType.ONE_HAND_SWORD)
+                bind.selectSpan.isEnabled = false
+                notificationUpdate()
+            }
+            selectBothHandSword.select {
+                if(it)
+                    selectWeapon.add(WeaponType.BOTH_HAND_SWORD)
+                else
+                    selectWeapon.remove(WeaponType.BOTH_HAND_SWORD)
+                bind.selectSpan.isEnabled = false
+                notificationUpdate()
+            }
+            selectBowAndArrow.select {
+                if(it)
+                    selectWeapon.add(WeaponType.BOW_AND_ARROW)
+                else
+                    selectWeapon.remove(WeaponType.BOW_AND_ARROW)
+                bind.selectSpan.isEnabled = false
+                notificationUpdate()
+            }
+            selectMagicArts.select {
+                if(it)
+                    selectWeapon.add(WeaponType.MAGIC_ARTS)
+                else
+                    selectWeapon.remove(WeaponType.MAGIC_ARTS)
+                bind.selectSpan.isEnabled = false
+                notificationUpdate()
+            }
+            selectSpear.select {
+                if(it)
+                    selectWeapon.add(WeaponType.SPEAR)
+                else
+                    selectWeapon.remove(WeaponType.SPEAR)
+                bind.selectSpan.isEnabled = false
+                notificationUpdate()
+            }
+
+        }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment WeaponFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            WeaponFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun isBaseOnWidth(): Boolean {
+        return false
     }
+
+    override fun getSizeInDp(): Float {
+        return 730f
+    }
+
 }

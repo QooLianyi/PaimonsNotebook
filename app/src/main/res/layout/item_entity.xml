@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         >
         <FrameLayout
-            android:layout_width="80dp"
+            android:layout_width="75dp"
             android:layout_height="match_parent"
             android:background="@drawable/icon_character_background"
             >
@@ -22,7 +22,7 @@
                 android:layout_gravity="top|center_horizontal"
                 app:cardCornerRadius="5dp"
                 app:cardElevation="0dp"
-                android:layout_marginTop="2dp"
+                android:layout_margin="2dp"
                 android:layout_height="wrap_content">
                 <ImageView
                     android:layout_width="75dp"
@@ -32,14 +32,14 @@
             </androidx.cardview.widget.CardView>
 
             <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_margin="5dp"
                 android:id="@+id/type"
                 />
 
             <TextView
-                android:layout_width="80dp"
+                android:layout_width="75dp"
                 android:layout_height="20dp"
                 android:layout_gravity="bottom"
                 android:textColor="@color/black"

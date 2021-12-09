@@ -2,12 +2,15 @@ package com.lianyi.paimonsnotebook.util
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -54,6 +57,11 @@ fun String.showLong(){
     Toast.makeText(PaiMonsNoteBook.context,this,Toast.LENGTH_LONG).show()
 }
 
+inline fun <reified T>goA(){
+    val intent = Intent(PaiMonsNoteBook.context,T::class.java)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    PaiMonsNoteBook.context.startActivity(intent)
+}
 
 fun View.gone(){
     this.visibility = View.GONE
@@ -72,6 +80,14 @@ fun TabLayout.tab(block:(Int)->Unit){
         }
 
         override fun onTabReselected(p0: TabLayout.Tab?) {
+        }
+    })
+}
+
+fun AppCompatCheckBox.select(block: (Boolean) -> Unit){
+    this.setOnCheckedChangeListener(object :CompoundButton.OnCheckedChangeListener{
+        override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {
+            block(p1)
         }
     })
 }

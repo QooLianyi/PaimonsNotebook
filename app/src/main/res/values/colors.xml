@@ -7,7 +7,7 @@
 
     <color name="blue_01">#26C6DA</color>
     <color name="white">#fff</color>
-    <color name="black">#111</color>
+    <color name="black">#333333</color>
 
     <color name="black_alpha_80">#CC111111</color>
     <color name="black_alpha_40">#66111111</color>
@@ -17,7 +17,9 @@
     <color name="white_alpha_0">#00FFFFFF</color>
 
     <color name="gray_01">#F0F1F5</color>
-    <color name="gray_02">#818387</color>
+    <color name="gray_02">#DCDCDC</color>
+    <color name="gray_03">#D5D5D5</color>
+    <color name="gray_04">#979797</color>
 
     <color name="wave_ocean_blue_01">#3BE1FA</color>
 
@@ -28,6 +30,17 @@
     <color name="menu_un_select_color">#F4D8A8</color>
     <color name="menu_un_select_color_02">#D3BC8E</color>
     <color name="menu_select_color">#fff</color>
+
+    <color name="entity_detail_title_background">#E0DAD3</color>
+    <color name="entity_detail_title_text_stroke_color">#B1968B</color>
+    <color name="entity_detail_subtitle_background">#EEEAE7</color>
+    <color name="entity_detail_content_background">#F5F5F5</color>
+    <color name="entity_detail_br_color">#E2DCD6</color>
+
+    <color name="entity_detail_intensify_text_color">#AC8556</color>
+
+    <color name="star_color">#FFBF43</color>
+
 
     <color name="fragment_background_color">#ECE5D8</color>
 

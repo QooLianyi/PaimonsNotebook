@@ -60,7 +60,6 @@ class HomeFragment : Fragment(R.layout.fragment_home),CustomAdapt {
         if(page.list.adapter !=null) return
     RefreshData.getBanner {
         MetaData.loadDataList { result, count ->
-        }
             activity?.runOnUiThread {
                 if(it){
                     val bannerData = GSON.fromJson(sp.getString(JsonCacheName.BANNER_CACHE,""),HomeBannerBean::class.java)
@@ -82,14 +81,15 @@ class HomeFragment : Fragment(R.layout.fragment_home),CustomAdapt {
         }
     }
 
+
+}
+
     private fun loadPagerActivity(pager:View){
         val page = PagerListBinding.bind(pager)
         if(page.list.adapter !=null) return
-        RefreshData.getBlackBoard {
             activity?.runOnUiThread {
-                if(it){
-                    val blackBoard = GSON.fromJson(sp.getString(JsonCacheName.BLACK_BOARD,""),BlackBoardBean::class.java)
-
+                val blackBoard = GSON.fromJson(sp.getString(JsonCacheName.BLACK_BOARD,""),BlackBoardBean::class.java)
+                if(blackBoard !=null){
                     val activityList = mutableListOf<BlackBoardBean.DataBean.ListBean>()
                     blackBoard.data.list.forEach {
                         if(it.kind=="1"&&it.break_type=="0"){
@@ -102,7 +102,7 @@ class HomeFragment : Fragment(R.layout.fragment_home),CustomAdapt {
                         val item = ItemHomeActivityBinding.bind(view)
 
                         item.title.text = listBean.title
-                        item.time.text = "${Format.TIME_DAY.format(listBean.start_time.toLong()*1000L)} - ${Format.TIME_DAY.format(listBean.end_time.toLong()*1000L)}"
+                        item.time.text = "${Format.TIME.format(listBean.start_time.toLong()*1000L)} - ${Format.TIME.format(listBean.end_time.toLong()*1000L)}"
                         loadImage(item.cover,listBean.img_url)
 
                         val bgColor = if(listBean.padding_color.isNotEmpty()) listBean.padding_color else "#000"
@@ -119,7 +119,6 @@ class HomeFragment : Fragment(R.layout.fragment_home),CustomAdapt {
                     getString(R.string.error_can_not_get_black_board).show()
                 }
             }
-        }
     }
 
     override fun isBaseOnWidth(): Boolean {

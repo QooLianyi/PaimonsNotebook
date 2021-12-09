@@ -11,11 +11,15 @@ import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.BlackBoardBean
+import com.lianyi.paimonsnotebook.config.Format
 import com.lianyi.paimonsnotebook.config.JsonCacheName
 import com.lianyi.paimonsnotebook.databinding.*
 import com.lianyi.paimonsnotebook.ui.RefreshData
 import com.lianyi.paimonsnotebook.util.*
 import me.jessyan.autosize.internal.CustomAdapt
+import java.sql.Timestamp
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 class DailyMaterialsFragment : Fragment(R.layout.fragment_daily_materials),CustomAdapt {
@@ -50,7 +54,7 @@ class DailyMaterialsFragment : Fragment(R.layout.fragment_daily_materials),Custo
             }
         }
         //进入时星期设置为当前的日期
-        bind.weekSelect.setSelection(Calendar.DAY_OF_WEEK-1)
+        bind.weekSelect.setSelection(Format.getWeekByName(Format.TIME_WEEK.format(System.currentTimeMillis())))
         bind.dailyViewPager.adapter = PagerAdapter(pages, titles)
         bind.dailyTabLayout.setupWithViewPager(bind.dailyViewPager)
         bind.dailyTabLayout.tab {

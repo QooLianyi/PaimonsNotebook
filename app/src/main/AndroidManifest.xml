@@ -13,7 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/paimonNoteTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".LoadingActivity"></activity>
+        <activity android:name=".activity.WeaponDetailActivity"></activity>
+        <activity android:name=".activity.CharacterDetailActivity" />
+        <activity android:name=".LoadingActivity" />
         <activity android:name=".ui.options.OptionsActivity" />
 
         <meta-data

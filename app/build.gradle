@@ -70,9 +70,10 @@ dependencies {
     //屏幕自适应
     implementation 'me.jessyan:autosize:1.2.1'
 
-
     implementation(name:"gifdecoder-4.10.0",ext:"aar")
     implementation(name:"glide-4.10.0",ext:"aar")
     implementation(name:"MPAndroidChart-v3.1.0",ext:"aar")
+
+    implementation 'org.jsoup:jsoup:1.14.3'
 
 }

@@ -11,6 +11,7 @@
         <item name="colorPrimary">@color/wave_ocean_blue_01</item>
         <item name="colorPrimaryDark">@color/white</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
 
 
@@ -21,5 +22,10 @@
         <item name="android:layout_marginStart">5dp</item>
         <item name="android:layout_marginEnd">5dp</item>
     </style>
+
+    <style name="CheckBoxStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/check_box_select</item>
+    </style>
+
 
 </resources>
