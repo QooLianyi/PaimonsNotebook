@@ -5,22 +5,19 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.base.BaseFragment
 import com.lianyi.paimonsnotebook.bean.BlackBoardBean
 import com.lianyi.paimonsnotebook.bean.HomeBannerBean
 import com.lianyi.paimonsnotebook.config.Format
 import com.lianyi.paimonsnotebook.config.JsonCacheName
-import com.lianyi.paimonsnotebook.databinding.FragmentHomeBinding
-import com.lianyi.paimonsnotebook.databinding.ItemHomeActivityBinding
-import com.lianyi.paimonsnotebook.databinding.ItemHomeBannerBinding
-import com.lianyi.paimonsnotebook.databinding.PagerListBinding
+import com.lianyi.paimonsnotebook.databinding.*
 import com.lianyi.paimonsnotebook.lib.MetaData
 import com.lianyi.paimonsnotebook.ui.RefreshData
 import com.lianyi.paimonsnotebook.util.*
-import me.jessyan.autosize.internal.CustomAdapt
+import kotlin.concurrent.thread
 
-class HomeFragment : Fragment(R.layout.fragment_home),CustomAdapt {
+class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     lateinit var bind:FragmentHomeBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,36 +50,50 @@ class HomeFragment : Fragment(R.layout.fragment_home),CustomAdapt {
         bind.homeTabLayout.setupWithViewPager(bind.homeViewPager)
 
         loadPagerNotice(pages[0])
-    }
 
-    private fun loadPagerNotice(pager:View){
-        val page = PagerListBinding.bind(pager)
-        if(page.list.adapter !=null) return
-    RefreshData.getBanner {
-        MetaData.loadDataList { result, count ->
-            activity?.runOnUiThread {
-                if(it){
-                    val bannerData = GSON.fromJson(sp.getString(JsonCacheName.BANNER_CACHE,""),HomeBannerBean::class.java)
-                    bannerData.data.list.sortByDescending { it.post_id.toLong() }
-                    page.list.adapter = ReAdapter(bannerData.data.list,R.layout.item_home_banner){
-                            view: View, listBean: HomeBannerBean.DataBean.ListBean, i: Int ->
-                        val item = ItemHomeBannerBinding.bind(view)
-                        item.title.text = listBean.subject
-                        if(listBean.banner.isEmpty()){
-                            item.cover.setImageResource(R.drawable.icon_official_notice)
-                        }else{
-                            loadImage(item.cover,listBean.banner)
-                        }
+        bind.userNick.setOnClickListener {
+            showLoading(context!!)
+            var closeCountDown = 60
+
+            thread {
+                while (true){
+                    Thread.sleep(1000)
+                    closeCountDown--
+                    if(closeCountDown<=0){
+                        loadingWindowDismiss()
+                        return@thread
+                    }else{
+                        println("距离窗口关闭还有 $closeCountDown 秒")
                     }
-                }else{
-                    getString(R.string.error_can_not_get_banner).show()
                 }
             }
         }
     }
 
-
-}
+    private fun loadPagerNotice(pager:View){
+        val page = PagerListBinding.bind(pager)
+        if(page.list.adapter !=null) return
+        RefreshData.getBanner {
+            MetaData.loadDataList { result, count ->
+                activity?.runOnUiThread {
+                    if(it){
+                        val bannerData = GSON.fromJson(sp.getString(JsonCacheName.BANNER_CACHE,""),HomeBannerBean::class.java)
+                        bannerData.data.list.sortByDescending { it.post_id.toLong() }
+                        page.list.adapter = ReAdapter(bannerData.data.list,R.layout.item_home_banner){
+                            view: View, listBean: HomeBannerBean.DataBean.ListBean, i: Int ->
+                            val item = ItemHomeBannerBinding.bind(view)
+                            item.title.text = listBean.subject
+                            if(listBean.banner.isEmpty()){
+                                item.cover.setImageResource(R.drawable.icon_official_notice)
+                            }else{
+                                loadImage(item.cover,listBean.banner)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     private fun loadPagerActivity(pager:View){
         val page = PagerListBinding.bind(pager)
@@ -119,13 +130,6 @@ class HomeFragment : Fragment(R.layout.fragment_home),CustomAdapt {
                     getString(R.string.error_can_not_get_black_board).show()
                 }
             }
-    }
+        }
 
-    override fun isBaseOnWidth(): Boolean {
-        return false
     }
-
-    override fun getSizeInDp(): Float {
-        return 730f
-    }
-}

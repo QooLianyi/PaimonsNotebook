@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/motion"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    app:showPaths="false"
+    android:orientation="vertical"
+    android:background="@drawable/loading_background"
+    >
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/icon_area_land"
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="10dp"
+        />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/icon_summer_land_mini"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="21dp"
+        android:layout_marginStart="10dp"
+        />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="0dp"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="3dp"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:background="@color/loading_progress_bar_color" />
+    </androidx.cardview.widget.CardView>
+
+    <ImageView
+        android:id="@+id/icon_klee"
+        android:layout_width="80dp"
+        android:layout_height="120dp"
+        android:src="@drawable/icon_klee"
+        android:layout_gravity="bottom"
+        />
+
+</FrameLayout>

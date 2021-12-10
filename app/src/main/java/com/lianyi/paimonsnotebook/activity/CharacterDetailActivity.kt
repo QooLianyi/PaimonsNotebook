@@ -1,9 +1,9 @@
 package com.lianyi.paimonsnotebook.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.base.BaseActivity
 import com.lianyi.paimonsnotebook.bean.EntityJsonBean
 import com.lianyi.paimonsnotebook.config.CharacterProperty
 import com.lianyi.paimonsnotebook.config.WeaponType
@@ -13,7 +13,7 @@ import com.lianyi.paimonsnotebook.databinding.ItemPropertyBinding
 import com.lianyi.paimonsnotebook.util.ReAdapter
 import com.lianyi.paimonsnotebook.util.loadImage
 
-class CharacterDetailActivity : AppCompatActivity() {
+class CharacterDetailActivity : BaseActivity() {
 
     companion object{
         lateinit var detailInformation:EntityJsonBean

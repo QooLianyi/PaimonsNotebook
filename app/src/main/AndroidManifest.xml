@@ -23,7 +23,7 @@
             android:value="360" />
         <meta-data
             android:name="design_height_in_dp"
-            android:value="730" />
+            android:value="700" />
 
         <activity
             android:name=".MainActivity"

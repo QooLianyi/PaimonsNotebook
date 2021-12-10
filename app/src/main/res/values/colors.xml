@@ -40,7 +40,9 @@
     <color name="entity_detail_intensify_text_color">#AC8556</color>
 
     <color name="star_color">#FFBF43</color>
-
+    
+    <color name="loading_progress_bar_color">#13ABDC</color>
+    <color name="loading_background_color">#1B65A5</color>
 
     <color name="fragment_background_color">#ECE5D8</color>
 

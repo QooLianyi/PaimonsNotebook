@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.activity.WeaponDetailActivity
+import com.lianyi.paimonsnotebook.base.BaseFragment
 import com.lianyi.paimonsnotebook.bean.EntityJsonBean
+import com.lianyi.paimonsnotebook.config.AppConfig
 import com.lianyi.paimonsnotebook.config.CharacterProperty
 import com.lianyi.paimonsnotebook.config.JsonCacheName
 import com.lianyi.paimonsnotebook.config.WeaponType
@@ -15,12 +17,12 @@ import com.lianyi.paimonsnotebook.util.*
 import me.jessyan.autosize.internal.CustomAdapt
 import org.json.JSONArray
 
-class WeaponFragment : Fragment(R.layout.fragment_weapon),CustomAdapt {
+class WeaponFragment : BaseFragment(R.layout.fragment_weapon) {
     lateinit var bind: FragmentWeaponBinding
 
     private val weaponList = mutableListOf<EntityJsonBean>()
     private val weaponShowList = mutableListOf<EntityJsonBean>()
-    val selectWeapon = mutableListOf<Int>()
+    private val selectWeapon = mutableListOf<Int>()
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -114,14 +116,6 @@ class WeaponFragment : Fragment(R.layout.fragment_weapon),CustomAdapt {
             }
 
         }
-    }
-
-    override fun isBaseOnWidth(): Boolean {
-        return false
-    }
-
-    override fun getSizeInDp(): Float {
-        return 730f
     }
 
 }

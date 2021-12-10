@@ -1,25 +1,15 @@
 package com.lianyi.paimonsnotebook
 
 import android.os.Bundle
-import android.view.View
-import android.view.WindowInsets
 import android.view.WindowManager
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.setupWithNavController
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.navigation.NavigationView
 import com.lianyi.paimonsnotebook.adapter.MainViewPager2Adapter
 import com.lianyi.paimonsnotebook.adapter.NavigationViewSetupWithViewPager2
-import com.lianyi.paimonsnotebook.adapter.ViewPager2SwitchFadeInFadeOut
+import com.lianyi.paimonsnotebook.base.BaseActivity
 import com.lianyi.paimonsnotebook.config.PagerIndex
 import com.lianyi.paimonsnotebook.databinding.ActivityMainBinding
 import com.lianyi.paimonsnotebook.ui.home.*
-import com.lianyi.paimonsnotebook.util.gone
-import com.lianyi.paimonsnotebook.util.show
-import me.jessyan.autosize.internal.CustomAdapt
 
-class MainActivity : AppCompatActivity() ,CustomAdapt{
+class MainActivity : BaseActivity(){
     lateinit var bind: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,14 +45,8 @@ class MainActivity : AppCompatActivity() ,CustomAdapt{
         }.attach()
 
 //        bind.viewPager2.setPageTransformer(ViewPager2SwitchFadeInFadeOut())
-    }
 
-    override fun isBaseOnWidth(): Boolean {
-        return false
-    }
 
-    override fun getSizeInDp(): Float {
-        return 700f
     }
 
 }

@@ -10,7 +10,9 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.base.BaseFragment
 import com.lianyi.paimonsnotebook.bean.BlackBoardBean
+import com.lianyi.paimonsnotebook.config.AppConfig
 import com.lianyi.paimonsnotebook.config.Format
 import com.lianyi.paimonsnotebook.config.JsonCacheName
 import com.lianyi.paimonsnotebook.databinding.*
@@ -22,7 +24,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
-class DailyMaterialsFragment : Fragment(R.layout.fragment_daily_materials),CustomAdapt {
+class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
 
     lateinit var bind:FragmentDailyMaterialsBinding
 
@@ -139,14 +141,6 @@ class DailyMaterialsFragment : Fragment(R.layout.fragment_daily_materials),Custo
                 }
             }
         }
-    }
-
-    override fun isBaseOnWidth(): Boolean {
-        return false
-    }
-
-    override fun getSizeInDp(): Float {
-        return 730f
     }
 
 }

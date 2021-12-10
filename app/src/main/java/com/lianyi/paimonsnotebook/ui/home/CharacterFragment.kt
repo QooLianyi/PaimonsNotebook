@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.activity.CharacterDetailActivity
+import com.lianyi.paimonsnotebook.base.BaseFragment
 import com.lianyi.paimonsnotebook.bean.EntityJsonBean
+import com.lianyi.paimonsnotebook.config.AppConfig
 import com.lianyi.paimonsnotebook.config.CharacterProperty
 import com.lianyi.paimonsnotebook.config.JsonCacheName
 import com.lianyi.paimonsnotebook.config.WeaponType
@@ -16,7 +18,7 @@ import com.lianyi.paimonsnotebook.util.*
 import me.jessyan.autosize.internal.CustomAdapt
 import org.json.JSONArray
 
-class CharacterFragment : Fragment(R.layout.fragment_character), CustomAdapt {
+class CharacterFragment : BaseFragment(R.layout.fragment_character) {
 
     lateinit var bind: FragmentCharacterBinding
     private val characterList = mutableListOf<EntityJsonBean>()
@@ -78,14 +80,6 @@ class CharacterFragment : Fragment(R.layout.fragment_character), CustomAdapt {
             bind.list.adapter?.notifyDataSetChanged()
             bind.selectSpan.isEnabled = true
         }
-    }
-
-    override fun isBaseOnWidth(): Boolean {
-        return false
-    }
-
-    override fun getSizeInDp(): Float {
-        return 730f
     }
 
     fun initSelect(){
