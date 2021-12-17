@@ -10,7 +10,7 @@ open class BaseFragment:Fragment ,CustomAdapt{
     constructor(contentLayoutId: Int) : super(contentLayoutId)
 
     override fun isBaseOnWidth(): Boolean {
-        return false
+        return true
     }
 
     override fun getSizeInDp(): Float {

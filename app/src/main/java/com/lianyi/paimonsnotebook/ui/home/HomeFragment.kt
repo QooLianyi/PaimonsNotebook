@@ -5,17 +5,23 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.ui.activity.HoYoLabLoginActivity
 import com.lianyi.paimonsnotebook.base.BaseFragment
 import com.lianyi.paimonsnotebook.bean.BlackBoardBean
+import com.lianyi.paimonsnotebook.bean.DailyNoteBean
 import com.lianyi.paimonsnotebook.bean.HomeBannerBean
-import com.lianyi.paimonsnotebook.config.Format
-import com.lianyi.paimonsnotebook.config.JsonCacheName
+import com.lianyi.paimonsnotebook.bean.MonthLedgerBean
+import com.lianyi.paimonsnotebook.config.*
 import com.lianyi.paimonsnotebook.databinding.*
 import com.lianyi.paimonsnotebook.lib.MetaData
 import com.lianyi.paimonsnotebook.ui.RefreshData
 import com.lianyi.paimonsnotebook.util.*
-import kotlin.concurrent.thread
 
 class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
@@ -49,52 +55,147 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         bind.homeViewPager.offscreenPageLimit = 3
         bind.homeTabLayout.setupWithViewPager(bind.homeViewPager)
 
-        loadPagerNotice(pages[0])
-
+        //nick 点击时的事件
         bind.userNick.setOnClickListener {
-            showLoading(context!!)
-            var closeCountDown = 60
-
-            thread {
-                while (true){
-                    Thread.sleep(1000)
-                    closeCountDown--
-                    if(closeCountDown<=0){
-                        loadingWindowDismiss()
-                        return@thread
-                    }else{
-                        println("距离窗口关闭还有 $closeCountDown 秒")
-                    }
-                }
-            }
+            val intent = Intent(bind.root.context,HoYoLabLoginActivity::class.java)
+            startActivityForResult(intent,ActivityRequestCode.LOGIN)
         }
+
+        var isOpen = true
+            bind.memo.setOnClickListener {
+            if(isOpen){
+                bind.motion.transitionToEnd()
+                bind.memo.transitionToEnd()
+            }else{
+                bind.motion.transitionToStart()
+                bind.memo.transitionToStart()
+            }
+            isOpen = !isOpen
+        }
+
+
+        bind.dailySign.setOnClickListener {
+            showLoading(bind.root.context)
+            bind.dailySign.isEnabled = false
+        }
+
+        initInformationDetail()
     }
 
+    //树脂详情页和树脂进度条UI更新
+    private fun initInformationDetail() {
+        activity?.runOnUiThread {
+            bind.userNick.text = mainUser?.nickName
+            val dailyNoteBean = GSON.fromJson(sp.getString(Settings.SP_DAILY_NOTE_NAME+ mainUser?.gameUid,""),DailyNoteBean::class.java)
+
+            with(bind){
+                resinCurrent.text = dailyNoteBean.current_resin.toString()
+                resinMax.text = dailyNoteBean.max_resin.toString()
+                resinFill.scaleX = dailyNoteBean.current_resin.toFloat() / dailyNoteBean.max_resin
+
+                bind.resinProgressBar.progress = ((dailyNoteBean.current_resin.toFloat()/dailyNoteBean.max_resin.toFloat())*100).toInt()
+
+                resinRecoverTime.text = Format.getResinRecoverTime(dailyNoteBean.resin_recovery_time.toLong())
+
+                dailyTaskFinishedCount.text = dailyNoteBean.finished_task_num.toString()
+                dailyTaskMax.text = dailyNoteBean.total_task_num.toString()
+                dailyTaskFill.scaleX = dailyNoteBean.finished_task_num.toFloat()/dailyNoteBean.total_task_num
+
+                resinDiscountNum.text = (dailyNoteBean.resin_discount_num_limit - dailyNoteBean.remain_resin_discount_num).toString()
+                resinDiscountNumMax.text = dailyNoteBean.resin_discount_num_limit.toString()
+                resinDiscountFill.scaleX = (dailyNoteBean.resin_discount_num_limit - dailyNoteBean.remain_resin_discount_num).toFloat() / dailyNoteBean.resin_discount_num_limit.toFloat()
+
+                currentExpeditionNum.text = dailyNoteBean.current_expedition_num.toString()
+                maxExpeditionNum.text = dailyNoteBean.max_expedition_num.toString()
+                expeditionFill.scaleX = dailyNoteBean.current_expedition_num.toFloat()/dailyNoteBean.max_expedition_num
+
+            }
+        }
+
+        //加载本月获得的原石
+        RefreshData.getMonthLedger("0", mainUser!!.gameUid,mainUser!!.region){
+            activity?.runOnUiThread {
+                if(it){
+                    val monthLedgerBean = GSON.fromJson(sp.getString(Settings.SP_MONTH_LEDGER_NAME+ mainUser!!.gameUid,""),MonthLedgerBean::class.java)
+                    bind.dayGemstone.text = monthLedgerBean.day_data.current_primogems.toString()
+                    bind.dayMora.text = monthLedgerBean.day_data.current_mora.toString()
+                    bind.monthGemstone.text = monthLedgerBean.month_data.current_primogems.toString()
+                    bind.monthMora.text = monthLedgerBean.month_data.current_mora.toString()
+
+                    val colors = listOf(
+                        ContextCompat.getColor(bind.root.context,R.color.abyss_fill),
+                        ContextCompat.getColor(bind.root.context,R.color.daily_fill),
+                        ContextCompat.getColor(bind.root.context,R.color.event_fill),
+                        ContextCompat.getColor(bind.root.context,R.color.mail_fill),
+                        ContextCompat.getColor(bind.root.context,R.color.adventure_fill),
+                        ContextCompat.getColor(bind.root.context,R.color.task_fill),
+                        ContextCompat.getColor(bind.root.context,R.color.other_fill)
+                    )
+
+                    val pieEntry = mutableListOf<PieEntry>()
+                    monthLedgerBean.month_data.group_by.forEach {
+                        pieEntry += PieEntry(it.percent.toFloat(),it.action+it.percent+"%")
+                    }
+
+                    with(bind.pie){
+                        val pieDataSet = PieDataSet(pieEntry,"")
+                        pieDataSet.colors =colors
+                        pieDataSet.setDrawValues(false)
+                        val pieData = PieData(pieDataSet)
+                        data = pieData
+                        println("加载数据")
+                        notifyDataSetChanged()
+                    }
+
+                }
+
+                with(bind.pie){
+                    isRotationEnabled = false
+                    isSelected = false
+                    description.isEnabled = false
+                    setNoDataText("冒险等级不足,请提升后再来看看吧。")
+
+                    holeRadius = 80f
+
+                    extraRightOffset = 20.dp
+                    legend.textSize = 13f
+
+                    legend.orientation = Legend.LegendOrientation.VERTICAL
+                    legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+                    legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+
+                    setTouchEnabled(false)
+                    setDrawEntryLabels(false)
+                }
+            }
+
+        }
+
+    }
+
+    //加载公告页
     private fun loadPagerNotice(pager:View){
         val page = PagerListBinding.bind(pager)
         if(page.list.adapter !=null) return
-        RefreshData.getBanner {
-            MetaData.loadDataList { result, count ->
-                activity?.runOnUiThread {
-                    if(it){
-                        val bannerData = GSON.fromJson(sp.getString(JsonCacheName.BANNER_CACHE,""),HomeBannerBean::class.java)
-                        bannerData.data.list.sortByDescending { it.post_id.toLong() }
-                        page.list.adapter = ReAdapter(bannerData.data.list,R.layout.item_home_banner){
-                            view: View, listBean: HomeBannerBean.DataBean.ListBean, i: Int ->
-                            val item = ItemHomeBannerBinding.bind(view)
-                            item.title.text = listBean.subject
-                            if(listBean.banner.isEmpty()){
-                                item.cover.setImageResource(R.drawable.icon_official_notice)
-                            }else{
-                                loadImage(item.cover,listBean.banner)
-                            }
-                        }
+        MetaData.loadBlackBoardData { result, count ->
+            activity?.runOnUiThread {
+                val bannerData = GSON.fromJson(sp.getString(JsonCacheName.BANNER_CACHE,""),HomeBannerBean::class.java)
+                bannerData.data.list.sortByDescending { it.post_id.toLong() }
+                page.list.adapter = ReAdapter(bannerData.data.list,R.layout.item_home_banner){
+                    view: View, listBean: HomeBannerBean.DataBean.ListBean, i: Int ->
+                    val item = ItemHomeBannerBinding.bind(view)
+                    item.title.text = listBean.subject
+                    if(listBean.banner.isEmpty()){
+                        item.cover.setImageResource(R.drawable.icon_official_notice)
+                    }else{
+                        loadImage(item.cover,listBean.banner)
                     }
                 }
             }
         }
     }
 
+    //加载活动页
     private fun loadPagerActivity(pager:View){
         val page = PagerListBinding.bind(pager)
         if(page.list.adapter !=null) return
@@ -132,4 +233,10 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
             }
         }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode==ActivityResponseCode.OK&&requestCode==ActivityRequestCode.LOGIN){
+            initInformationDetail()
+        }
     }
+}

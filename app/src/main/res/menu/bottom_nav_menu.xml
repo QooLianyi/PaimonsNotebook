@@ -4,48 +4,55 @@
     <item
         android:id="@+id/menu_home"
         android:icon="@drawable/icon_menu_home"
-        android:title=""
+        android:title="首页"
         />
 
     <item
         android:id="@+id/menu_daily_materials"
         android:icon="@drawable/icon_menu_daily_materials"
-        android:title=""
+        android:title="日常材料"
         />
 
     <item
         android:id="@+id/menu_week_materials"
         android:icon="@drawable/icon_menu_week_materials"
-        android:title="" />
+        android:title="周常材料"
+        />
 
     <item
         android:id="@+id/menu_character"
         android:icon="@drawable/icon_menu_character_boy"
-        android:title="" />
+        android:title="角色"
+        />
 
     <item
         android:id="@+id/menu_weapon"
         android:icon="@drawable/icon_menu_weapon"
-        android:title="" />
+        android:title="武器"
+        />
 
     <item
         android:id="@+id/menu_map"
         android:icon="@drawable/icon_menu_map"
-        android:title="" />
+        android:title="地图"
+        />
 
     <item
         android:id="@+id/menu_wish"
         android:icon="@drawable/icon_menu_wish"
-        android:title="" />
+        android:title="祈愿记录"
+        />
 
     <item
         android:id="@+id/menu_search"
         android:icon="@drawable/icon_menu_search"
-        android:title="" />
+        android:title="玩家查询"
+        />
 
     <item
         android:id="@+id/menu_time_line"
         android:icon="@drawable/icon_menu_time"
-        android:title="" />
+        android:title="时间线"
+        />
 
 </menu>

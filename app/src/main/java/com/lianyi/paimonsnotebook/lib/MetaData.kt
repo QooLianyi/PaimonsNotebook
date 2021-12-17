@@ -10,7 +10,7 @@ import com.lianyi.paimonsnotebook.util.*
 class MetaData {
     companion object{
         //初始化本地数据
-        fun loadDataList(block:(result:Boolean,count:Int)->Unit){
+        fun loadBlackBoardData(block:(result:Boolean, count:Int)->Unit){
             Ok.get(URL.BLACK_BOARD){
                 if(it.ok){
                     val blackBoard = GSON.fromJson(sp.getString(JsonCacheName.BLACK_BOARD,"")!!,BlackBoardBean::class.java)
@@ -24,7 +24,6 @@ class MetaData {
                             }
                         }
                     }
-
                     val cEdit = csp.edit()
                     val wEdit = wsp.edit()
                     cEdit.putString(JsonCacheName.CHARACTER_ENTITY_LIST, GSON.toJson(character))
@@ -37,8 +36,5 @@ class MetaData {
         }
     }
 
-    private fun loadWeapon(block:(result:Boolean,count:Int)->Unit){
-
-    }
 
 }

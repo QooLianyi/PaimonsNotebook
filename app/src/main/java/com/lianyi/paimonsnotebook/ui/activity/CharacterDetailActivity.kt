@@ -1,4 +1,4 @@
-package com.lianyi.paimonsnotebook.activity
+package com.lianyi.paimonsnotebook.ui.activity
 
 import android.os.Bundle
 import android.view.WindowManager
@@ -23,7 +23,6 @@ class CharacterDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         bind = ActivityCharacterDetailBinding.inflate(layoutInflater)
         setContentView(bind.root)
 

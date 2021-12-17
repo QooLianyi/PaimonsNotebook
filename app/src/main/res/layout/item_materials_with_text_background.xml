@@ -12,10 +12,10 @@
         app:cardElevation="0dp"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:layout_width="170dp"
+            android:layout_width="165dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="8dp"
+            android:padding="6dp"
             android:background="@color/materials_background_color"
             >
             <ImageView

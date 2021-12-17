@@ -12,9 +12,15 @@
     <color name="black_alpha_80">#CC111111</color>
     <color name="black_alpha_40">#66111111</color>
     <color name="black_alpha_10">#1A111111</color>
-    <color name="white_alpha_50">#80FFFFFF</color>
 
+    <color name="white_alpha_80">#CCFFFFFF</color>
+    <color name="white_alpha_50">#80FFFFFF</color>
     <color name="white_alpha_0">#00FFFFFF</color>
+
+    <color name="transparent">#00FFFFFF</color>
+
+    <color name="white_dark_01">#F8F8F8</color>
+    <color name="white_dark_02">#F0F0F0</color>
 
     <color name="gray_01">#F0F1F5</color>
     <color name="gray_02">#DCDCDC</color>
@@ -49,5 +55,14 @@
     <color name="materials_background_color">#F5F5F5</color>
     <color name="materials_text_color">#333333</color>
 
+    <color name="resin_fill_color">#80D8FF</color>
+
+    <color name="abyss_fill">#789D76</color>
+    <color name="daily_fill">#BE9D61</color>
+    <color name="event_fill">#5F84A4</color>
+    <color name="mail_fill">#7F73AA</color>
+    <color name="adventure_fill">#D56C6C</color>
+    <color name="task_fill">#75B5B7</color>
+    <color name="other_fill">#78ACC8</color>
 
 </resources>

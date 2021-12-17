@@ -2,6 +2,7 @@ package com.lianyi.paimonsnotebook.util
 
 import com.google.gson.Gson
 import com.lianyi.paimonsnotebook.config.ResponseCode
+import com.lianyi.paimonsnotebook.config.Settings
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -15,7 +16,12 @@ class Ok {
         val client by lazy {
             OkHttpClient.Builder().addInterceptor {
                 val request = it.request().newBuilder()
-
+                val cookie = "ltuid=${mainUser?.loginUid};ltoken=${mainUser?.lToken};account_id=${mainUser?.loginUid};cookie_token=${mainUser?.cookieToken}"
+                request.addHeader("DS", getDS("role_id=${mainUser?.gameUid}&server=${mainUser?.region}"))
+                request.addHeader("Cookie",cookie)
+                request.addHeader("x-rpc-client_type","5")
+                request.addHeader("x-rpc-app_version",Settings.APP_VERSION)
+                println("cookie = $cookie")
                 it.proceed(request.build())
             }.build()
         }
@@ -24,7 +30,6 @@ class Ok {
             val request = Request.Builder().get().url(url).build()
             client.newCall(request).enqueue(MyCallBack(block))
         }
-
 
     }
 }

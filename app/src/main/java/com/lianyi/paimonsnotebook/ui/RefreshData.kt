@@ -1,11 +1,9 @@
 package com.lianyi.paimonsnotebook.ui
 
 import android.util.Log
+import com.lianyi.paimonsnotebook.bean.DailyNoteBean
 import com.lianyi.paimonsnotebook.bean.EntityJsonBean
-import com.lianyi.paimonsnotebook.config.CharacterProperty
-import com.lianyi.paimonsnotebook.config.JsonCacheName
-import com.lianyi.paimonsnotebook.config.URL
-import com.lianyi.paimonsnotebook.config.WeaponType
+import com.lianyi.paimonsnotebook.config.*
 import com.lianyi.paimonsnotebook.util.*
 import org.json.JSONArray
 import org.jsoup.Jsoup
@@ -14,11 +12,15 @@ import kotlin.concurrent.thread
 import kotlin.math.ceil
 import kotlin.math.log
 
+/*
+* 此类提供刷新本地缓存数据方法
+*
+* */
 
-//刷新本地缓存数据
 class RefreshData {
     companion object{
 
+        //获得banner 主页公告
         fun getBanner(block:(Boolean)->Unit){
             Ok.get(URL.HOME_BANNER){
                 if(it.ok){
@@ -30,6 +32,7 @@ class RefreshData {
             }
         }
 
+        //用于主页活动 和每日材料
         fun getBlackBoard(block: (Boolean) -> Unit){
             Ok.get(URL.BLACK_BOARD){
                 if(it.ok){
@@ -41,8 +44,8 @@ class RefreshData {
             }
         }
 
-        //重新获取JSON数据
-        fun initJsonData(block: (Boolean) -> Unit){
+        //获取 全部角色、全部武器 所需的JSON数据
+        fun getJsonData(block: (Boolean) -> Unit){
             try {
                 thread {
                     println("开始获取")
@@ -56,6 +59,7 @@ class RefreshData {
                         characterData += GSON.fromJson(jsonArray[it].toString(), EntityJsonBean::class.java)
                     }
 
+                    //控制台打印
                     characterData.forEach {
                         println(
                             """
@@ -81,6 +85,7 @@ class RefreshData {
                         weaponData += GSON.fromJson(weaponJson[it].toString(),EntityJsonBean::class.java)
                     }
 
+                    //控制台打印
                     weaponData.forEach {
                         println(
                             """
@@ -113,6 +118,27 @@ class RefreshData {
             }
         }
 
+        fun getDailyNote(gameUid:String,server:String,block: (Boolean) -> Unit){
+            val edit = sp.edit()
+            Ok.get(URL.getDailyNoteUrl(gameUid,server)){
+                if(it.ok){
+                    edit.putString(Settings.SP_DAILY_NOTE_NAME+gameUid,it.optString("data"))
+                    edit.apply()
+                }
+                block(it.ok)
+            }
+        }
+
+        fun getMonthLedger(month:String,gameUID: String,server: String,block: (Boolean) -> Unit){
+            val edit = sp.edit()
+            Ok.get(URL.getMonthInfo(month, gameUID, server)){
+                if(it.ok){
+                    edit.putString(Settings.SP_MONTH_LEDGER_NAME+ mainUser?.gameUid,it.optString("data"))
+                    edit.apply()
+                }
+                block(it.ok)
+            }
+        }
 
     }
 }

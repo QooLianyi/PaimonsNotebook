@@ -3,11 +3,32 @@ package com.lianyi.paimonsnotebook.config
 import com.lianyi.paimonsnotebook.R
 import java.text.SimpleDateFormat
 
+/*
+* 此处存放各类常量值
+*
+* */
+
 //一些常量
 class Settings {
     companion object{
-        //数据缓存
+        //每日签到用的SALT
+        const val SIGN_SALT = "4a8knnbk5pbjqsrudp3dq484m9axoc5g"
+        const val SIGN_APP_VERSION = "2.10.1"
+        //一般请求用的DS
+        const val API_SALT = "xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs"
+        const val APP_VERSION = "2.14.1"
+
+
+        //原神游戏ID
+        const val GENSHIN_GAME_ID = "hk4e_cn"
+
+        //数据缓存 格式为:缓存名称+UID
         const val SP_NAME = "cache_info"
+        //缓存便笺
+        const val SP_DAILY_NOTE_NAME = "daily_note"
+        //缓存本月原石数据
+        const val SP_MONTH_LEDGER_NAME = "month_ledger"
+
         //用户信息缓存
         const val USP_NAME = "user_info"
         //游戏角色信息缓存
@@ -15,12 +36,27 @@ class Settings {
         //游戏武器信息缓存
         const val WSP_NAME ="weapon_info"
 
+        const val USP_MAIN_USER_NAME = "main_user"
+        const val USP_USER_LIST_NAME = "user_list"
+
+        const val STOKEN_NAME = ""
+        const val ITOKEN_NAME = ""
+        const val LOGIN_TICKET_NAME = "login_ticket"
+        const val LOGIN_UID_NAME = "login_uid"
+        const val ACCOUNT_ID_NAME = "account_id"
+        const val LTUID_NAME = "ltuid"
+        const val LTOKEN_NAME = "ltoken"
+        const val COOKIE_TOKEN_NAME = "cookie_token"
+
+        const val DAILY_TASK_STATE_NOT_FINISHED = "「每日委托」奖励还未领取"
+        const val DAILY_TASK_STATE_FINISHED = "「每日委托」奖励还未领取"
+
 
         //替换占位符
         const val REPLACE_PLACEHOLDER = "#(*PLACEHOLDER!!)"
     }
 }
-
+//各类API
 class URL{
     companion object{
         //JSON数据获取
@@ -36,14 +72,48 @@ class URL{
         //大地图
         const val MAP = "https://webstatic.mihoyo.com/app/ys-map-cn/index.html"
 
+
+        //米游社登录
+        const val LOGIN = "https://m.bbs.mihoyo.com/ys/#/login"
+
+        //通过login_ticket 获取 itoken和stoken
+        const val GET_MULTI_TOKEN = "https://api-takumi.mihoyo.com/auth/api/getMultiTokenByLoginTicket?"
+
+        const val GET_GAME_ROLES_BY_COOKIE = "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=${Settings.GENSHIN_GAME_ID}"
+
+        fun getDailyNoteUrl(gameUID:String,server:String):String{
+            return "https://api-takumi.mihoyo.com/game_record/app/genshin/api/dailyNote?role_id=$gameUID&server=$server"
+        }
+
+        fun getMonthInfo(month:String,gameUID: String,server: String):String{
+            return "https://hk4e-api.mihoyo.com/event/ys_ledger/monthInfo?month=$month&bind_uid=$gameUID&bind_region=$server&bbs_presentation_style=fullscreen&bbs_auth+required=true&mys_source=GameRecord"
+        }
+
     }
 }
 
+//请求返回值
 class ResponseCode{
     companion object{
         const val OK = "0"
     }
 }
+
+//activity 跳转请求值
+class ActivityRequestCode{
+    companion object{
+        const val LOGIN = 200
+    }
+}
+
+//activity跳转返回值
+class ActivityResponseCode{
+    companion object{
+        const val OK = 100
+    }
+}
+
+
 //本地JSON数据名称
 class JsonCacheName{
     companion object{
@@ -63,12 +133,29 @@ class JsonCacheName{
         const val WEAPON_LIST = "weapon_list"
     }
 }
+
 //时间格式
 class Format{
     companion object{
         val TIME = SimpleDateFormat("yyyy-MM-dd HH:mm")
+        val TIME_FULL = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val TIME_WEEK = SimpleDateFormat("E")
         val TIME_DAY = SimpleDateFormat("d")
+        val TIME_DAY_FULL = SimpleDateFormat("yyyy-MM-dd")
+        val TIME_HOUR_MINUTE = SimpleDateFormat("HH:mm")
+
+        fun getResinRecoverTime(resinRecoverTime:Long):String{
+            val todayLimitTime = TIME_DAY_FULL.format(System.currentTimeMillis())+" 23:59:59"
+            val todayLimit = TIME_FULL.parse(todayLimitTime).time
+
+            val day = if(System.currentTimeMillis()+resinRecoverTime*1000L>todayLimit){
+                "明天"
+            }else{
+                "今天"
+            }
+            val recoverFullTime = TIME_HOUR_MINUTE.format((System.currentTimeMillis()+resinRecoverTime*1000L))
+            return day+recoverFullTime
+        }
 
         fun getWeekByName(name:String):Int{
             return when(name){
@@ -84,6 +171,7 @@ class Format{
     }
 }
 
+//菜单切换跳转对应页面
 class PagerIndex{
     companion object{
         const val HOME_PAGE = 0
@@ -106,6 +194,7 @@ class EntityType{
     }
 }
 
+//武器类型
 class WeaponType{
     companion object{
         const val ONE_HAND_SWORD = 2001
@@ -150,6 +239,7 @@ class WeaponType{
     }
 }
 
+//角色元素类型
 class CharacterProperty{
     companion object{
         const val FIRE = 1001
@@ -201,6 +291,7 @@ class CharacterProperty{
 
     }
 }
+//地区
 class Area{
     companion object{
         const val MOND = ""

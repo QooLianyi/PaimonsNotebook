@@ -6,12 +6,14 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/banner_item_height">
+        android:layout_height="wrap_content">
         
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/cover"
+            android:adjustViewBounds="true"
+            android:maxHeight="1080dp"
             />
         
         <TextView

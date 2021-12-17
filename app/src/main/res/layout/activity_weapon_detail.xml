@@ -9,7 +9,7 @@
     android:paddingStart="5dp"
     android:paddingEnd="5dp"
     android:paddingTop="15dp"
-    tools:context=".activity.WeaponDetailActivity"
+    tools:context=".ui.activity.WeaponDetailActivity"
     >
 
     <ScrollView

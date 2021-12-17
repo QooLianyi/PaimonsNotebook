@@ -4,25 +4,19 @@ import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.base.BaseFragment
 import com.lianyi.paimonsnotebook.bean.BlackBoardBean
-import com.lianyi.paimonsnotebook.config.AppConfig
 import com.lianyi.paimonsnotebook.config.Format
 import com.lianyi.paimonsnotebook.config.JsonCacheName
 import com.lianyi.paimonsnotebook.databinding.*
 import com.lianyi.paimonsnotebook.ui.RefreshData
 import com.lianyi.paimonsnotebook.util.*
-import me.jessyan.autosize.internal.CustomAdapt
-import java.sql.Timestamp
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.util.*
 
 class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
 
@@ -72,6 +66,7 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
         loadCharacter(pages[0],false)
     }
 
+    //加载角色
     private fun loadCharacter(view:View,dataChange:Boolean){
         val page = PagerDailyMaterialsBinding.bind(view)
         page.pagerName.text = "天赋培养"
@@ -80,6 +75,7 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
         }
     }
 
+    //加载武器
     private fun loadWeapon(view: View,dataChange:Boolean){
         val page = PagerDailyMaterialsBinding.bind(view)
         page.pagerName.text = "武器突破"
@@ -88,6 +84,7 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
         }
     }
 
+    //加载物品列表
     private fun loadItemList(list:RecyclerView, kind:String, type:String){
         val currentItemList = mutableListOf<BlackBoardBean.DataBean.ListBean>()
         val blackBoard = GSON.fromJson(sp.getString(JsonCacheName.BLACK_BOARD,""),BlackBoardBean::class.java)
@@ -120,14 +117,21 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
                         listBean.contentInfos.forEach {
                             materials += it
                         }
+                        //设置适配器
                         layout.list.adapter = ReAdapter(materials,R.layout.item_materials_with_text_background){
                             view, contentInfosBean, position ->
                             val ma = ItemMaterialsWithTextBackgroundBinding.bind(view)
                             loadImage(ma.icon,contentInfosBean.icon)
                             ma.name.text = contentInfosBean.title
                         }
-                        win.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+                        //取消dialog自带的背景
+                        win.window?.setBackgroundDrawableResource(R.color.transparent)
+                        //设置左右两边的间隔
+                        win.window?.decorView?.setPadding(10.dp.toInt(),0,10.dp.toInt(),0)
+                        win.window?.setLayout(resources.displayMetrics.widthPixels-20.dp.toInt(),ViewGroup.LayoutParams.WRAP_CONTENT)
                         win.show()
+
                         layout.close.setOnClickListener {
                             win.cancel()
                         }

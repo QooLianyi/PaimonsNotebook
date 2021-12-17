@@ -7,7 +7,7 @@ import me.jessyan.autosize.internal.CustomAdapt
 open class BaseActivity:AppCompatActivity(),CustomAdapt {
 
     override fun isBaseOnWidth(): Boolean {
-        return false
+        return true
     }
 
     override fun getSizeInDp(): Float {

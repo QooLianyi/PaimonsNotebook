@@ -1,7 +1,6 @@
-package com.lianyi.paimonsnotebook.activity
+package com.lianyi.paimonsnotebook.ui.activity
 
 import android.os.Bundle
-import android.view.WindowManager
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.base.BaseActivity
 import com.lianyi.paimonsnotebook.bean.EntityJsonBean
@@ -15,11 +14,10 @@ class WeaponDetailActivity : BaseActivity() {
     companion object{
         lateinit var detailInformation:EntityJsonBean
     }
-    lateinit var bind:ActivityWeaponDetailBinding
+    lateinit var bind: ActivityWeaponDetailBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         bind = ActivityWeaponDetailBinding.inflate(layoutInflater)
         setContentView(bind.root)
 

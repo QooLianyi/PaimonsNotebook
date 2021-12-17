@@ -9,7 +9,7 @@
     android:paddingEnd="5dp"
     android:paddingTop="15dp"
     android:background="@color/white"
-    tools:context=".activity.CharacterDetailActivity">
+    tools:context=".ui.activity.CharacterDetailActivity">
 
 
     <ScrollView

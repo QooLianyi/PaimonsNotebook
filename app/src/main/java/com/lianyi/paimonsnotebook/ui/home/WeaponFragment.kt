@@ -1,20 +1,16 @@
 package com.lianyi.paimonsnotebook.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.activity.WeaponDetailActivity
+import com.lianyi.paimonsnotebook.ui.activity.WeaponDetailActivity
 import com.lianyi.paimonsnotebook.base.BaseFragment
 import com.lianyi.paimonsnotebook.bean.EntityJsonBean
-import com.lianyi.paimonsnotebook.config.AppConfig
-import com.lianyi.paimonsnotebook.config.CharacterProperty
 import com.lianyi.paimonsnotebook.config.JsonCacheName
 import com.lianyi.paimonsnotebook.config.WeaponType
 import com.lianyi.paimonsnotebook.databinding.FragmentWeaponBinding
 import com.lianyi.paimonsnotebook.databinding.ItemEntityBinding
 import com.lianyi.paimonsnotebook.util.*
-import me.jessyan.autosize.internal.CustomAdapt
 import org.json.JSONArray
 
 class WeaponFragment : BaseFragment(R.layout.fragment_weapon) {
