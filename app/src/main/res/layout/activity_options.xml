@@ -17,20 +17,83 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
+                android:layout_margin="5dp"
+                app:cardCornerRadius="3dp"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:text="页面"
-                    android:textStyle="bold"
-                    />
+                    android:orientation="vertical"
+                    android:padding="5dp"
+                    android:id="@+id/options_page_span"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:text="页面"
+                            android:textStyle="bold"
+                            />
 
-            </LinearLayout>
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/icon_drop_down"
+                            android:layout_gravity="end|center"
+                            android:id="@+id/options_page_drop_down"
+                            />
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:id="@+id/options_page"
+                            style="@style/CheckBoxStyle"
+                            android:background="@color/transparent"
+                            />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:text="加载页数据同步"
+                            android:textStyle="bold"
+                            android:layout_marginTop="10dp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:text="(加载页数据刷新/关闭后数据刷新放入主页)"
+                            android:layout_marginTop="10dp"
+                            />
+                    </LinearLayout>
+
+                    <Switch
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:text="关闭"
+                        />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
 
 
             <androidx.cardview.widget.CardView

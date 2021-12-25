@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="95dp"
     android:layout_marginTop="15dp"
     android:gravity="center_horizontal"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -18,28 +18,41 @@
             >
 
             <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
                 android:layout_gravity="top|center_horizontal"
                 app:cardCornerRadius="5dp"
                 app:cardElevation="0dp"
                 android:layout_margin="2dp"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:id="@+id/icon"
-                    />
+                >
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/star_background"
+                        android:scaleType="centerCrop"
+                        android:paddingTop="10dp"
+                        />
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/icon"
+                        />
+                </FrameLayout>
             </androidx.cardview.widget.CardView>
 
             <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_margin="5dp"
                 android:id="@+id/type"
                 />
 
             <TextView
-                android:layout_width="75dp"
+                android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:layout_gravity="bottom"
                 android:textColor="@color/black"

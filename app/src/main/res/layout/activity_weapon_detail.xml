@@ -18,6 +18,7 @@
         android:scrollbars="none"
         android:overScrollMode="never"
         android:id="@+id/scroll"
+        android:paddingBottom="10dp"
         >
         <LinearLayout
             android:layout_width="match_parent"
@@ -98,11 +99,23 @@
                             app:cardElevation="0dp"
                             android:background="@color/entity_detail_content_background"
                             android:layout_height="wrap_content">
-                            <ImageView
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
-                                android:id="@+id/icon"
-                                />
+                            <FrameLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                >
+                                <ImageView
+                                    android:layout_width="100dp"
+                                    android:layout_height="100dp"
+                                    android:id="@+id/star_background"
+                                    android:scaleType="centerCrop"
+                                    android:paddingTop="10dp"
+                                    />
+                                <ImageView
+                                    android:layout_width="100dp"
+                                    android:layout_height="100dp"
+                                    android:id="@+id/icon"
+                                    />
+                            </FrameLayout>
                         </androidx.cardview.widget.CardView>
 
                         <LinearLayout
@@ -286,23 +299,42 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="EffectName"
-                            android:textColor="@color/black"
+                            android:text="ATTRIBUTE"
+                            android:textColor="@color/black_alpha_80"
                             android:textStyle="bold"
-                            android:textSize="20sp"
-                            android:id="@+id/main_property"
+                            android:textSize="15sp"
+                            android:id="@+id/attribute"
                             />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="EffectName"
+                            android:text="ATTRIBUTE VALUE"
                             android:textColor="@color/black"
                             android:textStyle="bold"
-                            android:textSize="16sp"
-                            android:id="@+id/attack"
+                            android:textSize="17sp"
+                            android:id="@+id/attribute_value"
                             />
 
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="基础攻击力"
+                            android:textColor="@color/black_alpha_80"
+                            android:textStyle="bold"
+                            android:textSize="17sp"
+                            android:layout_marginTop="3dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/atk"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="ATTACK"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            />
 
                     </LinearLayout>
 
@@ -390,7 +422,7 @@
                             android:text="EffectName"
                             android:textColor="@color/black"
                             android:textStyle="bold"
-                            android:textSize="15sp"
+                            android:textSize="17sp"
                             android:id="@+id/effect_name"
                             />
                         <TextView
@@ -400,7 +432,6 @@
                             android:textColor="@color/black"
                             android:textSize="15sp"
                             android:id="@+id/effect"
-                            android:textStyle="bold"
                             />
 
                         <View
@@ -482,29 +513,43 @@
                             android:layout_gravity="left|bottom"
                             />
 
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/icon_information"
+                            android:layout_gravity="end|center"
+                            android:layout_marginEnd="20dp"
+                            android:alpha="0.5"
+                            android:id="@+id/information"
+                            />
+
                     </FrameLayout>
 
-                    <RelativeLayout
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/entity_detail_content_background"
+                        android:orientation="horizontal"
                         android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:background="@color/entity_detail_content_background"
                         >
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:layout_width="match_parent"
+                        <include layout="@layout/item_material"
+                            android:id="@+id/daily_material"
+                            android:layout_width="80dp"
                             android:layout_height="wrap_content"
-                            android:nestedScrollingEnabled="false"
-                            android:id="@+id/materials_list"
-                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                            app:spanCount="4"
-                            android:paddingTop="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:paddingStart="5dp"
-                            android:paddingEnd="5dp"
-                            android:scrollbars="none"
-                            android:overScrollMode="never"
                             />
-                    </RelativeLayout>
+                        <include layout="@layout/item_material"
+                            android:id="@+id/elite_material"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            />
+                        <include layout="@layout/item_material"
+                            android:id="@+id/monster_material"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            />
+                    </LinearLayout>
 
                 </LinearLayout>
 

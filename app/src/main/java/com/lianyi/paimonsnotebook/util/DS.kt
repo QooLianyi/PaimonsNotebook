@@ -1,13 +1,13 @@
 package com.lianyi.paimonsnotebook.util
 
-import com.lianyi.paimonsnotebook.config.Settings
+import com.lianyi.paimonsnotebook.lib.information.Constants
 import java.security.MessageDigest
 
 
 fun getDS(query:String,body:String =""):String{
     val time: Long = System.currentTimeMillis()/1000L
     val rs: String = getRS()
-    val cs: String = md5("salt=${Settings.API_SALT}&t=${time}&r=${rs}&b=$body&q=$query")
+    val cs: String = md5("salt=${Constants.API_SALT}&t=${time}&r=${rs}&b=$body&q=$query")
     return "${time},${rs},${cs}"
 }
 

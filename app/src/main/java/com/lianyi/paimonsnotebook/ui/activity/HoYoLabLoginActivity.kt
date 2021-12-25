@@ -3,12 +3,12 @@ package com.lianyi.paimonsnotebook.ui.activity
 import android.os.Bundle
 import android.util.Log
 import android.webkit.*
-import com.lianyi.paimonsnotebook.base.BaseActivity
+import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.bean.GetGameRolesByCookieBean
-import com.lianyi.paimonsnotebook.config.ActivityResponseCode
-import com.lianyi.paimonsnotebook.config.Settings
-import com.lianyi.paimonsnotebook.config.URL
 import com.lianyi.paimonsnotebook.databinding.ActivityHoYoLabLoginBinding
+import com.lianyi.paimonsnotebook.lib.information.ActivityResponseCode
+import com.lianyi.paimonsnotebook.lib.information.Constants
+import com.lianyi.paimonsnotebook.lib.information.MiHoYoApi
 import com.lianyi.paimonsnotebook.util.*
 
 class HoYoLabLoginActivity : BaseActivity() {
@@ -31,7 +31,7 @@ class HoYoLabLoginActivity : BaseActivity() {
             settings.blockNetworkImage = false
             settings.useWideViewPort = true
 
-            loadUrl(URL.LOGIN)
+            loadUrl(MiHoYoApi.LOGIN)
             webViewClient = object :WebViewClient(){
                 override fun onPageFinished(view: WebView?, url: String?) {
                     val cookieManager = CookieManager.getInstance()
@@ -47,17 +47,17 @@ class HoYoLabLoginActivity : BaseActivity() {
                             cookieMap += cookie.first().trim() to cookie.last().trim()
                             println("first --> ${cookie.first()} last --> ${cookie.last()}")
                             when(cookie.first()){
-                                Settings.ACCOUNT_ID_NAME-> isLogin = true
+                                Constants.ACCOUNT_ID_NAME-> isLogin = true
                             }
                         }
 
-                        mainUser?.lToken = cookieMap[Settings.LTOKEN_NAME]?:""
-                        mainUser?.loginUid = cookieMap[Settings.LTUID_NAME]?:""
-                        mainUser?.cookieToken = cookieMap[Settings.COOKIE_TOKEN_NAME]?:""
+                        mainUser?.lToken = cookieMap[Constants.LTOKEN_NAME]?:""
+                        mainUser?.loginUid = cookieMap[Constants.LTUID_NAME]?:""
+                        mainUser?.cookieToken = cookieMap[Constants.COOKIE_TOKEN_NAME]?:""
 
                         //当登录完成时
                         if(isLogin){
-                            Ok.get(URL.GET_GAME_ROLES_BY_COOKIE){
+                            Ok.get(MiHoYoApi.GET_GAME_ROLES_BY_COOKIE){
                                 if(it.ok){
                                     val roles = GSON.fromJson(it.optString("data"),
                                         GetGameRolesByCookieBean::class.java)
@@ -74,7 +74,7 @@ class HoYoLabLoginActivity : BaseActivity() {
                                     }
 
                                     val edit = usp.edit()
-                                    edit.putString(Settings.USP_MAIN_USER_NAME,GSON.toJson(mainUser))
+                                    edit.putString(Constants.USP_MAIN_USER_NAME,GSON.toJson(mainUser))
                                     edit.apply()
 
                                     //请理Cookie

@@ -10,6 +10,7 @@
     <color name="black">#333333</color>
 
     <color name="black_alpha_80">#CC111111</color>
+    <color name="black_alpha_70">#B3111111</color>
     <color name="black_alpha_40">#66111111</color>
     <color name="black_alpha_10">#1A111111</color>
 
@@ -38,6 +39,7 @@
     <color name="menu_select_color">#fff</color>
 
     <color name="entity_detail_title_background">#E0DAD3</color>
+    <color name="entity_detail_title_information_background">#CCC6BF</color>
     <color name="entity_detail_title_text_stroke_color">#B1968B</color>
     <color name="entity_detail_subtitle_background">#EEEAE7</color>
     <color name="entity_detail_content_background">#F5F5F5</color>

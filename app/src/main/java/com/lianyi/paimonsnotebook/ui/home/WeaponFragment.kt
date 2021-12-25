@@ -4,20 +4,22 @@ import android.os.Bundle
 import android.view.View
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.ui.activity.WeaponDetailActivity
-import com.lianyi.paimonsnotebook.base.BaseFragment
-import com.lianyi.paimonsnotebook.bean.EntityJsonBean
-import com.lianyi.paimonsnotebook.config.JsonCacheName
-import com.lianyi.paimonsnotebook.config.WeaponType
+import com.lianyi.paimonsnotebook.lib.base.BaseFragment
+import com.lianyi.paimonsnotebook.bean.WeaponBean
 import com.lianyi.paimonsnotebook.databinding.FragmentWeaponBinding
 import com.lianyi.paimonsnotebook.databinding.ItemEntityBinding
+import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
+import com.lianyi.paimonsnotebook.lib.information.JsonCacheName
+import com.lianyi.paimonsnotebook.lib.information.Star
+import com.lianyi.paimonsnotebook.lib.information.WeaponType
 import com.lianyi.paimonsnotebook.util.*
 import org.json.JSONArray
 
 class WeaponFragment : BaseFragment(R.layout.fragment_weapon) {
     lateinit var bind: FragmentWeaponBinding
 
-    private val weaponList = mutableListOf<EntityJsonBean>()
-    private val weaponShowList = mutableListOf<EntityJsonBean>()
+    private val weaponList = mutableListOf<WeaponBean>()
+    private val weaponShowList = mutableListOf<WeaponBean>()
     private val selectWeapon = mutableListOf<Int>()
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,13 +35,15 @@ class WeaponFragment : BaseFragment(R.layout.fragment_weapon) {
 
         weaponShowList.sortByDescending { it.star }
         bind.list.adapter = ReAdapter(weaponShowList,R.layout.item_entity){
-            viewItem, entityJsonBean, position ->
+            viewItem, weapon, position ->
             val item = ItemEntityBinding.bind(viewItem)
-            item.name.text = entityJsonBean.entity.name
-            loadImage(item.icon,entityJsonBean.entity.iconUrl)
-            item.type.setImageResource(WeaponType.getResourceByType(entityJsonBean.entityType))
+            item.name.text = weapon.name
+            loadImage(item.icon,weapon.icon)
+            item.type.setImageResource(WeaponType.getResourceByType(weapon.weaponType))
+            item.starBackground.setBackgroundResource(Star.getStarResourcesByStarNum(weapon.star,false))
+
             item.root.setOnClickListener {
-                WeaponDetailActivity.detailInformation = entityJsonBean
+                WeaponDetailActivity.weapon = weapon
                 goA<WeaponDetailActivity>()
                 activity?.overridePendingTransition(R.anim.activity_fade_in,R.anim.activity_fade_out)
             }
@@ -50,7 +54,7 @@ class WeaponFragment : BaseFragment(R.layout.fragment_weapon) {
     private fun notificationUpdate(){
         weaponShowList.clear()
         weaponList.forEach { entity->
-            if(selectWeapon.indexOf(entity.entityType)!=-1){
+            if(selectWeapon.indexOf(entity.weaponType)!=-1){
                 weaponShowList += entity
             }
         }

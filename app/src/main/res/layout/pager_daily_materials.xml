@@ -7,12 +7,15 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingBottom="10dp"
             >
 
             <LinearLayout
@@ -38,14 +41,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/list"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:spanCount="4"
                     android:nestedScrollingEnabled="false"
                     android:scrollbars="none"
                     android:overScrollMode="never"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="10dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     />
             </RelativeLayout>
 

@@ -4,21 +4,23 @@ import android.os.Bundle
 import android.view.View
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.ui.activity.CharacterDetailActivity
-import com.lianyi.paimonsnotebook.base.BaseFragment
-import com.lianyi.paimonsnotebook.bean.EntityJsonBean
-import com.lianyi.paimonsnotebook.config.CharacterProperty
-import com.lianyi.paimonsnotebook.config.JsonCacheName
-import com.lianyi.paimonsnotebook.config.WeaponType
+import com.lianyi.paimonsnotebook.lib.base.BaseFragment
+import com.lianyi.paimonsnotebook.bean.CharacterBean
 import com.lianyi.paimonsnotebook.databinding.FragmentCharacterBinding
 import com.lianyi.paimonsnotebook.databinding.ItemEntityBinding
+import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
+import com.lianyi.paimonsnotebook.lib.information.Element
+import com.lianyi.paimonsnotebook.lib.information.JsonCacheName
+import com.lianyi.paimonsnotebook.lib.information.Star
+import com.lianyi.paimonsnotebook.lib.information.WeaponType
 import com.lianyi.paimonsnotebook.util.*
 import org.json.JSONArray
 
 class CharacterFragment : BaseFragment(R.layout.fragment_character) {
 
     lateinit var bind: FragmentCharacterBinding
-    private val characterList = mutableListOf<EntityJsonBean>()
-    private val characterShowList = mutableListOf<EntityJsonBean>()
+    private val characterList = mutableListOf<CharacterBean>()
+    private val characterShowList = mutableListOf<CharacterBean>()
     //选择的属性和装备类型
     private val selectProperty = mutableListOf<Int>()
     private val selectEquipType = mutableListOf<Int>()
@@ -38,13 +40,15 @@ class CharacterFragment : BaseFragment(R.layout.fragment_character) {
         characterShowList.sortByDescending { it.star }
 
         bind.list.adapter = ReAdapter(characterShowList,R.layout.item_entity){
-                view, entityJsonBean, position ->
+                view, character, position ->
             val item = ItemEntityBinding.bind(view)
-            item.name.text = entityJsonBean.entity.name
-            loadImage(item.icon,entityJsonBean.entity.iconUrl)
-            item.type.setImageResource(CharacterProperty.getImageResourceByType(entityJsonBean.entityType))
+            item.name.text = character.name
+            loadImage(item.icon,character.icon)
+            item.type.setImageResource(Element.getImageResourceByType(character.element))
+            item.starBackground.setBackgroundResource(Star.getStarResourcesByStarNum(character.star,false))
+
             item.root.setOnClickListener {
-                CharacterDetailActivity.detailInformation = entityJsonBean
+                CharacterDetailActivity.character = character
                 goA<CharacterDetailActivity>()
                 activity?.overridePendingTransition(R.anim.activity_fade_in,R.anim.activity_fade_out)
             }
@@ -54,17 +58,18 @@ class CharacterFragment : BaseFragment(R.layout.fragment_character) {
 
     }
 
+    //筛选
     private fun notificationUpdate(){
         characterShowList.clear()
         characterList.forEach {  entity->
             selectProperty.forEach { property->
-                if(entity.entityType==property)
+                if(entity.element==property)
                     characterShowList += entity
             }
         }
-        val deleteList = mutableListOf<EntityJsonBean>()
+        val deleteList = mutableListOf<CharacterBean>()
         characterShowList.forEach { entity->
-            if(selectEquipType.indexOf(entity.equipType)==-1){
+            if(selectEquipType.indexOf(entity.weaponType)==-1){
                 deleteList += entity
             }
         }
@@ -82,13 +87,13 @@ class CharacterFragment : BaseFragment(R.layout.fragment_character) {
 
         with(bind){
 
-            selectProperty += CharacterProperty.FIRE
-            selectProperty += CharacterProperty.WATER
-            selectProperty += CharacterProperty.GRASS
-            selectProperty += CharacterProperty.ICE
-            selectProperty += CharacterProperty.WIND
-            selectProperty += CharacterProperty.ELECT
-            selectProperty += CharacterProperty.ROCK
+            selectProperty += Element.FIRE
+            selectProperty += Element.WATER
+            selectProperty += Element.GRASS
+            selectProperty += Element.ICE
+            selectProperty += Element.WIND
+            selectProperty += Element.ELECT
+            selectProperty += Element.ROCK
 
             selectEquipType += WeaponType.ONE_HAND_SWORD
             selectEquipType += WeaponType.BOTH_HAND_SWORD
@@ -99,57 +104,57 @@ class CharacterFragment : BaseFragment(R.layout.fragment_character) {
 
             selectFire.select {
                 if(it)
-                    selectProperty.add(CharacterProperty.FIRE)
+                    selectProperty.add(Element.FIRE)
                 else
-                    selectProperty.remove(CharacterProperty.FIRE)
+                    selectProperty.remove(Element.FIRE)
                 bind.selectSpan.isEnabled = false
                 notificationUpdate()
             }
             selectWater.select {
                 if(it)
-                    selectProperty.add(CharacterProperty.WATER)
+                    selectProperty.add(Element.WATER)
                 else
-                    selectProperty.remove(CharacterProperty.WATER)
+                    selectProperty.remove(Element.WATER)
                 bind.selectSpan.isEnabled = false
                 notificationUpdate()
             }
             selectGrass.select {
                 if(it)
-                    selectProperty.add(CharacterProperty.GRASS)
+                    selectProperty.add(Element.GRASS)
                 else
-                    selectProperty.remove(CharacterProperty.GRASS)
+                    selectProperty.remove(Element.GRASS)
                 bind.selectSpan.isEnabled = false
                 notificationUpdate()
             }
             selectIce.select {
                 if(it)
-                    selectProperty.add(CharacterProperty.ICE)
+                    selectProperty.add(Element.ICE)
                 else
-                    selectProperty.remove(CharacterProperty.ICE)
+                    selectProperty.remove(Element.ICE)
                 bind.selectSpan.isEnabled = false
                 notificationUpdate()
             }
             selectWind.select {
                 if(it)
-                    selectProperty.add(CharacterProperty.WIND)
+                    selectProperty.add(Element.WIND)
                 else
-                    selectProperty.remove(CharacterProperty.WIND)
+                    selectProperty.remove(Element.WIND)
                 bind.selectSpan.isEnabled = false
                 notificationUpdate()
             }
             selectElect.select {
                 if(it)
-                    selectProperty.add(CharacterProperty.ELECT)
+                    selectProperty.add(Element.ELECT)
                 else
-                    selectProperty.remove(CharacterProperty.ELECT)
+                    selectProperty.remove(Element.ELECT)
                 bind.selectSpan.isEnabled = false
                 notificationUpdate()
             }
             selectRock.select {
                 if(it)
-                    selectProperty.add(CharacterProperty.ROCK)
+                    selectProperty.add(Element.ROCK)
                 else
-                    selectProperty.remove(CharacterProperty.ROCK)
+                    selectProperty.remove(Element.ROCK)
                 bind.selectSpan.isEnabled = false
                 notificationUpdate()
             }

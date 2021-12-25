@@ -2,10 +2,10 @@ package com.lianyi.paimonsnotebook.ui.options
 
 import android.os.Bundle
 import android.widget.SeekBar
-import com.lianyi.paimonsnotebook.base.BaseActivity
-import com.lianyi.paimonsnotebook.config.Format
+import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.databinding.ActivityOptionsBinding
-import com.lianyi.paimonsnotebook.ui.RefreshData
+import com.lianyi.paimonsnotebook.lib.data.RefreshData
+import com.lianyi.paimonsnotebook.lib.information.Format
 import com.lianyi.paimonsnotebook.util.*
 import kotlin.concurrent.thread
 

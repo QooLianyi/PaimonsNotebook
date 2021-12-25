@@ -1,20 +1,10 @@
 package com.lianyi.paimonsnotebook.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.webkit.WebResourceRequest
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.base.BaseFragment
-import com.lianyi.paimonsnotebook.config.AppConfig
-import com.lianyi.paimonsnotebook.config.URL
+import com.lianyi.paimonsnotebook.lib.base.BaseFragment
 import com.lianyi.paimonsnotebook.databinding.FragmentMapBinding
-import me.jessyan.autosize.internal.CustomAdapt
 
 class MapFragment : BaseFragment(R.layout.fragment_map){
     lateinit var bind:FragmentMapBinding

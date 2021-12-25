@@ -1,6 +1,5 @@
 package com.lianyi.paimonsnotebook.util
 
-import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
@@ -17,23 +16,26 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.UserBean
-import com.lianyi.paimonsnotebook.config.AppConfig
-import com.lianyi.paimonsnotebook.config.Settings
 import com.lianyi.paimonsnotebook.databinding.PopLoadingBinding
+import com.lianyi.paimonsnotebook.lib.information.Constants
+import com.lianyi.paimonsnotebook.lib.listener.AnimatorFinished
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
-class PaiMonsNoteBook :Application(){
+
+class PaiMonsNoteBook : Application(){
     companion object{
-        lateinit var context:Context
+        lateinit var context: Context
         lateinit var loadingWindow:androidx.appcompat.app.AlertDialog
     }
     override fun onCreate() {
@@ -47,13 +49,13 @@ class PaiMonsNoteBook :Application(){
             .supportSubunits = Subunits.MM
 
         //设置mainUser
-        mainUser = GSON.fromJson(usp.getString(Settings.USP_MAIN_USER_NAME,""),UserBean::class.java)
+        mainUser = GSON.fromJson(usp.getString(Constants.USP_MAIN_USER_NAME,""), UserBean::class.java)
 
         if(mainUser ==null) mainUser = UserBean()
     }
 }
 
-fun loadImage(imageView: ImageView,url:String){
+fun loadImage(imageView: ImageView, url:String){
     Glide.with(imageView).load(url).into(imageView)
 }
 
@@ -61,17 +63,17 @@ var mainUser:UserBean? = null
     get() = field
 
 //数据缓存
-val sp:SharedPreferences
-get() = PaiMonsNoteBook.context.getSharedPreferences(Settings.SP_NAME,Context.MODE_PRIVATE)
+val sp: SharedPreferences
+get() = PaiMonsNoteBook.context.getSharedPreferences(Constants.SP_NAME,Context.MODE_PRIVATE)
 //用户信息缓存
 val usp:SharedPreferences
-get() = PaiMonsNoteBook.context.getSharedPreferences(Settings.USP_NAME,Context.MODE_PRIVATE)
+get() = PaiMonsNoteBook.context.getSharedPreferences(Constants.USP_NAME,Context.MODE_PRIVATE)
 //角色缓存
 val csp:SharedPreferences
-get() = PaiMonsNoteBook.context.getSharedPreferences(Settings.CSP_NAME,Context.MODE_PRIVATE)
+get() = PaiMonsNoteBook.context.getSharedPreferences(Constants.CSP_NAME,Context.MODE_PRIVATE)
 //武器缓存
 val wsp:SharedPreferences
-get() = PaiMonsNoteBook.context.getSharedPreferences(Settings.WSP_NAME,Context.MODE_PRIVATE)
+get() = PaiMonsNoteBook.context.getSharedPreferences(Constants.WSP_NAME,Context.MODE_PRIVATE)
 
 
 val Int.dp
@@ -98,7 +100,7 @@ fun View.show(){
     this.visibility = View.VISIBLE
 }
 
-//tablayout选中回调
+//tab layout选中回调
 fun TabLayout.tab(block:(Int)->Unit){
     this.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
         override fun onTabSelected(p0: TabLayout.Tab?) {
@@ -113,7 +115,7 @@ fun TabLayout.tab(block:(Int)->Unit){
     })
 }
 
-
+//动画完成回调
 fun Animation.onFinished(block: () -> Unit){
     this.setAnimationListener(object :Animation.AnimationListener{
         override fun onAnimationStart(p0: Animation?) {
@@ -140,8 +142,6 @@ fun loadingWindowDismiss(){
 //加载时弹窗
 fun showLoading(context: Context){
 
-    println("弹窗")
-
     //加载布局
     val layout = LayoutInflater.from(context).inflate(R.layout.pop_loading,null)
     val item = PopLoadingBinding.bind(layout)
@@ -166,7 +166,8 @@ fun showLoading(context: Context){
     //设置弹窗的内部布局
     win.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     win.window?.decorView?.setPadding(10.dp.toInt(),0,10.dp.toInt(),0)
-    win.window?.setLayout(PaiMonsNoteBook.context.resources.displayMetrics.widthPixels-20.dp.toInt(),ViewGroup.LayoutParams.WRAP_CONTENT)
+    win.window?.setLayout(PaiMonsNoteBook.context.resources.displayMetrics.widthPixels-20.dp.toInt(),
+        ViewGroup.LayoutParams.WRAP_CONTENT)
 
     win.show()
 
@@ -209,6 +210,7 @@ fun openAndCloseAnimationHor(target:View, start:Int, end:Int, time:Long){
     }
     anim.start()
 }
+
 fun openAndCloseAnimationVer(target:View, start:Int, end:Int, time:Long){
     val anim = ValueAnimator.ofInt(start.dp.toInt(), end.dp.toInt())
     anim.duration = time
@@ -219,61 +221,35 @@ fun openAndCloseAnimationVer(target:View, start:Int, end:Int, time:Long){
     anim.start()
 }
 
-
-//recyclerview通用适配器
-class ReAdapter<T>(val data:List<T>,val item:Int,val block:(RecyclerView.Adapter<RecyclerView.ViewHolder>.(view: View,T,position:Int)->Unit)):RecyclerView.Adapter<RecyclerView.ViewHolder>(){
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return object :RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(item,parent,false)){}
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        block(holder.itemView,data[position],position)
-    }
-
-    override fun getItemCount(): Int {
-        return data.size
-    }
-
+fun String.toMyRequestBody(): RequestBody {
+    return this.toRequestBody("application/json;charset=utf-8".toMediaType())
 }
 
-//viewpager通用适配器
-class PagerAdapter(val pages:List<View>,val titles:List<String>):PagerAdapter(){
-    override fun getCount(): Int {
-        return pages.size
+fun String.substring(start:String, end:String):String{
+    val from = if(start.isEmpty()){
+        0
+    }else{
+        val index = this.indexOf(start)
+        if(index==-1) 0 else index
+    }
+    val to = if(end.isEmpty()){
+        0
+    }else{
+        val index = this.indexOf(end)
+        if(index==-1) 0 else index
     }
 
-    override fun isViewFromObject(view: View, `object`: Any): Boolean {
-        return view == `object`
-    }
-
-    override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        container.addView(pages[position])
-        return pages[position]
-    }
-
-    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-        container.removeView(pages[position])
-    }
-
-    override fun getPageTitle(position: Int): CharSequence? {
-        return titles[position]
-    }
+    return this.substring(from,to)
 }
 
-//animation监听器
-class AnimatorFinished(val block: () -> Unit): Animator.AnimatorListener{
-    override fun onAnimationStart(p0: Animator?) {
-    }
+fun showAlertDialog(context: Context,layout: View): AlertDialog {
+    val win = AlertDialog.Builder(context).setView(layout).create()
 
-    override fun onAnimationEnd(p0: Animator?) {
-        block()
-    }
-
-    override fun onAnimationCancel(p0: Animator?) {
-    }
-
-    override fun onAnimationRepeat(p0: Animator?) {
-    }
+    win.window?.setBackgroundDrawableResource(R.color.transparent)
+    win.window?.decorView?.setPadding(10.dp.toInt(),0,10.dp.toInt(),0)
+    win.window?.setLayout(PaiMonsNoteBook.context.resources.displayMetrics.widthPixels-20.dp.toInt(),ViewGroup.LayoutParams.WRAP_CONTENT)
+    win.show()
+    return win
 }
 
 

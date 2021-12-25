@@ -1,7 +1,7 @@
 package com.lianyi.paimonsnotebook.bean
 
 /*
-*数据初始化时从本地获取JSON转为此类
+*数据初始化时获取的JSON转为此类
 *
 * entity 实体信息
 * entityType 实体类型 武器:大剑 单手剑 角色:元素类型

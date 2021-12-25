@@ -11,7 +11,6 @@
         <item name="colorPrimary">@color/wave_ocean_blue_01</item>
         <item name="colorPrimaryDark">@color/menu_background_color</item>
         <item name="colorAccent">@color/colorAccent</item>
-
     </style>
 
 

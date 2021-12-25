@@ -2,17 +2,16 @@ package com.lianyi.paimonsnotebook.ui.activity
 
 import android.os.Bundle
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.base.BaseActivity
-import com.lianyi.paimonsnotebook.bean.EntityJsonBean
-import com.lianyi.paimonsnotebook.config.WeaponType
+import com.lianyi.paimonsnotebook.lib.base.BaseActivity
+import com.lianyi.paimonsnotebook.bean.WeaponBean
 import com.lianyi.paimonsnotebook.databinding.ActivityWeaponDetailBinding
-import com.lianyi.paimonsnotebook.databinding.ItemMaterialsBinding
-import com.lianyi.paimonsnotebook.util.ReAdapter
+import com.lianyi.paimonsnotebook.lib.information.Star
+import com.lianyi.paimonsnotebook.lib.information.WeaponType
 import com.lianyi.paimonsnotebook.util.loadImage
 
 class WeaponDetailActivity : BaseActivity() {
     companion object{
-        lateinit var detailInformation:EntityJsonBean
+        lateinit var weapon:WeaponBean
     }
     lateinit var bind: ActivityWeaponDetailBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,27 +21,25 @@ class WeaponDetailActivity : BaseActivity() {
         setContentView(bind.root)
 
         with(bind){
-            loadImage(icon, detailInformation.entity.iconUrl)
-            name.text = detailInformation.entity.name
-            subName.text = detailInformation.entity.name
-            weaponType.text = WeaponType.getNameByType(detailInformation.entityType)
-            star.text = when(detailInformation.star){
-                4->"★★★★"
-                5->"★★★★★"
-                else->"★"
-            }
-            mainProperty.text = detailInformation.mainProperty
-            attack.text = detailInformation.propertyList.first()
-            effectName.text = detailInformation.effectName
-            effect.text = detailInformation.effect
-            story.text = detailInformation.story
+            loadImage(icon, weapon.icon)
+            name.text = weapon.name
+            subName.text = weapon.name
+            weaponType.text = WeaponType.getNameByType(weapon.weaponType)
+            star.text = Star.getStarSymbolByStarNum(weapon.star)
 
-            materialsList.adapter = ReAdapter(detailInformation.materialsList,R.layout.item_materials){
-                    view, pair, position ->
-                val item = ItemMaterialsBinding.bind(view)
-                item.name.text = pair.first
-                loadImage(item.icon,pair.second)
-            }
+            attribute.text = weapon.attributeName
+            attributeValue.text = weapon.attributeNameValue
+            atk.text = weapon.ATK
+            effectName.text = weapon.effectName
+            effect.text = weapon.effect
+            story.text = weapon.describe.trim()
+
+            starBackground.setImageResource(Star.getStarResourcesByStarNum(weapon.star,false))
+
+            Star.setStarBackgroundAndIcon(dailyMaterial,weapon.dailyMaterials.icon, weapon.dailyMaterials.star)
+            Star.setStarBackgroundAndIcon(eliteMaterial,weapon.eliteMonsterMaterial.icon, weapon.eliteMonsterMaterial.star)
+            Star.setStarBackgroundAndIcon(monsterMaterial,weapon.monsterMaterials.icon, weapon.monsterMaterials.star)
+
         }
     }
 

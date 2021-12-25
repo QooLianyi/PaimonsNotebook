@@ -277,6 +277,28 @@ public class BlackBoardBean {
                     return Objects.hash(content_id, title, icon, bbs_url);
                 }
             }
+
+            @Override
+            public String toString() {
+                return "ListBean{" +
+                        "title='" + title + '\'' +
+                        ", kind='" + kind + '\'' +
+                        ", img_url='" + img_url + '\'' +
+                        ", jump_type='" + jump_type + '\'' +
+                        ", jump_url='" + jump_url + '\'' +
+                        ", content_id='" + content_id + '\'' +
+                        ", style='" + style + '\'' +
+                        ", start_time='" + start_time + '\'' +
+                        ", end_time='" + end_time + '\'' +
+                        ", font_color='" + font_color + '\'' +
+                        ", padding_color='" + padding_color + '\'' +
+                        ", break_type='" + break_type + '\'' +
+                        ", id='" + id + '\'' +
+                        ", sort='" + sort + '\'' +
+                        ", drop_day=" + drop_day +
+                        ", contentInfos=" + contentInfos +
+                        '}';
+            }
         }
     }
 }

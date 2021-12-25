@@ -2,6 +2,12 @@ package com.lianyi.paimonsnotebook.config
 
 import com.lianyi.paimonsnotebook.util.dp
 
+
+/*
+* 此类存放各类APP配置信息
+*
+* */
+
 class AppConfig {
     companion object{
         //屏幕适配
@@ -21,6 +27,9 @@ class AppConfig {
         const val MENU_START_WIDTH = 115
         const val MENU_END_WIDTH = 40
 
+
+        //抽卡记录每页导出间隔
+        const val LOAD_GACHA_HISTORY_INTERVAL = 1000L
     }
 
 }

@@ -1,22 +1,20 @@
 package com.lianyi.paimonsnotebook.ui.activity
 
 import android.os.Bundle
-import android.view.WindowManager
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.base.BaseActivity
-import com.lianyi.paimonsnotebook.bean.EntityJsonBean
-import com.lianyi.paimonsnotebook.config.CharacterProperty
-import com.lianyi.paimonsnotebook.config.WeaponType
+import com.lianyi.paimonsnotebook.lib.base.BaseActivity
+import com.lianyi.paimonsnotebook.bean.CharacterBean
 import com.lianyi.paimonsnotebook.databinding.ActivityCharacterDetailBinding
-import com.lianyi.paimonsnotebook.databinding.ItemMaterialsBinding
-import com.lianyi.paimonsnotebook.databinding.ItemPropertyBinding
-import com.lianyi.paimonsnotebook.util.ReAdapter
+import com.lianyi.paimonsnotebook.lib.information.Area
+import com.lianyi.paimonsnotebook.lib.information.Element
+import com.lianyi.paimonsnotebook.lib.information.Star
+import com.lianyi.paimonsnotebook.lib.information.WeaponType
 import com.lianyi.paimonsnotebook.util.loadImage
 
 class CharacterDetailActivity : BaseActivity() {
 
     companion object{
-        lateinit var detailInformation:EntityJsonBean
+        lateinit var character:CharacterBean
     }
 
     lateinit var bind: ActivityCharacterDetailBinding
@@ -27,33 +25,27 @@ class CharacterDetailActivity : BaseActivity() {
         setContentView(bind.root)
 
         with(bind){
-            area.text = detailInformation.area
-            characterProperty.text = CharacterProperty.getNameByType(detailInformation.entityType)
-            equipType.text = WeaponType.getNameByType(detailInformation.equipType)
-            loadImage(icon, detailInformation.entity.iconUrl)
-            name.text = detailInformation.entity.name
+            area.text = Area.getNameByArea(character.area)
+            characterProperty.text = Element.getNameByType(character.element)
+            equipType.text = WeaponType.getNameByType(character.weaponType)
+            name.text = character.name
+            loadImage(icon, character.icon)
+            starBackground.setImageResource(Star.getStarResourcesByStarNum(character.star,false))
 
-            propertyList.adapter = ReAdapter(detailInformation.propertyList,R.layout.item_property){
-                view, s, position ->
-                val item = ItemPropertyBinding.bind(view)
-                val values = s.split(":")
-                item.value.text = values.last().trim()
-                item.name.text = if(position== detailInformation.propertyList.size-1){
-                    "${values.first()}(突破属性)"
-                }else{
-                    values.first()
-                }
-            }
+            baseAtk.text = character.baseATK
+            baseDef.text = character.baseDEF
+            baseHp.text = character.baseHP
 
-            materialsList.adapter = ReAdapter(detailInformation.materialsList,R.layout.item_materials){
-                view, pair, position ->
-                val item = ItemMaterialsBinding.bind(view)
-                item.name.text = pair.first
-                loadImage(item.icon,pair.second)
-            }
+            upAttribute.text = character.upAttribute
+            upAttributeValue.text = character.upAttributeValue
+
+            Star.setStarBackgroundAndIcon(localMaterial, character.localMaterials.icon, character.localMaterials.star)
+            Star.setStarBackgroundAndIcon(monsterMaterial, character.monsterMaterials.icon, character.monsterMaterials.star)
+            Star.setStarBackgroundAndIcon(bossMaterial, character.bossMaterial.icon, character.bossMaterial.star)
+            Star.setStarBackgroundAndIcon(dailyMaterial, character.dailyMaterials.icon, character.dailyMaterials.star)
+            Star.setStarBackgroundAndIcon(weeklyMaterial, character.weeklyMaterials.icon, character.weeklyMaterials.star)
 
         }
-
     }
 
     override fun onBackPressed() {

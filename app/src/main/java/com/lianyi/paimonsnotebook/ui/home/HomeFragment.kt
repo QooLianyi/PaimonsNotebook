@@ -12,15 +12,18 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.ui.activity.HoYoLabLoginActivity
-import com.lianyi.paimonsnotebook.base.BaseFragment
+import com.lianyi.paimonsnotebook.lib.base.BaseFragment
 import com.lianyi.paimonsnotebook.bean.BlackBoardBean
-import com.lianyi.paimonsnotebook.bean.DailyNoteBean
+import com.lianyi.paimonsnotebook.bean.dailynote.DailyNoteBean
 import com.lianyi.paimonsnotebook.bean.HomeBannerBean
 import com.lianyi.paimonsnotebook.bean.MonthLedgerBean
-import com.lianyi.paimonsnotebook.config.*
 import com.lianyi.paimonsnotebook.databinding.*
 import com.lianyi.paimonsnotebook.lib.MetaData
-import com.lianyi.paimonsnotebook.ui.RefreshData
+import com.lianyi.paimonsnotebook.lib.adapter.PagerAdapter
+import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
+import com.lianyi.paimonsnotebook.lib.data.RefreshData
+import com.lianyi.paimonsnotebook.lib.information.*
+import com.lianyi.paimonsnotebook.ui.activity.DailySignActivity
 import com.lianyi.paimonsnotebook.util.*
 
 class HomeFragment : BaseFragment(R.layout.fragment_home) {
@@ -58,7 +61,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         //nick 点击时的事件
         bind.userNick.setOnClickListener {
             val intent = Intent(bind.root.context,HoYoLabLoginActivity::class.java)
-            startActivityForResult(intent,ActivityRequestCode.LOGIN)
+            startActivityForResult(intent, ActivityRequestCode.LOGIN)
         }
 
         var isOpen = true
@@ -75,8 +78,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
 
         bind.dailySign.setOnClickListener {
-            showLoading(bind.root.context)
-            bind.dailySign.isEnabled = false
+            goA<DailySignActivity>()
         }
 
         initInformationDetail()
@@ -86,7 +88,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     private fun initInformationDetail() {
         activity?.runOnUiThread {
             bind.userNick.text = mainUser?.nickName
-            val dailyNoteBean = GSON.fromJson(sp.getString(Settings.SP_DAILY_NOTE_NAME+ mainUser?.gameUid,""),DailyNoteBean::class.java)
+            val dailyNoteBean = GSON.fromJson(sp.getString(Constants.SP_DAILY_NOTE_NAME+ mainUser?.gameUid,""),
+                DailyNoteBean::class.java)
 
             with(bind){
                 resinCurrent.text = dailyNoteBean.current_resin.toString()
@@ -116,7 +119,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         RefreshData.getMonthLedger("0", mainUser!!.gameUid,mainUser!!.region){
             activity?.runOnUiThread {
                 if(it){
-                    val monthLedgerBean = GSON.fromJson(sp.getString(Settings.SP_MONTH_LEDGER_NAME+ mainUser!!.gameUid,""),MonthLedgerBean::class.java)
+                    val monthLedgerBean = GSON.fromJson(sp.getString(Constants.SP_MONTH_LEDGER_NAME+ mainUser!!.gameUid,""),MonthLedgerBean::class.java)
                     bind.dayGemstone.text = monthLedgerBean.day_data.current_primogems.toString()
                     bind.dayMora.text = monthLedgerBean.day_data.current_mora.toString()
                     bind.monthGemstone.text = monthLedgerBean.month_data.current_primogems.toString()
@@ -235,7 +238,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode==ActivityResponseCode.OK&&requestCode==ActivityRequestCode.LOGIN){
+        if(resultCode== ActivityResponseCode.OK&&requestCode==ActivityRequestCode.LOGIN){
             initInformationDetail()
         }
     }

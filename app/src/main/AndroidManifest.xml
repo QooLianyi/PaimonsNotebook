@@ -12,12 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/paimonNoteTheme"
-        android:usesCleartextTraffic="true">
-        <activity android:name="com.lianyi.paimonsnotebook.ui.activity.DailySignActivity"></activity>
-        <activity android:name="com.lianyi.paimonsnotebook.ui.activity.HoYoLabLoginActivity"></activity>
-        <activity android:name="com.lianyi.paimonsnotebook.ui.activity.WeaponDetailActivity" />
-        <activity android:name="com.lianyi.paimonsnotebook.ui.activity.CharacterDetailActivity" />
-        <activity android:name=".LoadingActivity">
+        android:usesCleartextTraffic="true"
+        >
+        <activity android:name=".ui.activity.LoadingGachaWishHistoryActivity"></activity>
+        <activity android:name=".ui.activity.DailySignActivity" />
+        <activity android:name=".ui.activity.HoYoLabLoginActivity" />
+        <activity android:name=".ui.activity.WeaponDetailActivity" />
+        <activity android:name=".ui.activity.CharacterDetailActivity" />
+        <activity android:name=".ui.LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,8 +36,8 @@
             android:value="700" />
 
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"></activity>
+            android:name=".ui.MainActivity"
+            android:label="@string/app_name" />
     </application>
 
 </manifest>
