@@ -1,6 +1,6 @@
 package com.lianyi.paimonsnotebook.lib
 
-import com.lianyi.paimonsnotebook.bean.BlackBoardBean
+import com.lianyi.paimonsnotebook.bean.home.BlackBoardBean
 import com.lianyi.paimonsnotebook.bean.EntityBean
 import com.lianyi.paimonsnotebook.config.EntityType
 import com.lianyi.paimonsnotebook.lib.information.JsonCacheName
@@ -13,7 +13,8 @@ class MetaData {
         fun loadBlackBoardData(block:(result:Boolean, count:Int)->Unit){
             Ok.get(MiHoYoApi.BLACK_BOARD){
                 if(it.ok){
-                    val blackBoard = GSON.fromJson(sp.getString(JsonCacheName.BLACK_BOARD,"")!!,BlackBoardBean::class.java)
+                    val blackBoard = GSON.fromJson(sp.getString(JsonCacheName.BLACK_BOARD,"")!!,
+                        BlackBoardBean::class.java)
                     val character = mutableListOf<EntityBean>()
                     val weapon = mutableListOf<EntityBean>()
                     blackBoard.data.list.forEach {

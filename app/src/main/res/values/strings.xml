@@ -11,6 +11,9 @@
     <string name="error_can_not_get_black_board">获取BlackBoard失败啦~</string>
     <string name="error_black_board_is_empty">哎呀,出现了些小问题,请重新进入这个界面试试吧!</string>
 
+    <string name="information_default_account">默认账号用于地图上的标点显示,各种信息查询(如查询其他玩家的信息、获取游戏内公告等)。</string>
+    <string name="information_entity_materials">此处只展示了所需素材的最高级素材,角色突破所需的玉和提升技能所需的智识之冕均未列出,未来可能会显示所需的全部材料及所需数量。</string>
+
 
     <string-array name="week">
         <item>星期一</item>

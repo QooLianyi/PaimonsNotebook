@@ -4,7 +4,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
-import com.lianyi.paimonsnotebook.bean.GachaLogBean
+import com.lianyi.paimonsnotebook.bean.gacha.GachaLogBean
 import com.lianyi.paimonsnotebook.config.AppConfig
 import com.lianyi.paimonsnotebook.databinding.ActivityLoadingGachaWishHistoryBinding
 import com.lianyi.paimonsnotebook.lib.information.ActivityResponseCode
@@ -18,6 +18,14 @@ class LoadingGachaWishHistoryActivity : BaseActivity() {
 
     companion object{
         var logUrl = ""
+        //新手池
+        val newPlayerGachaHistory = mutableListOf<GachaLogBean.ListBean>()
+        //常驻
+        val permanentGachaHistory = mutableListOf<GachaLogBean.ListBean>()
+        //角色
+        val characterGachaHistory = mutableListOf<GachaLogBean.ListBean>()
+        //武器
+        val weaponGachaHistory = mutableListOf<GachaLogBean.ListBean>()
     }
 
     lateinit var bind:ActivityLoadingGachaWishHistoryBinding
@@ -27,24 +35,28 @@ class LoadingGachaWishHistoryActivity : BaseActivity() {
         bind = ActivityLoadingGachaWishHistoryBinding.inflate(layoutInflater)
         setContentView(bind.root)
 
-        setLoadingAnimation()
+        initView()
         loadGachaHistory()
     }
 
-    private fun loadGachaHistory() {
-        val newPlayerGachaHistory = mutableListOf<GachaLogBean.ListBean>()
-        val permanentGachaHistory = mutableListOf<GachaLogBean.ListBean>()
-        val characterGachaHistory = mutableListOf<GachaLogBean.ListBean>()
-        val weaponGachaHistory = mutableListOf<GachaLogBean.ListBean>()
+    private fun initView() {
+        newPlayerGachaHistory.clear()
+        permanentGachaHistory.clear()
+        characterGachaHistory.clear()
+        weaponGachaHistory.clear()
+        setLoadingAnimation()
+    }
 
+    private fun loadGachaHistory() {
         thread {
             GachaType.gachaList.forEach {
                 var page = 1
-                var gachaLog:GachaLogBean? = null
+                var gachaLog: GachaLogBean? = null
                 do {
                     val url = MiHoYoApi.getGachaLogUrl(logUrl,it,page,6,gachaLog?.list?.last()?.id?:"0")
                     Ok.getGachaHistory(url){
-                        gachaLog = GSON.fromJson(it.optString("data"),GachaLogBean::class.java)
+                        gachaLog = GSON.fromJson(it.optString("data"),
+                            GachaLogBean::class.java)
                     }
 
                     gachaLog!!.list.forEach {
@@ -55,13 +67,15 @@ class LoadingGachaWishHistoryActivity : BaseActivity() {
                             GachaType.WEAPON->weaponGachaHistory+=it
                         }
                     }
-                    page++
-                    //每加载10页休息5秒
+                    //每加载10页休息1秒
                     if(page%10==0){
-                        Thread.sleep(5000L)
+                        Thread.sleep(1000L)
                     }else{
                         Thread.sleep(AppConfig.LOAD_GACHA_HISTORY_INTERVAL)
                     }
+                    println("page = $page")
+                    page++
+
                 }while(gachaLog!!.list.size>0)
 
                 runOnUiThread {

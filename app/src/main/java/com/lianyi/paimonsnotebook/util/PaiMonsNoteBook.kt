@@ -14,7 +14,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatCheckBox
@@ -22,9 +25,12 @@ import androidx.cardview.widget.CardView
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.bean.UserBean
+import com.lianyi.paimonsnotebook.bean.account.UserBean
+import com.lianyi.paimonsnotebook.databinding.PopConfirmBinding
 import com.lianyi.paimonsnotebook.databinding.PopLoadingBinding
+import com.lianyi.paimonsnotebook.databinding.PopSuccessBinding
 import com.lianyi.paimonsnotebook.lib.information.Constants
+import com.lianyi.paimonsnotebook.lib.information.JsonCacheName
 import com.lianyi.paimonsnotebook.lib.listener.AnimatorFinished
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
@@ -36,7 +42,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 class PaiMonsNoteBook : Application(){
     companion object{
         lateinit var context: Context
-        lateinit var loadingWindow:androidx.appcompat.app.AlertDialog
+        lateinit var loadingWindow:AlertDialog
     }
     override fun onCreate() {
         super.onCreate()
@@ -49,17 +55,17 @@ class PaiMonsNoteBook : Application(){
             .supportSubunits = Subunits.MM
 
         //设置mainUser
-        mainUser = GSON.fromJson(usp.getString(Constants.USP_MAIN_USER_NAME,""), UserBean::class.java)
+        mainUser = GSON.fromJson(usp.getString(JsonCacheName.MAIN_USER_NAME,""), UserBean::class.java)
 
         if(mainUser ==null) mainUser = UserBean()
     }
 }
 
-fun loadImage(imageView: ImageView, url:String){
-    Glide.with(imageView).load(url).into(imageView)
+fun loadImage(imageView: ImageView, url:String?){
+    Glide.with(imageView).load(url?:"").into(imageView)
 }
 
-var mainUser:UserBean? = null
+var mainUser: UserBean? = null
     get() = field
 
 //数据缓存
@@ -79,7 +85,14 @@ get() = PaiMonsNoteBook.context.getSharedPreferences(Constants.WSP_NAME,Context.
 val Int.dp
     get() = PaiMonsNoteBook.context.resources.displayMetrics.density * this +0.5f
 
+val Int.sp
+    get() = (this * PaiMonsNoteBook.context.resources.displayMetrics.scaledDensity + 0.5f)
+
+val Int.px2dp
+    get() = (this /  PaiMonsNoteBook.context.resources.displayMetrics.density +0.5f)
+
 fun String.show(){
+    val toast = Toast(PaiMonsNoteBook.context)
     Toast.makeText(PaiMonsNoteBook.context,this,Toast.LENGTH_SHORT).show()
 }
 
@@ -141,7 +154,6 @@ fun loadingWindowDismiss(){
 
 //加载时弹窗
 fun showLoading(context: Context){
-
     //加载布局
     val layout = LayoutInflater.from(context).inflate(R.layout.pop_loading,null)
     val item = PopLoadingBinding.bind(layout)
@@ -162,6 +174,8 @@ fun showLoading(context: Context){
     //禁止通过点击window外面的区域关闭
     win.setCancelable(false)
     PaiMonsNoteBook.loadingWindow = win
+
+    if(PaiMonsNoteBook.loadingWindow.isShowing) loadingWindowDismiss()
 
     //设置弹窗的内部布局
     win.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -212,7 +226,7 @@ fun openAndCloseAnimationHor(target:View, start:Int, end:Int, time:Long){
 }
 
 fun openAndCloseAnimationVer(target:View, start:Int, end:Int, time:Long){
-    val anim = ValueAnimator.ofInt(start.dp.toInt(), end.dp.toInt())
+    val anim = ValueAnimator.ofInt(start, end)
     anim.duration = time
     anim.addUpdateListener {
         target.layoutParams.height = it.animatedValue as Int
@@ -242,6 +256,16 @@ fun String.substring(start:String, end:String):String{
     return this.substring(from,to)
 }
 
+fun Spinner.select(block: (position:Int,id:Long) -> Unit){
+    this.onItemSelectedListener = object :OnItemSelectedListener{
+        override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+            block(p2,p3)
+        }
+        override fun onNothingSelected(p0: AdapterView<*>?) {
+        }
+    }
+}
+
 fun showAlertDialog(context: Context,layout: View): AlertDialog {
     val win = AlertDialog.Builder(context).setView(layout).create()
 
@@ -251,5 +275,52 @@ fun showAlertDialog(context: Context,layout: View): AlertDialog {
     win.show()
     return win
 }
+
+fun showAlertDialog(context: Context,id:Int): AlertDialog {
+    val layout = LayoutInflater.from(context).inflate(id,null)
+    val win = AlertDialog.Builder(context).setView(layout).create()
+
+    win.window?.setBackgroundDrawableResource(R.color.transparent)
+    win.window?.decorView?.setPadding(10.dp.toInt(),0,10.dp.toInt(),0)
+    win.window?.setLayout(PaiMonsNoteBook.context.resources.displayMetrics.widthPixels-20.dp.toInt(),ViewGroup.LayoutParams.WRAP_CONTENT)
+    win.show()
+    return win
+}
+
+fun showConfirmAlertDialog(context: Context,title:String="提示",content:String="你确定吗",block: (isConfirm:Boolean) -> Unit){
+    val layout = PopConfirmBinding.bind(LayoutInflater.from(context).inflate(R.layout.pop_confirm,null))
+    val win = showAlertDialog(context,layout.root)
+
+    layout.title.text = title
+    layout.content.text = content
+
+    layout.confirm.setOnClickListener {
+        block(true)
+        win.dismiss()
+    }
+
+    layout.cancel.setOnClickListener {
+        block(false)
+        win.dismiss()
+    }
+}
+
+fun showSuccessInformationAlertDialog(context: Context,title:String){
+    val layout = PopSuccessBinding.bind(LayoutInflater.from(context).inflate(R.layout.pop_success,null))
+    val win = AlertDialog.Builder(context).setView(layout.root).create()
+
+    layout.close.setOnClickListener {
+        win.dismiss()
+    }
+
+    layout.title.text = title
+
+    win.window?.setBackgroundDrawableResource(R.color.transparent)
+    win.window?.decorView?.setPadding(10.dp.toInt(),0,10.dp.toInt(),0)
+    win.window?.setLayout(PaiMonsNoteBook.context.resources.displayMetrics.widthPixels-20.dp.toInt(),ViewGroup.LayoutParams.WRAP_CONTENT)
+    win.show()
+}
+
+
 
 

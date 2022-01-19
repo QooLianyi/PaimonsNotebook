@@ -5,9 +5,11 @@ import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.bean.WeaponBean
 import com.lianyi.paimonsnotebook.databinding.ActivityWeaponDetailBinding
+import com.lianyi.paimonsnotebook.databinding.PopInformationBinding
 import com.lianyi.paimonsnotebook.lib.information.Star
 import com.lianyi.paimonsnotebook.lib.information.WeaponType
 import com.lianyi.paimonsnotebook.util.loadImage
+import com.lianyi.paimonsnotebook.util.showAlertDialog
 
 class WeaponDetailActivity : BaseActivity() {
     companion object{
@@ -40,6 +42,15 @@ class WeaponDetailActivity : BaseActivity() {
             Star.setStarBackgroundAndIcon(eliteMaterial,weapon.eliteMonsterMaterial.icon, weapon.eliteMonsterMaterial.star)
             Star.setStarBackgroundAndIcon(monsterMaterial,weapon.monsterMaterials.icon, weapon.monsterMaterials.star)
 
+        }
+
+        bind.information.setOnClickListener {
+            val layout = PopInformationBinding.bind(layoutInflater.inflate(R.layout.pop_information,null))
+            val win = showAlertDialog(bind.root.context,layout.root)
+            layout.content.text = getString(R.string.information_entity_materials)
+            layout.close.setOnClickListener {
+                win.dismiss()
+            }
         }
     }
 

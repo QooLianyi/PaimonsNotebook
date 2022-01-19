@@ -63,6 +63,8 @@ dependencies {
     implementation files('libs\\gson-2.8.0.jar')
     implementation files('libs\\okio-jvm-2.8.0.jar')
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation files('libs\\poi-3.12-android-a.jar')
+    implementation files('libs\\poi-ooxml-schemas-3.12-20150511-a.jar')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -73,6 +75,7 @@ dependencies {
     implementation(name:"gifdecoder-4.10.0",ext:"aar")
     implementation(name:"glide-4.10.0",ext:"aar")
     implementation(name:"MPAndroidChart-v3.1.0",ext:"aar")
+    implementation(name:"banner-2.1.0",ext:"aar")
 
     implementation 'org.jsoup:jsoup:1.14.3'
 

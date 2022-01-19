@@ -291,52 +291,59 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="8dp"
+                        android:orientation="horizontal"
                         android:background="@color/entity_detail_content_background"
                         >
 
                         <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="ATTRIBUTE"
-                            android:textColor="@color/black_alpha_80"
-                            android:textStyle="bold"
-                            android:textSize="15sp"
+                            android:layout_width="0dp"
+                            android:layout_weight="1.1"
+                            android:layout_height="match_parent"
+                            android:textSize="16sp"
+                            android:textColor="@color/black"
+                            android:background="@color/entity_detail_subtitle_background"
+                            android:text="基础攻击力"
+                            android:padding="5dp"
+                            />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:textSize="16sp"
+                            android:textColor="@color/black"
+                            android:text="10000"
+                            android:padding="5dp"
+                            android:id="@+id/atk"
+                            android:gravity="center|start"
+                            />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1.5"
+                            android:layout_height="match_parent"
+                            android:textSize="16sp"
+                            android:textColor="@color/black"
+                            android:background="@color/entity_detail_subtitle_background"
+                            android:text="防御力"
+                            android:padding="5dp"
                             android:id="@+id/attribute"
                             />
 
                         <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="ATTRIBUTE VALUE"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:textSize="16sp"
                             android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:textSize="17sp"
+                            android:text="10000"
+                            android:padding="5dp"
                             android:id="@+id/attribute_value"
                             />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="基础攻击力"
-                            android:textColor="@color/black_alpha_80"
-                            android:textStyle="bold"
-                            android:textSize="17sp"
-                            android:layout_marginTop="3dp"
-                            />
-
-                        <TextView
-                            android:id="@+id/atk"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="ATTACK"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:textStyle="bold"
-                            />
-
                     </LinearLayout>
+
+
 
 
                 </LinearLayout>
@@ -518,7 +525,7 @@
                             android:layout_height="20dp"
                             android:src="@drawable/icon_information"
                             android:layout_gravity="end|center"
-                            android:layout_marginEnd="20dp"
+                            android:layout_marginEnd="12dp"
                             android:alpha="0.5"
                             android:id="@+id/information"
                             />

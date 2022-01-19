@@ -1,5 +1,8 @@
 package com.lianyi.paimonsnotebook.bean
 
+import com.lianyi.paimonsnotebook.bean.materials.DailyMaterial
+import com.lianyi.paimonsnotebook.bean.materials.MonsterMaterial
+
 /*
 * name 名称
 * weaponType 武器类型

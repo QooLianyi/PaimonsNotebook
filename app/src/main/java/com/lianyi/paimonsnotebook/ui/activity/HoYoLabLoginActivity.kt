@@ -5,11 +5,14 @@ import android.util.Log
 import android.webkit.*
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.bean.GetGameRolesByCookieBean
+import com.lianyi.paimonsnotebook.bean.account.UserBean
 import com.lianyi.paimonsnotebook.databinding.ActivityHoYoLabLoginBinding
 import com.lianyi.paimonsnotebook.lib.information.ActivityResponseCode
 import com.lianyi.paimonsnotebook.lib.information.Constants
+import com.lianyi.paimonsnotebook.lib.information.JsonCacheName
 import com.lianyi.paimonsnotebook.lib.information.MiHoYoApi
 import com.lianyi.paimonsnotebook.util.*
+import org.json.JSONArray
 
 class HoYoLabLoginActivity : BaseActivity() {
     lateinit var bind:ActivityHoYoLabLoginBinding
@@ -45,37 +48,70 @@ class HoYoLabLoginActivity : BaseActivity() {
                         cookieSplit.forEach {
                             val cookie = it.trim().split("=")
                             cookieMap += cookie.first().trim() to cookie.last().trim()
-                            println("first --> ${cookie.first()} last --> ${cookie.last()}")
                             when(cookie.first()){
                                 Constants.ACCOUNT_ID_NAME-> isLogin = true
                             }
                         }
 
-                        mainUser?.lToken = cookieMap[Constants.LTOKEN_NAME]?:""
-                        mainUser?.loginUid = cookieMap[Constants.LTUID_NAME]?:""
-                        mainUser?.cookieToken = cookieMap[Constants.COOKIE_TOKEN_NAME]?:""
-
                         //当登录完成时
-                        if(isLogin){
+                        if(isLogin && isAddUser){
+                            val cookie = "ltuid=${cookieMap[Constants.LTUID_NAME]?:""};ltoken=${cookieMap[Constants.LTOKEN_NAME]?:""};account_id=${cookieMap[Constants.ACCOUNT_ID_NAME]?:""};cookie_token=${cookieMap[Constants.COOKIE_TOKEN_NAME]?:""}"
+                            val userList = mutableListOf<UserBean>()
+                            Ok.get(MiHoYoApi.GET_GAME_ROLES_BY_COOKIE,cookie){
+                                if(it.ok){
+                                    val roles = GSON.fromJson(it.optString("data"),
+                                        GetGameRolesByCookieBean::class.java)
+                                    val userListArray = JSONArray(usp.getString(JsonCacheName.USER_LIST,"[]"))
+                                    userListArray.toList(userList)
+                                    with(roles.list.first()){
+                                        userList+= UserBean(
+                                            nickname,
+                                            cookieMap[Constants.LTUID_NAME]?:"",
+                                            region,
+                                            region_name,
+                                            game_uid,
+                                            cookieMap[Constants.LTOKEN_NAME]?:"",
+                                            cookieMap[Constants.COOKIE_TOKEN_NAME]?:"",
+                                            level
+                                        )
+                                    }
+                                }
+                                usp.edit().apply {
+                                    putString(JsonCacheName.USER_LIST,GSON.toJson(userList))
+                                    apply()
+                                }
+                                runOnUiThread {
+                                    cookieManager.removeAllCookies {
+                                        if(it){
+                                            cookieManager.flush()
+                                            setResult(ActivityResponseCode.OK)
+                                            finish()
+                                        }
+                                    }
+                                }
+                            }
+                        }else if(isLogin){
+                            mainUser?.lToken = cookieMap[Constants.LTOKEN_NAME]?:""
+                            mainUser?.loginUid = cookieMap[Constants.LTUID_NAME]?:""
+                            mainUser?.cookieToken = cookieMap[Constants.COOKIE_TOKEN_NAME]?:""
+
                             Ok.get(MiHoYoApi.GET_GAME_ROLES_BY_COOKIE){
                                 if(it.ok){
                                     val roles = GSON.fromJson(it.optString("data"),
                                         GetGameRolesByCookieBean::class.java)
-                                    if(isAddUser){
 
-                                    }else{
-                                        with(roles.list.first()){
-                                            mainUser?.gameLevel = level
-                                            mainUser?.nickName = nickname
-                                            mainUser?.region = region
-                                            mainUser?.regionName = region_name
-                                            mainUser?.gameUid = game_uid
-                                        }
+                                    with(roles.list.first()){
+                                        mainUser?.gameLevel = level
+                                        mainUser?.nickName = nickname
+                                        mainUser?.region = region
+                                        mainUser?.regionName = region_name
+                                        mainUser?.gameUid = game_uid
                                     }
 
-                                    val edit = usp.edit()
-                                    edit.putString(Constants.USP_MAIN_USER_NAME,GSON.toJson(mainUser))
-                                    edit.apply()
+                                    usp.edit().apply{
+                                        putString(JsonCacheName.MAIN_USER_NAME,GSON.toJson(mainUser))
+                                        apply()
+                                    }
 
                                     //请理Cookie
                                     runOnUiThread {
@@ -87,9 +123,6 @@ class HoYoLabLoginActivity : BaseActivity() {
                                             }
                                         }
                                     }
-                                }else{
-                                    println(it.toString())
-                                    Log.e("Lian::", "onPageFinished: 获取角色出错拉")
                                 }
                             }
                         }
@@ -98,4 +131,10 @@ class HoYoLabLoginActivity : BaseActivity() {
             }
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        isAddUser = false
+    }
+
 }

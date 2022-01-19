@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    >
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        app:cardElevation="0dp"
+        >
+        <FrameLayout
+            android:layout_width="50dp"
+            android:layout_height="72dp"
+            >
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="0.5dp"
+                >
+
+                <ImageView
+                    android:id="@+id/star_background"
+                    android:layout_width="52dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    />
+
+                <ImageView
+                    android:id="@+id/icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:orientation="horizontal"
+                android:background="#E9E5DC"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:text="LV."
+                    android:id="@+id/value_name"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:id="@+id/value"
+                    android:text="90"
+                    />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

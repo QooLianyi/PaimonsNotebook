@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    >
+
+    <com.lianyi.paimonsnotebook.view.AccountHorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:id="@+id/scroll_span"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <FrameLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="17dp"
+                    app:cardElevation="0dp"
+                    >
+                    <ImageView
+                        android:layout_width="54dp"
+                        android:layout_height="54dp"
+                        android:id="@+id/icon"
+                        />
+                </androidx.cardview.widget.CardView>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/pendant"
+                    />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="309dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:gravity="center_vertical"
+                    android:id="@+id/nick"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:id="@+id/game_uid"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:text="设为默认"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:background="@color/blue_02"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:id="@+id/set_default"
+                />
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:text="删除"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:background="@color/delete"
+                android:id="@+id/delete_account"
+                />
+
+        </LinearLayout>
+
+    </com.lianyi.paimonsnotebook.view.AccountHorizontalScrollView>
+
+</LinearLayout>

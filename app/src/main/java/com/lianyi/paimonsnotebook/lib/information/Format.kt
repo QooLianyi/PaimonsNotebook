@@ -1,5 +1,6 @@
 package com.lianyi.paimonsnotebook.lib.information
 
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
 class Format {
@@ -10,6 +11,9 @@ class Format {
         val TIME_DAY = SimpleDateFormat("d")
         val TIME_DAY_FULL = SimpleDateFormat("yyyy-MM-dd")
         val TIME_HOUR_MINUTE = SimpleDateFormat("HH:mm")
+
+        val DECIMALS_FORMAT = DecimalFormat("0.##")
+
 
         fun getResinRecoverTime(resinRecoverTime:Long):String{
             val todayLimitTime = TIME_DAY_FULL.format(System.currentTimeMillis())+" 23:59:59"

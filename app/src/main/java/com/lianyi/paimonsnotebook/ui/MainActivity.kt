@@ -1,17 +1,20 @@
 package com.lianyi.paimonsnotebook.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.core.view.forEach
 import androidx.core.view.get
+import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.lib.adapter.MainViewPager2Adapter
 import com.lianyi.paimonsnotebook.lib.adapter.NavigationViewSetupWithViewPager2
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.config.AppConfig
 import com.lianyi.paimonsnotebook.databinding.ActivityMainBinding
 import com.lianyi.paimonsnotebook.lib.information.PagerIndex
+import com.lianyi.paimonsnotebook.ui.activity.options.OptionsActivity
 import com.lianyi.paimonsnotebook.ui.home.*
-import com.lianyi.paimonsnotebook.ui.options.OptionsActivity
 import com.lianyi.paimonsnotebook.util.goA
 import com.lianyi.paimonsnotebook.util.openAndCloseAnimationHor
 import com.lianyi.paimonsnotebook.util.show
@@ -27,7 +30,6 @@ class MainActivity : BaseActivity(){
         super.onCreate(savedInstanceState)
         bind = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bind.root)
-
         initClickEvent()
         initView()
 
@@ -78,6 +80,35 @@ class MainActivity : BaseActivity(){
         bind.menuSwitch.setOnClickListener {
             bind.container.openDrawer(bind.navViewSpan)
         }
+
+        //侧边栏控制状态栏背景颜色
+        var num1 = 0f
+        var num2 = 0f
+        bind.container.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                if(num1==num2){
+                    num1 = slideOffset
+                }else{
+                    if(num1>num2){
+                        window.statusBarColor = getColor(R.color.menu_background_color)
+
+                    }else if(slideOffset==0f){
+                        window.statusBarColor = getColor(R.color.white)
+                    }
+                    num2 = num1
+                    num1 = slideOffset
+                }
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+            }
+
+            override fun onDrawerStateChanged(newState: Int) {
+            }
+        })
 
         //菜单详情切换
         bind.menuDetail.setOnClickListener {

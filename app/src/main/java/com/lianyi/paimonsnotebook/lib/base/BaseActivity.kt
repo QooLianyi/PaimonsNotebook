@@ -15,17 +15,21 @@ open class BaseActivity:AppCompatActivity(),CustomAdapt {
         super.onCreate(savedInstanceState)
 
         //隐藏状态栏
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.R){
-            window.setDecorFitsSystemWindows(false)
-            window.insetsController?.let {
-                it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-                it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            }
-        }else{
-            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        }
-
-
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            window.apply {
+//                setDecorFitsSystemWindows(false)
+//                attributes.apply {
+//                    layoutInDisplayCutoutMode =
+//                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT
+//                }
+//            }
+//            window.insetsController?.let {
+//                it.hide(WindowInsets.Type.statusBars())
+//                it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+//            }
+//        } else {
+//            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+//        }
     }
 
     override fun isBaseOnWidth(): Boolean {

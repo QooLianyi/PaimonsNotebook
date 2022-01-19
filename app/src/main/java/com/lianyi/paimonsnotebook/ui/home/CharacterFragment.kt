@@ -10,16 +10,13 @@ import com.lianyi.paimonsnotebook.databinding.FragmentCharacterBinding
 import com.lianyi.paimonsnotebook.databinding.ItemEntityBinding
 import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
 import com.lianyi.paimonsnotebook.lib.information.Element
-import com.lianyi.paimonsnotebook.lib.information.JsonCacheName
 import com.lianyi.paimonsnotebook.lib.information.Star
 import com.lianyi.paimonsnotebook.lib.information.WeaponType
 import com.lianyi.paimonsnotebook.util.*
-import org.json.JSONArray
 
 class CharacterFragment : BaseFragment(R.layout.fragment_character) {
 
     lateinit var bind: FragmentCharacterBinding
-    private val characterList = mutableListOf<CharacterBean>()
     private val characterShowList = mutableListOf<CharacterBean>()
     //选择的属性和装备类型
     private val selectProperty = mutableListOf<Int>()
@@ -29,13 +26,9 @@ class CharacterFragment : BaseFragment(R.layout.fragment_character) {
         super.onViewCreated(view, savedInstanceState)
         bind = FragmentCharacterBinding.bind(view)
 
-        val characterJsonArray = JSONArray(csp.getString(JsonCacheName.CHARACTER_LIST,"")!!)
-
-        characterJsonArray.toList(characterList)
-        characterList.forEach {
-            characterShowList += it
+        CharacterBean.characterList.forEach {
+            characterShowList+=it
         }
-
         //根据星级排序
         characterShowList.sortByDescending { it.star }
 
@@ -53,15 +46,13 @@ class CharacterFragment : BaseFragment(R.layout.fragment_character) {
                 activity?.overridePendingTransition(R.anim.activity_fade_in,R.anim.activity_fade_out)
             }
         }
-
         initSelect()
-
     }
 
     //筛选
     private fun notificationUpdate(){
         characterShowList.clear()
-        characterList.forEach {  entity->
+        CharacterBean.characterList.forEach { entity->
             selectProperty.forEach { property->
                 if(entity.element==property)
                     characterShowList += entity
@@ -83,7 +74,7 @@ class CharacterFragment : BaseFragment(R.layout.fragment_character) {
         }
     }
 
-    fun initSelect(){
+    private fun initSelect(){
 
         with(bind){
 

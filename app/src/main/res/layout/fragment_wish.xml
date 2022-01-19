@@ -63,13 +63,31 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             >
-            <Spinner
-                android:layout_width="120dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                android:id="@+id/wish_drop_down"
-                android:gravity="center"
-                />
+                android:orientation="horizontal"
+                android:id="@+id/select_account_span"
+                >
+                <Spinner
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/select_account"
+                    android:layout_marginStart="50dp"
+                    android:background="@color/white"
+                    android:layout_gravity="center_vertical"
+                    android:spinnerMode="dropdown"
+                    android:gravity="center"
+                    />
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/icon_drop_down"
+                    android:layout_gravity="center_vertical"
+                    app:tint="@color/menu_un_select_color"
+                    />
+            </LinearLayout>
+
             <com.google.android.material.tabs.TabLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

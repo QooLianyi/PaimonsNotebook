@@ -20,14 +20,7 @@ fun getSignDS(salt:String):String{
 
 
 fun getRS():String{
-    val rsKey = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    val rs = java.lang.StringBuilder()
-
-    (0..5).forEach {
-        rs.append(rsKey.random())
-    }
-
-    return rs.toString()
+    return (100000..200000).random().toString()
 }
 
 

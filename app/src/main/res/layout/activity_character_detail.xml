@@ -11,7 +11,6 @@
     android:background="@color/white"
     tools:context=".ui.activity.CharacterDetailActivity">
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -437,7 +436,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="25dp"
                             android:layout_margin="2dp"
-                            android:text="技能升级材料"
+                            android:text="角色养成材料"
                             android:textSize="16sp"
                             android:gravity="center"
                             android:textColor="@color/black"
@@ -473,7 +472,7 @@
                             android:layout_height="20dp"
                             android:src="@drawable/icon_information"
                             android:layout_gravity="end|center"
-                            android:layout_marginEnd="20dp"
+                            android:layout_marginEnd="12dp"
                             android:alpha="0.5"
                             android:id="@+id/information"
                             />

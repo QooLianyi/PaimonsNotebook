@@ -5,11 +5,13 @@ import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.bean.CharacterBean
 import com.lianyi.paimonsnotebook.databinding.ActivityCharacterDetailBinding
+import com.lianyi.paimonsnotebook.databinding.PopInformationBinding
 import com.lianyi.paimonsnotebook.lib.information.Area
 import com.lianyi.paimonsnotebook.lib.information.Element
 import com.lianyi.paimonsnotebook.lib.information.Star
 import com.lianyi.paimonsnotebook.lib.information.WeaponType
 import com.lianyi.paimonsnotebook.util.loadImage
+import com.lianyi.paimonsnotebook.util.showAlertDialog
 
 class CharacterDetailActivity : BaseActivity() {
 
@@ -46,6 +48,16 @@ class CharacterDetailActivity : BaseActivity() {
             Star.setStarBackgroundAndIcon(weeklyMaterial, character.weeklyMaterials.icon, character.weeklyMaterials.star)
 
         }
+
+        bind.information.setOnClickListener {
+            val layout = PopInformationBinding.bind(layoutInflater.inflate(R.layout.pop_information,null))
+            val win = showAlertDialog(bind.root.context,layout.root)
+            layout.content.text = getString(R.string.information_entity_materials)
+            layout.close.setOnClickListener {
+                win.dismiss()
+            }
+        }
+
     }
 
     override fun onBackPressed() {

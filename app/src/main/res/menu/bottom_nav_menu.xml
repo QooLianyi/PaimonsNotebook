@@ -21,7 +21,7 @@
 
     <item
         android:id="@+id/menu_character"
-        android:icon="@drawable/icon_menu_character_boy"
+        android:icon="@drawable/icon_menu_character"
         android:title="角色"
         />
 

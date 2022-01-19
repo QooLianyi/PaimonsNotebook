@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.SearchFragment">
+    tools:context=".ui.home.SearchFragment"
+    android:background="@color/white"
+    android:gravity="center"
+    >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <SearchView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/search_view_background"
+        android:id="@+id/search"
+        android:inputType="numberDecimal"
+        android:focusable="true"
+        android:queryHint="键入UID以查询"
+        />
 
-</FrameLayout>
+</LinearLayout>

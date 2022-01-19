@@ -17,7 +17,7 @@ class AppConfig {
         const val OFF_SCREEN_PAGE_LIMIT = 8
 
         //APP初始化所需步骤次数 便笺 banner数据更新 blackBoard数据更新 json数据完整性检查
-        const val APP_INIT_COUNT = 4
+        const val APP_INIT_COUNT = 3
 
         //点击间隔多少毫秒内退出app
         const val PRESS_BACK_INTERVAL = 1000L
@@ -28,8 +28,12 @@ class AppConfig {
         const val MENU_END_WIDTH = 40
 
 
+        //账号最大数量
+        const val MAX_ACCOUNT_NUM = 10
+
         //抽卡记录每页导出间隔
         const val LOAD_GACHA_HISTORY_INTERVAL = 1000L
+
     }
 
 }

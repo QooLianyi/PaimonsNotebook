@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context=".ui.options.OptionsActivity"
+    tools:context=".ui.activity.options.OptionsActivity"
     >
 
     <ScrollView
@@ -167,7 +167,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
                             android:textColor="@color/black"
-                            android:text="0000-00-00 00:00:00"
+                            android:text="无"
                             android:id="@+id/get_json_time"
                             />
                     </LinearLayout>

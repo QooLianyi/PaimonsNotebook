@@ -1,5 +1,10 @@
 package com.lianyi.paimonsnotebook.lib.information
 
+import android.graphics.Color
+import androidx.core.content.ContextCompat
+import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.util.PaiMonsNoteBook
+
 class Constants {
     companion object{
         //每日签到用的SALT
@@ -19,6 +24,9 @@ class Constants {
         const val SP_DAILY_NOTE_NAME = "daily_note"
         //缓存本月原石数据
         const val SP_MONTH_LEDGER_NAME = "month_ledger"
+        //缓存本地数据同步时间
+        const val LOCAL_JSON_DATA_UPDATE_TIME_NAME = "local_json_data_update_time"
+
 
         //用户信息缓存
         const val USP_NAME = "user_info"
@@ -26,9 +34,10 @@ class Constants {
         const val CSP_NAME = "character_info"
         //游戏武器信息缓存
         const val WSP_NAME ="weapon_info"
+        //玩家抽卡记录缓存 需要加上对应游戏uid来获取
+        const val GSP_NAME = "wish_history"
 
-        const val USP_MAIN_USER_NAME = "main_user"
-        const val USP_USER_LIST_NAME = "user_list"
+
 
         const val STOKEN_NAME = ""
         const val ITOKEN_NAME = ""
@@ -42,8 +51,39 @@ class Constants {
         const val DAILY_TASK_STATE_NOT_FINISHED = "「每日委托」奖励还未领取"
         const val DAILY_TASK_STATE_FINISHED = "「每日委托」奖励已领取"
 
-
         //替换占位符
         const val REPLACE_PLACEHOLDER = "#(*PLACEHOLDER!!)"
+
+
+
+
+        //旅行者札记饼图颜色
+        val monthLegendColors = listOf(
+            ContextCompat.getColor(PaiMonsNoteBook.context, R.color.abyss_fill),
+            ContextCompat.getColor(PaiMonsNoteBook.context, R.color.daily_fill),
+            ContextCompat.getColor(PaiMonsNoteBook.context, R.color.event_fill),
+            ContextCompat.getColor(PaiMonsNoteBook.context, R.color.mail_fill),
+            ContextCompat.getColor(PaiMonsNoteBook.context, R.color.adventure_fill),
+            ContextCompat.getColor(PaiMonsNoteBook.context, R.color.task_fill),
+            ContextCompat.getColor(PaiMonsNoteBook.context, R.color.other_fill)
+        )
+
+        val GACHA_HISTORY_5_STAR_CHARACTER_COLOR =  Color.parseColor("#F3A75B")
+        val GACHA_HISTORY_5_STAR_WEAPON_COLOR =  Color.parseColor("#D56C6C")
+        val GACHA_HISTORY_4_STAR_CHARACTER_COLOR =  Color.parseColor("#A962FA")
+        val GACHA_HISTORY_4_STAR_WEAPON_COLOR =  Color.parseColor("#665CF1")
+
+        val gachaHistoryColors = listOf(
+            Color.parseColor("#F3A75B"),
+            Color.parseColor("#A962FA"),
+            Color.parseColor("#665CF1"),
+            Color.parseColor("#496CEE")
+        )
+
+
+        val colorList = listOf<String>("#F3A75B",
+            "#A962FA",
+            "#665CF1",
+            "#496CEE")
     }
 }

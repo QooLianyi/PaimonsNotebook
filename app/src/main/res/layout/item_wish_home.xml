@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="3dp"
+        android:layout_margin="10dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:clipChildren="false"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="22sp"
+                    android:text="蛋池名称"
+                    android:textColor="@color/black"
+                    android:id="@+id/gacha_name"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/pie"
+                android:padding="10dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black_alpha_70"
+                android:layout_marginTop="5dp"
+                android:text="2020-2-1 ~ 2020-2-2"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:id="@+id/time"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/black_alpha_70"
+                    android:text="共 "
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/blue_01"
+                    android:text="100000"
+                    android:textSize="16sp"
+                    android:id="@+id/gacha_count"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/black_alpha_70"
+                    android:text=" 抽"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="3dp"
+                android:gravity="center_vertical"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/black_alpha_70"
+                    android:text="已累计 "
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/blue_01"
+                    android:text="77"
+                    android:textSize="16sp"
+                    android:id="@+id/not_get_of_count"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/black_alpha_70"
+                    android:text=" 抽未出五星"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="3dp"
+                android:gravity="center_vertical"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/black_alpha_70"
+                    android:text="平均 "
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/blue_01"
+                    android:text="77"
+                    android:textSize="16sp"
+                    android:id="@+id/avg_get_5_star_count"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/black_alpha_70"
+                    android:text=" 抽一个五星"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:clipChildren="false"
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="五星:"
+                            android:textColor="@color/gacha_history_star_5_color"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/gacha_history_star_5_color"
+                            android:text="99"
+                            android:textSize="16sp"
+                            android:paddingStart="10dp"
+                            android:id="@+id/star_5_count"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="2dp"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/gacha_history_star_4_color"
+                            android:text="四星:"
+                            android:textSize="16sp"
+                            />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/gacha_history_star_4_color"
+                            android:text="999"
+                            android:textSize="16sp"
+                            android:paddingStart="10dp"
+                            android:id="@+id/star_4_count"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="2dp"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/gacha_history_star_3_color"
+                            android:text="三星:"
+                            android:textSize="16sp"
+                            />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/gacha_history_star_3_color"
+                            android:text="99999"
+                            android:textSize="16sp"
+                            android:paddingStart="10dp"
+                            android:id="@+id/star_3_count"
+                            />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="10dp"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/gacha_history_star_5_color"
+                            android:text="["
+                            android:textSize="16sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/star_5_percent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="100"
+                            android:textColor="@color/gacha_history_star_5_color"
+                            android:textSize="16sp" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/gacha_history_star_5_color"
+                            android:text="%]"
+                            android:textSize="16sp"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="2dp"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/gacha_history_star_4_color"
+                            android:text="["
+                            android:textSize="16sp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/gacha_history_star_4_color"
+                            android:text="100"
+                            android:textSize="16sp"
+                            android:id="@+id/star_4_percent"
+                            />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/gacha_history_star_4_color"
+                            android:text="%]"
+                            android:textSize="16sp"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="2dp"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/gacha_history_star_3_color"
+                            android:text="["
+                            android:textSize="16sp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/gacha_history_star_3_color"
+                            android:text="100"
+                            android:textSize="16sp"
+                            android:id="@+id/star_3_percent"
+                            />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/gacha_history_star_3_color"
+                            android:text="%]"
+                            android:textSize="16sp"
+                            />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="16sp"
+                android:text="五星历史记录:"
+                android:id="@+id/history"
+                />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+</LinearLayout>

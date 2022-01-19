@@ -2,12 +2,11 @@ package com.lianyi.paimonsnotebook.ui.home
 
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.lib.base.BaseFragment
 import com.lianyi.paimonsnotebook.bean.CharacterBean
-import com.lianyi.paimonsnotebook.bean.DailyMaterial
+import com.lianyi.paimonsnotebook.bean.materials.DailyMaterial
 import com.lianyi.paimonsnotebook.bean.WeaponBean
 import com.lianyi.paimonsnotebook.databinding.*
 import com.lianyi.paimonsnotebook.lib.adapter.PagerAdapter
@@ -24,11 +23,11 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
 
     private val allCharacter = mutableListOf<CharacterBean>()
     private val characterList = mutableListOf<CharacterBean>()
-    private var characterGroup = mutableListOf<Pair<String,List<CharacterBean>>>()
+    private var characterGroup = mutableListOf<Pair<String, List<Pair<String, List<CharacterBean>>>>>()
 
     private val allWeapon = mutableListOf<WeaponBean>()
     private val weaponList = mutableListOf<WeaponBean>()
-    private var weaponGroup = mutableListOf<Pair<String,List<WeaponBean>>>()
+    private var weaponGroup = mutableListOf<Pair<String, List<Pair<String, List<WeaponBean>>>>>()
 
     //判断星期是否发生改变
     private var isChange = true
@@ -52,18 +51,16 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
 
         //星期选择
         val week = resources.getStringArray(R.array.week)
-        val adapter = ArrayAdapter(bind.root.context,R.layout.item_text,week)
-        adapter.setDropDownViewResource(R.layout.spinner_drop_down_style)
-        bind.weekSelect.adapter = adapter
-        bind.weekSelect.onItemSelectedListener = object :AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                isChange = true
-                loadCharacter(pages[0])
-                loadWeapon(pages[1])
-                isChange = false
-            }
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-            }
+        bind.weekSelect.adapter = ArrayAdapter(bind.root.context,R.layout.item_text,week).apply {
+            setDropDownViewResource(R.layout.spinner_drop_down_style)
+        }
+        bind.weekSelect.dropDownVerticalOffset = 28.dp.toInt()
+        bind.weekSelect.dropDownHorizontalOffset = -8.dp.toInt()
+        bind.weekSelect.select { _: Int, _: Long ->
+            isChange = true
+            loadCharacter(pages[0])
+            loadWeapon(pages[1])
+            isChange = false
         }
         //进入时星期设置为当前的日期
         bind.weekSelect.setSelection(Format.getWeekByName(Format.TIME_WEEK.format(System.currentTimeMillis())))
@@ -86,7 +83,6 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
 
     //加载角色
     private fun loadCharacter(view:View){
-
         if(isChange){
             val page = PagerDailyMaterialsBinding.bind(view)
             characterList.clear()
@@ -100,33 +96,39 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
                 }
             }
             characterGroup.clear()
-            characterList.groupBy { it.dailyMaterials.key }.toList().forEach {
-                characterGroup.add(it)
+            //根据材料的地区进行第一次分组 分出地区
+            characterList.groupBy { it.dailyMaterials.area }.toList().forEach { area->
+                //根据地区的每个角色的每日材料的KEY继续分出每种材料
+                characterGroup.add(area.first to area.second.groupBy { it.dailyMaterials.key }.toList())
             }
 
             if(page.list.adapter==null){
                 page.pagerName.text = "天赋培养"
-                page.list.adapter = ReAdapter(characterGroup,R.layout.item_entity_group){
+                page.list.adapter = ReAdapter(characterGroup,R.layout.item_materials_group){
                         view, pair, position ->
-                    val item = ItemEntityGroupBinding.bind(view)
-                    item.materialsName.text = pair.second.first().dailyMaterials.name
-                    loadImage(item.dailyMaterial,pair.second.first().dailyMaterials.icon)
+                    val materialsItem = ItemMaterialsGroupBinding.bind(view)
+                    materialsItem.name.text = Area.getNameByArea(pair.first)
 
-                    item.list.adapter = ReAdapter(pair.second,R.layout.item_entity){
-                            view, characterBean, position ->
-                        val characterItem = ItemEntityBinding.bind(view)
-                        characterItem.starBackground.setImageResource(Star.getStarResourcesByStarNum(characterBean.star,false))
-                        characterItem.type.setImageResource(Element.getImageResourceByType(characterBean.element))
-                        characterItem.name.text = characterBean.name
-                        loadImage(characterItem.icon,characterBean.icon)
+                    materialsItem.list.adapter = ReAdapter(pair.second,R.layout.item_entity_group){
+                        view, pair, position ->
+                        val item = ItemEntityGroupBinding.bind(view)
+                        item.materialsName.text = pair.second.first().dailyMaterials.name
+                        loadImage(item.dailyMaterial,pair.second.first().dailyMaterials.icon)
 
-                        characterItem.root.setOnClickListener {
-                            CharacterDetailActivity.character = characterBean
-                            goA<CharacterDetailActivity>()
+                        item.list.adapter = ReAdapter(pair.second,R.layout.item_entity){
+                                view, characterBean, position ->
+                            val characterItem = ItemEntityBinding.bind(view)
+                            characterItem.starBackground.setImageResource(Star.getStarResourcesByStarNum(characterBean.star,false))
+                            characterItem.type.setImageResource(Element.getImageResourceByType(characterBean.element))
+                            characterItem.name.text = characterBean.name
+                            loadImage(characterItem.icon,characterBean.icon)
+
+                            characterItem.root.setOnClickListener {
+                                CharacterDetailActivity.character = characterBean
+                                goA<CharacterDetailActivity>()
+                            }
                         }
-
                     }
-
                 }
             }else{
                 page.list.adapter?.notifyDataSetChanged()
@@ -136,7 +138,6 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
 
     //加载武器
     private fun loadWeapon(view: View){
-
         if(isChange){
             val page = PagerDailyMaterialsBinding.bind(view)
 
@@ -150,29 +151,35 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
                 }
             }
             weaponGroup.clear()
-            weaponList.groupBy { it.dailyMaterials.key }.toList().forEach {
-                weaponGroup.add(it)
+            weaponList.groupBy { it.dailyMaterials.area }.toList().forEach { area->
+                weaponGroup.add(area.first to area.second.groupBy { it.dailyMaterials.key }.toList())
             }
 
             if(page.list.adapter==null){
                 page.pagerName.text = "武器突破"
-                page.list.adapter = ReAdapter(weaponGroup,R.layout.item_entity_group){
+
+                page.list.adapter = ReAdapter(weaponGroup,R.layout.item_materials_group){
+                    view, pair, position ->
+                    val materialItems = ItemMaterialsGroupBinding.bind(view)
+                    materialItems.name.text = Area.getNameByArea(pair.first)
+
+                    materialItems.list.adapter = ReAdapter(pair.second,R.layout.item_entity_group){
                         view, pair, position ->
-                    val item = ItemEntityGroupBinding.bind(view)
-                    item.materialsName.text = pair.second.first().dailyMaterials.name
-                    loadImage(item.dailyMaterial,pair.second.first().dailyMaterials.icon)
+                        val entityItem = ItemEntityGroupBinding.bind(view)
+                        entityItem.materialsName.text = pair.second.first().dailyMaterials.name
+                        loadImage(entityItem.dailyMaterial,pair.second.first().dailyMaterials.icon)
 
-                    item.list.adapter = ReAdapter(pair.second,R.layout.item_entity){
-                            view, weaponBean, position ->
-                        val weaponItem = ItemEntityBinding.bind(view)
-                        weaponItem.starBackground.setImageResource(Star.getStarResourcesByStarNum(weaponBean.star,false))
-                        weaponItem.type.setImageResource(WeaponType.getResourceByType(weaponBean.weaponType))
-                        weaponItem.name.text = weaponBean.name
-                        loadImage(weaponItem.icon,weaponBean.icon)
-
-                        weaponItem.root.setOnClickListener {
-                            WeaponDetailActivity.weapon = weaponBean
-                            goA<WeaponDetailActivity>()
+                        entityItem.list.adapter = ReAdapter(pair.second,R.layout.item_entity){
+                                view: View, weaponBean: WeaponBean, i: Int ->
+                            val weaponItem = ItemEntityBinding.bind(view)
+                            weaponItem.starBackground.setImageResource(Star.getStarResourcesByStarNum(weaponBean.star,false))
+                            weaponItem.type.setImageResource(WeaponType.getResourceByType(weaponBean.weaponType))
+                            weaponItem.name.text = weaponBean.name
+                            loadImage(weaponItem.icon,weaponBean.icon)
+                            weaponItem.root.setOnClickListener {
+                                WeaponDetailActivity.weapon = weaponBean
+                                goA<WeaponDetailActivity>()
+                            }
                         }
                     }
                 }
@@ -180,87 +187,5 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
                 page.list.adapter?.notifyDataSetChanged()
             }
         }
-
     }
-
-    //加载物品列表
-//    private fun loadItemList(list:RecyclerView, kind:String, type:String){
-//        val currentItemList = mutableListOf<BlackBoardBean.DataBean.ListBean>()
-//        val blackBoard = GSON.fromJson(sp.getString(JsonCacheName.BLACK_BOARD,""),BlackBoardBean::class.java)
-//        if(blackBoard !=null) {
-//            blackBoard.data.list.forEach { bean ->
-//                if (bean.kind == kind && bean.break_type == type) {
-//                    bean.drop_day.forEach {
-//                        if (it == "${bind.weekSelect.selectedItemPosition + 1}") {
-//                            currentItemList += bean
-//                        }
-//                    }
-//                }
-//            }
-//
-//            //根据材料进行分组
-//            val group = currentItemList.groupBy { it.contentInfos.last()}
-//
-//            activity?.runOnUiThread {
-//                list.adapter = ReAdapter(group.toList(),R.layout.item_entity_group){
-//                    view, pair, position ->
-//                    val groupItem = ItemEntityGroupBinding.bind(view)
-//                    groupItem.materialsName.text = pair.first.title.substring("「","」")
-//
-//                    //材料列表
-//                    groupItem.materialsList.adapter = ReAdapter(pair.second.first().contentInfos,R.layout.item_material){
-//                        view, contentInfosBean, _ ->
-//                        val materialItem = ItemMaterialBinding.bind(view)
-//                        loadImage(materialItem.icon,contentInfosBean.icon)
-//                    }
-//
-//                    groupItem.list.adapter = ReAdapter(pair.second,R.layout.item_entity){
-//                            view, listBean, _ ->
-//                        val item = ItemEntityBinding.bind(view)
-//                        loadImage(item.icon,listBean.img_url)
-//                        item.name.text = listBean.title
-//
-//                        item.root.setOnClickListener {
-//                            val layout = PopMaterialsDetailBinding.bind(layoutInflater.inflate(R.layout.pop_materials_detail,null))
-//                            val win = AlertDialog.Builder(it.context)
-//                                .setView(layout.root)
-//                                .create()
-//                            val materials = mutableListOf<BlackBoardBean.DataBean.ListBean.ContentInfosBean>()
-//                            layout.name.text = listBean.title
-//                            listBean.contentInfos.forEach {
-//                                materials += it
-//                            }
-//                            //设置适配器
-//                            layout.list.adapter = ReAdapter(materials,R.layout.item_material_with_text_background){
-//                                    view, contentInfosBean, position ->
-//                                val ma = ItemMaterialWithTextBackgroundBinding.bind(view)
-//                                loadImage(ma.icon,contentInfosBean.icon)
-//                                ma.name.text = contentInfosBean.title
-//                            }
-//
-//                            //取消dialog自带的背景
-//                            win.window?.setBackgroundDrawableResource(R.color.transparent)
-//                            //设置左右两边的间隔
-//                            win.window?.decorView?.setPadding(10.dp.toInt(),0,10.dp.toInt(),0)
-//                            win.window?.setLayout(resources.displayMetrics.widthPixels-20.dp.toInt(),ViewGroup.LayoutParams.WRAP_CONTENT)
-//                            win.show()
-//
-//                            layout.close.setOnClickListener {
-//                                win.cancel()
-//                            }
-//                        }
-//                    }
-//
-//                }
-//
-//            }
-//        }else{
-//            RefreshData.getBlackBoard {
-//                activity?.runOnUiThread {
-//                    getString(R.string.error_black_board_is_empty).showLong()
-//                }
-//            }
-//        }
-//    }
-
 }

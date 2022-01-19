@@ -3,6 +3,8 @@ package com.lianyi.paimonsnotebook.ui
 import android.content.Intent
 import android.os.Bundle
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.bean.CharacterBean
+import com.lianyi.paimonsnotebook.bean.WeaponBean
 import com.lianyi.paimonsnotebook.ui.activity.HoYoLabLoginActivity
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.config.AppConfig
@@ -10,6 +12,8 @@ import com.lianyi.paimonsnotebook.lib.data.RefreshData
 import com.lianyi.paimonsnotebook.lib.information.ActivityResponseCode
 import com.lianyi.paimonsnotebook.lib.information.JsonCacheName
 import com.lianyi.paimonsnotebook.util.*
+import org.json.JSONArray
+import java.nio.charset.Charset
 
 class LoadingActivity : BaseActivity() {
 
@@ -18,15 +22,14 @@ class LoadingActivity : BaseActivity() {
     private var failedInitCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loading)
+        super.onCreate(savedInstanceState)
 
         //判断是否有账号是处于登录状态
-        if(mainUser?.isNotLogin()==true){
+        if (mainUser?.isNotLogin() == true) {
             goLogin()
-        }else{
+        } else {
             initInfo()
-            goA<MainActivity>()
         }
     }
 
@@ -42,12 +45,49 @@ class LoadingActivity : BaseActivity() {
             checkInitStatus()
         }
 
-        RefreshData.getBlackBoard {
-            if(it){
-                successInitCount++
-            }else{
-                failedInitCount++
+//        RefreshData.getBlackBoard {
+//            if(it){
+//                successInitCount++
+//            }else{
+//                failedInitCount++
+//            }
+//            checkInitStatus()
+//        }
+
+        if(sp.getString(JsonCacheName.WEAPON_LIST,"").isNullOrEmpty()||sp.getString(JsonCacheName.CHARACTER_LIST,"").isNullOrEmpty()){
+//            RefreshData.getJsonData {
+//                if(it){
+//                    successInitCount++
+//                }else{
+//                    failedInitCount++
+//                }
+//                checkInitStatus()
+//            }
+            val characterText = resources.assets.open("CharacterList")
+            val characterBuff =ByteArray(characterText.available())
+            characterText.read(characterBuff)
+            characterText.close()
+            val characterList = mutableListOf<CharacterBean>()
+            JSONArray(String(characterBuff, Charset.defaultCharset())).toList(characterList)
+            csp.edit().apply{
+                putString(JsonCacheName.CHARACTER_LIST,GSON.toJson(characterList))
+                apply()
             }
+
+            val weaponText = resources.assets.open("WeaponList")
+            val weaponBuff =ByteArray(weaponText.available())
+            weaponText.read(weaponBuff)
+            weaponText.close()
+            val weaponList = mutableListOf<WeaponBean>()
+            JSONArray(String(weaponBuff, Charset.defaultCharset())).toList(weaponList)
+            wsp.edit().apply{
+                putString(JsonCacheName.WEAPON_LIST,GSON.toJson(weaponList))
+                apply()
+            }
+            successInitCount++
+            checkInitStatus()
+        }else{
+            successInitCount++
             checkInitStatus()
         }
 
@@ -57,22 +97,6 @@ class LoadingActivity : BaseActivity() {
             }else{
                 failedInitCount++
             }
-            checkInitStatus()
-        }
-
-        if(wsp.getString(JsonCacheName.WEAPON_LIST,"").isNullOrEmpty()||csp.getString(JsonCacheName.CHARACTER_LIST,"").isNullOrEmpty()){
-            RefreshData.getJsonData {
-                runOnUiThread {
-                    if(it){
-                        successInitCount++
-                    }else{
-                        failedInitCount++
-                    }
-                    checkInitStatus()
-                }
-            }
-        }else{
-            successInitCount++
             checkInitStatus()
         }
 

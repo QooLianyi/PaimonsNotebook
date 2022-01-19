@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.LoadingGachaWishHistoryActivity"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        >
+        <include layout="@layout/pop_loading"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/loading"
+            android:layout_margin="5dp"
+            />
+    </androidx.cardview.widget.CardView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <ImageView
+            android:layout_width="400dp"
+            android:layout_height="400dp"
+            android:src="@drawable/icon_text_background_02"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black_alpha_40"
+            android:textSize="20sp"
+            android:text="加载进度"
+            android:layout_marginTop="70dp"
+            android:layout_marginStart="155dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="50dp"
+            android:paddingEnd="0dp"
+            android:paddingTop="130dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="@color/black_alpha_40"
+                    android:text="新手祈愿"
+                    android:layout_gravity="center"
+                    />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/icon_complete_01"
+                    android:layout_marginStart="5dp"
+                    android:id="@+id/new_player_ok"
+                    android:visibility="gone"
+                    />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="3dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="@color/black_alpha_40"
+                    android:text="常驻祈愿"
+                    android:layout_gravity="center"
+                    />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/icon_complete_01"
+                    android:layout_marginStart="5dp"
+                    android:id="@+id/permanent_ok"
+                    android:visibility="gone"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="3dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="@color/black_alpha_40"
+                    android:text="角色活动祈愿"
+                    android:layout_gravity="center"
+                    />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/icon_complete_01"
+                    android:layout_marginStart="5dp"
+                    android:id="@+id/character_ok"
+                    android:visibility="gone"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="3dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="@color/black_alpha_40"
+                    android:text="武器活动祈愿"
+                    android:layout_gravity="center"
+                    />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/icon_complete_01"
+                    android:layout_marginStart="5dp"
+                    android:id="@+id/weapon_ok"
+                    android:visibility="gone"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,7 +1,7 @@
 package com.lianyi.paimonsnotebook.util
 
 import com.google.gson.Gson
-import com.lianyi.paimonsnotebook.bean.UserBean
+import com.lianyi.paimonsnotebook.bean.account.UserBean
 import com.lianyi.paimonsnotebook.lib.information.Constants
 import com.lianyi.paimonsnotebook.lib.information.MiHoYoApi
 import com.lianyi.paimonsnotebook.lib.information.ResponseCode
@@ -17,7 +17,7 @@ class Ok {
         }
 
         //通用请求
-        val client by lazy {
+        private val client by lazy {
             OkHttpClient.Builder().addInterceptor {
                 val request = it.request().newBuilder()
                 val cookie = "ltuid=${mainUser?.loginUid};ltoken=${mainUser?.lToken};account_id=${mainUser?.loginUid};cookie_token=${mainUser?.cookieToken}"
@@ -29,13 +29,17 @@ class Ok {
             }.build()
         }
 
+        private val clientC by lazy{
+            OkHttpClient()
+        }
+
         //通用请求
         fun get(url:String,block: (JSONObject) -> Unit){
             val request = Request.Builder().get().url(url).build()
             client.newCall(request).enqueue(MyCallBack(block))
         }
 
-        //签到请求
+        //每日签到
         fun dailySign(user: UserBean, block: (JSONObject) -> Unit){
             val toRequestBody = """
                 {
@@ -51,14 +55,55 @@ class Ok {
                 .addHeader("x-rpc-device_id","c27b1ee7-54c2-3eaf-bfb1-8a2c4dd64939")
                 .addHeader("Cookie","account_id=${user.loginUid};cookie_token=${user.cookieToken};")
                 .build()
+            block(JSONObject(clientC.newCall(request).execute().body?.string()?:""))
+        }
 
-            OkHttpClient().newCall(request).enqueue(MyCallBack(block))
+        fun get(url:String,cookie:String,block: (JSONObject) -> Unit){
+            val request = Request.Builder()
+                .get()
+                .url(url)
+                .addHeader("Cookie",cookie)
+                .build()
+            clientC.newCall(request).enqueue(MyCallBack(block))
+        }
+
+        fun get(url:String,user: UserBean,block: (JSONObject) -> Unit){
+            val request = Request.Builder()
+                .get()
+                .url(url)
+                .addHeader("Cookie",MiHoYoApi.getCookie(user))
+                .build()
+            clientC.newCall(request).enqueue(MyCallBack(block))
         }
 
         //获取抽卡记录请求 (同步)
         fun getGachaHistory(url: String,block: (JSONObject) -> Unit){
             val request = Request.Builder().get().url(url).build()
             block(JSONObject(client.newCall(request).execute().body?.string()?:""))
+        }
+
+        fun getCharacter(cookie: String,body:String,requestBody: RequestBody,block: (JSONObject) -> Unit){
+            val request = Request.Builder()
+                .post(requestBody)
+                .url(MiHoYoApi.GET_CHARACTER_LIST_DETAIL)
+                .addHeader("x-rpc-app_version",Constants.APP_VERSION)
+                .addHeader("DS", getDS("",body))
+                .addHeader("x-rpc-client_type","5")
+                .addHeader("Cookie",cookie)
+                .build()
+            clientC.newCall(request).enqueue(MyCallBack(block))
+        }
+
+        fun getAbyss(cookie: String,query:String,block: (JSONObject) -> Unit){
+            val request = Request.Builder()
+                .get()
+                .url(MiHoYoApi.getAbyssUrl(mainUser!!.gameUid, mainUser!!.region))
+                .addHeader("x-rpc-app_version",Constants.APP_VERSION)
+                .addHeader("DS", getDS(query))
+                .addHeader("x-rpc-client_type","5")
+                .addHeader("Cookie",cookie)
+                .build()
+            clientC.newCall(request).enqueue(MyCallBack(block))
         }
 
     }
@@ -69,9 +114,18 @@ class MyCallBack(val block:(JSONObject)->Unit): Callback{
     }
 
     override fun onResponse(call: Call, response: Response) {
-        block(JSONObject(response.body!!.string()))
+        try {
+            block(JSONObject(response.body!!.string()))
+        }catch (e:Exception){
+            block(JSONObject("""
+                {
+                    "data": null,
+                    "message": "can not convert to json",
+                    "retcode": ${ResponseCode.CAN_NOT_CONVERT_TO_JSON}
+                }
+            """.trimIndent()))
+        }
     }
-
 }
 
 val GSON:Gson

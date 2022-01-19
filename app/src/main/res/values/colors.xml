@@ -5,7 +5,6 @@
     <color name="colorAccent">#03DAC5</color>
 
 
-    <color name="blue_01">#26C6DA</color>
     <color name="white">#fff</color>
     <color name="black">#333333</color>
 
@@ -20,6 +19,7 @@
 
     <color name="transparent">#00FFFFFF</color>
 
+    <color name="white_dark">#F6F6F6</color>
     <color name="white_dark_01">#F8F8F8</color>
     <color name="white_dark_02">#F0F0F0</color>
 
@@ -28,7 +28,14 @@
     <color name="gray_03">#D5D5D5</color>
     <color name="gray_04">#979797</color>
 
+
     <color name="wave_ocean_blue_01">#3BE1FA</color>
+    <color name="blue_01">#26C6DA</color>
+    <color name="blue_02">#0199FF</color>
+
+
+    <color name="delete">#FE5866</color>
+
 
     <color name="menu_background_color">#2D2F33</color>
     <color name="menu_background_color_gray">#4A5265</color>
@@ -66,5 +73,14 @@
     <color name="adventure_fill">#D56C6C</color>
     <color name="task_fill">#75B5B7</color>
     <color name="other_fill">#78ACC8</color>
+
+
+    <color name="gacha_history_star_5_color">#FFB74D</color>
+    <color name="gacha_history_star_4_color">#BA68C8</color>
+    <color name="gacha_history_star_3_color">#64B5F6</color>
+
+
+    <color name="official_type_background_color">#BDA575</color>
+
 
 </resources>
