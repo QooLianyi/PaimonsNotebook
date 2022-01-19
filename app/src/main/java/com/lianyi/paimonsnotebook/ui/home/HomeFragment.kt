@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.view.View
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.home.BlackBoardBean
+import com.lianyi.paimonsnotebook.bean.home.HomeInformationBean
 import com.lianyi.paimonsnotebook.bean.home.HomeOfficialCommendPostBean
 import com.lianyi.paimonsnotebook.lib.base.BaseFragment
-import com.lianyi.paimonsnotebook.bean.home.HomeInformationBean
 import com.lianyi.paimonsnotebook.databinding.*
 import com.lianyi.paimonsnotebook.lib.adapter.HomeBannerAdapter
 import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
@@ -28,7 +28,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
         Ok.get(MiHoYoApi.HOME_PAGER_INFORMATION){
             if(it.ok){
-                val bannerBean = GSON.fromJson(it.optString("data"),HomeInformationBean::class.java)
+                val bannerBean = GSON.fromJson(it.optString("data"), HomeInformationBean::class.java)
                 bind.homeBanner.apply {
                     adapter = HomeBannerAdapter(bannerBean.carousels)
                     setBannerGalleryMZ(40)
