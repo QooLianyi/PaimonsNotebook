@@ -19,7 +19,7 @@ import org.json.JSONArray
 import kotlin.concurrent.thread
 
 class DailySignActivity : BaseActivity() {
-    lateinit var bind:ActivityDailySignBinding
+    lateinit var bind: ActivityDailySignBinding
     var isSign = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,11 +31,6 @@ class DailySignActivity : BaseActivity() {
         val accountList = mutableListOf<UserBean>()
         showAccountList.add(mainUser!!.gameUid)
         accountList.add(mainUser!!)
-
-
-        bind.month.setOnClickListener {
-            NotificationManager.sendNotification("内容","签到成功0个,失败0个")
-        }
 
         val jsonArray = JSONArray(usp.getString(JsonCacheName.USER_LIST,"[]"))
         repeat(jsonArray.length()){
@@ -72,16 +67,19 @@ class DailySignActivity : BaseActivity() {
                 NotificationManager.sendNotification("签到结果","签到成功${success}个,失败${failed}个,已签到${signed}个 ")
                 runOnUiThread {
                     "签到结果已经发送到通知栏".show()
-                    loadingWindowDismiss()
-                    if(signed>0){
+                    dismissLoadingWindow()
+                    if(success>0){
                         refreshList(accountList[bind.accountSelect.selectedItemPosition])
                     }
                 }
             }
         }
         refreshList(mainUser!!)
+        setViewMarginBottomByNavigationBarHeight(bind.dailySignSpan)
+        setContentMargin(bind.root)
     }
 
+    //刷新列表
     private fun refreshList(user:UserBean){
         Ok.get(MiHoYoApi.GET_CURRENT_MONTH_SIGN_REWARD_INFO){ currentMonthSignReward->
             if(currentMonthSignReward.ok){

@@ -29,88 +29,50 @@ class RefreshData {
             }
         }
 
-        //用于主页活动 和每日材料
-        fun getBlackBoard(block: (Boolean) -> Unit){
-            Ok.get(MiHoYoApi.BLACK_BOARD){
-                if(it.ok){
-                    val edit = sp.edit()
-                    edit.putString(JsonCacheName.BLACK_BOARD,it.toString())
-                    edit.apply()
-                }
-                block(it.ok)
-            }
-        }
-
         //获取 全部角色、全部武器 所需的数据
-        fun getJsonData(block: (Boolean) -> Unit){
+        fun getJsonData(block: (Boolean,count:Int) -> Unit){
             thread {
                 try {
                     val document = Jsoup.connect(MiHoYoApi.JSON_DATA).get()
                     val weaponJsonSelect = "span.weapon li"
                     val characterJsonSelect = "span.character li"
 
+                    var newDataCount = 0
+
                     //角色获取
                     try {
-                        val jsonArray = JSONArray(document.select(characterJsonSelect).text())
                         val characterData = mutableListOf<CharacterBean>()
-                        repeat(jsonArray.length()-1){
-                            characterData += GSON.fromJson(jsonArray[it].toString(), CharacterBean::class.java)
+                        JSONArray(document.select(characterJsonSelect).text()).toListUtil(characterData)
+                        csp.edit().apply {
+                           putString(JsonCacheName.CHARACTER_LIST,GSON.toJson(characterData))
+                           apply()
                         }
-                        val cEdit = csp.edit()
-                        cEdit.putString(JsonCacheName.CHARACTER_LIST,GSON.toJson(characterData))
-                        cEdit.apply()
+                        newDataCount += characterData.size - CharacterBean.characterList.size
                     }catch (e:Exception){
-                        loadingWindowDismiss()
+                        dismissLoadingWindow()
                         e.printStackTrace()
-                        block(false)
+                        block(false,0)
                     }
 
                     //武器获取
                     try{
-                        val weaponJson = JSONArray(document.select(weaponJsonSelect).text())
                         val weaponData = mutableListOf<WeaponBean>()
-                        repeat(weaponJson.length()-1){
-                            weaponData += GSON.fromJson(weaponJson[it].toString(),WeaponBean::class.java)
+                        JSONArray(document.select(weaponJsonSelect).text()).toListUtil(weaponData)
+                        wsp.edit().apply {
+                            putString(JsonCacheName.WEAPON_LIST, GSON.toJson(weaponData))
+                            apply()
                         }
-
-                        val wEdit = wsp.edit()
-                        wEdit.putString(JsonCacheName.WEAPON_LIST, GSON.toJson(weaponData))
-                        wEdit.apply()
-                        block(true)
+                        newDataCount += weaponData.size - WeaponBean.weaponList.size
+                        block(true,newDataCount)
                     }catch (e:Exception){
-                        loadingWindowDismiss()
+                        dismissLoadingWindow()
                         e.printStackTrace()
-                        block(false)
+                        block(false,0)
                     }
                 }catch (e:Exception){
-                    block(false)
+                    block(false,0)
                 }
             }
         }
-
-        //更新便笺
-        fun getDailyNote(gameUid:String,server:String,block: (Boolean) -> Unit){
-            val edit = sp.edit()
-            Ok.get(MiHoYoApi.getDailyNoteUrl(gameUid,server)){
-                if(it.ok){
-                    edit.putString(Constants.SP_DAILY_NOTE_NAME+gameUid,it.optString("data"))
-                    edit.apply()
-                }
-                block(it.ok)
-            }
-        }
-
-        //更新旅行者手记
-        fun getMonthLedger(month:String,gameUID: String,server: String,block: (Boolean) -> Unit){
-            val edit = sp.edit()
-            Ok.get(MiHoYoApi.getMonthInfoUrl(month, gameUID, server)){
-                if(it.ok){
-                    edit.putString(Constants.SP_MONTH_LEDGER_NAME+ mainUser?.gameUid,it.optString("data"))
-                    edit.apply()
-                }
-                block(it.ok)
-            }
-        }
-
     }
 }

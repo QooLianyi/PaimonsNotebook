@@ -191,7 +191,7 @@
                 android:background="@drawable/check_box_select"
                 android:checked="true"
                 android:layout_gravity="center"
-                android:id="@+id/select_type_one_hand_sword"
+                android:id="@+id/select_one_hand_sword"
                 />
             <ImageView
                 android:layout_width="39dp"
@@ -297,16 +297,27 @@
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:id="@+id/list"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="4"
-        />
+        android:scrollbars="none"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/list"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="4"
+                android:nestedScrollingEnabled="false"
+                android:overScrollMode="never"
+                android:scrollbars="none"
+                />
+        </RelativeLayout>
+
+    </ScrollView>
 
 </LinearLayout>

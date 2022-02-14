@@ -54,9 +54,9 @@
         tools:layout="@layout/fragment_search" />
 
     <fragment
-        android:id="@+id/menu_time_line"
+        android:id="@+id/menu_hutao_database"
         android:label="@string/title_notifications"
-        android:name="com.lianyi.paimonsnotebook.ui.home.TimeLineFragment"
-        tools:layout="@layout/fragment_time_line" />
+        android:name="com.lianyi.paimonsnotebook.ui.home.HutaoDataseFragment"
+        tools:layout="@layout/fragment_hutao_database" />
 
 </navigation>

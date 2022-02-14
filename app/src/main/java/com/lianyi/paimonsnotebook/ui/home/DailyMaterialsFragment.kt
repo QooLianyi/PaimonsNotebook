@@ -1,5 +1,7 @@
 package com.lianyi.paimonsnotebook.ui.home
 
+import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -34,17 +36,21 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bind = FragmentDailyMaterialsBinding.bind(view)
+
+
+        initView()
+    }
+
+    private fun initView() {
         val pages = listOf(
             layoutInflater.inflate(R.layout.pager_daily_materials,null),
             layoutInflater.inflate(R.layout.pager_daily_materials,null)
         )
 
         val titles = listOf("天赋培养","武器突破")
-
         bind.weekSelectSpan.setOnClickListener {
             bind.weekSelect.performClick()
         }
-
         //加载角色和武器
         JSONArray(csp.getString(JsonCacheName.CHARACTER_LIST,"")!!).toList(allCharacter)
         JSONArray(wsp.getString(JsonCacheName.WEAPON_LIST,"")!!).toList(allWeapon)
@@ -125,11 +131,15 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
 
                             characterItem.root.setOnClickListener {
                                 CharacterDetailActivity.character = characterBean
-                                goA<CharacterDetailActivity>()
+                                startActivity(
+                                    Intent(activity!!,CharacterDetailActivity::class.java),
+                                    ActivityOptions.makeSceneTransitionAnimation(activity!!,characterItem.icon,"icon").toBundle()
+                                )
                             }
                         }
                     }
                 }
+                setViewMarginBottomByNavigationBarHeight(page.list)
             }else{
                 page.list.adapter?.notifyDataSetChanged()
             }
@@ -178,11 +188,15 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
                             loadImage(weaponItem.icon,weaponBean.icon)
                             weaponItem.root.setOnClickListener {
                                 WeaponDetailActivity.weapon = weaponBean
-                                goA<WeaponDetailActivity>()
+                                startActivity(
+                                    Intent(activity!!, WeaponDetailActivity::class.java),
+                                    ActivityOptions.makeSceneTransitionAnimation(activity!!,weaponItem.icon,"icon").toBundle()
+                                )
                             }
                         }
                     }
                 }
+                setViewMarginBottomByNavigationBarHeight(page.list)
             }else{
                 page.list.adapter?.notifyDataSetChanged()
             }

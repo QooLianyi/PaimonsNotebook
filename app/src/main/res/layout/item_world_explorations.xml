@@ -11,14 +11,15 @@
         android:layout_height="60dp"
         android:layout_gravity="center_vertical"
         android:id="@+id/icon"
-        android:background="@color/gray_03"
+        android:tint="@color/black_alpha_40"
+        tools:ignore="UseAppTint"
         />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="15dp"
         android:orientation="vertical"
         android:layout_gravity="center_vertical"
         android:id="@+id/area_information_span"
@@ -45,7 +46,7 @@
                 android:layout_height="match_parent"
                 android:text="声望等级 - "
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 />
 
             <TextView
@@ -53,7 +54,7 @@
                 android:layout_height="match_parent"
                 android:text="10级"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:id="@+id/reputation_level"
                 android:layout_marginRight="20dp"
                 />
@@ -64,7 +65,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="130dp"
+        android:layout_width="140dp"
         android:layout_height="match_parent"
         android:gravity="center_vertical|start"
         >

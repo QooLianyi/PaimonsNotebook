@@ -10,6 +10,6 @@ class PagerIndex {
         const val MAP_PAGE = 5
         const val WISH_PAGE = 6
         const val SEARCH_PAGE = 7
-        const val TIME_LINE_PAGE = 8
+        const val HUTAO_DATABASE = 8
     }
 }

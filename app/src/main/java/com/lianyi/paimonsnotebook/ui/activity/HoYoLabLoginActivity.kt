@@ -1,7 +1,6 @@
 package com.lianyi.paimonsnotebook.ui.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.webkit.*
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.bean.GetGameRolesByCookieBean
@@ -13,13 +12,15 @@ import com.lianyi.paimonsnotebook.lib.information.JsonCacheName
 import com.lianyi.paimonsnotebook.lib.information.MiHoYoApi
 import com.lianyi.paimonsnotebook.util.*
 import org.json.JSONArray
-
+import kotlin.concurrent.thread
 class HoYoLabLoginActivity : BaseActivity() {
     lateinit var bind:ActivityHoYoLabLoginBinding
 
     companion object{
         var isAddUser = false
     }
+
+    private val cookieMap = mutableMapOf<String,String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,9 +43,9 @@ class HoYoLabLoginActivity : BaseActivity() {
 
                     //当网页加载完毕时
                     if(view?.progress==100&&cookies!=null&&cookies.isNotEmpty()){
-                        val cookieMap = mutableMapOf<String,String>()
                         val cookieSplit = cookies.split(";")
                         var isLogin = false
+
                         cookieSplit.forEach {
                             val cookie = it.trim().split("=")
                             cookieMap += cookie.first().trim() to cookie.last().trim()
@@ -57,38 +58,19 @@ class HoYoLabLoginActivity : BaseActivity() {
                         if(isLogin && isAddUser){
                             val cookie = "ltuid=${cookieMap[Constants.LTUID_NAME]?:""};ltoken=${cookieMap[Constants.LTOKEN_NAME]?:""};account_id=${cookieMap[Constants.ACCOUNT_ID_NAME]?:""};cookie_token=${cookieMap[Constants.COOKIE_TOKEN_NAME]?:""}"
                             val userList = mutableListOf<UserBean>()
-                            Ok.get(MiHoYoApi.GET_GAME_ROLES_BY_COOKIE,cookie){
-                                if(it.ok){
-                                    val roles = GSON.fromJson(it.optString("data"),
-                                        GetGameRolesByCookieBean::class.java)
-                                    val userListArray = JSONArray(usp.getString(JsonCacheName.USER_LIST,"[]"))
-                                    userListArray.toList(userList)
-                                    with(roles.list.first()){
-                                        userList+= UserBean(
-                                            nickname,
-                                            cookieMap[Constants.LTUID_NAME]?:"",
-                                            region,
-                                            region_name,
-                                            game_uid,
-                                            cookieMap[Constants.LTOKEN_NAME]?:"",
-                                            cookieMap[Constants.COOKIE_TOKEN_NAME]?:"",
-                                            level
-                                        )
-                                    }
+                            JSONArray(usp.getString(JsonCacheName.USER_LIST,"[]")).toList(userList)
+
+                            getGameRolesByCookie(cookie){
+                                if(it!=null){
+                                    userList += it
+                                }else{
+
                                 }
                                 usp.edit().apply {
                                     putString(JsonCacheName.USER_LIST,GSON.toJson(userList))
                                     apply()
                                 }
-                                runOnUiThread {
-                                    cookieManager.removeAllCookies {
-                                        if(it){
-                                            cookieManager.flush()
-                                            setResult(ActivityResponseCode.OK)
-                                            finish()
-                                        }
-                                    }
-                                }
+                                clearCookie()
                             }
                         }else if(isLogin){
                             mainUser?.lToken = cookieMap[Constants.LTOKEN_NAME]?:""
@@ -114,19 +96,48 @@ class HoYoLabLoginActivity : BaseActivity() {
                                     }
 
                                     //请理Cookie
-                                    runOnUiThread {
-                                        cookieManager.removeAllCookies {
-                                            if(it){
-                                                cookieManager.flush()
-                                                setResult(ActivityResponseCode.OK)
-                                                finish()
-                                            }
-                                        }
-                                    }
+                                    clearCookie()
                                 }
                             }
                         }
                     }
+                }
+            }
+        }
+        setContentMargin(bind.root)
+    }
+
+    private fun getGameRolesByCookie(cookie:String,block:(UserBean?)->Unit){
+        Ok.getGameRolesByCookie(cookie){
+            if(it.ok){
+                val roles = GSON.fromJson(it.optString("data"),
+                    GetGameRolesByCookieBean::class.java)
+                if(roles.list.size>0){
+                    block(UserBean(
+                        roles.list.first().nickname,
+                        cookieMap[Constants.LTUID_NAME]?:"",
+                        roles.list.first().region,
+                        roles.list.first().region_name,
+                        roles.list.first().game_uid,
+                        cookieMap[Constants.LTOKEN_NAME]?:"",
+                        cookieMap[Constants.COOKIE_TOKEN_NAME]?:"",
+                        roles.list.first().level
+                    ))
+                }
+            }else{
+                block(null)
+            }
+        }
+    }
+
+
+    private fun clearCookie(){
+        runOnUiThread {
+            CookieManager.getInstance().removeAllCookies {
+                if(it){
+                    CookieManager.getInstance().flush()
+                    setResult(ActivityResponseCode.OK)
+                    finish()
                 }
             }
         }

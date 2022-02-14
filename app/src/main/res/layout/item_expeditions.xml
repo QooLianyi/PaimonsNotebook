@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        app:cardElevation="0dp"
+        android:layout_margin="3dp"
+        app:cardCornerRadius="23dp"
+        app:cardBackgroundColor="@color/transparent"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/card_background_accent_color"
+                >
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp"
+                    android:layout_marginStart="1dp"
+                    app:cardBackgroundColor="@color/white"
+                    >
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_circular_ring"
+                        android:tint="@color/black"
+                        tools:ignore="UseAppTint"
+                        android:id="@+id/circular_ring"
+                        />
+
+                </androidx.cardview.widget.CardView>
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/icon_klee"
+                    android:id="@+id/icon"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="11dp"
+                    android:layout_marginStart="2dp"
+                    />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="@drawable/expedition_item_background"
+                android:paddingStart="15dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="剩余时间:"
+                    android:textColor="@color/the_expedition_circular_ring"
+                    android:layout_gravity="center"
+                    android:textSize="18sp"
+                    android:gravity="right"
+                    android:id="@+id/left_time_text"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="23小时59分"
+                    android:textColor="@color/black_alpha_80"
+                    android:layout_gravity="center"
+                    android:textSize="18sp"
+                    android:id="@+id/time"
+                    android:layout_marginEnd="15dp"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

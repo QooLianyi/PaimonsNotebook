@@ -4,6 +4,7 @@ import android.animation.Animator
 
 //animation监听器
 class AnimatorFinished(val block: () -> Unit): Animator.AnimatorListener{
+
     override fun onAnimationStart(p0: Animator?) {
     }
 

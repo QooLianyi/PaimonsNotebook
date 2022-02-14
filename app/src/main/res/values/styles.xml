@@ -9,11 +9,10 @@
 
 <!--    APP样式-->
     <style name="paimonsNoteTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/wave_ocean_blue_01</item>
+        <item name="colorPrimary">@color/star_color</item>
         <item name="colorPrimaryDark">@color/menu_background_color</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/accent_blue</item>
 
-        <item name="android:statusBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 

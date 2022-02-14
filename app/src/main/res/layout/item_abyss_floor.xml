@@ -5,6 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_02"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:alpha="0.6"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="center_vertical"
             >
             <TextView
                 android:layout_width="wrap_content"
@@ -48,8 +58,10 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
                 android:text="1970-01-01 08:00"
-                android:textColor="@color/gray_03"
-                android:textSize="16sp" />
+                android:textColor="@color/gray_04"
+                android:textSize="16sp"
+                android:gravity="center"
+                />
 
         </LinearLayout>
 
@@ -117,6 +129,7 @@
                         android:layout_height="30dp"
                         android:src="@drawable/icon_abyss_star"
                         android:id="@+id/abyss_star_1"
+                        android:alpha="0.5"
                         />
 
                     <ImageView
@@ -124,6 +137,7 @@
                         android:layout_height="30dp"
                         android:src="@drawable/icon_abyss_star"
                         android:id="@+id/abyss_star_2"
+                        android:alpha="0.5"
                         />
 
                     <ImageView

@@ -12,6 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager2"
             android:layout_width="match_parent"
@@ -30,6 +31,16 @@
             android:layout_marginTop="10dp"
             tools:ignore="UseAppTint"
             />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/menu_area_switch"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
@@ -54,9 +65,11 @@
             tools:ignore="UseAppTint"
             />
 
+
+
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"
-            android:layout_width="115dp"
+            android:layout_width="125dp"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@color/menu_background_color"
@@ -67,6 +80,7 @@
             app:itemTextColor="@color/menu_icon_color"
             app:itemIconPadding="10dp"
             android:overScrollMode="never"
+            app:insetForeground="@color/transparent"
             />
 
         <ImageView
@@ -77,7 +91,7 @@
             app:tint="@color/menu_un_select_color"
             android:tint="@color/menu_un_select_color"
             android:id="@+id/options"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             tools:ignore="UseAppTint"
             />
 

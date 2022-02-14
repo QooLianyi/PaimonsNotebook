@@ -2,7 +2,6 @@ package com.lianyi.paimonsnotebook.lib.information
 
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.databinding.ItemMaterialBinding
-import com.lianyi.paimonsnotebook.ui.activity.WeaponDetailActivity
 import com.lianyi.paimonsnotebook.util.loadImage
 
 class Star {
@@ -10,6 +9,7 @@ class Star {
         fun getStarResourcesByStarNum(star:Int, small:Boolean):Int{
             return if(small){
                 when(star){
+                    105->R.drawable.icon_star_105s
                     5-> R.drawable.icon_star_5s
                     4-> R.drawable.icon_star_4s
                     3-> R.drawable.icon_star_3s
@@ -18,6 +18,7 @@ class Star {
                 }
             }else{
                 when(star){
+                    105->R.drawable.icon_star_105
                     5-> R.drawable.icon_star_5
                     4-> R.drawable.icon_star_4
                     3-> R.drawable.icon_star_3
@@ -28,7 +29,7 @@ class Star {
         }
 
         fun getStarSymbolByStarNum(star: Int):String{
-            return when(WeaponDetailActivity.weapon.star){
+            return when(star){
                 5->"★★★★★"
                 4->"★★★★"
                 3->"★★★"

@@ -38,362 +38,379 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/images_home_background"
                 android:scaleType="fitStart"
+                android:id="@+id/home_background"
                 />
 
-
-            <ScrollView
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="none"
+                android:layout_height="wrap_content"
+                android:id="@+id/swipe"
                 >
 
-                <LinearLayout
+                <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="30dp"
+                    android:layout_height="match_parent"
+                    android:scrollbars="none"
                     >
-                    <com.youth.banner.Banner
-                        android:layout_width="match_parent"
-                        android:layout_height="175dp"
-                        android:id="@+id/home_banner"
-                        app:banner_loop_time="5000"
-                        app:banner_infinite_loop="true"
-                        />
 
-                    <FrameLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
+                        android:layout_marginTop="30dp"
                         >
-
-                        <TextView
+                        <com.youth.banner.Banner
                             android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:layout_gravity="bottom"
-                            android:background="@color/white"
+                            android:layout_height="175dp"
+                            android:id="@+id/home_banner"
+                            app:banner_loop_time="5000"
+                            app:banner_infinite_loop="true"
                             />
 
-                        <androidx.cardview.widget.CardView
+                        <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:cardCornerRadius="10dp"
-                            android:layout_marginTop="5dp"
-                            app:cardElevation="0dp"
+                            android:orientation="vertical"
                             >
 
-                            <LinearLayout
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="30dp"
+                                android:layout_gravity="bottom"
+                                android:background="@color/white"
+                                />
+
+                            <androidx.cardview.widget.CardView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:background="@color/white_dark"
+                                app:cardCornerRadius="10dp"
+                                android:layout_marginTop="5dp"
+                                app:cardElevation="0dp"
                                 >
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:padding="10dp"
-                                    android:background="@color/white"
+                                    android:orientation="vertical"
+                                    android:background="@color/white_dark"
                                     >
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
-                                        android:layout_height="60dp"
+                                        android:layout_height="wrap_content"
                                         android:orientation="horizontal"
+                                        android:padding="10dp"
+                                        android:background="@color/white"
                                         >
 
                                         <LinearLayout
-                                            android:layout_width="0dp"
-                                            android:layout_weight="1"
-                                            android:layout_height="match_parent"
-                                            android:orientation="vertical"
-                                            android:gravity="center_horizontal"
-                                            android:id="@+id/daily_sign"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="60dp"
+                                            android:orientation="horizontal"
                                             >
-                                            <androidx.cardview.widget.CardView
-                                                android:layout_width="40dp"
-                                                android:layout_height="40dp"
-                                                app:cardCornerRadius="20dp"
+
+                                            <LinearLayout
+                                                android:layout_width="0dp"
+                                                android:layout_weight="1"
+                                                android:layout_height="match_parent"
+                                                android:orientation="vertical"
+                                                android:gravity="center_horizontal"
+                                                android:id="@+id/daily_sign"
                                                 >
-                                                <LinearLayout
-                                                    android:layout_width="match_parent"
-                                                    android:layout_weight="1"
-                                                    android:layout_height="match_parent"
-                                                    android:orientation="vertical"
-                                                    android:gravity="center"
-                                                    android:background="@color/black_alpha_40"
+                                                <androidx.cardview.widget.CardView
+                                                    android:layout_width="40dp"
+                                                    android:layout_height="40dp"
+                                                    app:cardCornerRadius="20dp"
                                                     >
-                                                    <ImageView
+                                                    <LinearLayout
                                                         android:layout_width="match_parent"
+                                                        android:layout_weight="1"
                                                         android:layout_height="match_parent"
-                                                        android:padding="7dp"
-                                                        android:src="@drawable/icon_daily_sign"
-                                                        />
-                                                </LinearLayout>
-                                            </androidx.cardview.widget.CardView>
+                                                        android:orientation="vertical"
+                                                        android:gravity="center"
+                                                        android:background="@color/black_alpha_40"
+                                                        >
+                                                        <ImageView
+                                                            android:layout_width="match_parent"
+                                                            android:layout_height="match_parent"
+                                                            android:padding="7dp"
+                                                            android:src="@drawable/icon_daily_sign"
+                                                            />
+                                                    </LinearLayout>
+                                                </androidx.cardview.widget.CardView>
 
-                                            <TextView
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:textSize="16sp"
-                                                android:textColor="@color/black"
-                                                android:text="每日签到"
-                                                />
-                                        </LinearLayout>
+                                                <TextView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:textSize="16sp"
+                                                    android:textColor="@color/black"
+                                                    android:text="每日签到"
+                                                    />
+                                            </LinearLayout>
 
-                                        <LinearLayout
-                                            android:layout_width="0dp"
-                                            android:layout_weight="1"
-                                            android:layout_height="match_parent"
-                                            android:orientation="vertical"
-                                            android:gravity="center_horizontal"
-                                            android:id="@+id/account_manager"
-                                            >
-                                            <androidx.cardview.widget.CardView
-                                                android:layout_width="40dp"
-                                                android:layout_height="40dp"
-                                                app:cardCornerRadius="20dp"
+                                            <LinearLayout
+                                                android:layout_width="0dp"
+                                                android:layout_weight="1"
+                                                android:layout_height="match_parent"
+                                                android:orientation="vertical"
+                                                android:gravity="center_horizontal"
+                                                android:id="@+id/account_manager"
                                                 >
-                                                <LinearLayout
-                                                    android:layout_width="match_parent"
-                                                    android:layout_weight="1"
-                                                    android:layout_height="match_parent"
-                                                    android:orientation="vertical"
-                                                    android:gravity="center"
-                                                    android:background="@color/black_alpha_40"
+                                                <androidx.cardview.widget.CardView
+                                                    android:layout_width="40dp"
+                                                    android:layout_height="40dp"
+                                                    app:cardCornerRadius="20dp"
                                                     >
-                                                    <ImageView
+                                                    <LinearLayout
                                                         android:layout_width="match_parent"
+                                                        android:layout_weight="1"
                                                         android:layout_height="match_parent"
-                                                        android:padding="7dp"
-                                                        android:src="@drawable/icon_account"
-                                                        />
-                                                </LinearLayout>
-                                            </androidx.cardview.widget.CardView>
+                                                        android:orientation="vertical"
+                                                        android:gravity="center"
+                                                        android:background="@color/black_alpha_40"
+                                                        >
+                                                        <ImageView
+                                                            android:layout_width="match_parent"
+                                                            android:layout_height="match_parent"
+                                                            android:padding="7dp"
+                                                            android:src="@drawable/icon_account"
+                                                            />
+                                                    </LinearLayout>
+                                                </androidx.cardview.widget.CardView>
 
-                                            <TextView
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:textSize="16sp"
-                                                android:textColor="@color/black"
-                                                android:text="账号管理"
-                                                />
-                                        </LinearLayout>
+                                                <TextView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:textSize="16sp"
+                                                    android:textColor="@color/black"
+                                                    android:text="账号管理"
+                                                    />
+                                            </LinearLayout>
 
-                                        <LinearLayout
-                                            android:layout_width="0dp"
-                                            android:layout_weight="1"
-                                            android:layout_height="match_parent"
-                                            android:orientation="vertical"
-                                            android:gravity="center_horizontal"
-                                            android:id="@+id/me_information"
-                                            >
-                                            <androidx.cardview.widget.CardView
-                                                android:layout_width="40dp"
-                                                android:layout_height="40dp"
-                                                app:cardCornerRadius="20dp"
+                                            <LinearLayout
+                                                android:layout_width="0dp"
+                                                android:layout_weight="1"
+                                                android:layout_height="match_parent"
+                                                android:orientation="vertical"
+                                                android:gravity="center_horizontal"
+                                                android:id="@+id/me_information"
                                                 >
-                                                <LinearLayout
-                                                    android:layout_width="match_parent"
-                                                    android:layout_weight="1"
-                                                    android:layout_height="match_parent"
-                                                    android:orientation="vertical"
-                                                    android:gravity="center"
-                                                    android:background="@color/black_alpha_40"
+                                                <androidx.cardview.widget.CardView
+                                                    android:layout_width="40dp"
+                                                    android:layout_height="40dp"
+                                                    app:cardCornerRadius="20dp"
                                                     >
-                                                    <ImageView
+                                                    <LinearLayout
                                                         android:layout_width="match_parent"
+                                                        android:layout_weight="1"
                                                         android:layout_height="match_parent"
-                                                        android:padding="7dp"
-                                                        android:src="@drawable/icon_me_information"
-                                                        />
-                                                </LinearLayout>
-                                            </androidx.cardview.widget.CardView>
+                                                        android:orientation="vertical"
+                                                        android:gravity="center"
+                                                        android:background="@color/black_alpha_40"
+                                                        >
+                                                        <ImageView
+                                                            android:layout_width="match_parent"
+                                                            android:layout_height="match_parent"
+                                                            android:padding="7dp"
+                                                            android:src="@drawable/icon_me_information"
+                                                            />
+                                                    </LinearLayout>
+                                                </androidx.cardview.widget.CardView>
 
-                                            <TextView
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:textSize="16sp"
-                                                android:textColor="@color/black"
-                                                android:text="我的信息"
-                                                />
-                                        </LinearLayout>
+                                                <TextView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:textSize="16sp"
+                                                    android:textColor="@color/black"
+                                                    android:text="我的信息"
+                                                    />
+                                            </LinearLayout>
 
-                                        <LinearLayout
-                                            android:layout_width="0dp"
-                                            android:layout_weight="1"
-                                            android:layout_height="match_parent"
-                                            android:orientation="vertical"
-                                            android:gravity="center_horizontal"
-                                            android:id="@+id/month_ledge"
-                                            >
-                                            <androidx.cardview.widget.CardView
-                                                android:layout_width="40dp"
-                                                android:layout_height="40dp"
-                                                app:cardCornerRadius="20dp"
+                                            <LinearLayout
+                                                android:layout_width="0dp"
+                                                android:layout_weight="1"
+                                                android:layout_height="match_parent"
+                                                android:orientation="vertical"
+                                                android:gravity="center_horizontal"
+                                                android:id="@+id/month_ledge"
                                                 >
-                                                <LinearLayout
-                                                    android:layout_width="match_parent"
-                                                    android:layout_weight="1"
-                                                    android:layout_height="match_parent"
-                                                    android:orientation="vertical"
-                                                    android:gravity="center"
-                                                    android:background="@color/black_alpha_40"
+                                                <androidx.cardview.widget.CardView
+                                                    android:layout_width="40dp"
+                                                    android:layout_height="40dp"
+                                                    app:cardCornerRadius="20dp"
                                                     >
-                                                    <ImageView
+                                                    <LinearLayout
                                                         android:layout_width="match_parent"
+                                                        android:layout_weight="1"
                                                         android:layout_height="match_parent"
-                                                        android:padding="7dp"
-                                                        android:src="@drawable/icon_month_ledge"
-                                                        />
-                                                </LinearLayout>
+                                                        android:orientation="vertical"
+                                                        android:gravity="center"
+                                                        android:background="@color/black_alpha_40"
+                                                        >
+                                                        <ImageView
+                                                            android:layout_width="match_parent"
+                                                            android:layout_height="match_parent"
+                                                            android:padding="7dp"
+                                                            android:src="@drawable/icon_month_ledge"
+                                                            />
+                                                    </LinearLayout>
 
-                                            </androidx.cardview.widget.CardView>
+                                                </androidx.cardview.widget.CardView>
 
-                                            <TextView
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:textSize="16sp"
-                                                android:textColor="@color/black"
-                                                android:text="旅行札记"
-                                                />
+                                                <TextView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:textSize="16sp"
+                                                    android:textColor="@color/black"
+                                                    android:text="旅行札记"
+                                                    />
+                                            </LinearLayout>
+
                                         </LinearLayout>
 
                                     </LinearLayout>
 
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        android:background="@color/white"
+                                        android:layout_marginTop="6dp"
+                                        android:paddingStart="10dp"
+                                        android:paddingEnd="10dp"
+                                        android:paddingTop="5dp"
+                                        >
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="30dp"
+                                            android:textColor="@color/black"
+                                            android:textSize="18sp"
+                                            android:text="近期活动"
+                                            android:gravity="center_vertical"
+                                            android:textStyle="bold"
+                                            />
+                                        <TextView
+                                            android:layout_width="0dp"
+                                            android:layout_weight="1"
+                                            android:layout_height="wrap_content"/>
+                                        <TextView
+                                            android:layout_width="60dp"
+                                            android:layout_height="match_parent"
+                                            android:textColor="@color/gray_04"
+                                            android:text="全部 >"
+                                            android:textSize="14sp"
+                                            android:gravity="center"
+                                            android:id="@+id/all_recommend_post"
+                                            android:visibility="gone"
+                                            />
+                                    </LinearLayout>
+
                                 </LinearLayout>
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:background="@color/white"
-                                    android:layout_marginTop="6dp"
-                                    android:paddingStart="10dp"
-                                    android:paddingEnd="10dp"
-                                    android:paddingTop="5dp"
-                                    >
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="30dp"
-                                        android:textColor="@color/black"
-                                        android:textSize="18sp"
-                                        android:text="近期活动"
-                                        android:gravity="center_vertical"
-                                        android:textStyle="bold"
-                                        />
-                                    <TextView
-                                        android:layout_width="0dp"
-                                        android:layout_weight="1"
-                                        android:layout_height="wrap_content"/>
-                                    <TextView
-                                        android:layout_width="60dp"
-                                        android:layout_height="match_parent"
-                                        android:textColor="@color/gray_04"
-                                        android:text="全部 >"
-                                        android:textSize="14sp"
-                                        android:gravity="center"
-                                        android:id="@+id/all_recommend_post"
-                                        android:visibility="gone"
-                                        />
-                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
 
-                            </LinearLayout>
+                        </FrameLayout>
 
-                        </androidx.cardview.widget.CardView>
-
-                    </FrameLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        >
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:paddingStart="10dp"
-                            android:paddingEnd="10dp"
-                            android:paddingBottom="10dp"
+                        <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                            android:id="@+id/home_near_activity"
-                            android:nestedScrollingEnabled="false"
-                            android:scrollbars="none"
-                            android:overScrollMode="never"
-                            />
+                            android:background="@color/white"
+                            >
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:paddingStart="10dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="10dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                android:id="@+id/home_near_activity"
+                                android:nestedScrollingEnabled="false"
+                                android:scrollbars="none"
+                                android:overScrollMode="never"
+                                />
 
-                    </RelativeLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:background="@color/white_dark"
-                        >
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:background="@color/white"
-                            android:padding="10dp"
-                            android:layout_marginTop="6dp"
-                            android:layout_marginBottom="30dp"
+                            android:background="@color/white_dark"
                             >
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/black"
-                                android:textSize="18sp"
-                                android:text="公告"
-                                android:gravity="center_vertical"
-                                android:textStyle="bold"
-                                />
-
-                            <RelativeLayout
+                            <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:background="@color/white"
+                                android:padding="10dp"
                                 android:layout_marginTop="6dp"
+                                android:layout_marginBottom="30dp"
                                 >
-                                <androidx.recyclerview.widget.RecyclerView
-                                    android:layout_width="match_parent"
+
+                                <TextView
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                                    android:nestedScrollingEnabled="false"
-                                    android:scrollbars="none"
-                                    android:overScrollMode="never"
-                                    android:id="@+id/home_notice"
+                                    android:textColor="@color/black"
+                                    android:textSize="18sp"
+                                    android:text="公告"
+                                    android:gravity="center_vertical"
+                                    android:textStyle="bold"
                                     />
 
-                            </RelativeLayout>
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="6dp"
+                                    >
+                                    <androidx.recyclerview.widget.RecyclerView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                        android:nestedScrollingEnabled="false"
+                                        android:scrollbars="none"
+                                        android:overScrollMode="never"
+                                        android:id="@+id/home_notice"
+                                        />
+
+                                </RelativeLayout>
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
                     </LinearLayout>
 
-                </LinearLayout>
+                </ScrollView>
 
-            </ScrollView>
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:id="@+id/memo_anchor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/star_color"
+        />
+
     <!--    右下角按钮-->
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/memo"
-        android:layout_margin="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layoutDescription="@xml/fragment_home_memo_scene"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/memo_anchor"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/white_border_alpha80_background"
+        app:layout_constraintBottom_toTopOf="@id/memo_anchor"
         >
 
         <TextView
@@ -435,8 +452,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:layout_height="match_parent"
+            android:background="@color/content_background_color"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -448,25 +465,27 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="55dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 app:cardCornerRadius="4dp"
+                app:cardBackgroundColor="@color/card_background_color"
                 >
+
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="3dp"
+                    android:layout_height="match_parent"
                     >
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@color/resin_fill_color"
-                        android:transformPivotX="0dp"
-                        android:id="@+id/resin_fill"
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_resin"
+                        android:padding="6dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginStart="3dp"
                         />
 
                     <TextView
@@ -475,28 +494,29 @@
                         android:text="原粹树脂"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/black_alpha_80"
-                        android:layout_margin="4dp"
+                        android:textColor="@color/black_alpha_90"
+                        android:layout_marginStart="45dp"
+                        android:layout_marginTop="6dp"
                         />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginTop="26dp"
-                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="28dp"
+                        android:layout_marginStart="45dp"
                         >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="将于"
-                            android:textColor="@color/black_alpha_80"
+                            android:text="将于 "
+                            android:textColor="@color/card_content_text_color"
                             android:textSize="14sp"
                             />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black_alpha_80"
+                            android:textColor="@color/card_content_text_color"
                             android:textSize="14sp"
                             android:text="00:00"
                             android:id="@+id/resin_recover_time"
@@ -504,49 +524,49 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="全部恢复"
-                            android:textColor="@color/black_alpha_80"
+                            android:text="后 全部恢复"
                             android:textSize="14sp"
+                            android:textColor="@color/card_content_text_color"
                             />
+
                     </LinearLayout>
 
-
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:layout_gravity="end|center"
-                        android:layout_marginEnd="10dp"
+                        android:background="@color/card_background_accent_color"
+                        android:gravity="center"
                         >
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textColor="@color/black_alpha_80"
-                            android:textColorHighlight="@color/black"
+                            android:textColor="@color/card_content_text_accent_color"
                             android:textSize="16sp"
                             android:id="@+id/resin_current"
+                            android:textStyle="bold"
                             />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="/"
-                            android:textColor="@color/black_alpha_80"
-                            android:textColorHighlight="@color/black"
+                            android:textColor="@color/card_content_text_accent_color"
                             android:textSize="16sp"
+                            android:textStyle="bold"
                             />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="160"
-                            android:textColor="@color/black_alpha_80"
-                            android:textColorHighlight="@color/black"
                             android:textSize="16sp"
                             android:id="@+id/resin_max"
+                            android:textStyle="bold"
+                            android:textColor="@color/card_content_text_accent_color"
                             />
                     </LinearLayout>
-
 
                 </FrameLayout>
 
@@ -554,25 +574,27 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="55dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 app:cardCornerRadius="4dp"
+                app:cardBackgroundColor="@color/card_background_color"
                 >
+
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="3dp"
+                    android:layout_height="match_parent"
                     >
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@color/resin_fill_color"
-                        android:transformPivotX="0dp"
-                        android:id="@+id/daily_task_fill"
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_daily_task"
+                        android:padding="6dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginStart="3dp"
                         />
 
                     <TextView
@@ -581,56 +603,58 @@
                         android:text="每日委托任务"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/black_alpha_80"
-                        android:layout_margin="4dp"
+                        android:textColor="@color/black_alpha_90"
+                        android:layout_marginStart="45dp"
+                        android:layout_marginTop="6dp"
                         />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black_alpha_80"
+                        android:textColor="@color/card_content_text_color"
                         android:textSize="14sp"
-                        android:text="「每日委托」奖励还未领取"
-                        android:layout_marginTop="26dp"
-                        android:layout_marginStart="4dp"
+                        android:text="每日委托奖励还未领取"
+                        android:layout_marginTop="28dp"
+                        android:layout_marginStart="45dp"
                         android:id="@+id/daily_task_state"
                         />
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:layout_gravity="end|center"
-                        android:layout_marginEnd="10dp"
+                        android:background="@color/card_background_accent_color"
+                        android:gravity="center"
                         >
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textColor="@color/black_alpha_80"
-                            android:textColorHighlight="@color/black"
+                            android:textColor="@color/card_content_text_accent_color"
                             android:textSize="16sp"
+                            android:textStyle="bold"
                             android:id="@+id/daily_task_finished_count"
                             />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="/"
-                            android:textColor="@color/black_alpha_80"
-                            android:textColorHighlight="@color/black"
+                            android:textColor="@color/card_content_text_accent_color"
                             android:textSize="16sp"
+                            android:textStyle="bold"
                             />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="4"
-                            android:textColor="@color/black_alpha_80"
-                            android:textColorHighlight="@color/black"
+                            android:text="160"
                             android:textSize="16sp"
                             android:id="@+id/daily_task_max"
+                            android:textStyle="bold"
+                            android:textColor="@color/card_content_text_accent_color"
                             />
                     </LinearLayout>
-
 
                 </FrameLayout>
 
@@ -638,25 +662,136 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="55dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 app:cardCornerRadius="4dp"
+                app:cardBackgroundColor="@color/card_background_color"
                 >
+
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="3dp"
+                    android:layout_height="match_parent"
                     >
 
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_home_coin"
+                        android:padding="6dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginStart="3dp"
+                        />
+
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@color/resin_fill_color"
-                        android:transformPivotX="0dp"
-                        android:id="@+id/resin_discount_fill"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="洞天宝钱"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black_alpha_90"
+                        android:layout_marginStart="45dp"
+                        android:layout_marginTop="6dp"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="28dp"
+                        android:layout_marginStart="45dp"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="将于 "
+                            android:textSize="14sp"
+                            android:textColor="@color/card_content_text_color"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:textColor="@color/card_content_text_color"
+                            android:text="00:00"
+                            android:id="@+id/home_icon_time"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="后 全部恢复"
+                            android:textSize="14sp"
+                            android:textColor="@color/card_content_text_color"
+                            />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_gravity="end|center"
+                        android:background="@color/card_background_accent_color"
+                        android:gravity="center"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/card_content_text_accent_color"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:id="@+id/home_icon_current"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="/"
+                            android:textColor="@color/card_content_text_accent_color"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="16sp"
+                            android:id="@+id/home_icon_max"
+                            android:textStyle="bold"
+                            android:textColor="@color/card_content_text_accent_color"
+                            />
+                    </LinearLayout>
+
+                </FrameLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                app:cardCornerRadius="4dp"
+                app:cardBackgroundColor="@color/card_background_color"
+                >
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_secret_tower"
+                        android:padding="6dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginStart="3dp"
                         />
 
                     <TextView
@@ -665,58 +800,62 @@
                         android:text="值得铭记的强敌"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/black_alpha_80"
-                        android:layout_margin="4dp"
+                        android:textColor="@color/black_alpha_90"
+                        android:layout_marginStart="45dp"
+                        android:layout_marginTop="6dp"
                         />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black_alpha_80"
                         android:textSize="14sp"
+                        android:textColor="@color/card_content_text_color"
                         android:text="本周已消耗的减半次数"
-                        android:layout_marginTop="26dp"
-                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="28dp"
+                        android:layout_marginStart="45dp"
                         />
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:layout_gravity="end|center"
-                        android:layout_marginEnd="10dp"
+                        android:background="@color/card_background_accent_color"
+                        android:gravity="center"
                         >
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textColor="@color/black_alpha_80"
-                            android:textColorHighlight="@color/black"
+                            android:textColor="@color/card_content_text_accent_color"
                             android:textSize="16sp"
                             android:id="@+id/resin_discount_num"
+                            android:textStyle="bold"
                             />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="/"
-                            android:textColor="@color/black_alpha_80"
-                            android:textColorHighlight="@color/black"
                             android:textSize="16sp"
+                            android:textColor="@color/card_content_text_accent_color"
+                            android:textStyle="bold"
                             />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="3"
-                            android:textColor="@color/black_alpha_80"
-                            android:textColorHighlight="@color/black"
                             android:textSize="16sp"
+                            android:textColor="@color/card_content_text_accent_color"
                             android:id="@+id/resin_discount_num_max"
+                            android:textStyle="bold"
                             />
                     </LinearLayout>
 
                 </FrameLayout>
 
             </androidx.cardview.widget.CardView>
+
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -726,256 +865,102 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 app:cardCornerRadius="4dp"
-                >
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="3dp"
-                    >
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@color/resin_fill_color"
-                        android:transformPivotX="0dp"
-                        android:id="@+id/expedition_fill"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="探索派遣"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/black_alpha_80"
-                        android:layout_margin="4dp"
-                        />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="26dp"
-                        android:layout_marginStart="4dp"
-                        >
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black_alpha_80"
-                            android:textSize="14sp"
-                            android:text="限制:"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black_alpha_80"
-                            android:textSize="14sp"
-                            android:text="0"
-                            android:id="@+id/current_expedition_num"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black_alpha_80"
-                            android:textSize="14sp"
-                            android:text="/"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black_alpha_80"
-                            android:textSize="14sp"
-                            android:text="5"
-                            android:id="@+id/max_expedition_num"
-                            />
-                    </LinearLayout>
-
-
-                </FrameLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
-                app:cardCornerRadius="4dp"
+                app:cardBackgroundColor="@color/card_background_color"
                 >
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="5dp"
-                    android:background="@color/white"
+                    android:layout_marginStart="3dp"
                     >
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_height="wrap_content">
+                        android:layout_marginEnd="10dp"
+                        android:gravity="center_vertical"
+                        >
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            >
+                            android:text="探索派遣"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black_alpha_90"
+                            android:layout_margin="4dp"
+                            />
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textSize="16sp"
-                                android:textColorHighlight="@color/black_alpha_80"
-                                android:text="今日共获得"
-                                android:textStyle="bold"
-                                />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black_alpha_90"
+                            android:text="("
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            />
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                >
-                                <ImageView
-                                    android:layout_width="25dp"
-                                    android:layout_height="25dp"
-                                    android:src="@drawable/icon_gemstone"
-                                    />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="5dp"
-                                    android:textSize="16sp"
-                                    android:textColorHighlight="@color/black_alpha_80"
-                                    android:text="100"
-                                    android:gravity="center"
-                                    android:textStyle="bold"
-                                    android:layout_gravity="center"
-                                    android:id="@+id/day_gemstone"
-                                    />
-                            </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black_alpha_90"
+                            android:text="0"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:id="@+id/current_expedition_num"
+                            />
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:layout_marginTop="3dp"
-                                >
-                                <ImageView
-                                    android:layout_width="25dp"
-                                    android:layout_height="25dp"
-                                    android:src="@drawable/icon_mora"
-                                    />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="5dp"
-                                    android:textSize="16sp"
-                                    android:textColorHighlight="@color/black_alpha_80"
-                                    android:text="100"
-                                    android:gravity="center"
-                                    android:textStyle="bold"
-                                    android:layout_gravity="center"
-                                    android:id="@+id/day_mora"
-                                    />
-                            </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black_alpha_90"
+                            android:text="/"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            />
 
-                        </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black_alpha_90"
+                            android:text="5"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:id="@+id/max_expedition_num"
+                            />
 
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:layout_margin="10dp"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textSize="16sp"
-                                android:textColorHighlight="@color/black_alpha_80"
-                                android:text="当月共获得"
-                                android:textStyle="bold"
-                                />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                >
-                                <ImageView
-                                    android:layout_width="25dp"
-                                    android:layout_height="25dp"
-                                    android:src="@drawable/icon_gemstone"
-                                    />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="5dp"
-                                    android:textSize="16sp"
-                                    android:textColorHighlight="@color/black_alpha_80"
-                                    android:text="100"
-                                    android:gravity="center"
-                                    android:textStyle="bold"
-                                    android:layout_gravity="center"
-                                    android:id="@+id/month_gemstone"
-                                    />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:layout_marginTop="3dp"
-                                >
-                                <ImageView
-                                    android:layout_width="25dp"
-                                    android:layout_height="25dp"
-                                    android:src="@drawable/icon_mora"
-                                    />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="5dp"
-                                    android:textSize="16sp"
-                                    android:textColorHighlight="@color/black_alpha_80"
-                                    android:text="100"
-                                    android:gravity="center"
-                                    android:textStyle="bold"
-                                    android:layout_gravity="center"
-                                    android:id="@+id/month_mora"
-                                    />
-                            </LinearLayout>
-
-                        </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black_alpha_90"
+                            android:text=")"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            />
 
                     </LinearLayout>
 
-                    <TextView
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:textColorHighlight="@color/black_alpha_80"
-                        android:text="原石收入组成"
-                        android:textStyle="bold"
-                        android:layout_margin="10dp"
-                        />
-
-                    <com.github.mikephil.charting.charts.PieChart
-                        android:layout_width="match_parent"
-                        android:layout_height="150dp"
-                        android:id="@+id/pie"
-                        android:clickable="false"
-                        android:focusable="false"
-                        />
+                        >
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            android:orientation="vertical"
+                            android:overScrollMode="never"
+                            android:scrollbars="none"
+                            android:nestedScrollingEnabled="false"
+                            android:id="@+id/expeditions_list"
+                            android:paddingStart="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="10dp"
+                            android:paddingEnd="10dp"
+                            />
+                    </RelativeLayout>
 
                 </LinearLayout>
 

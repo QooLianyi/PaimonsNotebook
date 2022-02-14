@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.util.PaiMonsNoteBook
 
+//常量
 class Constants {
     companion object{
         //每日签到用的SALT
@@ -16,7 +17,6 @@ class Constants {
 
 
         //原神游戏ID
-        const val GENSHIN_GAME_ID = "hk4e_cn"
 
         //数据缓存 格式为:缓存名称+UID
         const val SP_NAME = "cache_info"
@@ -54,8 +54,18 @@ class Constants {
         //替换占位符
         const val REPLACE_PLACEHOLDER = "#(*PLACEHOLDER!!)"
 
+        const val UIGF_EXPORT_APP_NAME = "PaimonsNotebook"
 
 
+        //UIGF 的页面
+        const val UIGF_URL = "https://github.com/DGP-Studio/Snap.Genshin/wiki/StandardFormat"
+        const val JSON_DATA = "https://qoolianyi.github.io/PaimonsNotebook.github.io/"
+
+
+        //新版本apk路径
+        fun getApkUr(version:String):String{
+            return "https://github.com/QooLianyi/PaimonsNotebook.github.io/tree/main/apk/${version}.apk"
+        }
 
         //旅行者札记饼图颜色
         val monthLegendColors = listOf(
@@ -80,10 +90,70 @@ class Constants {
             Color.parseColor("#496CEE")
         )
 
-
-        val colorList = listOf<String>("#F3A75B",
+        val gachaColorList = listOf("#F3A75B",
             "#A962FA",
             "#665CF1",
-            "#496CEE")
+            "#496CEE",
+            "#FD79A8",
+            "#D63031",
+            "#FDCB6E",
+            "#E17055",
+            "#00B894",
+            "#00CEC9",
+            "#0984E3",
+            "#6C5CE7",
+            "#A29BFE",
+            "#55EFC4",
+            "#4CD137",
+            "#F368E0",
+            "#FF9FF3",
+            "#FD7272",
+            "#7D5FFF",
+            "#FFF200",
+            "#FFAF40",
+            "#EE5A24",
+            "#A3CB38",
+            "#FDA7DF",
+            "#ED4C67",
+            "#B53471",
+            "#30336B",
+            "#006266",
+            "#9AECDB",
+            "#CC8E35",
+            "#CCAE62",
+            "#B33939",
+            "#CD6133",
+            "#82589F"
+        )
+
+        fun getMonthLegendColors(list: List<Int>):List<Int>{
+            val colors = mutableListOf<Int>()
+            list.forEach {
+                colors += when(it){
+                    1->{
+                        ContextCompat.getColor(PaiMonsNoteBook.context, R.color.adventure_fill)
+                    }
+                    2->{
+                        ContextCompat.getColor(PaiMonsNoteBook.context, R.color.task_fill)
+                    }
+                    3->{
+                        ContextCompat.getColor(PaiMonsNoteBook.context, R.color.daily_fill)
+                    }
+                    4->{
+                        ContextCompat.getColor(PaiMonsNoteBook.context, R.color.abyss_fill)
+                    }
+                    5->{
+                        ContextCompat.getColor(PaiMonsNoteBook.context, R.color.mail_fill)
+                    }
+                    6->{
+                        ContextCompat.getColor(PaiMonsNoteBook.context, R.color.event_fill)
+                    }
+                    else->{
+                        ContextCompat.getColor(PaiMonsNoteBook.context, R.color.other_fill)
+                    }
+                }
+            }
+            return colors
+        }
     }
 }

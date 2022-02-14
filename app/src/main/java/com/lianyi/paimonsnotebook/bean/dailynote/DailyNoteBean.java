@@ -3,6 +3,7 @@ package com.lianyi.paimonsnotebook.bean.dailynote;
 import java.util.List;
 
 public class DailyNoteBean {
+
     /**
      * current_resin : 当前树脂
      * max_resin :最大树脂
@@ -13,7 +14,10 @@ public class DailyNoteBean {
      * remain_resin_discount_num : 剩余周本消耗减半次数
      * resin_discount_num_limit : 最大周本减半次数
      * current_expedition_num : 当前探险委托数
-     * max_expedition_num : 最大探险委托书
+     * max_expedition_num : 最大探险委托数
+     * current_home_coin : 当前洞天宝钱
+     * max_home_coin :最大洞天宝钱
+     * home_coin_recovery_time :洞天宝钱恢复时间
      * expeditions : [{"avatar_side_icon":"https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_Chongyun.png","status":"Finished","remained_time":"0"},{"avatar_side_icon":"https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_Fischl.png","status":"Finished","remained_time":"0"},{"avatar_side_icon":"https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_Bennett.png","status":"Finished","remained_time":"0"},{"avatar_side_icon":"https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_Keqing.png","status":"Finished","remained_time":"0"},{"avatar_side_icon":"https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_Sara.png","status":"Finished","remained_time":"0"}]
      */
 
@@ -27,6 +31,9 @@ public class DailyNoteBean {
     private int resin_discount_num_limit;
     private int current_expedition_num;
     private int max_expedition_num;
+    private int current_home_coin;
+    private int max_home_coin;
+    private String home_coin_recovery_time;
     private List<ExpeditionsBean> expeditions;
 
     public int getCurrent_resin() {
@@ -109,6 +116,30 @@ public class DailyNoteBean {
         this.max_expedition_num = max_expedition_num;
     }
 
+    public int getCurrent_home_coin() {
+        return current_home_coin;
+    }
+
+    public void setCurrent_home_coin(int current_home_coin) {
+        this.current_home_coin = current_home_coin;
+    }
+
+    public int getMax_home_coin() {
+        return max_home_coin;
+    }
+
+    public void setMax_home_coin(int max_home_coin) {
+        this.max_home_coin = max_home_coin;
+    }
+
+    public String getHome_coin_recovery_time() {
+        return home_coin_recovery_time;
+    }
+
+    public void setHome_coin_recovery_time(String home_coin_recovery_time) {
+        this.home_coin_recovery_time = home_coin_recovery_time;
+    }
+
     public List<ExpeditionsBean> getExpeditions() {
         return expeditions;
     }
@@ -119,7 +150,7 @@ public class DailyNoteBean {
 
     public static class ExpeditionsBean {
         /**
-         * avatar_side_icon :
+         * avatar_side_icon : https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_Chongyun.png
          * status : Finished
          * remained_time : 0
          */

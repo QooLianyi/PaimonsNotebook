@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         
-        <ImageView
+        <com.lianyi.paimonsnotebook.view.HomeNoticeImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/cover"

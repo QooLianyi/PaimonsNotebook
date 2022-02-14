@@ -1,12 +1,20 @@
 package com.lianyi.paimonsnotebook.ui.activity.options
 
+import android.app.DownloadManager
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
-import android.widget.SeekBar
+import android.os.Environment
+import android.webkit.DownloadListener
+import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.databinding.ActivityOptionsBinding
+import com.lianyi.paimonsnotebook.databinding.PopWarningBinding
 import com.lianyi.paimonsnotebook.lib.data.RefreshData
-import com.lianyi.paimonsnotebook.lib.information.Format
+import com.lianyi.paimonsnotebook.lib.information.Constants
+import com.lianyi.paimonsnotebook.lib.information.MiHoYoApi
 import com.lianyi.paimonsnotebook.util.*
+import org.jsoup.Jsoup
 import kotlin.concurrent.thread
 
 class OptionsActivity : BaseActivity() {
@@ -16,74 +24,90 @@ class OptionsActivity : BaseActivity() {
 
         bind = ActivityOptionsBinding.inflate(layoutInflater)
         setContentView(bind.root)
+        setContentMargin(bind.root)
 
-        //更新JSON数据
+        initView()
+    }
+
+    private fun initView() {
+        initCommonSetting()
+        initDataSetting()
+        initAboutPaimonsNotebook()
+        setContentMargin(bind.root)
+    }
+
+    private fun initCommonSetting() {
+        bind.sidebarButtonSetting.setOnClickListener {
+            goA<SideBarButtonSettingActivity>()
+        }
+
+        bind.screenMarginSetting.setOnClickListener {
+            val layout = PopWarningBinding.bind(layoutInflater.inflate(R.layout.pop_warning,null))
+            val win = showAlertDialog(bind.root.context,layout.root)
+
+            layout.title.text = "警告"
+            layout.message.text = "修改内容边距可能会导致UI错位。(后续版本也许会修复)\n即使如此,你也要修改内容边距吗?"
+
+            layout.cancel.setOnClickListener {
+                win.dismiss()
+            }
+            layout.confirm.setOnClickListener {
+                goA<ContentMarginActivity>()
+                win.dismiss()
+            }
+        }
+    }
+
+    private fun initDataSetting() {
+        //更新数据
         bind.getJson.setOnClickListener {
             showLoading(bind.root.context)
-            RefreshData.getJsonData {
+            RefreshData.getJsonData { ok,newDataCount->
                 runOnUiThread {
-                    if(it){
-                        "更新成功~".show()
-                        bind.getJsonTime.text = Format.TIME_FULL.format(System.currentTimeMillis())
+                    if (ok&&newDataCount>0) {
+                        "新增${newDataCount}条数据,下次启动时使用".showLong()
+                    } else if(ok) {
+                        "没有发现新数据".show()
                     }else{
                         "更新失败,请稍后再试试吧".show()
                     }
-                    loadingWindowDismiss()
+                    dismissLoadingWindow()
+                }
+            }
+        }
+    }
+
+    private fun initAboutPaimonsNotebook() {
+        bind.checkUpdate.setOnClickListener {
+            thread {
+                try {
+                    val document = Jsoup.connect(Constants.JSON_DATA).get()
+                    val appLastVersionSelect = "p.app_lastest_version"
+                    val appLastVersion = document.select(appLastVersionSelect).text()
+
+                    val uri = Uri.parse(Constants.getApkUr(appLastVersion))
+
+                    val manager = PaiMonsNoteBook.context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                    val requestApk = DownloadManager.Request(uri)
+                    //指定下载网络
+//                    requestApk.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI)
+                    requestApk.setDestinationInExternalPublicDir(Environment.getDownloadCacheDirectory().absolutePath,"${appLastVersion}.apk")
+                    requestApk.setTitle("派蒙的笔记本${appLastVersion}")
+                    manager.enqueue(requestApk)
+
+                    println(Constants.getApkUr(appLastVersion))
+                }catch (e:Exception){
+                    e.printStackTrace()
+                    runOnUiThread {
+                        "检查新版本失败,请稍后再试".show()
+                    }
                 }
             }
         }
 
-        bind.optionsData.select {
-            if(it){
-                openAndCloseAnimationVer(bind.optionsDataSpan,35,150,500)
-                bind.optionsDataDropDown.rotation = 0f
-            }else{
-                openAndCloseAnimationVer(bind.optionsDataSpan,150,35,500)
-                bind.optionsDataDropDown.rotation = 180f
-            }
-            bind.optionsDataDropDown.animate().rotationBy(180f).duration = 500
+        bind.goFeedBack.setOnClickListener {
+
         }
-
-        bind.optionsTestShowLoadingWindow.select {
-            if(it){
-                openAndCloseAnimationVer(bind.optionsTestShowLoadingWindowSpan,35,150,500)
-                bind.optionsTestShowLoadingWindowDropDown.rotation = 0f
-            }else{
-                openAndCloseAnimationVer(bind.optionsTestShowLoadingWindowSpan,150,35,500)
-                bind.optionsTestShowLoadingWindowDropDown.rotation = 180f
-            }
-            bind.optionsTestShowLoadingWindowDropDown.animate().rotationBy(180f).duration = 500
-        }
-
-        bind.showLoadingWindowTimeProgressBar.setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener{
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                bind.showLoadingWindowTime.text = "${p1}秒"
-            }
-
-            override fun onStartTrackingTouch(p0: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(p0: SeekBar?) {
-            }
-        })
-
-        bind.showLoadingWindow.setOnClickListener {
-            var time = bind.showLoadingWindowTimeProgressBar.progress
-            showLoading(bind.root.context)
-            bind.showLoadingWindow.isEnabled = false
-            thread {
-                do{
-                    time--
-                    Thread.sleep(1000)
-                    if(time<=0){
-                        runOnUiThread {
-                            loadingWindowDismiss()
-                            bind.showLoadingWindow.isEnabled = true
-                        }
-                    }
-                }while (time>0)
-            }
-        }
-
     }
+
 }

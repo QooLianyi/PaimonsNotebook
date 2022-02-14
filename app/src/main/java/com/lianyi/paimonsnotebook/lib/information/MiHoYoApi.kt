@@ -6,7 +6,8 @@ class MiHoYoApi {
     companion object{
         //JSON数据获取
         const val JSON_DATA = "https://qoolianyi.github.io/PaimonsNotebook.github.io/"
-        //首页banner
+
+        //首页公告
         const val OFFICIAL_RECOMMEND_POST = "https://bbs-api.mihoyo.com/post/wapi/getOfficialRecommendedPosts?gids=2"
         //首页活动
         const val BLACK_BOARD = "https://api-static.mihoyo.com/common/blackboard/ys_obc/v1/get_activity_calendar?app_sn=ys_obc"
@@ -27,7 +28,7 @@ class MiHoYoApi {
         const val GET_MULTI_TOKEN = "https://api-takumi.mihoyo.com/auth/api/getMultiTokenByLoginTicket?"
 
         //通过Cookie获得玩家信息
-        const val GET_GAME_ROLES_BY_COOKIE = "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=${Constants.GENSHIN_GAME_ID}"
+        const val GET_GAME_ROLES_BY_COOKIE = "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn"
 
         //当前月份签到奖励
         const val GET_CURRENT_MONTH_SIGN_REWARD_INFO = "https://api-takumi.mihoyo.com/event/bbs_sign_reward/home?act_id=e202009291139501"
@@ -45,7 +46,7 @@ class MiHoYoApi {
         }
 
         //获得旅行者札记url
-        fun getMonthInfoUrl(month:String, gameUID: String, server: String):String{
+        fun getMonthLedgerUrl(month:Int, gameUID: String, server: String):String{
             return "https://hk4e-api.mihoyo.com/event/ys_ledger/monthInfo?month=$month&bind_uid=$gameUID&bind_region=$server&bbs_presentation_style=fullscreen&bbs_auth+required=true&mys_source=GameRecord"
         }
 
@@ -61,13 +62,16 @@ class MiHoYoApi {
         }
 
         fun getAccountInformation(loginUid:String):String{
-
             return "https://bbs-api.mihoyo.com/user/api/getUserFullInfo?uid=$loginUid"
         }
 
         //获得帖子连接
         fun getArticleUrl(postId:String?):String{
-            return "https://bbs.mihoyo.com/ys/article/$postId"
+            return if(postId?.contains("article") == true){
+                "https://bbs.mihoyo.com/ys/article$postId"
+            }else{
+                postId?:""
+            }
         }
 
         //获得Cookie
@@ -77,9 +81,6 @@ class MiHoYoApi {
         }
 
         //获得查询玩家信息的url
-        fun getPlayerInfoUrl(gameUID:String):String{
-            return "https://api-takumi.mihoyo.com/game_record/app/genshin/api/index?role_id=${gameUID}&server=cn_gf01"
-        }
         fun getPlayerInfoUrl(gameUID:String, server: String):String{
             return "https://api-takumi.mihoyo.com/game_record/app/genshin/api/index?role_id=${gameUID}&server=$server"
         }

@@ -2,6 +2,10 @@ package com.lianyi.paimonsnotebook.bean
 
 import com.lianyi.paimonsnotebook.bean.materials.DailyMaterial
 import com.lianyi.paimonsnotebook.bean.materials.MonsterMaterial
+import com.lianyi.paimonsnotebook.lib.information.JsonCacheName
+import com.lianyi.paimonsnotebook.util.toList
+import com.lianyi.paimonsnotebook.util.wsp
+import org.json.JSONArray
 
 /*
 * name 名称
@@ -34,6 +38,26 @@ class WeaponBean(val name:String,
                  val icon:String,
                  val star:Int
                     ) {
+
+    companion object{
+        val weaponList:MutableList<WeaponBean> by lazy {
+            val list = mutableListOf<WeaponBean>()
+            val weaponJsonArray = JSONArray(wsp.getString(JsonCacheName.WEAPON_LIST,"")!!)
+            weaponJsonArray.toList(list)
+            list
+        }
+
+        fun getWeaponByName(name:String):WeaponBean?{
+            var character: WeaponBean? = null
+            weaponList.forEach {
+                if(it.name==name){
+                    return it
+                }
+            }
+            return character
+        }
+    }
+
     override fun toString(): String {
         return "WeaponBean(name='$name', weaponType=$weaponType, ATK='$ATK', attributeName='$attributeName', attributeNameValue='$attributeNameValue', dailyMaterials=$dailyMaterials, eliteMonsterMaterial=$eliteMonsterMaterial, monsterMaterials=$monsterMaterials, effectName='$effectName', effect='$effect', describe='$describe', icon='$icon', star=$star)"
     }

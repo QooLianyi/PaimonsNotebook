@@ -1,6 +1,7 @@
 package com.lianyi.paimonsnotebook.ui.activity
 
 import android.os.Bundle
+import android.view.ViewAnimationUtils
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.bean.CharacterBean
@@ -11,7 +12,9 @@ import com.lianyi.paimonsnotebook.lib.information.Element
 import com.lianyi.paimonsnotebook.lib.information.Star
 import com.lianyi.paimonsnotebook.lib.information.WeaponType
 import com.lianyi.paimonsnotebook.util.loadImage
+import com.lianyi.paimonsnotebook.util.setContentMargin
 import com.lianyi.paimonsnotebook.util.showAlertDialog
+import kotlin.math.sqrt
 
 class CharacterDetailActivity : BaseActivity() {
 
@@ -20,6 +23,7 @@ class CharacterDetailActivity : BaseActivity() {
     }
 
     lateinit var bind: ActivityCharacterDetailBinding
+    private var animationFlag = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -57,12 +61,21 @@ class CharacterDetailActivity : BaseActivity() {
                 win.dismiss()
             }
         }
-
+        setContentMargin(bind.root)
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        overridePendingTransition(R.anim.activity_fade_in,R.anim.activity_fade_out)
-    }
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
 
+        if(animationFlag){
+            bind.motion.transitionToEnd()
+
+            val starBackGroundWidth = bind.starBackground.width
+            val starBackGroundHeight = bind.starBackground.height
+            val endRadius = sqrt(starBackGroundWidth.toDouble()*starBackGroundWidth + starBackGroundHeight.toDouble()*starBackGroundHeight).toFloat()
+
+            ViewAnimationUtils.createCircularReveal(bind.starBackground,starBackGroundWidth/2,starBackGroundHeight/2,0f,endRadius).setDuration(900L).start()
+            animationFlag = false
+        }
+    }
 }

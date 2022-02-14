@@ -9,6 +9,7 @@ import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class Ok {
     companion object{
@@ -20,20 +21,20 @@ class Ok {
         private val client by lazy {
             OkHttpClient.Builder().addInterceptor {
                 val request = it.request().newBuilder()
-                val cookie = "ltuid=${mainUser?.loginUid};ltoken=${mainUser?.lToken};account_id=${mainUser?.loginUid};cookie_token=${mainUser?.cookieToken}"
                 request.addHeader("DS", getDS("role_id=${mainUser?.gameUid}&server=${mainUser?.region}"))
-                request.addHeader("Cookie",cookie)
+                request.addHeader("Cookie",MiHoYoApi.getCookie(mainUser!!))
                 request.addHeader("x-rpc-client_type","5")
                 request.addHeader("x-rpc-app_version",Constants.APP_VERSION)
                 it.proceed(request.build())
-            }.build()
+            }.retryOnConnectionFailure(true)
+            .readTimeout(3L,TimeUnit.MINUTES)
+            .build()
         }
 
         private val clientC by lazy{
             OkHttpClient()
         }
 
-        //通用请求
         fun get(url:String,block: (JSONObject) -> Unit){
             val request = Request.Builder().get().url(url).build()
             client.newCall(request).enqueue(MyCallBack(block))
@@ -58,10 +59,10 @@ class Ok {
             block(JSONObject(clientC.newCall(request).execute().body?.string()?:""))
         }
 
-        fun get(url:String,cookie:String,block: (JSONObject) -> Unit){
+        fun getGameRolesByCookie(cookie:String, block: (JSONObject) -> Unit){
             val request = Request.Builder()
                 .get()
-                .url(url)
+                .url(MiHoYoApi.GET_GAME_ROLES_BY_COOKIE)
                 .addHeader("Cookie",cookie)
                 .build()
             clientC.newCall(request).enqueue(MyCallBack(block))
@@ -76,8 +77,21 @@ class Ok {
             clientC.newCall(request).enqueue(MyCallBack(block))
         }
 
-        //获取抽卡记录请求 (同步)
-        fun getGachaHistory(url: String,block: (JSONObject) -> Unit){
+        fun getSync(url: String,user: UserBean,block: (JSONObject) -> Unit){
+            val request = Request.Builder().get().url(url)
+                .addHeader("Cookie",MiHoYoApi.getCookie(user))
+                .build()
+            block(JSONObject(clientC.newCall(request).execute().body?.string()?:""))
+        }
+
+        fun getSync(url: String,cookie: String,block: (JSONObject) -> Unit){
+            val request = Request.Builder().get().url(url)
+                .addHeader("Cookie",cookie)
+                .build()
+            block(JSONObject(clientC.newCall(request).execute().body?.string()?:""))
+        }
+
+        fun getSync(url: String, block: (JSONObject) -> Unit){
             val request = Request.Builder().get().url(url).build()
             block(JSONObject(client.newCall(request).execute().body?.string()?:""))
         }
@@ -94,18 +108,17 @@ class Ok {
             clientC.newCall(request).enqueue(MyCallBack(block))
         }
 
-        fun getAbyss(cookie: String,query:String,block: (JSONObject) -> Unit){
+        fun get(url: String,query:String,block: (JSONObject) -> Unit){
             val request = Request.Builder()
                 .get()
-                .url(MiHoYoApi.getAbyssUrl(mainUser!!.gameUid, mainUser!!.region))
+                .url(url)
                 .addHeader("x-rpc-app_version",Constants.APP_VERSION)
                 .addHeader("DS", getDS(query))
                 .addHeader("x-rpc-client_type","5")
-                .addHeader("Cookie",cookie)
+                .addHeader("Cookie",MiHoYoApi.getCookie(mainUser!!))
                 .build()
             clientC.newCall(request).enqueue(MyCallBack(block))
         }
-
     }
 }
 
@@ -143,6 +156,12 @@ inline fun <reified T> JSONObject.toList(name:String, list:MutableList<T>){
 
 inline fun <reified T> JSONArray.toList(list: MutableList<T>){
     repeat(this.length()){
+        list += GSON.fromJson(this[it].toString(),T::class.java)
+    }
+}
+
+inline fun <reified T> JSONArray.toListUtil(list: MutableList<T>){
+    repeat(this.length()-1){
         list += GSON.fromJson(this[it].toString(),T::class.java)
     }
 }

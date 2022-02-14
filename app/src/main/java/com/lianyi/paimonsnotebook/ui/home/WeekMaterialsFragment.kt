@@ -18,6 +18,7 @@ import com.lianyi.paimonsnotebook.ui.activity.CharacterDetailActivity
 import com.lianyi.paimonsnotebook.util.dp
 import com.lianyi.paimonsnotebook.util.goA
 import com.lianyi.paimonsnotebook.util.loadImage
+import com.lianyi.paimonsnotebook.util.setViewMarginBottomByNavigationBarHeight
 
 class WeekMaterialsFragment : BaseFragment(R.layout.fragment_week_materials) {
     lateinit var bind:FragmentWeekMaterialsBinding
@@ -61,5 +62,6 @@ class WeekMaterialsFragment : BaseFragment(R.layout.fragment_week_materials) {
                 }
             }
         }
+        setViewMarginBottomByNavigationBarHeight(bind.list)
     }
 }

@@ -1,7 +1,6 @@
 package com.lianyi.paimonsnotebook.ui.activity.home
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.account.AccountBean
@@ -9,12 +8,12 @@ import com.lianyi.paimonsnotebook.bean.account.UserBean
 import com.lianyi.paimonsnotebook.config.AppConfig
 import com.lianyi.paimonsnotebook.databinding.ActivityAccountManagerBinding
 import com.lianyi.paimonsnotebook.databinding.ItemAccountBinding
-import com.lianyi.paimonsnotebook.databinding.PopConfirmBinding
 import com.lianyi.paimonsnotebook.databinding.PopInformationBinding
 import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.lib.information.*
 import com.lianyi.paimonsnotebook.ui.activity.HoYoLabLoginActivity
+import com.lianyi.paimonsnotebook.ui.activity.SetCookieActivity
 import com.lianyi.paimonsnotebook.util.*
 import org.json.JSONArray
 
@@ -25,27 +24,30 @@ class AccountManagerActivity : BaseActivity() {
         val userList =  mutableListOf<UserBean>()
     }
 
+    private var originalMainUserId = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bind = ActivityAccountManagerBinding.inflate(layoutInflater)
         setContentView(bind.root)
 
+        initView()
+    }
+
+    private fun initView() {
+        originalMainUserId = mainUser!!.gameUid
         refreshUserListData()
         if(userList.size>0){
             setAccountListAdapter()
         }
 
-        refreshMainUserInformation()
-
         bind.addUser.setOnClickListener {
-
             if(userList.size>=AppConfig.MAX_ACCOUNT_NUM){
                 "不能再添加更多账号".show()
                 return@setOnClickListener
             }
 
-            HoYoLabLoginActivity.isAddUser = true
-            startActivityForResult(Intent(this,HoYoLabLoginActivity::class.java),ActivityRequestCode.LOGIN)
+            SetCookieActivity.isAddUser = true
+            startActivityForResult(Intent(this,SetCookieActivity::class.java),ActivityRequestCode.LOGIN)
         }
 
         bind.defaultAccountInformation.setOnClickListener {
@@ -59,6 +61,9 @@ class AccountManagerActivity : BaseActivity() {
             }
         }
 
+        setViewMarginBottomByNavigationBarHeight(bind.accountManagerSpan)
+        refreshMainUserInformation()
+        setContentMargin(bind.root)
     }
 
     //设置账号列表适配器
@@ -180,6 +185,13 @@ class AccountManagerActivity : BaseActivity() {
         }else{
             "取消添加".show()
         }
+    }
+
+    override fun onBackPressed() {
+        if(originalMainUserId!= mainUser!!.gameUid){
+            setResult(ActivityResponseCode.DATA_CHANGE)
+        }
+        finish()
     }
 
 }

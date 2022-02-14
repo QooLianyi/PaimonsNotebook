@@ -50,9 +50,9 @@
         />
 
     <item
-        android:id="@+id/menu_time_line"
-        android:icon="@drawable/icon_menu_time"
-        android:title="时间线"
+        android:id="@+id/menu_hutao_database"
+        android:icon="@drawable/icon_hutao_database"
+        android:title="胡桃数据库"
         />
 
 </menu>

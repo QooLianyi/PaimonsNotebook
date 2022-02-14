@@ -23,7 +23,7 @@ class PagerAdapter(val pages:List<View>, val titles:List<String>): PagerAdapter(
         container.removeView(pages[position])
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
+    override fun getPageTitle(position: Int): CharSequence {
         return titles[position]
     }
 }

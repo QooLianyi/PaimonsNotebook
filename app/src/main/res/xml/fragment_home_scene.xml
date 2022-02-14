@@ -16,11 +16,10 @@
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            motion:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/memo"
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
-            />
+            motion:layout_constraintBottom_toTopOf="@id/memo_anchor" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">

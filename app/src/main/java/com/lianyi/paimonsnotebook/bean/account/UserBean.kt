@@ -17,8 +17,8 @@ class UserBean(var nickName:String,
         return "UserBean(nickName='$nickName', loginUid='$loginUid', region='$region', regionName='$regionName', gameUid='$gameUid', lToken='$lToken', cookieToken='$cookieToken', gameLevel=$gameLevel)"
     }
 
-    fun isNotLogin():Boolean{
-        return loginUid.isEmpty()&&region.isEmpty()&&cookieToken.isEmpty()&&lToken.isEmpty()
+    fun isNull():Boolean{
+        return loginUid.isEmpty()||region.isEmpty()||cookieToken.isEmpty()||lToken.isEmpty()
     }
 
 }

@@ -28,7 +28,7 @@ class HomeBannerAdapter(val list: List<HomeInformationBean.CarouselsBean>):Banne
     ) {
         loadImage(p0!!.imageView,p1!!.cover)
         p0.imageView.setOnClickListener {
-            MiHoYoApi.getArticleUrl(p1.path).show()
+//            MiHoYoApi.getArticleUrl(p1.path).show()
         }
     }
 

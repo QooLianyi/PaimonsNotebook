@@ -9,6 +9,9 @@ class GachaType {
 
         const val WEAPON = 302
 
+
+        const val ERROR = "*ERROR*"
+
         val gachaList = listOf(
             NEW_PLAYERS,
             PERMANENT,
@@ -20,11 +23,28 @@ class GachaType {
             return when(type){
                 NEW_PLAYERS->"新手祈愿"
                 PERMANENT->"常驻祈愿"
-                CHARACTER_ACTIVITY_01->"角色活动祈愿"
-                CHARACTER_ACTIVITY_02->"角色活动祈愿-2"
+                CHARACTER_ACTIVITY_01,CHARACTER_ACTIVITY_02->"角色活动祈愿"
                 WEAPON->"武器活动祈愿"
-                else-> "*ERROR*"
+                else-> ERROR
             }
         }
+
+        fun getUIGFType(type: Int):String{
+            return when(type){
+                NEW_PLAYERS->"100"
+                PERMANENT->"200"
+                CHARACTER_ACTIVITY_01,CHARACTER_ACTIVITY_02-> "301"
+                WEAPON-> "302"
+                else-> "1000"
+            }
+        }
+
+        fun getUIGFType(type: String):String{
+            return when(type){
+                "301","400"-> "301"
+                else-> type
+            }
+        }
+
     }
 }

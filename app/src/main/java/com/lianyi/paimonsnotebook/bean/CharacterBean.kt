@@ -44,7 +44,6 @@ class CharacterBean(val area:String,
                     val star:Int
                     ) {
 
-
     companion object{
         val characterList:MutableList<CharacterBean> by lazy {
             val list = mutableListOf<CharacterBean>()

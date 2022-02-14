@@ -1,12 +1,10 @@
 package com.lianyi.paimonsnotebook.ui
 
 import android.os.Bundle
-import android.view.View
 import androidx.core.view.forEach
 import androidx.core.view.get
-import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
-import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.bean.config.SideBarButtonSettings
 import com.lianyi.paimonsnotebook.lib.adapter.MainViewPager2Adapter
 import com.lianyi.paimonsnotebook.lib.adapter.NavigationViewSetupWithViewPager2
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
@@ -15,24 +13,26 @@ import com.lianyi.paimonsnotebook.databinding.ActivityMainBinding
 import com.lianyi.paimonsnotebook.lib.information.PagerIndex
 import com.lianyi.paimonsnotebook.ui.activity.options.OptionsActivity
 import com.lianyi.paimonsnotebook.ui.home.*
-import com.lianyi.paimonsnotebook.util.goA
-import com.lianyi.paimonsnotebook.util.openAndCloseAnimationHor
-import com.lianyi.paimonsnotebook.util.show
+import com.lianyi.paimonsnotebook.util.*
 
 class MainActivity : BaseActivity(){
-    lateinit var bind: ActivityMainBinding
     private var pressBackTime = 0L
 
     private val menuTitle = mutableListOf<String>()
     private var menuDetailIsOpen = true
 
+    companion object{
+        lateinit var bind: ActivityMainBinding
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bind = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bind.root)
-        initClickEvent()
-        initView()
 
+        initView()
+        initClickEvent()
+        initConfig()
         //页面切换渐变
 //        bind.viewPager2.setPageTransformer(ViewPager2SwitchFadeInFadeOut())
     }
@@ -58,7 +58,7 @@ class MainActivity : BaseActivity(){
             PagerIndex.MAP_PAGE to MapFragment(),
             PagerIndex.WISH_PAGE to WishFragment(),
             PagerIndex.SEARCH_PAGE to SearchFragment(),
-            PagerIndex.TIME_LINE_PAGE to TimeLineFragment(),
+            PagerIndex.HUTAO_DATABASE to HutaoDatabaseFragment()
         )
 
         //设置页面缓存数
@@ -73,42 +73,21 @@ class MainActivity : BaseActivity(){
         bind.navView.menu.forEach {
             menuTitle += it.title.toString()
         }
+
+        setViewMarginBottomByNavigationBarHeight(bind.options)
+        setContentMargin(bind.root)
     }
 
     //初始化各种点击事件
     private fun initClickEvent() {
+
+        //开启侧边栏
         bind.menuSwitch.setOnClickListener {
             bind.container.openDrawer(bind.navViewSpan)
         }
-
-        //侧边栏控制状态栏背景颜色
-        var num1 = 0f
-        var num2 = 0f
-        bind.container.addDrawerListener(object : DrawerLayout.DrawerListener {
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                if(num1==num2){
-                    num1 = slideOffset
-                }else{
-                    if(num1>num2){
-                        window.statusBarColor = getColor(R.color.menu_background_color)
-
-                    }else if(slideOffset==0f){
-                        window.statusBarColor = getColor(R.color.white)
-                    }
-                    num2 = num1
-                    num1 = slideOffset
-                }
-            }
-
-            override fun onDrawerOpened(drawerView: View) {
-            }
-
-            override fun onDrawerClosed(drawerView: View) {
-            }
-
-            override fun onDrawerStateChanged(newState: Int) {
-            }
-        })
+        bind.menuAreaSwitch.setOnClickListener {
+            bind.container.openDrawer(bind.navViewSpan)
+        }
 
         //菜单详情切换
         bind.menuDetail.setOnClickListener {
@@ -125,14 +104,52 @@ class MainActivity : BaseActivity(){
             }
             menuDetailIsOpen = !menuDetailIsOpen
         }
+        //前往设置
         bind.options.setOnClickListener {
             goA<OptionsActivity>()
         }
     }
 
+    private fun initConfig() {
+        if(SideBarButtonSettings.instance.enabled){
+            bind.menuAreaSwitch.layoutParams.apply {
+                width = SideBarButtonSettings.instance.sideBarAreaWidth.dp.toInt()
+            }
+
+            bind.viewPager2.onPageChange {
+                when(it){
+                    PagerIndex.CHARACTER_PAGE->{
+                        bind.menuAreaSwitch.gone()
+                    }
+                    PagerIndex.WEAPON_PAGE->{
+                        bind.menuAreaSwitch.gone()
+                    }
+                    PagerIndex.MAP_PAGE->{
+                        bind.menuAreaSwitch.gone()
+                        bind.menuSwitch.show()
+                    }
+                    else->{
+                        bind.menuAreaSwitch.show()
+                        if(SideBarButtonSettings.instance.enabled && SideBarButtonSettings.instance.hideDefaultSideBarButton){
+                            bind.menuSwitch.gone()
+                        }
+                    }
+                }
+            }
+
+            if(SideBarButtonSettings.instance.hideDefaultSideBarButton){
+                bind.menuSwitch.gone()
+            }else{
+                bind.menuSwitch.show()
+            }
+        }else{
+            bind.menuAreaSwitch.gone()
+        }
+    }
+
     //当点击返回时
     override fun onBackPressed() {
-         val back = System.currentTimeMillis() - pressBackTime
+        val back = System.currentTimeMillis() - pressBackTime
         if(back<AppConfig.PRESS_BACK_INTERVAL){
             finish()
         }else{

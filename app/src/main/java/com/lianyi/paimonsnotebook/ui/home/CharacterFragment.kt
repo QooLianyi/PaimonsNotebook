@@ -1,31 +1,56 @@
 package com.lianyi.paimonsnotebook.ui.home
 
+import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.ui.activity.CharacterDetailActivity
 import com.lianyi.paimonsnotebook.lib.base.BaseFragment
 import com.lianyi.paimonsnotebook.bean.CharacterBean
+import com.lianyi.paimonsnotebook.bean.config.SideBarButtonSettings
 import com.lianyi.paimonsnotebook.databinding.FragmentCharacterBinding
 import com.lianyi.paimonsnotebook.databinding.ItemEntityBinding
 import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
 import com.lianyi.paimonsnotebook.lib.information.Element
 import com.lianyi.paimonsnotebook.lib.information.Star
 import com.lianyi.paimonsnotebook.lib.information.WeaponType
+import com.lianyi.paimonsnotebook.ui.MainActivity
 import com.lianyi.paimonsnotebook.util.*
 
 class CharacterFragment : BaseFragment(R.layout.fragment_character) {
 
-    lateinit var bind: FragmentCharacterBinding
+    //展示的角色列表
     private val characterShowList = mutableListOf<CharacterBean>()
     //选择的属性和装备类型
     private val selectProperty = mutableListOf<Int>()
     private val selectEquipType = mutableListOf<Int>()
 
+    companion object{
+        private lateinit var bind: FragmentCharacterBinding
+
+        fun initConfig() {
+            if(SideBarButtonSettings.instance.enabled){
+                bind.selectSpan.setOnClickListener {
+                    MainActivity.bind.container.openDrawer(MainActivity.bind.navViewSpan)
+                }
+            }else{
+                bind.selectSpan.setOnClickListener {
+                }
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bind = FragmentCharacterBinding.bind(view)
 
+        initView()
+        initSelect()
+        initConfig()
+    }
+
+    private fun initView() {
         CharacterBean.characterList.forEach {
             characterShowList+=it
         }
@@ -42,14 +67,16 @@ class CharacterFragment : BaseFragment(R.layout.fragment_character) {
 
             item.root.setOnClickListener {
                 CharacterDetailActivity.character = character
-                goA<CharacterDetailActivity>()
-                activity?.overridePendingTransition(R.anim.activity_fade_in,R.anim.activity_fade_out)
+                startActivity(
+                    Intent(activity!!,CharacterDetailActivity::class.java),
+                    ActivityOptions.makeSceneTransitionAnimation(activity!!,item.icon,"icon").toBundle()
+                )
             }
         }
-        initSelect()
+        setViewMarginBottomByNavigationBarHeight(bind.list)
     }
 
-    //筛选
+    //更新列表
     private fun notificationUpdate(){
         characterShowList.clear()
         CharacterBean.characterList.forEach { entity->
@@ -75,7 +102,6 @@ class CharacterFragment : BaseFragment(R.layout.fragment_character) {
     }
 
     private fun initSelect(){
-
         with(bind){
 
             selectProperty += Element.FIRE
@@ -93,105 +119,31 @@ class CharacterFragment : BaseFragment(R.layout.fragment_character) {
             selectEquipType += WeaponType.SPEAR
 
 
-            selectFire.select {
-                if(it)
-                    selectProperty.add(Element.FIRE)
-                else
-                    selectProperty.remove(Element.FIRE)
-                bind.selectSpan.isEnabled = false
-                notificationUpdate()
-            }
-            selectWater.select {
-                if(it)
-                    selectProperty.add(Element.WATER)
-                else
-                    selectProperty.remove(Element.WATER)
-                bind.selectSpan.isEnabled = false
-                notificationUpdate()
-            }
-            selectGrass.select {
-                if(it)
-                    selectProperty.add(Element.GRASS)
-                else
-                    selectProperty.remove(Element.GRASS)
-                bind.selectSpan.isEnabled = false
-                notificationUpdate()
-            }
-            selectIce.select {
-                if(it)
-                    selectProperty.add(Element.ICE)
-                else
-                    selectProperty.remove(Element.ICE)
-                bind.selectSpan.isEnabled = false
-                notificationUpdate()
-            }
-            selectWind.select {
-                if(it)
-                    selectProperty.add(Element.WIND)
-                else
-                    selectProperty.remove(Element.WIND)
-                bind.selectSpan.isEnabled = false
-                notificationUpdate()
-            }
-            selectElect.select {
-                if(it)
-                    selectProperty.add(Element.ELECT)
-                else
-                    selectProperty.remove(Element.ELECT)
-                bind.selectSpan.isEnabled = false
-                notificationUpdate()
-            }
-            selectRock.select {
-                if(it)
-                    selectProperty.add(Element.ROCK)
-                else
-                    selectProperty.remove(Element.ROCK)
-                bind.selectSpan.isEnabled = false
-                notificationUpdate()
+            val selectElementViews = listOf(selectFire,selectWater,selectGrass,selectIce,selectWind,selectElect,selectRock)
+            val selectElements = listOf(Element.FIRE,Element.WATER,Element.GRASS,Element.ICE,Element.WIND,Element.ELECT,Element.ROCK)
+
+            selectElementViews.forEachIndexed{index, selectView ->
+                selectView.select {
+                    if(it)
+                        selectProperty.add(selectElements[index])
+                    else
+                        selectProperty.remove(selectElements[index])
+                    notificationUpdate()
+                }
             }
 
-            selectTypeOneHandSword.select {
-                if(it)
-                    selectEquipType.add(WeaponType.ONE_HAND_SWORD)
-                else
-                    selectEquipType.remove(WeaponType.ONE_HAND_SWORD)
-                bind.selectSpan.isEnabled = false
-                notificationUpdate()
-            }
-            selectBothHandSword.select {
-                if(it)
-                    selectEquipType.add(WeaponType.BOTH_HAND_SWORD)
-                else
-                    selectEquipType.remove(WeaponType.BOTH_HAND_SWORD)
-                bind.selectSpan.isEnabled = false
-                notificationUpdate()
-            }
-            selectBowAndArrow.select {
-                if(it)
-                    selectEquipType.add(WeaponType.BOW_AND_ARROW)
-                else
-                    selectEquipType.remove(WeaponType.BOW_AND_ARROW)
-                bind.selectSpan.isEnabled = false
-                notificationUpdate()
-            }
-            selectMagicArts.select {
-                if(it)
-                    selectEquipType.add(WeaponType.MAGIC_ARTS)
-                else
-                    selectEquipType.remove(WeaponType.MAGIC_ARTS)
-                bind.selectSpan.isEnabled = false
-                notificationUpdate()
-            }
-            selectSpear.select {
-                if(it)
-                    selectEquipType.add(WeaponType.SPEAR)
-                else
-                    selectEquipType.remove(WeaponType.SPEAR)
-                bind.selectSpan.isEnabled = false
-                notificationUpdate()
-            }
+            val selectWeaponViews = listOf(selectOneHandSword,selectBothHandSword,selectBowAndArrow,selectMagicArts,selectSpear)
+            val selectWeapons = listOf(WeaponType.ONE_HAND_SWORD,WeaponType.BOTH_HAND_SWORD,WeaponType.BOW_AND_ARROW,WeaponType.MAGIC_ARTS,WeaponType.SPEAR)
 
+            selectWeaponViews.forEachIndexed{index, selectView ->
+                selectView.select {
+                    if(it)
+                        selectEquipType.add(selectWeapons[index])
+                    else
+                        selectEquipType.remove(selectWeapons[index])
+                    notificationUpdate()
+                }
+            }
         }
     }
-
 }

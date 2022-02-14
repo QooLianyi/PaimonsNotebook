@@ -8,14 +8,27 @@
     <color name="white">#fff</color>
     <color name="black">#333333</color>
 
+    <color name="black_alpha_100">#111111</color>
+    <color name="black_alpha_90">#E6111111</color>
     <color name="black_alpha_80">#CC111111</color>
     <color name="black_alpha_70">#B3111111</color>
+    <color name="black_alpha_60">#99111111</color>
+    <color name="black_alpha_50">#80111111</color>
     <color name="black_alpha_40">#66111111</color>
+    <color name="black_alpha_30">#4D111111</color>
+    <color name="black_alpha_20">#33111111</color>
     <color name="black_alpha_10">#1A111111</color>
 
+    <color name="white_alpha_95">#F2FFFFFF</color>
+    <color name="white_alpha_90">#E6FFFFFF</color>
     <color name="white_alpha_80">#CCFFFFFF</color>
+    <color name="white_alpha_70">#B3FFFFFF</color>
+    <color name="white_alpha_60">#99FFFFFF</color>
     <color name="white_alpha_50">#80FFFFFF</color>
-    <color name="white_alpha_0">#00FFFFFF</color>
+    <color name="white_alpha_40">#66FFFFFF</color>
+    <color name="white_alpha_30">#4DFFFFFF</color>
+    <color name="white_alpha_20">#33FFFFFF</color>
+    <color name="white_alpha_10">#1AFFFFFF</color>
 
     <color name="transparent">#00FFFFFF</color>
 
@@ -30,8 +43,10 @@
 
 
     <color name="wave_ocean_blue_01">#3BE1FA</color>
-    <color name="blue_01">#26C6DA</color>
-    <color name="blue_02">#0199FF</color>
+    <color name="blue_01">#4DD0E1</color>
+
+    <color name="link_blue">#0199FF</color>
+    <color name="accent_blue">#18dcff</color>
 
 
     <color name="delete">#FE5866</color>
@@ -44,6 +59,17 @@
     <color name="menu_un_select_color">#F4D8A8</color>
     <color name="menu_un_select_color_02">#D3BC8E</color>
     <color name="menu_select_color">#fff</color>
+
+    <color name="card_background_color">#F5F1EB</color>
+    <color name="card_background_accent_color">#ECE3D8</color>
+    <color name="content_background_color">#F0EAE3</color>
+
+    <color name="card_content_text_accent_color">#7C5E44</color>
+    <color name="card_content_text_color">#C4B7A7</color>
+
+    <color name="the_expedition_circular_ring">#DD9B4D</color>
+    <color name="expedition_finished">#83BE1C</color>
+
 
     <color name="entity_detail_title_background">#E0DAD3</color>
     <color name="entity_detail_title_information_background">#CCC6BF</color>
@@ -66,6 +92,8 @@
 
     <color name="resin_fill_color">#80D8FF</color>
 
+    <color name="home_fill_color">#CC80D8FF</color>
+
     <color name="abyss_fill">#789D76</color>
     <color name="daily_fill">#BE9D61</color>
     <color name="event_fill">#5F84A4</color>
@@ -81,6 +109,8 @@
 
 
     <color name="official_type_background_color">#BDA575</color>
+
+    <color name="information_border_color">#D5BF93</color>
 
 
 </resources>

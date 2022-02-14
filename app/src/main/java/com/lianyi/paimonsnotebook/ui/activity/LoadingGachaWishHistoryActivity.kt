@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator
 import android.os.Bundle
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.bean.gacha.GachaLogBean
+import com.lianyi.paimonsnotebook.bean.gacha.UIGFExcelBean
 import com.lianyi.paimonsnotebook.config.AppConfig
 import com.lianyi.paimonsnotebook.databinding.ActivityLoadingGachaWishHistoryBinding
 import com.lianyi.paimonsnotebook.lib.information.ActivityResponseCode
@@ -18,18 +19,11 @@ class LoadingGachaWishHistoryActivity : BaseActivity() {
 
     companion object{
         var logUrl = ""
-        //新手池
-        val newPlayerGachaHistory = mutableListOf<GachaLogBean.ListBean>()
-        //常驻
-        val permanentGachaHistory = mutableListOf<GachaLogBean.ListBean>()
-        //角色
-        val characterGachaHistory = mutableListOf<GachaLogBean.ListBean>()
-        //武器
-        val weaponGachaHistory = mutableListOf<GachaLogBean.ListBean>()
     }
 
     lateinit var bind:ActivityLoadingGachaWishHistoryBinding
     var isLoading = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bind = ActivityLoadingGachaWishHistoryBinding.inflate(layoutInflater)
@@ -40,47 +34,74 @@ class LoadingGachaWishHistoryActivity : BaseActivity() {
     }
 
     private fun initView() {
-        newPlayerGachaHistory.clear()
-        permanentGachaHistory.clear()
-        characterGachaHistory.clear()
-        weaponGachaHistory.clear()
         setLoadingAnimation()
+        setContentMargin(bind.root)
     }
 
     private fun loadGachaHistory() {
         thread {
-            GachaType.gachaList.forEach {
+            val list = mutableListOf<UIGFExcelBean>()
+
+            GachaType.gachaList.forEach { gachaType->
                 var page = 1
                 var gachaLog: GachaLogBean? = null
+                var lastId = ""
+                var continueRead = true
+
+                runOnUiThread {
+                    bind.gachaName.text = GachaType.getNameByType(gachaType)
+                }
                 do {
-                    val url = MiHoYoApi.getGachaLogUrl(logUrl,it,page,6,gachaLog?.list?.last()?.id?:"0")
-                    Ok.getGachaHistory(url){
-                        gachaLog = GSON.fromJson(it.optString("data"),
-                            GachaLogBean::class.java)
+                    runOnUiThread {
+                        bind.page.text = "$page"
                     }
 
-                    gachaLog!!.list.forEach {
-                        when(it.gacha_type.toInt()){
-                            GachaType.PERMANENT-> permanentGachaHistory+=it
-                            GachaType.CHARACTER_ACTIVITY_01,GachaType.CHARACTER_ACTIVITY_02->characterGachaHistory+=it
-                            GachaType.NEW_PLAYERS->newPlayerGachaHistory+=it
-                            GachaType.WEAPON->weaponGachaHistory+=it
+                    val url = MiHoYoApi.getGachaLogUrl(logUrl,gachaType,page,6,gachaLog?.list?.last()?.id?:"0")
+                    Ok.getSync(url){
+                        gachaLog = GSON.fromJson(it.optString("data"),GachaLogBean::class.java)
+                    }
+
+                    if(lastId.isEmpty()&&!gachaLog!!.list.isNullOrEmpty()){
+                        lastId = PaiMonsNotebookDataBase.INSTANCE.getLastGachaHistoryId(gachaType.toString(),gachaLog!!.list.first().uid)
+                        println("lastId == $lastId")
+                    }
+
+                    gachaLog!!.list.forEach { bean->
+                        with(bean){
+                            val uigfGachaBean =
+                                UIGFExcelBean(
+                                    count,
+                                    gacha_type,
+                                    id,
+                                    item_id,
+                                    item_type,
+                                    lang,
+                                    name,
+                                    rank_type,
+                                    time,
+                                    uid,
+                                    GachaType.getUIGFType(gacha_type)
+                                )
+                            if(uigfGachaBean.id!=lastId){
+                                list += uigfGachaBean
+                            }else{
+                                continueRead = false
+                            }
                         }
                     }
-                    //每加载10页休息1秒
+
+                    //每加载10页休息2~3秒
                     if(page%10==0){
-                        Thread.sleep(1000L)
+                        Thread.sleep((2000L..3000L).random())
                     }else{
                         Thread.sleep(AppConfig.LOAD_GACHA_HISTORY_INTERVAL)
                     }
-                    println("page = $page")
                     page++
 
-                }while(gachaLog!!.list.size>0)
+                }while(gachaLog!!.list.size>0&&continueRead)
 
                 runOnUiThread {
-                    "page=$page".show()
-                    when(it){
+                    when(gachaType){
                         GachaType.PERMANENT-> bind.permanentOk.show()
                         GachaType.CHARACTER_ACTIVITY_01,GachaType.CHARACTER_ACTIVITY_02->bind.characterOk.show()
                         GachaType.NEW_PLAYERS->bind.newPlayerOk.show()
@@ -88,8 +109,13 @@ class LoadingGachaWishHistoryActivity : BaseActivity() {
                     }
                 }
             }
+
+            if(list.size>0){
+                //写入数据库
+                PaiMonsNotebookDataBase.INSTANCE.writeGachaHistoryForExcel(list.first().uid,list)
+            }
             runOnUiThread {
-                "加载完成".show()
+                "加载完成".showLong()
                 setResult(ActivityResponseCode.OK)
                 finish()
             }

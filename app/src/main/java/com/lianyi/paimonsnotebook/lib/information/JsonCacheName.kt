@@ -23,5 +23,8 @@ class JsonCacheName {
         //默认账号 usp
         const val MAIN_USER_NAME = "main_user"
 
+        //祈愿记录导出账号列表
+        const val GACHA_HISTORY_ACCOUNT_LIST = "gacha_history_account_list"
+
     }
 }

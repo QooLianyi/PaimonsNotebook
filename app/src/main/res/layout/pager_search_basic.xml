@@ -15,6 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             >
 
             <androidx.cardview.widget.CardView
@@ -234,6 +236,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="10dp"
                 android:layout_margin="10dp"
+                android:id="@+id/home_span"
                 >
 
                 <LinearLayout

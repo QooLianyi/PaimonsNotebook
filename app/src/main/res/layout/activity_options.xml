@@ -11,286 +11,422 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:text="常规"
+                android:textStyle="bold"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                />
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                app:cardCornerRadius="3dp"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="3dp"
                 >
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="5dp"
-                    android:id="@+id/options_page_span"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
                     >
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:text="页面"
-                            android:textStyle="bold"
-                            />
 
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:src="@drawable/icon_drop_down"
-                            android:layout_gravity="end|center"
-                            android:id="@+id/options_page_drop_down"
-                            />
-                        <androidx.appcompat.widget.AppCompatCheckBox
-                            android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:id="@+id/options_page"
-                            style="@style/CheckBoxStyle"
-                            android:background="@color/transparent"
-                            />
-                    </FrameLayout>
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_unfold"
+                        />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginStart="10dp"
                         >
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
                             android:textSize="16sp"
-                            android:text="加载页数据同步"
-                            android:textStyle="bold"
-                            android:layout_marginTop="10dp"
+                            android:text="侧边栏呼出按钮"
                             />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
                             android:textSize="14sp"
-                            android:text="(加载页数据刷新/关闭后数据刷新放入主页)"
-                            android:layout_marginTop="10dp"
+                            android:text="悬浮在屏幕一侧的侧边栏呼出区域"
                             />
+
                     </LinearLayout>
 
-                    <Switch
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:text="关闭"
-                        />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                app:cardCornerRadius="3dp"
-                >
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:orientation="vertical"
-                    android:padding="5dp"
-                    android:id="@+id/options_data_span"
-                    >
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:text="数据"
-                            android:textStyle="bold"
-                            />
-
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:src="@drawable/icon_drop_down"
-                            android:layout_gravity="end|center"
-                            android:id="@+id/options_data_drop_down"
-                            />
-                        <androidx.appcompat.widget.AppCompatCheckBox
-                            android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:id="@+id/options_data"
-                            style="@style/CheckBoxStyle"
-                            android:background="@color/transparent"
-                            />
-                    </FrameLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:textSize="16sp"
-                        android:text="本地JSON数据"
-                        android:textStyle="bold"
-                        android:layout_marginTop="10dp"
-                        />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"
-                            android:text="上次同步时间:"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"
-                            android:text="无"
-                            android:id="@+id/get_json_time"
-                            />
-                    </LinearLayout>
-
-                    <Button
+                    <androidx.cardview.widget.CardView
                         android:layout_width="80dp"
-                        android:layout_height="40dp"
-                        android:text="立即同步"
-                        android:id="@+id/get_json"
-                        />
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="0dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        >
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:text="设置"
+                            android:gravity="center"
+                            android:background="?attr/selectableItemBackground"
+                            android:id="@+id/sidebar_button_setting"
+                            />
+                    </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
 
+
             </androidx.cardview.widget.CardView>
 
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:text="关于"
-                    android:textStyle="bold"
-                    />
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="3dp"
+                >
 
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    >
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_padding"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginStart="10dp"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:text="内容边距"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:text="设置内容距离屏幕边缘的距离"
+                            />
+
+                    </LinearLayout>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="80dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="0dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        >
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:text="设置"
+                            android:gravity="center"
+                            android:background="?attr/selectableItemBackground"
+                            android:id="@+id/screen_margin_setting"
+                            />
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:text="数据"
+                android:textStyle="bold"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                />
 
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                app:cardCornerRadius="3dp"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="3dp"
                 >
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:orientation="vertical"
-                    android:padding="5dp"
-                    android:id="@+id/options_test_show_loading_window_span"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
                     >
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center"
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_synchronization"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginStart="10dp"
                         >
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:text="测试"
-                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:text="重新获取数据"
                             />
 
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:src="@drawable/icon_drop_down"
-                            android:layout_gravity="end|center"
-                            android:id="@+id/options_test_show_loading_window_drop_down"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:text="当角色或武器缺失时,可尝试同步"
                             />
-                        <androidx.appcompat.widget.AppCompatCheckBox
+
+                    </LinearLayout>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="80dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="0dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        >
+                        <Button
                             android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:id="@+id/options_test_show_loading_window"
-                            style="@style/CheckBoxStyle"
-                            android:background="@color/transparent"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:text="立即同步"
+                            android:gravity="center"
+                            android:background="?attr/selectableItemBackground"
+                            android:id="@+id/get_json"
                             />
-                    </FrameLayout>
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:text="关于派蒙的笔记本"
+                android:textStyle="bold"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="3dp"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    >
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginTop="10dp"
                         >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:text="加载窗口"
-                            android:textStyle="bold"
-                            />
 
-                        <TextView
+                        <ImageView
                             android:layout_width="40dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:text="0秒"
-                            android:layout_marginStart="10dp"
-                            android:id="@+id/show_loading_window_time"
+                            android:layout_height="40dp"
+                            android:src="@drawable/icon_about"
                             />
 
-                        <SeekBar
-                            android:layout_marginEnd="10dp"
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:max="120"
-                            android:id="@+id/show_loading_window_time_progress_bar"
-                            android:layout_gravity="center_vertical"
-                            />
-                    </LinearLayout>
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:layout_marginStart="10dp"
+                            >
 
-                    <Button
-                        android:layout_width="80dp"
-                        android:layout_height="40dp"
-                        android:text="SHOW"
-                        android:id="@+id/show_loading_window"
-                        />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                android:text="派蒙的笔记本"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:textSize="14sp"
+                                android:text="v1.0.0"
+                                />
+
+                        </LinearLayout>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="80dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center"
+                            app:cardCornerRadius="6dp"
+                            app:cardElevation="0dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginEnd="5dp"
+                            >
+                            <Button
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textColor="@color/black"
+                                android:textSize="14sp"
+                                android:text="检查更新"
+                                android:gravity="center"
+                                android:background="?attr/selectableItemBackground"
+                                android:id="@+id/check_update"
+                                />
+                        </androidx.cardview.widget.CardView>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="3dp"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    >
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_feed_back"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginStart="10dp"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:text="反馈与建议"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:text="反馈遇到的问题和提出建议"
+                            />
+
+                    </LinearLayout>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="80dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="0dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        >
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:text="前往"
+                            android:gravity="center"
+                            android:background="?attr/selectableItemBackground"
+                            android:id="@+id/go_feed_back"
+                            />
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 

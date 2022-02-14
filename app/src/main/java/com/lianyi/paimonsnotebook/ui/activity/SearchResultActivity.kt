@@ -2,11 +2,11 @@ package com.lianyi.paimonsnotebook.ui.activity
 
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.CharacterBean
+import com.lianyi.paimonsnotebook.bean.PlayerCharacterInformationBean
 import com.lianyi.paimonsnotebook.bean.PlayerInformationBean
 import com.lianyi.paimonsnotebook.bean.SpiralAbyssBean
 import com.lianyi.paimonsnotebook.databinding.*
@@ -17,7 +17,6 @@ import com.lianyi.paimonsnotebook.lib.information.Element
 import com.lianyi.paimonsnotebook.lib.information.Format
 import com.lianyi.paimonsnotebook.lib.information.MiHoYoApi
 import com.lianyi.paimonsnotebook.lib.information.Star
-import com.lianyi.paimonsnotebook.ui.home.CharacterFragment
 import com.lianyi.paimonsnotebook.util.*
 import java.lang.StringBuilder
 
@@ -31,6 +30,8 @@ class SearchResultActivity : BaseActivity() {
     private val titles = listOf("基本信息","角色信息","深境螺旋")
     private val pagers = mutableListOf<View>()
     private val characterIds = StringBuilder()
+    private lateinit var roleId:String
+    private lateinit var server:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,20 +48,8 @@ class SearchResultActivity : BaseActivity() {
 
         bind.viewPager.offscreenPageLimit = 3
 
-//        bind.tabLayout.tab {
-//            when(it){
-//                0->{
-//                    loadBasicInformation()
-//                }
-//                1->{
-//                    loadCharacter()
-//                }
-//                2->{
-//                    loadAbyss()
-//                }
-//            }
-//        }
         initData()
+        setContentMargin(bind.root)
     }
 
     private fun initData(){
@@ -77,6 +66,10 @@ class SearchResultActivity : BaseActivity() {
                 }
             }
         }
+
+        roleId = intent.getStringExtra("roleId")?:""
+        server = intent.getStringExtra("server")?:""
+
         loadBasicInformation()
         loadCharacter()
         loadAbyss()
@@ -132,14 +125,13 @@ class SearchResultActivity : BaseActivity() {
             repeat(worldExplorationsBean.offerings.size){
                 val text = TextView(item.root.context)
                 text.text = "${worldExplorationsBean.offerings[it].name} -  ${worldExplorationsBean.offerings[it].level}级"
-                text.textSize = 18f
+                text.textSize = 17f
                 text.setTextColor(ContextCompat.getColor(bind.root.context,R.color.black))
                 item.areaInformationSpan.addView(text)
             }
 
             item.explorationsValue.text = "${(worldExplorationsBean.exploration_percentage / 10f)}%"
         }
-
 
         page.homeLevel.infoName.text = "信任等阶"
         page.comfortNum.infoName.text = "最高洞天仙力"
@@ -165,44 +157,55 @@ class SearchResultActivity : BaseActivity() {
             item.name.text = homesBean.name
         }
 
+        setViewMarginBottomByNavigationBarHeight(page.homeSpan)
     }
 
     private fun loadCharacter(){
         val page = PagerSearchCharacterBinding.bind(pagers[1])
-
         val body = """
-            {"character_ids":${characterIds},
-            "role_id":"${mainUser!!.gameUid}","server":"${mainUser!!.region}"}
-        """.trimIndent()
+        {"character_ids":${characterIds},
+        "role_id":"$roleId","server":"$server"}
+         """.trimIndent()
 
         Ok.getCharacter(MiHoYoApi.getCookie(mainUser!!),body,body.toMyRequestBody()){
             if(it.ok){
-                val playerCharacterInfo = GSON.fromJson(it.optString("data"),PlayerInformationBean::class.java)
-                runOnUiThread {
-                    page.list.adapter = ReAdapter(playerCharacterInfo.avatars,R.layout.item_character){
-                        view, avatarsBean, position ->
-                        val item = ItemCharacterBinding.bind(view)
-                        item.name.text = avatarsBean.name
+                val playerCharacterInfo = GSON.fromJson(it.optString("data"),PlayerCharacterInformationBean::class.java)
+                setCharacterListAdapter(page, playerCharacterInfo.avatars)
+            }
+        }
 
-                        val character = CharacterBean.getCharacterByName(avatarsBean.name)
+        setViewMarginBottomByNavigationBarHeight(page.list)
+    }
 
-                        if(character!=null){
-                            item.starBackground.setImageResource(Star.getStarResourcesByStarNum(character.star,false))
-                            item.type.setImageResource(Element.getImageResourceByType(character.element))
-                            loadImage(item.icon,character.icon)
-                        }
+    private fun setCharacterListAdapter(page:PagerSearchCharacterBinding,avatars:List<PlayerCharacterInformationBean.AvatarsBean>){
+        runOnUiThread {
+            page.list.adapter = ReAdapter(avatars,R.layout.item_character){
+                    view, avatarsBean, position ->
+                val item = ItemCharacterBinding.bind(view)
+                item.name.text = avatarsBean.name
 
-                        if(avatarsBean.actived_constellation_num>0){
-                            item.activatedConstellationNum.show()
-                            item.activatedConstellationNum.text = avatarsBean.actived_constellation_num.toString()
-                        }else{
-                            item.activatedConstellationNum.gone()
-                        }
+                val character = CharacterBean.getCharacterByName(avatarsBean.name)
 
-                        item.value.text = avatarsBean.level.toString()
-                        item.name.text = avatarsBean.name
+                if(character!=null){
+                    item.starBackground.setImageResource(Star.getStarResourcesByStarNum(character.star,false))
+                    item.type.setImageResource(Element.getImageResourceByType(character.element))
+                    loadImage(item.icon,character.icon)
+                }
 
-                    }
+                if(avatarsBean.actived_constellation_num>0){
+                    item.activatedConstellationNum.show()
+                    item.activatedConstellationNum.text = avatarsBean.actived_constellation_num.toString()
+                }else{
+                    item.activatedConstellationNum.gone()
+                }
+
+                item.value.text = avatarsBean.level.toString()
+                item.name.text = avatarsBean.name
+
+                item.root.setOnClickListener {
+                    SearchResultCharacterDetailActivity.avatarsBean = avatarsBean
+                    SearchResultCharacterDetailActivity.avatarsList = avatars
+                    goA<SearchResultCharacterDetailActivity>()
                 }
             }
         }
@@ -211,96 +214,123 @@ class SearchResultActivity : BaseActivity() {
     private fun loadAbyss(){
         val page = PagerSearchAbyssBinding.bind(pagers[2])
 
-        val query = MiHoYoApi.getAbyssUrl(mainUser!!.gameUid, mainUser!!.region).split("?").last()
-
-        Ok.getAbyss(MiHoYoApi.getCookie(mainUser!!),query){
+        val query = MiHoYoApi.getAbyssUrl(roleId, server).split("?").last()
+        Ok.get(MiHoYoApi.getAbyssUrl(roleId,server),query){
             if(it.ok){
                 val spiralAbyss = GSON.fromJson(it.optString("data"),SpiralAbyssBean::class.java)
+                setAbyssListAdapter(page,spiralAbyss)
+            }
+        }
 
-                runOnUiThread {
-                    page.maxFloor.infoName.text = "最深抵达"
-                    page.maxFloor.infoValue.text = spiralAbyss.max_floor
-                    page.totalBattleTimes.infoName.text = "战斗次数"
-                    page.totalBattleTimes.infoValue.text = spiralAbyss.total_battle_times.toString()
-                    page.totalStar.infoName.text = "渊星"
-                    page.totalStar.infoValue.text = spiralAbyss.total_star.toString()
+        setViewMarginBottomByNavigationBarHeight(page.list)
+    }
 
-                    page.revealRankList.adapter = ReAdapter(spiralAbyss.reveal_rank,R.layout.item_character){
-                        view, revealRankBean, position ->
-                        val item = ItemCharacterBinding.bind(view)
-                        item.valueName.gone()
-                        item.value.text = "${revealRankBean.value}次"
-                        item.starBackground.setBackgroundResource(Star.getStarResourcesByStarNum(revealRankBean.rarity,false))
-                        loadImage(item.icon,revealRankBean.avatar_icon)
-                        item.type.gone()
+    private fun setAbyssListAdapter(page:PagerSearchAbyssBinding,spiralAbyss:SpiralAbyssBean){
+        runOnUiThread {
+            page.maxFloor.infoName.text = "最深抵达"
+            page.maxFloor.infoValue.text = spiralAbyss.max_floor
+            page.totalBattleTimes.infoName.text = "战斗次数"
+            page.totalBattleTimes.infoValue.text = spiralAbyss.total_battle_times.toString()
+            page.totalStar.infoName.text = "渊星"
+            page.totalStar.infoValue.text = spiralAbyss.total_star.toString()
+
+            //战斗次数排行榜
+            page.revealRankList.adapter = ReAdapter(spiralAbyss.reveal_rank,R.layout.item_character){
+                    view, revealRankBean, position ->
+                val item = ItemCharacterBinding.bind(view)
+                item.valueName.gone()
+                item.value.text = "${revealRankBean.value}次"
+                item.starBackground.setBackgroundResource(Star.getStarResourcesByStarNum(revealRankBean.rarity,false))
+                loadImage(item.icon,revealRankBean.avatar_icon)
+                item.type.gone()
+            }
+
+            if(spiralAbyss.defeat_rank.size>0){
+                loadImage(page.defeatRankIcon,spiralAbyss.defeat_rank.first().avatar_icon)
+                page.defeatRankValue.text = spiralAbyss.defeat_rank.first().value.toString()
+            }
+
+            if(spiralAbyss.damage_rank.size>0){
+                loadImage(page.damageRankIcon,spiralAbyss.damage_rank.first().avatar_icon)
+                page.damageRankValue.text = spiralAbyss.damage_rank.first().value.toString()
+            }
+
+            if(spiralAbyss.take_damage_rank.size>0){
+                loadImage(page.takeDamageRankIcon,spiralAbyss.take_damage_rank.first().avatar_icon)
+                page.takeDamageRankValue.text = spiralAbyss.take_damage_rank.first().value.toString()
+            }
+
+            if(spiralAbyss.normal_skill_rank.size>0){
+                loadImage(page.normalSkillRankIcon,spiralAbyss.normal_skill_rank.first().avatar_icon)
+                page.normalSkillRankValue.text = spiralAbyss.normal_skill_rank.first().value.toString()
+            }
+
+            if(spiralAbyss.energy_skill_rank.size>0){
+                loadImage(page.energySkillRankIcon,spiralAbyss.energy_skill_rank.first().avatar_icon)
+                page.energySkillRankValue.text = spiralAbyss.energy_skill_rank.first().value.toString()
+            }
+
+            page.list.adapter = ReAdapter(spiralAbyss.floors,R.layout.item_abyss_tower){
+                    view, floorsBean, position ->
+                val tower = ItemAbyssTowerBinding.bind(view)
+                tower.floor.text = floorsBean.index.toString()
+                tower.star.text = floorsBean.star.toString()
+                tower.maxStar.text = floorsBean.max_star.toString()
+
+
+                tower.showContent.select {
+                    if(it){
+                        tower.list.measure(0,0)
+                        openAndCloseAnimationVer(tower.floorSpan,40.dp.toInt(),tower.list.measuredHeight+40.dp.toInt(),500)
+                        tower.dropDown.rotation = 0f
+                    }else{
+                        openAndCloseAnimationVer(tower.floorSpan,tower.list.measuredHeight+40.dp.toInt(),40.dp.toInt(),500)
+                        tower.dropDown.rotation = 180f
                     }
+                    tower.dropDown.animate().rotationBy(180f).duration = 500
+                }
 
-                    if(spiralAbyss.defeat_rank.size>0){
-                        loadImage(page.defeatRankIcon,spiralAbyss.defeat_rank.first().avatar_icon)
-                        page.defeatRankValue.text = spiralAbyss.defeat_rank.first().value.toString()
-                    }
+                tower.list.adapter = ReAdapter(floorsBean.levels,R.layout.item_abyss_floor){
+                        view, levelsBean, position ->
+                    val floor = ItemAbyssFloorBinding.bind(view)
+                    floor.index.text = levelsBean.index.toString()
 
-                    if(spiralAbyss.damage_rank.size>0){
-                        loadImage(page.damageRankIcon,spiralAbyss.damage_rank.first().avatar_icon)
-                        page.damageRankValue.text = spiralAbyss.damage_rank.first().value.toString()
-                    }
+                    floor.time.text = Format.TIME_FULL.format(levelsBean.battles.first().timestamp.toLong()*1000L)
 
-                    if(spiralAbyss.take_damage_rank.size>0){
-                        loadImage(page.takeDamageRankIcon,spiralAbyss.take_damage_rank.first().avatar_icon)
-                        page.takeDamageRankValue.text = spiralAbyss.take_damage_rank.first().value.toString()
-                    }
-
-                    if(spiralAbyss.normal_skill_rank.size>0){
-                        loadImage(page.normalSkillRankIcon,spiralAbyss.normal_skill_rank.first().avatar_icon)
-                        page.normalSkillRankValue.text = spiralAbyss.normal_skill_rank.first().value.toString()
-                    }
-
-                    if(spiralAbyss.energy_skill_rank.size>0){
-                        loadImage(page.energySkillRankIcon,spiralAbyss.energy_skill_rank.first().avatar_icon)
-                        page.energySkillRankValue.text = spiralAbyss.energy_skill_rank.first().value.toString()
-                    }
-
-                    page.list.adapter = ReAdapter(spiralAbyss.floors,R.layout.item_abyss_tower){
-                        view, floorsBean, position ->
-                        val tower = ItemAbyssTowerBinding.bind(view)
-                        tower.floor.text = floorsBean.index.toString()
-                        tower.star.text = floorsBean.star.toString()
-                        tower.maxStar.text = floorsBean.max_star.toString()
-
-                        tower.showContent.select {
-                            if(it){
-                                tower.list.measure(0,0)
-                                openAndCloseAnimationVer(tower.floorSpan,40.dp.toInt(),tower.list.measuredHeight+40.dp.toInt(),500)
-                                tower.dropDown.rotation = 0f
-                            }else{
-                                openAndCloseAnimationVer(tower.floorSpan,tower.list.measuredHeight+40.dp.toInt(),40.dp.toInt(),500)
-                                tower.dropDown.rotation = 180f
-                            }
-                            tower.dropDown.animate().rotationBy(180f).duration = 500
+                    floor.characterList.adapter = ReAdapter(levelsBean.battles,R.layout.item_grid_layout_list){
+                            view, battlesBean, position ->
+                        val battles = ItemGridLayoutListBinding.bind(view)
+                        battles.list.adapter = ReAdapter(battlesBean.avatars,R.layout.item_character_small){
+                                view, avatarsBean, position ->
+                            val character = ItemCharacterSmallBinding.bind(view)
+                            character.starBackground.setImageResource(Star.getStarResourcesByStarNum(avatarsBean.rarity,false))
+                            loadImage(character.icon,avatarsBean.icon)
+                            character.value.text = avatarsBean.level.toString()
                         }
+                    }
 
-                        tower.list.adapter = ReAdapter(floorsBean.levels,R.layout.item_abyss_floor){
-                            view, levelsBean, position ->
-                            val floor = ItemAbyssFloorBinding.bind(view)
-                            floor.index.text = levelsBean.index.toString()
-
-                            floor.time.text = Format.TIME_FULL.format(levelsBean.battles.first().timestamp.toLong()*1000L)
-
-                            floor.characterList.adapter = ReAdapter(levelsBean.battles,R.layout.item_grid_layout_list){
-                                view, battlesBean, position ->
-                                val battles = ItemGridLayoutListBinding.bind(view)
-                                battles.list.adapter = ReAdapter(battlesBean.avatars,R.layout.item_character_small){
-                                    view, avatarsBean, position ->
-                                    val character = ItemCharacterSmallBinding.bind(view)
-                                    character.starBackground.setImageResource(Star.getStarResourcesByStarNum(avatarsBean.rarity,false))
-                                    loadImage(character.icon,avatarsBean.icon)
-                                    character.value.text = avatarsBean.level.toString()
-                                }
-                            }
+                    when(levelsBean.star){
+                        1->{
+                            floor.abyssStar1.alpha = 1f
+                        }
+                        2->{
+                            floor.abyssStar1.alpha = 1f
+                            floor.abyssStar2.alpha = 1f
+                        }
+                        3->{
+                            floor.abyssStar1.alpha = 1f
+                            floor.abyssStar2.alpha = 1f
+                            floor.abyssStar3.alpha = 1f
+                        }
+                        else->{
+                            floor.abyssStar1.alpha = 0.5f
+                            floor.abyssStar2.alpha = 0.5f
+                            floor.abyssStar3.alpha = 0.5f
                         }
                     }
                 }
             }
         }
     }
+
 }

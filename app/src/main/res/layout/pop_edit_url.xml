@@ -8,7 +8,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
+        app:cardCornerRadius="6dp"
         >
 
         <LinearLayout
@@ -16,43 +16,66 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@color/white"
-            android:padding="10dp"
             >
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:textColor="@color/black"
-                android:text="请输入URL"
-                />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="@color/black"
-                android:text="在此输入祈愿记录链接"
-                android:layout_marginTop="5dp"
-                />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxHeight="120dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/block_gray_width1"
-                android:padding="5dp"
-                android:id="@+id/input"
-                />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="15dp"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="22sp"
+                    android:textColor="@color/black"
+                    android:text="请输入URL"
+                    />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textColor="@color/link_blue"
+                        android:text="如何获取?"
+                        android:id="@+id/how_to_get_the_url"
+                        android:layout_gravity="end"
+                        />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        app:boxStrokeColor="@color/blue_01"
+                        app:boxBackgroundColor="@color/star_color"
+                        android:minHeight="50dp"
+                        >
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxHeight="120dp"
+                            android:padding="5dp"
+                            android:id="@+id/input"
+                            android:hint="在此输入祈愿记录链接"
+                            />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginTop="10dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
                 >
 
                 <TextView
@@ -65,6 +88,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/black_alpha_80"
                     android:id="@+id/cancel"
+                    android:background="?attr/selectableItemBackground"
                     />
                 <View
                     android:layout_width="1dp"
@@ -77,12 +101,13 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:text="确定"
+                    android:text="开始"
                     android:textSize="18sp"
                     android:gravity="center"
                     android:textStyle="bold"
-                    android:textColor="@color/resin_fill_color"
+                    android:textColor="@color/accent_blue"
                     android:id="@+id/confirm"
+                    android:background="?attr/selectableItemBackground"
                     />
 
             </LinearLayout>

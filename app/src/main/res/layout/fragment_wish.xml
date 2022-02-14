@@ -15,7 +15,6 @@
         android:gravity="center"
         android:orientation="vertical"
         android:id="@+id/no_data_span"
-        android:visibility="gone"
         >
         <TextView
             android:layout_width="wrap_content"
@@ -50,8 +49,55 @@
                 />
         </LinearLayout>
 
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:id="@+id/import_excel"
+            >
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/icon_import"
+                app:tint="@color/black"
+                android:layout_gravity="center"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:text="从UIGF工作簿导入"
+                android:layout_gravity="center"
+                />
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:id="@+id/import_json"
+            >
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/icon_import"
+                app:tint="@color/black"
+                android:layout_gravity="center"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:text="从UIGF JSON导入"
+                android:layout_gravity="center"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -68,16 +114,15 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:id="@+id/select_account_span"
+                android:layout_marginStart="40dp"
+                android:gravity="center_vertical"
                 >
                 <Spinner
-                    android:layout_width="80dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
                     android:id="@+id/select_account"
-                    android:layout_marginStart="50dp"
                     android:background="@color/white"
-                    android:layout_gravity="center_vertical"
                     android:spinnerMode="dropdown"
-                    android:gravity="center"
                     />
                 <ImageView
                     android:layout_width="25dp"
@@ -94,7 +139,10 @@
                 android:layout_weight="1"
                 android:id="@+id/wish_tab_layout"
                 app:tabIndicatorFullWidth="false"
+                app:tabIndicatorColor="@color/gacha_history_star_5_color"
+                app:tabSelectedTextColor="@color/gacha_history_star_5_color"
                 />
+
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"

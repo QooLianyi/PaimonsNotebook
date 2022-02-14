@@ -30,6 +30,7 @@
             android:src="@drawable/icon_drop_down"
             android:layout_gravity="center_vertical"
             app:tint="@color/menu_un_select_color"
+            android:layout_marginStart="15dp"
             />
     </LinearLayout>
 
