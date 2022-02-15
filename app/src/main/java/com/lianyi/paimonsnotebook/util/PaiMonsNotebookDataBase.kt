@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.lianyi.paimonsnotebook.bean.gacha.UIGFExcelBean
 import com.lianyi.paimonsnotebook.bean.gacha.UIGFJsonBean
 import com.lianyi.paimonsnotebook.lib.information.JsonCacheName
+import com.lianyi.paimonsnotebook.util.PaiMonsNoteBook.Companion.context
 import org.json.JSONArray
 
 class PaiMonsNotebookDataBase private constructor(context: Context) :
@@ -15,7 +16,7 @@ class PaiMonsNotebookDataBase private constructor(context: Context) :
 
     companion object{
         val INSTANCE by lazy {
-            PaiMonsNotebookDataBase(PaiMonsNoteBook.context)
+            PaiMonsNotebookDataBase(context)
         }
         private const val DB_NAME = "PaimonsNotebookDataBase"
         private const val DB_VERSION =100
