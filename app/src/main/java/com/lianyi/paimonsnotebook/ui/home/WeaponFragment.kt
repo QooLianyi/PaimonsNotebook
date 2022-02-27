@@ -22,24 +22,10 @@ import org.json.JSONArray
 
 class WeaponFragment : BaseFragment(R.layout.fragment_weapon) {
 
-    private val weaponList = mutableListOf<WeaponBean>()
     private val weaponShowList = mutableListOf<WeaponBean>()
     private val selectWeapon = mutableListOf<Int>()
 
-    companion object{
-        private lateinit var bind: FragmentWeaponBinding
-
-        fun initConfig() {
-            if(SideBarButtonSettings.instance.enabled){
-                bind.selectSpan.setOnClickListener {
-                    MainActivity.bind.container.openDrawer(MainActivity.bind.navViewSpan)
-                }
-            }else{
-                bind.selectSpan.setOnClickListener {
-                }
-            }
-        }
-    }
+    private lateinit var bind: FragmentWeaponBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,15 +33,14 @@ class WeaponFragment : BaseFragment(R.layout.fragment_weapon) {
 
         initView()
         initSelect()
-        initConfig()
     }
 
     private fun initView() {
-        JSONArray(wsp.getString(JsonCacheName.WEAPON_LIST,"")).toList(weaponList)
-
-        weaponList.forEach {
-            weaponShowList +=it
+        bind.rank.setOnClickListener {
+            "数值排行:将在未来实现".show()
         }
+
+        WeaponBean.weaponList.copy(weaponShowList)
 
         weaponShowList.sortByDescending { it.star }
         bind.list.adapter = ReAdapter(weaponShowList,R.layout.item_entity){
@@ -80,7 +65,7 @@ class WeaponFragment : BaseFragment(R.layout.fragment_weapon) {
 
     private fun notificationUpdate(){
         weaponShowList.clear()
-        weaponList.forEach { entity->
+        WeaponBean.weaponList.forEach { entity->
             if(selectWeapon.indexOf(entity.weaponType)!=-1){
                 weaponShowList += entity
             }

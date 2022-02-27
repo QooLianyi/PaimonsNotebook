@@ -36,7 +36,7 @@ class PaiMonsNotebookDataBase private constructor(context: Context) :
 
 
         private fun getCreateTableSql(uid:String):String{
-            return "create table ${getGachaHistoryTableName(uid)}($COLUMN_NAME_COUNT text,$COLUMN_NAME_GACHA_TYPE text,$COLUMN_NAME_ID text primary key,$COLUMN_NAME_ITEM_ID text,$COLUMN_NAME_ITEM_TYPE text,$COLUMN_NAME_LANG text,$COLUMN_NAME_NAME text,$COLUMN_NAME_RANK_TYPE text,$COLUMN_NAME_TIME text,$COLUMN_NAME_UID text,$COLUMN_NAME_UIGF_GACHA_TYPE text)"
+            return "create table if not exists ${getGachaHistoryTableName(uid)}($COLUMN_NAME_COUNT text,$COLUMN_NAME_GACHA_TYPE text,$COLUMN_NAME_ID text primary key,$COLUMN_NAME_ITEM_ID text,$COLUMN_NAME_ITEM_TYPE text,$COLUMN_NAME_LANG text,$COLUMN_NAME_NAME text,$COLUMN_NAME_RANK_TYPE text,$COLUMN_NAME_TIME text,$COLUMN_NAME_UID text,$COLUMN_NAME_UIGF_GACHA_TYPE text)"
         }
 
         private fun getGachaHistoryTableName(uid: String):String{
@@ -55,12 +55,16 @@ class PaiMonsNotebookDataBase private constructor(context: Context) :
     fun checkGachaHistoryTableExists(uid: String):Boolean{
         try {
             val rawQuery = readableDatabase.rawQuery("select * from ${getGachaHistoryTableName(uid)}",null)
+            if(rawQuery.moveToNext()){
+                println("move = ${System.currentTimeMillis()}")
+                return true
+            }
             rawQuery.close()
         }catch (e:Exception){
             e.printStackTrace()
             return false
         }
-        return true
+        return false
     }
 
     //获得祈愿记录表(全部)
@@ -91,7 +95,6 @@ class PaiMonsNotebookDataBase private constructor(context: Context) :
         list.sortBy { it.id.toLong() }
         return list
     }
-
 
     fun getGachaHistoryForJson(uid: String):List<UIGFJsonBean>{
         val list = mutableListOf<UIGFJsonBean>()
@@ -167,10 +170,7 @@ class PaiMonsNotebookDataBase private constructor(context: Context) :
 
     //插入数据
     fun insertDataForExcel(uigfExcelBean: UIGFExcelBean, uid: String):Boolean{
-        val exists = checkGachaHistoryTableExists(uid)
-        if(!exists){
-            writableDatabase.execSQL(getCreateTableSql(uid))
-        }
+        writableDatabase.execSQL(getCreateTableSql(uid))
 
         //查找是否有相同的ID
         val cursor = writableDatabase.query(getGachaHistoryTableName(uid), arrayOf(COLUMN_NAME_ID),"$COLUMN_NAME_ID = ${uigfExcelBean.id}",null,null,null,null,null)
@@ -197,10 +197,7 @@ class PaiMonsNotebookDataBase private constructor(context: Context) :
     }
 
     fun insertDataForJson(uigfExcelBean: UIGFJsonBean, uid: String ,lang: String):Boolean{
-        val exists = checkGachaHistoryTableExists(uid)
-        if(!exists){
-            writableDatabase.execSQL(getCreateTableSql(uid))
-        }
+        writableDatabase.execSQL(getCreateTableSql(uid))
 
         //查找是否有相同的ID
         val cursor = writableDatabase.query(getGachaHistoryTableName(uid), arrayOf(COLUMN_NAME_ID),"$COLUMN_NAME_ID = $uid",null,null,null,null,null)
@@ -302,4 +299,16 @@ class PaiMonsNotebookDataBase private constructor(context: Context) :
         }
     }
 
+    fun deleteGachaHistory(uid:String){
+        val gachaHistoryAccountList = mutableListOf<String>()
+        JSONArray(sp.getString(JsonCacheName.GACHA_HISTORY_ACCOUNT_LIST,"[]")).toList(gachaHistoryAccountList)
+        gachaHistoryAccountList.remove(uid)
+        sp.edit().apply {
+            putString(JsonCacheName.GACHA_HISTORY_ACCOUNT_LIST, GSON.toJson(gachaHistoryAccountList))
+            apply()
+        }
+
+        val sql = "drop table if exists ${getGachaHistoryTableName(uid)}"
+        writableDatabase.execSQL(sql)
+    }
 }

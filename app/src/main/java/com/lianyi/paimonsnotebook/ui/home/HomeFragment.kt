@@ -2,7 +2,10 @@ package com.lianyi.paimonsnotebook.ui.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
+import androidx.activity.OnBackPressedCallback
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.dailynote.DailyNoteBean
@@ -18,7 +21,6 @@ import com.lianyi.paimonsnotebook.ui.activity.home.AccountManagerActivity
 import com.lianyi.paimonsnotebook.ui.activity.home.DailySignActivity
 import com.lianyi.paimonsnotebook.ui.activity.home.MonthLedgerActivity
 import com.lianyi.paimonsnotebook.util.*
-import kotlin.concurrent.thread
 
 class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
@@ -27,6 +29,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     private val nearActivity = mutableListOf<BlackBoardBean.DataBean.ListBean>()
     private val bannerData = mutableListOf<HomeInformationBean.CarouselsBean>()
     private val notices = mutableListOf<HomeOfficialCommendPostBean.ListBean>()
+    private var dailyNoteIsOpen = false //便笺开关标记
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,16 +39,15 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     }
 
     private fun initView() {
-        var isOpen = false
         bind.memo.setOnClickListener {
-            if (isOpen) {
+            if (dailyNoteIsOpen) {
                 bind.motion.transitionToStart()
                 bind.memo.transitionToStart()
             } else {
                 bind.motion.transitionToEnd()
                 bind.memo.transitionToEnd()
             }
-            isOpen = !isOpen
+            dailyNoteIsOpen = !dailyNoteIsOpen
         }
 
         bind.dailySign.setOnClickListener {
@@ -59,11 +61,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         bind.meInformation.setOnClickListener {
             bind.meInformation.isEnabled = false
             SearchFragment.querySelfInformation(mainUser!!.gameUid) {
-                thread {
-                    Thread.sleep(1000L)
-                    activity?.runOnUiThread {
-                        bind.meInformation.isEnabled = true
-                    }
+                activity?.runOnUiThread {
+                    bind.meInformation.isEnabled = true
                 }
             }
         }
@@ -108,6 +107,18 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                 loadHomeNoticeImage(item.cover, listBean.banner)
                 item.title.text = listBean.subject
             }
+
+        //展开时收起
+//        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//                if (dailyNoteIsOpen) {
+//                    bind.memo.transitionToStart()
+//                    bind.motion.transitionToStart()
+//                    dailyNoteIsOpen = false
+//                } else {
+//                }
+//            }
+//        })
 
         setViewMarginBottomByNavigationBarHeight(bind.homeNotice,bind.memoAnchor)
         refreshData()
@@ -166,7 +177,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
             if(it.ok){
                 val dailyNoteBean = GSON.fromJson(it.optString("data"),DailyNoteBean::class.java)
                 activity?.runOnUiThread {
-                    with(bind) {
+                    with(bind.informationDetailSpan) {
                         //外部树脂进度条
                         bind.resinProgressBar.progress =
                             ((dailyNoteBean.current_resin.toFloat() / dailyNoteBean.max_resin.toFloat()) * 100).toInt()
@@ -180,6 +191,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                         //每日任务
                         dailyTaskFinishedCount.text = dailyNoteBean.finished_task_num.toString()
                         dailyTaskMax.text = dailyNoteBean.total_task_num.toString()
+
+                        if(dailyNoteBean.isIs_extra_task_reward_received){
+                            dailyTaskState.text = Constants.DAILY_TASK_STATE_FINISHED
+                        }else{
+                            dailyTaskState.text = Constants.DAILY_TASK_STATE_NOT_FINISHED
+                        }
 
                         //洞天宝钱
                         homeIconCurrent.text = dailyNoteBean.current_home_coin.toString()
@@ -232,4 +249,14 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         }
     }
 
+    override fun handelBackPressed(): Boolean {
+        return if(dailyNoteIsOpen){
+            bind.memo.transitionToStart()
+            bind.motion.transitionToStart()
+            dailyNoteIsOpen = false
+            true
+        }else{
+            false
+        }
+    }
 }

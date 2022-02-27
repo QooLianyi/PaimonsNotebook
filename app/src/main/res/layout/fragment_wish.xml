@@ -114,7 +114,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:id="@+id/select_account_span"
-                android:layout_marginStart="40dp"
+                android:layout_marginStart="20dp"
                 android:gravity="center_vertical"
                 >
                 <Spinner

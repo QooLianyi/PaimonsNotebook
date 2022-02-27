@@ -98,39 +98,21 @@
                 android:layout_marginStart="10dp"
                 >
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:text="上半"
-                    android:layout_marginTop="10dp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:text="下半"
-                    android:layout_gravity="bottom"
-                    />
-
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center"
-                    android:gravity="end"
-                    >
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:gravity="end"
+                >
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/icon_abyss_star"
-                        android:id="@+id/abyss_star_1"
-                        android:alpha="0.5"
-                        />
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/icon_abyss_star"
+                    android:id="@+id/abyss_star_1"
+                    android:alpha="0.5"
+                    />
 
                     <ImageView
                         android:layout_width="30dp"

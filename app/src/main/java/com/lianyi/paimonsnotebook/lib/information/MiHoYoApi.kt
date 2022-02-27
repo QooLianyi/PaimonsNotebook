@@ -1,6 +1,13 @@
 package com.lianyi.paimonsnotebook.lib.information
 
+import android.content.Intent
+import com.lianyi.paimonsnotebook.bean.PlayerCharacterInformationBean
+import com.lianyi.paimonsnotebook.bean.PlayerInformationBean
+import com.lianyi.paimonsnotebook.bean.SpiralAbyssBean
 import com.lianyi.paimonsnotebook.bean.account.UserBean
+import com.lianyi.paimonsnotebook.ui.activity.SearchResultActivity
+import com.lianyi.paimonsnotebook.util.*
+import java.lang.StringBuilder
 
 class MiHoYoApi {
     companion object{
@@ -90,5 +97,74 @@ class MiHoYoApi {
             return "https://api-takumi.mihoyo.com/game_record/app/genshin/api/spiralAbyss?role_id=${gameUID}&schedule_type=1&server=$server"
         }
 
+        //获得玩家深渊数据 回调
+        fun getAbyssData(roleId:String, server:String,block:(SpiralAbyssBean)->Unit){
+            val query = getAbyssUrl(roleId, server).split("?").last()
+            Ok.get(getAbyssUrl(roleId,server),query){
+                if(it.ok){
+                    block(GSON.fromJson(it.optString("data"), SpiralAbyssBean::class.java))
+                }
+            }
+        }
+
+        //获得玩家角色数据 回调
+        fun getCharacterData(playerInformationBean: PlayerInformationBean,roleId: String,server: String,block: (PlayerCharacterInformationBean) -> Unit){
+            val characterIds = StringBuilder()
+
+            playerInformationBean.avatars.forEachIndexed{ i: Int, avatarsBean: PlayerInformationBean.AvatarsBean ->
+                when(i){
+                    0->{
+                        characterIds.append("[${avatarsBean.id},")
+                    }
+                    playerInformationBean.avatars.size-1->{
+                        characterIds.append("${avatarsBean.id}]")
+                    }
+                    else->{
+                        characterIds.append("${avatarsBean.id},")
+                    }
+                }
+            }
+
+            val body = """
+                {"character_ids":${characterIds},
+                "role_id":"$roleId","server":"$server"}
+                 """.trimIndent()
+
+            Ok.getCharacter(getCookie(mainUser!!),body,body.toMyRequestBody()){
+                if(it.ok){
+                    block(GSON.fromJson(it.optString("data"),
+                        PlayerCharacterInformationBean::class.java))
+                }
+            }
+        }
+
+        //获得玩家信息
+        private var switch = true
+        fun getPlayerData(uid:String, server:String = "cn_gf01", block: (Boolean, PlayerInformationBean?, Intent?) -> Unit){
+            val query = "role_id=${uid}&server=${server}"
+
+            Ok.get(getPlayerInfoUrl(uid,server),query){
+                if(it.ok){
+                    val playerInfo = GSON.fromJson(it.optString("data"),
+                        PlayerInformationBean::class.java)
+                    val intent = Intent(PaiMonsNoteBook.context, SearchResultActivity::class.java)
+                    intent.putExtra("roleId",uid)
+                    intent.putExtra("server",server)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    switch = true
+                    block(true,playerInfo,intent)
+                }else{
+                    switch = if(switch){
+                        getPlayerData(uid, "cn_qd01"){ b: Boolean, playerInformationBean: PlayerInformationBean?, intent:Intent?->
+                            block(b,playerInformationBean,intent)
+                        }
+                        false
+                    }else{
+                        block(false,null,null)
+                        true
+                    }
+                }
+            }
+        }
     }
 }

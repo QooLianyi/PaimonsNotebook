@@ -18,6 +18,7 @@
         android:inputType="numberDecimal"
         android:focusable="true"
         android:queryHint="键入UID以查询"
+        android:queryBackground="@color/transparent"
         />
 
     <TextView

@@ -8,14 +8,12 @@ import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.ui.activity.CharacterDetailActivity
 import com.lianyi.paimonsnotebook.lib.base.BaseFragment
 import com.lianyi.paimonsnotebook.bean.CharacterBean
-import com.lianyi.paimonsnotebook.bean.config.SideBarButtonSettings
 import com.lianyi.paimonsnotebook.databinding.FragmentCharacterBinding
 import com.lianyi.paimonsnotebook.databinding.ItemEntityBinding
 import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
 import com.lianyi.paimonsnotebook.lib.information.Element
 import com.lianyi.paimonsnotebook.lib.information.Star
 import com.lianyi.paimonsnotebook.lib.information.WeaponType
-import com.lianyi.paimonsnotebook.ui.MainActivity
 import com.lianyi.paimonsnotebook.util.*
 
 class CharacterFragment : BaseFragment(R.layout.fragment_character) {
@@ -25,21 +23,7 @@ class CharacterFragment : BaseFragment(R.layout.fragment_character) {
     //选择的属性和装备类型
     private val selectProperty = mutableListOf<Int>()
     private val selectEquipType = mutableListOf<Int>()
-
-    companion object{
-        private lateinit var bind: FragmentCharacterBinding
-
-        fun initConfig() {
-            if(SideBarButtonSettings.instance.enabled){
-                bind.selectSpan.setOnClickListener {
-                    MainActivity.bind.container.openDrawer(MainActivity.bind.navViewSpan)
-                }
-            }else{
-                bind.selectSpan.setOnClickListener {
-                }
-            }
-        }
-    }
+    private lateinit var bind: FragmentCharacterBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,13 +31,14 @@ class CharacterFragment : BaseFragment(R.layout.fragment_character) {
 
         initView()
         initSelect()
-        initConfig()
     }
 
     private fun initView() {
-        CharacterBean.characterList.forEach {
-            characterShowList+=it
+        bind.rank.setOnClickListener {
+            "数值排行榜:将在未来实现".show()
         }
+
+        CharacterBean.characterList.copy(characterShowList)
         //根据星级排序
         characterShowList.sortByDescending { it.star }
 

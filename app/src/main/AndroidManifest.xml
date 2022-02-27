@@ -17,7 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/paimonsNoteTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.activity.SetCookieActivity"></activity>
+        <activity android:name=".ui.activity.FragmentContainerActivity"></activity>
+        <activity android:name=".ui.activity.options.WishOptionsActivity" />
+        <activity android:name=".ui.activity.SetCookieActivity" />
         <activity android:name=".ui.activity.options.ContentMarginActivity" />
         <activity android:name=".ui.activity.options.SideBarButtonSettingActivity" />
         <activity android:name=".ui.activity.SearchResultCharacterDetailActivity" />

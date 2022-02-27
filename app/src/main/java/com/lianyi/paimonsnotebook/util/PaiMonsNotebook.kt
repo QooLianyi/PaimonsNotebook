@@ -15,32 +15,36 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.SwitchCompat
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
+import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.account.UserBean
 import com.lianyi.paimonsnotebook.bean.config.ContentMarginSettings
-import com.lianyi.paimonsnotebook.databinding.PopConfirmBinding
-import com.lianyi.paimonsnotebook.databinding.PopFailureBinding
-import com.lianyi.paimonsnotebook.databinding.PopLoadingBinding
-import com.lianyi.paimonsnotebook.databinding.PopSuccessBinding
+import com.lianyi.paimonsnotebook.databinding.*
+import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
 import com.lianyi.paimonsnotebook.lib.information.Constants
 import com.lianyi.paimonsnotebook.lib.information.JsonCacheName
 import com.lianyi.paimonsnotebook.lib.listener.AnimatorFinished
+import com.lianyi.paimonsnotebook.util.PaiMonsNoteBook.Companion.context
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.apache.poi.ss.formula.functions.T
 
 
 class PaiMonsNoteBook : Application(){
@@ -49,11 +53,11 @@ class PaiMonsNoteBook : Application(){
         var loadingWindow: AlertDialog? = null
         var loadingWindowAnimatorSet:AnimatorSet? = null
 
-        val VERSION_NAME by lazy {
+        val VERSION_NAME: String by lazy {
             context.packageManager.getPackageInfo(context.packageName,
                 PackageManager.GET_CONFIGURATIONS).versionName
         }
-        const val APP_NAME = "Paimon's Notebook"
+        const val APP_NAME = "Paimons Notebook"
         const val UIGF_VERSION = "v2.2"
     }
     override fun onCreate() {
@@ -91,45 +95,45 @@ var mainUser: UserBean? = null
 
 //数据缓存
 val sp: SharedPreferences
-get() = PaiMonsNoteBook.context.getSharedPreferences(Constants.SP_NAME,Context.MODE_PRIVATE)
+get() = context.getSharedPreferences(Constants.SP_NAME,Context.MODE_PRIVATE)
 //用户信息缓存
 val usp:SharedPreferences
-get() = PaiMonsNoteBook.context.getSharedPreferences(Constants.USP_NAME,Context.MODE_PRIVATE)
+get() = context.getSharedPreferences(Constants.USP_NAME,Context.MODE_PRIVATE)
 //角色缓存
 val csp:SharedPreferences
-get() = PaiMonsNoteBook.context.getSharedPreferences(Constants.CSP_NAME,Context.MODE_PRIVATE)
+get() = context.getSharedPreferences(Constants.CSP_NAME,Context.MODE_PRIVATE)
 //武器缓存
 val wsp:SharedPreferences
-get() = PaiMonsNoteBook.context.getSharedPreferences(Constants.WSP_NAME,Context.MODE_PRIVATE)
+get() = context.getSharedPreferences(Constants.WSP_NAME,Context.MODE_PRIVATE)
 
 
 val Int.dp
-    get() = PaiMonsNoteBook.context.resources.displayMetrics.density * this +0.5f
+    get() = context.resources.displayMetrics.density * this +0.5f
 
 val Int.sp
-    get() = (this * PaiMonsNoteBook.context.resources.displayMetrics.scaledDensity + 0.5f)
+    get() = (this * context.resources.displayMetrics.scaledDensity + 0.5f)
 
 val Int.px2dp
-    get() = (this /  PaiMonsNoteBook.context.resources.displayMetrics.density +0.5f)
+    get() = (this /  context.resources.displayMetrics.density +0.5f)
 
 
 //获得底部导航栏高度
 val navigationBarHeight:Int
         by lazy {
-            val resourceId = PaiMonsNoteBook.context.resources.getIdentifier("navigation_bar_height","dimen", "android")
+            val resourceId = context.resources.getIdentifier("navigation_bar_height","dimen", "android")
             var height = 0
             //判断是否有底部导航栏
             if(resourceId>0){
                 //判断是否显示了导航栏
-                val configShowNav = PaiMonsNoteBook.context.resources.getIdentifier("config_showNavigationBar", "bool", "android")
+                val configShowNav = context.resources.getIdentifier("config_showNavigationBar", "bool", "android")
                 var isHave = false
 
                 if(configShowNav!=0){
-                    isHave = PaiMonsNoteBook.context.resources.getBoolean(configShowNav)
+                    isHave = context.resources.getBoolean(configShowNav)
                 }
 
                 if(isHave){
-                    height = PaiMonsNoteBook.context.resources.getDimensionPixelSize(resourceId)
+                    height = context.resources.getDimensionPixelSize(resourceId)
                 }
             }
             height
@@ -144,6 +148,17 @@ fun setViewMarginBottomByNavigationBarHeight(vararg views:View){
     }
 }
 
+fun setListItemMargin(view:View,position: Int,topMargin:Int){
+    when(position){
+        0->{
+            val lp = view.layoutParams as ViewGroup.MarginLayoutParams
+            lp.setMargins(view.marginLeft,view.marginTop+topMargin.dp.toInt(),view.marginRight,view.marginBottom)
+            view.layoutParams = lp
+        }
+    }
+}
+
+//设置内容边距
 fun setContentMargin(view:View){
    if(ContentMarginSettings.instance.enable){
        val lp = view.layoutParams as ViewGroup.MarginLayoutParams
@@ -154,18 +169,17 @@ fun setContentMargin(view:View){
 }
 
 fun String.show(){
-    val toast = Toast(PaiMonsNoteBook.context)
-    Toast.makeText(PaiMonsNoteBook.context,this,Toast.LENGTH_SHORT).show()
+    Toast.makeText(context,this,Toast.LENGTH_SHORT).show()
 }
 
 fun String.showLong(){
-    Toast.makeText(PaiMonsNoteBook.context,this,Toast.LENGTH_LONG).show()
+    Toast.makeText(context,this,Toast.LENGTH_LONG).show()
 }
 
 inline fun <reified T>goA(){
-    val intent = Intent(PaiMonsNoteBook.context,T::class.java)
+    val intent = Intent(context,T::class.java)
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    PaiMonsNoteBook.context.startActivity(intent)
+    context.startActivity(intent)
 }
 
 fun View.gone(){
@@ -174,6 +188,15 @@ fun View.gone(){
 fun View.show(){
     this.visibility = View.VISIBLE
 }
+
+fun getSP(sp:SharedPreferences,name:String):String{
+    return sp.getString(name,"")!!
+}
+
+fun getListSP(sp:SharedPreferences,name:String):String{
+    return sp.getString(name,"[]")!!
+}
+
 
 //tab layout选中回调
 fun TabLayout.tab(block:(Int)->Unit){
@@ -383,7 +406,6 @@ fun <T>MutableList<T>.addFromList(list: List<T>){
     }
 }
 
-
 fun Spinner.select(block: (position:Int,id:Long) -> Unit){
     this.onItemSelectedListener = null
     this.onItemSelectedListener = object :OnItemSelectedListener{
@@ -401,75 +423,35 @@ fun SwitchCompat.click(block: (Boolean) -> Unit){
     }
 }
 
-private fun setAlertDialogTransparentBackground(win:AlertDialog){
-    win.window?.setBackgroundDrawableResource(R.color.transparent)
-    win.window?.decorView?.setPadding(10.dp.toInt(),0,10.dp.toInt(),0)
-    win.window?.setLayout(PaiMonsNoteBook.context.resources.displayMetrics.widthPixels-20.dp.toInt(),ViewGroup.LayoutParams.WRAP_CONTENT)
-}
-
-fun showAlertDialog(context: Context,layout: View): AlertDialog {
-    val win = AlertDialog.Builder(context).setView(layout).create()
-
-    setAlertDialogTransparentBackground(win)
-    win.show()
-    return win
-}
-
-fun showAlertDialog(context: Context,id:Int): AlertDialog {
-    val layout = LayoutInflater.from(context).inflate(id,null)
-    val win = AlertDialog.Builder(context).setView(layout).create()
-
-    setAlertDialogTransparentBackground(win)
-    win.show()
-    return win
-}
-
-fun showConfirmAlertDialog(context: Context,title:String="提示",content:String="你确定吗",block: (isConfirm:Boolean) -> Unit){
-    val layout = PopConfirmBinding.bind(LayoutInflater.from(context).inflate(R.layout.pop_confirm,null))
-    val win = showAlertDialog(context,layout.root)
-
-    layout.title.text = title
-    layout.content.text = content
-
-    layout.confirm.setOnClickListener {
-        block(true)
-        win.dismiss()
-    }
-
-    layout.cancel.setOnClickListener {
-        block(false)
-        win.dismiss()
+fun Fragment.setOnHandleBackPressed(block:(() -> Unit)?=null){
+    requireActivity().onBackPressedDispatcher.addCallback {
+        block?.invoke()
     }
 }
 
-fun showSuccessInformationAlertDialog(context: Context,title:String){
-    val layout = PopSuccessBinding.bind(LayoutInflater.from(context).inflate(R.layout.pop_success,null))
-    val win = AlertDialog.Builder(context).setView(layout.root).create()
+fun MotionLayout.onFinished(block: () -> Unit){
+    this.setTransitionListener(object :MotionLayout.TransitionListener{
+        override fun onTransitionStarted(motionLayout: MotionLayout?, startId: Int, endId: Int) {
+        }
 
-    layout.close.setOnClickListener {
-        win.dismiss()
-    }
+        override fun onTransitionChange(
+            motionLayout: MotionLayout?,
+            startId: Int,
+            endId: Int,
+            progress: Float
+        ) {
+        }
 
-    layout.title.text = title
+        override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
+            block()
+        }
 
-    setAlertDialogTransparentBackground(win)
-    win.show()
+        override fun onTransitionTrigger(
+            motionLayout: MotionLayout?,
+            triggerId: Int,
+            positive: Boolean,
+            progress: Float
+        ) {
+        }
+    })
 }
-
-fun showFailureAlertDialog(context: Context,title: String="失败",message:String=""): AlertDialog {
-    val layout = PopFailureBinding.bind(LayoutInflater.from(context).inflate(R.layout.pop_failure,null))
-    val win = AlertDialog.Builder(context).setView(layout.root).create()
-
-    layout.title.text = title
-    layout.message.text = message
-
-    layout.close.setOnClickListener {
-        win.dismiss()
-    }
-    setAlertDialogTransparentBackground(win)
-    win.show()
-    return win
-}
-
-
-

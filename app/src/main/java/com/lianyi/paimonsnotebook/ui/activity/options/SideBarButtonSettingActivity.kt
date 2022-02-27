@@ -143,8 +143,6 @@ class SideBarButtonSettingActivity : BaseActivity() {
         }else{
             MainActivity.bind.menuSwitch.show()
             MainActivity.bind.menuAreaSwitch.gone()
-            WeaponFragment.initConfig()
-            CharacterFragment.initConfig()
         }
         super.onDestroy()
     }

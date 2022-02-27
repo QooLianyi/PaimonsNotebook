@@ -3,6 +3,7 @@ package com.lianyi.paimonsnotebook.util
 import com.google.gson.Gson
 import com.lianyi.paimonsnotebook.bean.account.UserBean
 import com.lianyi.paimonsnotebook.lib.information.Constants
+import com.lianyi.paimonsnotebook.lib.information.HuTaoApi
 import com.lianyi.paimonsnotebook.lib.information.MiHoYoApi
 import com.lianyi.paimonsnotebook.lib.information.ResponseCode
 import okhttp3.*
@@ -119,6 +120,39 @@ class Ok {
                 .build()
             clientC.newCall(request).enqueue(MyCallBack(block))
         }
+
+        fun hutaoGet(url: String,block: (JSONObject) -> Unit){
+            val request = Request.Builder()
+                .addHeader("Authorization",sp.getString(HuTaoApi.SP_TOKEN,"")!!)
+                .url(url)
+                .build()
+            clientC.newCall(request).enqueue(MyCallBack(block))
+        }
+
+        fun hutaoPost(url:String,requestBody: RequestBody,block: (JSONObject) -> Unit){
+            val request = Request.Builder().addHeader("Authorization",sp.getString(HuTaoApi.SP_TOKEN,"")!!)
+                .url(url)
+                .post(requestBody)
+                .build()
+            clientC.newCall(request).enqueue(MyCallBack(block))
+        }
+
+        fun hutaoLogin(block: (JSONObject) -> Unit){
+            val request = Request.Builder()
+                .url(HuTaoApi.LOGIN)
+                .post(HuTaoApi.LOGIN_REQUEST_BODY)
+                .build()
+            clientC.newCall(request).enqueue(MyCallBack(block))
+        }
+
+        private fun hutaoCheckLogin(block: (JSONObject) -> Unit){
+            val request = Request.Builder()
+                .addHeader("Authorization",sp.getString(HuTaoApi.SP_TOKEN,"")!!)
+                .url(HuTaoApi.OVER_VIEW)
+                .get()
+                .build()
+            clientC.newCall(request).enqueue(MyCallBack(block))
+        }
     }
 }
 
@@ -130,6 +164,7 @@ class MyCallBack(val block:(JSONObject)->Unit): Callback{
         try {
             block(JSONObject(response.body!!.string()))
         }catch (e:Exception){
+            e.printStackTrace()
             block(JSONObject("""
                 {
                     "data": null,
@@ -160,7 +195,7 @@ inline fun <reified T> JSONArray.toList(list: MutableList<T>){
     }
 }
 
-inline fun <reified T> JSONArray.toListUtil(list: MutableList<T>){
+inline fun <reified T> JSONArray.toListUntil(list: MutableList<T>){
     repeat(this.length()-1){
         list += GSON.fromJson(this[it].toString(),T::class.java)
     }

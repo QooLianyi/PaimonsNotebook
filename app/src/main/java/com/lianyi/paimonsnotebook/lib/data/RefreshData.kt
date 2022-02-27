@@ -42,7 +42,7 @@ class RefreshData {
                     //角色获取
                     try {
                         val characterData = mutableListOf<CharacterBean>()
-                        JSONArray(document.select(characterJsonSelect).text()).toListUtil(characterData)
+                        JSONArray(document.select(characterJsonSelect).text()).toListUntil(characterData)
                         csp.edit().apply {
                            putString(JsonCacheName.CHARACTER_LIST,GSON.toJson(characterData))
                            apply()
@@ -57,7 +57,7 @@ class RefreshData {
                     //武器获取
                     try{
                         val weaponData = mutableListOf<WeaponBean>()
-                        JSONArray(document.select(weaponJsonSelect).text()).toListUtil(weaponData)
+                        JSONArray(document.select(weaponJsonSelect).text()).toListUntil(weaponData)
                         wsp.edit().apply {
                             putString(JsonCacheName.WEAPON_LIST, GSON.toJson(weaponData))
                             apply()

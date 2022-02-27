@@ -52,16 +52,17 @@ class CharacterBean(val area:String,
             list
         }
 
-        fun getCharacterByName(name:String):CharacterBean?{
-            var character: CharacterBean? = null
+        val characterMap:MutableMap<String,CharacterBean> by lazy {
+            val map = mutableMapOf<String,CharacterBean>()
             characterList.forEach {
-                if(it.name==name){
-                    return it
-                }
+                map += it.name to it
             }
-            return character
+            map
         }
 
+        fun getCharacterByName(name:String):CharacterBean?{
+            return characterMap[name]
+        }
     }
 
     override fun toString(): String {

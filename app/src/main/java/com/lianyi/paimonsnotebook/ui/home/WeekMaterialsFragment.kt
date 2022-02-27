@@ -34,11 +34,7 @@ class WeekMaterialsFragment : BaseFragment(R.layout.fragment_week_materials) {
         bind.list.adapter = ReAdapter(characterGroup,R.layout.item_materials_group){
             view, pair, position ->
             val materialItem = ItemMaterialsGroupBinding.bind(view)
-            if(position==0) {
-                val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-                lp.topMargin = 40.dp.toInt()
-                materialItem.root.layoutParams = lp
-            }
+
             materialItem.name.text = pair.first
             materialItem.list.adapter = ReAdapter(pair.second,R.layout.item_entity_group){
                 view, pair, position ->

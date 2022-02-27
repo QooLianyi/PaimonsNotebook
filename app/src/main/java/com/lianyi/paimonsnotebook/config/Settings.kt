@@ -14,8 +14,6 @@ class Settings {
 
 }
 
-
-
 //实体类型 角色=100 武器=200
 class EntityType{
     companion object{

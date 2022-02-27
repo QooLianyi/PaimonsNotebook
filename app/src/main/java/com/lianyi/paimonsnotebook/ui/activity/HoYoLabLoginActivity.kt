@@ -12,7 +12,7 @@ import com.lianyi.paimonsnotebook.lib.information.JsonCacheName
 import com.lianyi.paimonsnotebook.lib.information.MiHoYoApi
 import com.lianyi.paimonsnotebook.util.*
 import org.json.JSONArray
-import kotlin.concurrent.thread
+
 class HoYoLabLoginActivity : BaseActivity() {
     lateinit var bind:ActivityHoYoLabLoginBinding
 
@@ -37,6 +37,7 @@ class HoYoLabLoginActivity : BaseActivity() {
 
             loadUrl(MiHoYoApi.LOGIN)
             webViewClient = object :WebViewClient(){
+
                 override fun onPageFinished(view: WebView?, url: String?) {
                     val cookieManager = CookieManager.getInstance()
                     val cookies = cookieManager.getCookie(url)
@@ -63,8 +64,6 @@ class HoYoLabLoginActivity : BaseActivity() {
                             getGameRolesByCookie(cookie){
                                 if(it!=null){
                                     userList += it
-                                }else{
-
                                 }
                                 usp.edit().apply {
                                     putString(JsonCacheName.USER_LIST,GSON.toJson(userList))
@@ -131,13 +130,15 @@ class HoYoLabLoginActivity : BaseActivity() {
     }
 
 
-    private fun clearCookie(){
+    private fun clearCookie(finish:Boolean = true){
         runOnUiThread {
             CookieManager.getInstance().removeAllCookies {
                 if(it){
                     CookieManager.getInstance().flush()
                     setResult(ActivityResponseCode.OK)
-                    finish()
+                    if(finish){
+                        finish()
+                    }
                 }
             }
         }

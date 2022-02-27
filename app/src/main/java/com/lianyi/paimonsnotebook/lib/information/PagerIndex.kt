@@ -1,15 +1,24 @@
 package com.lianyi.paimonsnotebook.lib.information
 
-class PagerIndex {
+enum class PagerIndex {
+
+    HOME_PAGE,
+    DAILY_MATERIALS_PAGE,
+    WEEK_MATERIALS_PAGE,
+    CHARACTER_PAGE,
+    WEAPON_PAGE,
+    MAP_PAGE,
+    WISH_PAGE,
+    SEARCH_PAGE,
+    HUTAO_DATABASE,
+    EMPTY_PAGE;
+
     companion object{
-        const val HOME_PAGE = 0
-        const val DAILY_MATERIALS_PAGE = 1
-        const val WEEK_MATERIALS_PAGE = 2
-        const val CHARACTER_PAGE = 3
-        const val WEAPON_PAGE = 4
-        const val MAP_PAGE = 5
-        const val WISH_PAGE = 6
-        const val SEARCH_PAGE = 7
-        const val HUTAO_DATABASE = 8
+        const val HUTAO_AVATAR_PARTICIPATION = 0
+        const val HUTAO_CONSTELLATION = 1
+        const val HUTAO_TEAM_COLLOCATION = 2
+        const val HUTAO_WEAPON_USAGE = 3
+        const val HUTAO_AVATAR_RELIQUARY_USAGE = 4
+        const val HUTAO_TEAM_COMBINATION = 5
     }
 }

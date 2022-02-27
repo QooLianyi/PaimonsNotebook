@@ -70,16 +70,17 @@ class LoadingActivity : BaseActivity() {
             showAddCookieButton()
         }else{
             thread {
-                var pass = false
                 Ok.getSync(MiHoYoApi.getAccountInformation(mainUser!!.loginUid), mainUser!!){
-                    pass = it.ok
+                    if(it.ok){
+                        initInfo()
+                        initFinished = true
+                    }else{
+                        showAddCookieButton()
+                        runOnUiThread {
+                            "$it".showLong()
+                        }
+                    }
                 }
-                if(pass){
-                    initInfo()
-                    initFinished = true
-                    return@thread
-                }
-                showAddCookieButton()
             }
         }
     }

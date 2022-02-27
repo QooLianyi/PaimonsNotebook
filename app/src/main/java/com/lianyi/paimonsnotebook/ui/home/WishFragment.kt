@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.net.wifi.aware.WifiAwareManager
 import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
@@ -21,6 +22,7 @@ import com.lianyi.paimonsnotebook.bean.CharacterBean
 import com.lianyi.paimonsnotebook.bean.WeaponBean
 import com.lianyi.paimonsnotebook.bean.gacha.UIGFExcelBean
 import com.lianyi.paimonsnotebook.bean.gacha.UIGFJSON
+import com.lianyi.paimonsnotebook.config.AppConfig
 import com.lianyi.paimonsnotebook.databinding.*
 import com.lianyi.paimonsnotebook.lib.adapter.PagerAdapter
 import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
@@ -163,12 +165,10 @@ class WishFragment : BaseFragment(R.layout.fragment_wish) {
         }
     }
 
-    private fun checkData(){
+    fun checkData(){
         activity?.runOnUiThread {
             gachaHistoryUidList.clear()
-            JSONArray(sp.getString(JsonCacheName.GACHA_HISTORY_ACCOUNT_LIST, "[]")).toList(
-                gachaHistoryUidList
-            )
+            JSONArray(sp.getString(JsonCacheName.GACHA_HISTORY_ACCOUNT_LIST, "[]")).toList(gachaHistoryUidList)
 
             if (gachaHistoryUidList.size == 0) {
                 bind.noDataSpan.show()
@@ -215,6 +215,11 @@ class WishFragment : BaseFragment(R.layout.fragment_wish) {
         val page = PagerListBinding.bind(pages.first())
         summarizePageData.clear()
         gachaData.groupBy { it.uigf_gacha_type }.toList().copy(summarizePageData)
+
+        //根据设置排序
+        if(sp.getBoolean(AppConfig.SP_WISH_SORT_BY_DESCENDING,false)){
+            summarizePageData.sortByDescending { it.first.toInt() }
+        }
 
         if(page.list.adapter==null){
             page.list.adapter = ReAdapter(
@@ -588,11 +593,7 @@ class WishFragment : BaseFragment(R.layout.fragment_wish) {
                 table,
                 "${uid}_${System.currentTimeMillis()}"
             )
-            activity?.runOnUiThread {
-                dismissLoadingWindow()
-                showSuccessInformationAlertDialog(bind.root.context, "导出成功")
-                NotificationManager.sendNotification("导出到以下位置:","${PaiMonsNoteBook.context.getExternalFilesDir(null)?.absolutePath}/table")
-            }
+            showExportSuccess("table")
         }
     }
 
@@ -663,7 +664,7 @@ class WishFragment : BaseFragment(R.layout.fragment_wish) {
                                         PaiMonsNotebookDataBase.INSTANCE.insertDataForExcel(it,uid)
                                     }
 
-                                    showSuccess()
+                                    showImportSuccess()
                                     PaiMonsNotebookDataBase.INSTANCE.addGachaHistoryAccount(uid)
                                     checkData()
                                 }
@@ -717,7 +718,7 @@ class WishFragment : BaseFragment(R.layout.fragment_wish) {
                                         PaiMonsNotebookDataBase.INSTANCE.insertDataForJson(it,uigfJson.info.uid,uigfJson.info.lang)
                                     }
 
-                                    showSuccess()
+                                    showImportSuccess()
                                     PaiMonsNotebookDataBase.INSTANCE.addGachaHistoryAccount(uigfJson.info.uid)
                                     checkData()
                                 }
@@ -753,11 +754,8 @@ class WishFragment : BaseFragment(R.layout.fragment_wish) {
 
             val uigfjson = UIGFJSON(info,PaiMonsNotebookDataBase.INSTANCE.getGachaHistoryForJson(uid))
             FileUtil.writeUIGFJSON(uigfjson)
-            activity?.runOnUiThread {
-                showSuccessInformationAlertDialog(bind.root.context, "导出成功")
-                NotificationManager.sendNotification("导出到以下位置:","${PaiMonsNoteBook.context.getExternalFilesDir(null)?.absolutePath}/json")
-            }
-            dismissLoadingWindow()
+
+            showExportSuccess("json")
         }
     }
 
@@ -834,10 +832,18 @@ class WishFragment : BaseFragment(R.layout.fragment_wish) {
         }
     }
 
-    private fun showSuccess(){
+    private fun showImportSuccess(){
         activity?.runOnUiThread {
             dismissLoadingWindow()
             showSuccessInformationAlertDialog(bind.root.context, "导入成功")
+        }
+    }
+
+    private fun showExportSuccess(dir:String){
+        activity?.runOnUiThread {
+            showSuccessInformationAlertDialog(bind.root.context, "导出成功")
+            NotificationManager.sendNotification("导出到以下位置:","${PaiMonsNoteBook.context.getExternalFilesDir(null)?.absolutePath}/$dir")
+            dismissLoadingWindow()
         }
     }
 

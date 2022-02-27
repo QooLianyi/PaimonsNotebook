@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="角色出场"
+        />
+    <item
+        android:title="角色持有"
+        />
+    <item
+        android:title="角色搭配"
+        />
+    <item
+        android:title="武器搭配"
+        />
+    <item
+        android:title="圣遗物搭配"
+        />
+    <item
+        android:title="队伍出场"
+        />
+</menu>

@@ -29,7 +29,6 @@ class SearchResultActivity : BaseActivity() {
     lateinit var bind:ActivitySearchResultBinding
     private val titles = listOf("基本信息","角色信息","深境螺旋")
     private val pagers = mutableListOf<View>()
-    private val characterIds = StringBuilder()
     private lateinit var roleId:String
     private lateinit var server:String
 
@@ -53,20 +52,6 @@ class SearchResultActivity : BaseActivity() {
     }
 
     private fun initData(){
-        playerInfo.avatars.forEachIndexed{ i: Int, avatarsBean: PlayerInformationBean.AvatarsBean ->
-            when(i){
-                0->{
-                    characterIds.append("[${avatarsBean.id},")
-                }
-                playerInfo.avatars.size-1->{
-                    characterIds.append("${avatarsBean.id}]")
-                }
-                else->{
-                    characterIds.append("${avatarsBean.id},")
-                }
-            }
-        }
-
         roleId = intent.getStringExtra("roleId")?:""
         server = intent.getStringExtra("server")?:""
 
@@ -162,18 +147,10 @@ class SearchResultActivity : BaseActivity() {
 
     private fun loadCharacter(){
         val page = PagerSearchCharacterBinding.bind(pagers[1])
-        val body = """
-        {"character_ids":${characterIds},
-        "role_id":"$roleId","server":"$server"}
-         """.trimIndent()
 
-        Ok.getCharacter(MiHoYoApi.getCookie(mainUser!!),body,body.toMyRequestBody()){
-            if(it.ok){
-                val playerCharacterInfo = GSON.fromJson(it.optString("data"),PlayerCharacterInformationBean::class.java)
-                setCharacterListAdapter(page, playerCharacterInfo.avatars)
-            }
+        MiHoYoApi.getCharacterData(playerInfo,roleId,server){
+            setCharacterListAdapter(page, it.avatars)
         }
-
         setViewMarginBottomByNavigationBarHeight(page.list)
     }
 
@@ -214,12 +191,8 @@ class SearchResultActivity : BaseActivity() {
     private fun loadAbyss(){
         val page = PagerSearchAbyssBinding.bind(pagers[2])
 
-        val query = MiHoYoApi.getAbyssUrl(roleId, server).split("?").last()
-        Ok.get(MiHoYoApi.getAbyssUrl(roleId,server),query){
-            if(it.ok){
-                val spiralAbyss = GSON.fromJson(it.optString("data"),SpiralAbyssBean::class.java)
-                setAbyssListAdapter(page,spiralAbyss)
-            }
+        MiHoYoApi.getAbyssData(roleId,server){
+            setAbyssListAdapter(page,it)
         }
 
         setViewMarginBottomByNavigationBarHeight(page.list)

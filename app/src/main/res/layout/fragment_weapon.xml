@@ -15,10 +15,20 @@
         android:id="@+id/select_span"
         >
 
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/icon_sort"
+            android:tint="@color/white"
+            tools:ignore="UseAppTint"
+            android:id="@+id/rank"
+            android:layout_marginTop="60dp"
+            />
+
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="120dp"
+            android:layout_marginTop="30dp"
             >
             <androidx.appcompat.widget.AppCompatCheckBox
                 android:layout_width="34dp"

@@ -47,14 +47,16 @@ class WeaponBean(val name:String,
             list
         }
 
-        fun getWeaponByName(name:String):WeaponBean?{
-            var character: WeaponBean? = null
+        val weaponMap:MutableMap<String,WeaponBean> by lazy {
+            val map = mutableMapOf<String,WeaponBean>()
             weaponList.forEach {
-                if(it.name==name){
-                    return it
-                }
+                map += it.name to it
             }
-            return character
+            map
+        }
+
+        fun getWeaponByName(name:String):WeaponBean?{
+            return weaponMap[name]
         }
     }
 

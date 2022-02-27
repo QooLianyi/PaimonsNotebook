@@ -8,7 +8,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
+        app:cardCornerRadius="8dp"
         >
 
         <LinearLayout
@@ -24,13 +24,17 @@
                 android:textSize="22sp"
                 android:textColor="@color/black"
                 android:text="UIGF"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
                 >
                 <TextView
                     android:layout_width="0dp"
@@ -65,7 +69,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:id="@+id/import_excel"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="6dp"
                 >
 
                 <ImageView
@@ -117,7 +121,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:id="@+id/import_json"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 >
 
                 <ImageView
@@ -162,14 +166,15 @@
 
             </LinearLayout>
 
-c            <TextView
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/link_blue"
-                android:text="什么是UIGF?"
+                android:text="关于UIGF"
                 android:textSize="14sp"
-                android:gravity="right"
                 android:id="@+id/what_is_uigf"
+                android:layout_gravity="end"
+                android:padding="5dp"
                 />
 
         </LinearLayout>

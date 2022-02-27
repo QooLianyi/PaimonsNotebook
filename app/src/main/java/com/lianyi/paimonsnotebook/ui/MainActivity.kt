@@ -4,13 +4,16 @@ import android.os.Bundle
 import androidx.core.view.forEach
 import androidx.core.view.get
 import com.google.android.material.navigation.NavigationView
+import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.config.SideBarButtonSettings
 import com.lianyi.paimonsnotebook.lib.adapter.MainViewPager2Adapter
 import com.lianyi.paimonsnotebook.lib.adapter.NavigationViewSetupWithViewPager2
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.config.AppConfig
 import com.lianyi.paimonsnotebook.databinding.ActivityMainBinding
+import com.lianyi.paimonsnotebook.lib.`interface`.BackPressedListener
 import com.lianyi.paimonsnotebook.lib.information.PagerIndex
+import com.lianyi.paimonsnotebook.ui.activity.FragmentContainerActivity
 import com.lianyi.paimonsnotebook.ui.activity.options.OptionsActivity
 import com.lianyi.paimonsnotebook.ui.home.*
 import com.lianyi.paimonsnotebook.util.*
@@ -48,27 +51,43 @@ class MainActivity : BaseActivity(){
         //初始化点击退出的时间
         pressBackTime = System.currentTimeMillis()/1000
 
-        //设置需要加载的界面
-        val fragments = mapOf(
-            PagerIndex.HOME_PAGE to HomeFragment(),
-            PagerIndex.DAILY_MATERIALS_PAGE to DailyMaterialsFragment(),
-            PagerIndex.WEEK_MATERIALS_PAGE to WeekMaterialsFragment(),
-            PagerIndex.CHARACTER_PAGE to CharacterFragment(),
-            PagerIndex.WEAPON_PAGE to WeaponFragment(),
-            PagerIndex.MAP_PAGE to MapFragment(),
-            PagerIndex.WISH_PAGE to WishFragment(),
-            PagerIndex.SEARCH_PAGE to SearchFragment(),
-            PagerIndex.HUTAO_DATABASE to HutaoDatabaseFragment()
-        )
+        //显示主页
+        supportFragmentManager.beginTransaction().add(R.id.fragment_container,HomeFragment()).commit()
 
-        //设置页面缓存数
-        bind.viewPager2.offscreenPageLimit = AppConfig.OFF_SCREEN_PAGE_LIMIT.toInt()
-        bind.viewPager2.adapter = MainViewPager2Adapter(fragments,supportFragmentManager,lifecycle)
-        NavigationViewSetupWithViewPager2(bind.viewPager2,bind.navView){
-                navigationView, viewPager2 ->
-            //关闭ViewPager2滑动
-            viewPager2.isUserInputEnabled = false
-        }.attach()
+        bind.navView.setNavigationItemSelectedListener {
+            FragmentContainerActivity.pagerIndex = when(it.itemId){
+                R.id.menu_daily_materials->{
+                    PagerIndex.DAILY_MATERIALS_PAGE
+                }
+                R.id.menu_week_materials->{
+                    PagerIndex.WEEK_MATERIALS_PAGE
+                }
+                R.id.menu_character->{
+                    PagerIndex.CHARACTER_PAGE
+                }
+                R.id.menu_weapon->{
+                    PagerIndex.WEAPON_PAGE
+                }
+                R.id.menu_map->{
+                    PagerIndex.MAP_PAGE
+                }
+                R.id.menu_wish->{
+                    PagerIndex.WISH_PAGE
+                }
+                R.id.menu_search->{
+                    PagerIndex.SEARCH_PAGE
+                }
+                R.id.menu_hutao_database->{
+                    PagerIndex.HUTAO_DATABASE
+                }
+                else->{
+                    PagerIndex.EMPTY_PAGE
+                }
+            }
+            goA<FragmentContainerActivity>()
+
+            true
+        }
 
         bind.navView.menu.forEach {
             menuTitle += it.title.toString()
@@ -116,27 +135,6 @@ class MainActivity : BaseActivity(){
                 width = SideBarButtonSettings.instance.sideBarAreaWidth.dp.toInt()
             }
 
-            bind.viewPager2.onPageChange {
-                when(it){
-                    PagerIndex.CHARACTER_PAGE->{
-                        bind.menuAreaSwitch.gone()
-                    }
-                    PagerIndex.WEAPON_PAGE->{
-                        bind.menuAreaSwitch.gone()
-                    }
-                    PagerIndex.MAP_PAGE->{
-                        bind.menuAreaSwitch.gone()
-                        bind.menuSwitch.show()
-                    }
-                    else->{
-                        bind.menuAreaSwitch.show()
-                        if(SideBarButtonSettings.instance.enabled && SideBarButtonSettings.instance.hideDefaultSideBarButton){
-                            bind.menuSwitch.gone()
-                        }
-                    }
-                }
-            }
-
             if(SideBarButtonSettings.instance.hideDefaultSideBarButton){
                 bind.menuSwitch.gone()
             }else{
@@ -148,7 +146,17 @@ class MainActivity : BaseActivity(){
     }
 
     //当点击返回时
-    override fun onBackPressed() {
+    override fun onBackPressed(){
+        supportFragmentManager.fragments.forEach {
+            if(it is BackPressedListener){
+                if(!it.handelBackPressed()){
+                   backPressed()
+                }
+            }
+        }
+    }
+
+    private fun backPressed(){
         val back = System.currentTimeMillis() - pressBackTime
         if(back<AppConfig.PRESS_BACK_INTERVAL){
             finish()
@@ -157,6 +165,7 @@ class MainActivity : BaseActivity(){
             "再次点击返回键退出".show()
         }
     }
+
 
     //淡入MainActivity
     override fun onWindowFocusChanged(hasFocus: Boolean) {

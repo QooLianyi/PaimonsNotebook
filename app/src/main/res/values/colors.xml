@@ -7,6 +7,7 @@
 
     <color name="white">#fff</color>
     <color name="black">#333333</color>
+    <color name="absolute_black">#000000</color>
 
     <color name="black_alpha_100">#111111</color>
     <color name="black_alpha_90">#E6111111</color>

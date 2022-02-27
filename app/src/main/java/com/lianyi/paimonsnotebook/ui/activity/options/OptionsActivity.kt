@@ -2,9 +2,11 @@ package com.lianyi.paimonsnotebook.ui.activity.options
 
 import android.app.DownloadManager
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.webkit.DownloadListener
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
@@ -51,10 +53,15 @@ class OptionsActivity : BaseActivity() {
             layout.cancel.setOnClickListener {
                 win.dismiss()
             }
+
             layout.confirm.setOnClickListener {
                 goA<ContentMarginActivity>()
                 win.dismiss()
             }
+        }
+
+        bind.wishSetting.setOnClickListener {
+            goA<WishOptionsActivity>()
         }
     }
 
@@ -85,17 +92,30 @@ class OptionsActivity : BaseActivity() {
                     val appLastVersionSelect = "p.app_lastest_version"
                     val appLastVersion = document.select(appLastVersionSelect).text()
 
-                    val uri = Uri.parse(Constants.getApkUr(appLastVersion))
-
-                    val manager = PaiMonsNoteBook.context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                    val requestApk = DownloadManager.Request(uri)
-                    //指定下载网络
-//                    requestApk.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI)
-                    requestApk.setDestinationInExternalPublicDir(Environment.getDownloadCacheDirectory().absolutePath,"${appLastVersion}.apk")
-                    requestApk.setTitle("派蒙的笔记本${appLastVersion}")
-                    manager.enqueue(requestApk)
-
-                    println(Constants.getApkUr(appLastVersion))
+                    runOnUiThread {
+                        if(appLastVersion!=PaiMonsNoteBook.VERSION_NAME){
+//                            val uri = Uri.parse(Constants.getApkUr(appLastVersion))
+//                            val manager = PaiMonsNoteBook.context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+//                            val requestApk = DownloadManager.Request(uri)
+//                            //指定下载网络
+////                    requestApk.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI)
+//                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+//                                requestApk.setDestinationInExternalPublicDir(MediaStore.Downloads.EXTERNAL_CONTENT_URI.path?:"","${appLastVersion}.apk")
+//                            }else{
+//                                requestApk.setDestinationInExternalPublicDir(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath,"${appLastVersion}.apk")
+//                            }
+//                            requestApk.setTitle("派蒙的笔记本${appLastVersion}")
+//                            manager.enqueue(requestApk)
+                            val uri = Uri.parse(Constants.getApkUr(appLastVersion))
+                            val intent = Intent(Intent.ACTION_VIEW,uri)
+                            startActivity(intent)
+                            "发现新版本,正在通过系统的浏览器下载...".showLong()
+                        }else if(appLastVersion==PaiMonsNoteBook.VERSION_NAME){
+                            "当前已是最新版本".show()
+                        }else{
+                            "没有发现新版本".showLong()
+                        }
+                    }
                 }catch (e:Exception){
                     e.printStackTrace()
                     runOnUiThread {
@@ -105,9 +125,9 @@ class OptionsActivity : BaseActivity() {
             }
         }
 
-        bind.goFeedBack.setOnClickListener {
+        bind.appVersion.text = PaiMonsNoteBook.VERSION_NAME
 
+        bind.goFeedBack.setOnClickListener {
         }
     }
-
 }

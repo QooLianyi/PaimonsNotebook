@@ -121,7 +121,7 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
                         item.materialsName.text = pair.second.first().dailyMaterials.name
                         loadImage(item.dailyMaterial,pair.second.first().dailyMaterials.icon)
 
-                        item.list.adapter = ReAdapter(pair.second,R.layout.item_entity){
+                        item.list.adapter = ReAdapter(pair.second.sortedByDescending { it.star },R.layout.item_entity){
                                 view, characterBean, position ->
                             val characterItem = ItemEntityBinding.bind(view)
                             characterItem.starBackground.setImageResource(Star.getStarResourcesByStarNum(characterBean.star,false))
@@ -179,7 +179,7 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
                         entityItem.materialsName.text = pair.second.first().dailyMaterials.name
                         loadImage(entityItem.dailyMaterial,pair.second.first().dailyMaterials.icon)
 
-                        entityItem.list.adapter = ReAdapter(pair.second,R.layout.item_entity){
+                        entityItem.list.adapter = ReAdapter(pair.second.sortedByDescending { it.star },R.layout.item_entity){
                                 view: View, weaponBean: WeaponBean, i: Int ->
                             val weaponItem = ItemEntityBinding.bind(view)
                             weaponItem.starBackground.setImageResource(Star.getStarResourcesByStarNum(weaponBean.star,false))

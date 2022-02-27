@@ -10,7 +10,6 @@ import com.lianyi.paimonsnotebook.lib.information.ActivityRequestCode
 import com.lianyi.paimonsnotebook.lib.information.ActivityResponseCode
 import com.lianyi.paimonsnotebook.lib.information.Constants
 import com.lianyi.paimonsnotebook.lib.information.JsonCacheName
-import com.lianyi.paimonsnotebook.ui.activity.home.AccountManagerActivity
 import com.lianyi.paimonsnotebook.util.*
 import org.json.JSONArray
 
@@ -53,7 +52,7 @@ class SetCookieActivity : BaseActivity() {
         }
 
         val account_id = cookieMap[Constants.LTUID_NAME]?:cookieMap[Constants.ACCOUNT_ID_NAME]?:""
-        val ltoken = cookieMap[Constants.LTOKEN_NAME]?:""
+        val ltoken = cookieMap[Constants.LTOKEN_NAME]?:cookieMap["lToken"]?:""
         val cookie_token = cookieMap[Constants.COOKIE_TOKEN_NAME]?:""
 
         if(account_id.isNotEmpty()&&ltoken.isNotEmpty()&&cookie_token.isNotEmpty()){
