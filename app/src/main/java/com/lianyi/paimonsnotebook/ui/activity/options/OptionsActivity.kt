@@ -1,20 +1,15 @@
 package com.lianyi.paimonsnotebook.ui.activity.options
 
-import android.app.DownloadManager
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
-import android.webkit.DownloadListener
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.bean.PaimonsNotebookLatestBean
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.databinding.ActivityOptionsBinding
 import com.lianyi.paimonsnotebook.databinding.PopWarningBinding
 import com.lianyi.paimonsnotebook.lib.data.RefreshData
 import com.lianyi.paimonsnotebook.lib.information.Constants
-import com.lianyi.paimonsnotebook.lib.information.MiHoYoApi
 import com.lianyi.paimonsnotebook.util.*
 import org.jsoup.Jsoup
 import kotlin.concurrent.thread
@@ -86,14 +81,27 @@ class OptionsActivity : BaseActivity() {
 
     private fun initAboutPaimonsNotebook() {
         bind.checkUpdate.setOnClickListener {
+            showLoading(this)
             thread {
                 try {
                     val document = Jsoup.connect(Constants.JSON_DATA).get()
                     val appLastVersionSelect = "p.app_lastest_version"
-                    val appLastVersion = document.select(appLastVersionSelect).text()
+                    val appLastVersionCodeSelect = "p.app_last_version_code"
 
-                    runOnUiThread {
-                        if(appLastVersion!=PaiMonsNoteBook.VERSION_NAME){
+                    val appLastVersion = document.select(appLastVersionSelect).text()
+                    val appLastVersionCode = if(document.select(appLastVersionCodeSelect).text().isNullOrEmpty()) 0L else document.select(appLastVersionCodeSelect).text().toLong()
+
+                    if(PaiMonsNoteBook.APP_VERSION_CODE<appLastVersionCode){
+
+                        Ok.get(Constants.PAIMONS_NOTE_BOOK_LATEST){
+                            val latestBean = GSON.fromJson(it.toString(),PaimonsNotebookLatestBean::class.java)
+                            runOnUiThread {
+                                val uri = Uri.parse(latestBean.assets.first().browser_download_url)
+                                val intent = Intent(Intent.ACTION_VIEW,uri)
+                                startActivity(intent)
+                                "发现新版本(${appLastVersion})\n正在通过系统的浏览器下载...".showLong()
+                            }
+                        }
 //                            val uri = Uri.parse(Constants.getApkUr(appLastVersion))
 //                            val manager = PaiMonsNoteBook.context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 //                            val requestApk = DownloadManager.Request(uri)
@@ -106,14 +114,9 @@ class OptionsActivity : BaseActivity() {
 //                            }
 //                            requestApk.setTitle("派蒙的笔记本${appLastVersion}")
 //                            manager.enqueue(requestApk)
-                            val uri = Uri.parse(Constants.getApkUr(appLastVersion))
-                            val intent = Intent(Intent.ACTION_VIEW,uri)
-                            startActivity(intent)
-                            "发现新版本,正在通过系统的浏览器下载...".showLong()
-                        }else if(appLastVersion==PaiMonsNoteBook.VERSION_NAME){
-                            "当前已是最新版本".show()
-                        }else{
-                            "没有发现新版本".showLong()
+                    }else{
+                        runOnUiThread {
+                            "当前已是最新版本".showLong()
                         }
                     }
                 }catch (e:Exception){
@@ -121,11 +124,15 @@ class OptionsActivity : BaseActivity() {
                     runOnUiThread {
                         "检查新版本失败,请稍后再试".show()
                     }
+                }finally {
+                    runOnUiThread {
+                        dismissLoadingWindow()
+                    }
                 }
             }
         }
 
-        bind.appVersion.text = PaiMonsNoteBook.VERSION_NAME
+        bind.appVersion.text = PaiMonsNoteBook.APP_VERSION_NAME
 
         bind.goFeedBack.setOnClickListener {
         }

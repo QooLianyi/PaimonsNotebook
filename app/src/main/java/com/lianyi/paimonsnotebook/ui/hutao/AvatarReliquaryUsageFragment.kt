@@ -24,7 +24,7 @@ import com.lianyi.paimonsnotebook.util.*
 import org.json.JSONArray
 
 class AvatarReliquaryUsageFragment : BaseFragment(R.layout.fragment_avatar_reliquary_usage) {
-    lateinit var bind:FragmentAvatarReliquaryUsageBinding
+    lateinit var bind: FragmentAvatarReliquaryUsageBinding
 
     val dataSet = mutableListOf<AvatarReliquaryUsageBean>()
     val showDataSet = mutableListOf<AvatarReliquaryUsageBean>()
@@ -38,8 +38,8 @@ class AvatarReliquaryUsageFragment : BaseFragment(R.layout.fragment_avatar_reliq
     }
 
     private fun initView() {
-        Ok.hutaoGet(HuTaoApi.AVATAR_RELIQUARY_USAGE){
-            if(it.ok){
+        Ok.hutaoGet(HuTaoApi.AVATAR_RELIQUARY_USAGE) {
+            if (it.ok) {
                 val list = mutableListOf<AvatarReliquaryUsageBean>()
                 JSONArray(it.optString("data")).toList(list)
 
@@ -48,31 +48,52 @@ class AvatarReliquaryUsageFragment : BaseFragment(R.layout.fragment_avatar_reliq
 
                 addData(0)
                 activity?.runOnUiThread {
-                    bind.part.list.adapter = ReAdapter(showDataSet,R.layout.item_hutao_avatar_reliquary_usage){
-                        view, avatarReliquaryUsageBean, position ->
+                    bind.part.list.adapter = ReAdapter(
+                        showDataSet,
+                        R.layout.item_hutao_avatar_reliquary_usage
+                    ) { view, avatarReliquaryUsageBean, position ->
                         var startHeight = 20
 
                         val item = ItemHutaoAvatarReliquaryUsageBinding.bind(view)
-                        setListItemMargin(item.root,position,50)
+                        setListItemMargin(item.root, position, 50)
 
                         val avatarsBean = AvatarsBean.avatarsMap[avatarReliquaryUsageBean.avatar]
-                        if(avatarsBean!=null){
+                        if (avatarsBean != null) {
                             val character = CharacterBean.characterMap[avatarsBean.name]
-                            if(character!=null){
-                                item.character.starBackground.setImageResource(Star.getStarResourcesByStarNum(character.star,false))
-                                item.character.type.setImageResource(Element.getImageResourceByType(character.element))
+                            if (character != null) {
+                                item.character.starBackground.setImageResource(
+                                    Star.getStarResourcesByStarNum(
+                                        character.star,
+                                        false
+                                    )
+                                )
+                                item.character.type.setImageResource(
+                                    Element.getImageResourceByType(
+                                        character.element
+                                    )
+                                )
                             }
-                            loadImage(item.character.icon,avatarsBean.url)
+                            loadImage(item.character.icon, avatarsBean.url)
                             item.character.name.text = avatarsBean.name
                         }
 
                         item.showContent.select {
-                            if(it){
-                                item.list.measure(0,0)
-                                openAndCloseAnimationVer(item.root,startHeight,item.list.measuredHeight+40.dp.toInt(),500)
+                            if (it) {
+                                item.list.measure(0, 0)
+                                openAndCloseAnimationVer(
+                                    item.root,
+                                    startHeight,
+                                    item.list.measuredHeight + 40.dp.toInt(),
+                                    500
+                                )
                                 item.dropDown.rotation = 0f
-                            }else{
-                                openAndCloseAnimationVer(item.root,item.list.measuredHeight+40.dp.toInt(),startHeight,500)
+                            } else {
+                                openAndCloseAnimationVer(
+                                    item.root,
+                                    item.list.measuredHeight + 40.dp.toInt(),
+                                    startHeight,
+                                    500
+                                )
                                 item.dropDown.rotation = 180f
                             }
                             item.dropDown.animate().rotationBy(180f).duration = 500
@@ -80,59 +101,72 @@ class AvatarReliquaryUsageFragment : BaseFragment(R.layout.fragment_avatar_reliq
 
                         avatarReliquaryUsageBean.reliquaryUsage.sortByDescending { it.value }
 
-                        item.list.adapter = ReAdapter(avatarReliquaryUsageBean.reliquaryUsage,R.layout.item_hutao_avatar_reliquary){
-                            view, reliquaryUsageBean, position ->
+                        item.list.adapter = ReAdapter(
+                            avatarReliquaryUsageBean.reliquaryUsage,
+                            R.layout.item_hutao_avatar_reliquary
+                        ) { view, reliquaryUsageBean, position ->
                             val itemReliquaryUsage = ItemHutaoAvatarReliquaryBinding.bind(view)
 
                             val reliquaryUsageList = reliquaryUsageBean.id.split(";")
 
-                            reliquaryUsageList.forEachIndexed{ index,string->
-                                val name = string.split("-")
-                                val id = name.first().toInt()
-                                val count = name.last()
+                            val name = reliquaryUsageList.first().split("-")
+                            val id = name.first().toInt()
+                            val count = name.last()
+                            val reliquary = ReliquariesBean.reliquariesMap[id]
 
-                                val reliquary = ReliquariesBean.reliquariesMap[id]
+                            if (reliquary != null) {
+                                loadImage(itemReliquaryUsage.icon1, reliquary.url)
+                                itemReliquaryUsage.name1.text = "${count}x${reliquary.name}"
 
-                                if(reliquary!=null){
-                                    when(index){
-                                        0->{
-                                            loadImage(itemReliquaryUsage.icon1,reliquary.url)
-                                            itemReliquaryUsage.name1.text = "${count}x${reliquary.name}"
-                                        }
-                                        else->{
-                                            loadImage(itemReliquaryUsage.icon2,reliquary.url)
-                                            itemReliquaryUsage.name2.text = "${count}x${reliquary.name}"
-                                            itemReliquaryUsage.name2.show()
-                                        }
+                                if (reliquaryUsageList.size > 1) {
+                                    val secondName = reliquaryUsageList.last().split("-")
+                                    val secondId = secondName.first().toInt()
+                                    val secondCount = secondName.last()
+
+                                    val secondReliqury = ReliquariesBean.reliquariesMap[secondId]
+                                    if (secondReliqury != null) {
+                                        loadImage(itemReliquaryUsage.icon2, secondReliqury.url)
+                                        itemReliquaryUsage.name2.text =
+                                            "${secondCount}x${secondReliqury.name}"
+                                        itemReliquaryUsage.name2.show()
+                                        itemReliquaryUsage.icon2.show()
                                     }
+                                } else {
+                                    itemReliquaryUsage.icon2.gone()
+                                    itemReliquaryUsage.name2.gone()
                                 }
                             }
-                            itemReliquaryUsage.value.text = "${Format.DECIMALS_FORMAT.format(reliquaryUsageBean.value*100)}%"
 
-                            startHeight += when(position){
-                                0,1->{
-                                    itemReliquaryUsage.root.measure(0,0)
-                                    itemReliquaryUsage.root.marginTop+ itemReliquaryUsage.root.marginBottom+ itemReliquaryUsage.root.measuredHeight + 10
+                            itemReliquaryUsage.value.text =
+                                "${Format.DECIMALS_FORMAT.format(reliquaryUsageBean.value * 100)}%"
+
+                            when (position) {
+                                0, 1 -> {
+                                    itemReliquaryUsage.root.measure(0, 0)
+                                    startHeight += itemReliquaryUsage.root.marginTop + itemReliquaryUsage.root.marginBottom + itemReliquaryUsage.root.measuredHeight + 10
                                 }
 
-                                2->{
+                                2 -> {
+                                    item.character.root.measure(0, 0)
+                                    val characterHeight = 60 +
+                                            item.character.root.measuredHeight + item.character.root.marginTop + item.character.root.marginBottom + item.character.root.paddingTop + item.character.root.paddingBottom
+                                    if (startHeight < characterHeight) {
+                                        startHeight = characterHeight
+                                    }
+
                                     val lp = item.root.layoutParams
                                     lp.apply {
                                         height = startHeight
                                     }
                                     item.root.layoutParams = lp
-                                    0
-                                }
-                                else->{
-                                    0
                                 }
                             }
                         }
                     }
-                    val listener =  object :
-                        RecyclerViewPagerPreloadListener(bind.part.list.layoutManager as LinearLayoutManager){
+                    val listener = object :
+                        RecyclerViewPagerPreloadListener(bind.part.list.layoutManager as LinearLayoutManager) {
                         override fun onLoadMore(current_page: Int) {
-                            if(current_page!=dataSet.size){
+                            if (current_page != dataSet.size) {
                                 addData(current_page)
                             }
                         }
@@ -144,8 +178,8 @@ class AvatarReliquaryUsageFragment : BaseFragment(R.layout.fragment_avatar_reliq
         setViewMarginBottomByNavigationBarHeight(bind.part.list)
     }
 
-    private fun addData(index:Int){
-        if(showDataSet.size<=dataSet.size){
+    private fun addData(index: Int) {
+        if (showDataSet.size <= dataSet.size) {
             showDataSet.add(dataSet[index])
         }
     }

@@ -49,10 +49,7 @@ class Constants {
         //角色和武器的更新URL
         const val JSON_DATA = "https://qoolianyi.github.io/PaimonsNotebook.github.io/"
 
-        //新版本apk路径
-        fun getApkUr(version:String):String{
-            return "https://github.com/QooLianyi/PaimonsNotebook/releases/download/apk/${version}.apk"
-        }
+        const val PAIMONS_NOTE_BOOK_LATEST = "https://api.github.com/repos/QooLianyi/PaimonsNotebook/releases/latest"
 
         //旅行者札记饼图颜色
         val monthLegendColors = listOf(

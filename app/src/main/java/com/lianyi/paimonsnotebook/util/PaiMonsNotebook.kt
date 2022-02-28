@@ -53,10 +53,20 @@ class PaiMonsNoteBook : Application(){
         var loadingWindow: AlertDialog? = null
         var loadingWindowAnimatorSet:AnimatorSet? = null
 
-        val VERSION_NAME: String by lazy {
+
+        val APP_VERSION_NAME: String by lazy {
             context.packageManager.getPackageInfo(context.packageName,
                 PackageManager.GET_CONFIGURATIONS).versionName
         }
+
+        val APP_VERSION_CODE by lazy {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                context.packageManager.getPackageInfo(context.packageName,PackageManager.GET_CONFIGURATIONS).longVersionCode
+            } else {
+                context.packageManager.getPackageInfo(context.packageName,PackageManager.GET_CONFIGURATIONS).versionCode.toLong()
+            }
+        }
+
         const val APP_NAME = "Paimons Notebook"
         const val UIGF_VERSION = "v2.2"
     }

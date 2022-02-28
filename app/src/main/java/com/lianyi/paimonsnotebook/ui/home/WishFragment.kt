@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.net.wifi.aware.WifiAwareManager
 import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
@@ -748,7 +747,7 @@ class WishFragment : BaseFragment(R.layout.fragment_wish) {
                 Format.TIME_FULL.format(System.currentTimeMillis()),
                 (System.currentTimeMillis()/1000L).toString(),
                 PaiMonsNoteBook.APP_NAME,
-                PaiMonsNoteBook.VERSION_NAME,
+                PaiMonsNoteBook.APP_VERSION_NAME,
                 PaiMonsNoteBook.UIGF_VERSION
             )
 
