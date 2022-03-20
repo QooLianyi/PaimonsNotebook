@@ -5,7 +5,7 @@ import com.lianyi.paimonsnotebook.util.GSON
 import com.lianyi.paimonsnotebook.util.sp
 
 
-class SideBarButtonSettings(val enabled:Boolean,val stylePreview:Boolean,val hideDefaultSideBarButton:Boolean,val widthProgress:Int,val sideBarAreaWidth:Int) {
+data class SideBarButtonSettings(val enabled:Boolean,val stylePreview:Boolean,val hideDefaultSideBarButton:Boolean,val widthProgress:Int,val sideBarAreaWidth:Int) {
     companion object{
         var instance: SideBarButtonSettings =
             GSON.fromJson(sp.getString(AppConfig.SP_SIDE_BAR_BUTTON_SETTINGS,""),SideBarButtonSettings::class.java)
@@ -13,8 +13,8 @@ class SideBarButtonSettings(val enabled:Boolean,val stylePreview:Boolean,val hid
                     enabled = true,
                     stylePreview = false,
                     hideDefaultSideBarButton = false,
-                    widthProgress = 30,
-                    sideBarAreaWidth = 30
+                    widthProgress = 40,
+                    sideBarAreaWidth = 40
                 )
     }
     override fun toString(): String {

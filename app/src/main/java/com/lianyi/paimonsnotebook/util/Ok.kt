@@ -121,6 +121,17 @@ class Ok {
             clientC.newCall(request).enqueue(MyCallBack(block))
         }
 
+        fun get(url:String,headers:Array<Pair<String,String>>,block: (JSONObject) -> Unit){
+            val request = Request.Builder()
+                .get()
+                .url(url)
+            headers.forEach {
+                request.addHeader(it.first,it.second)
+            }
+
+            clientC.newCall(request.build()).enqueue(MyCallBack(block))
+        }
+
         fun hutaoGet(url: String,block: (JSONObject) -> Unit){
             val request = Request.Builder()
                 .addHeader("Authorization",sp.getString(HuTaoApi.SP_TOKEN,"")!!)

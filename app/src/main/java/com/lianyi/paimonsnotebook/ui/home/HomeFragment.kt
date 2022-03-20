@@ -2,28 +2,25 @@ package com.lianyi.paimonsnotebook.ui.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.View
-import androidx.activity.OnBackPressedCallback
-import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.dailynote.DailyNoteBean
 import com.lianyi.paimonsnotebook.bean.home.BlackBoardBean
 import com.lianyi.paimonsnotebook.bean.home.HomeInformationBean
 import com.lianyi.paimonsnotebook.bean.home.HomeOfficialCommendPostBean
+import com.lianyi.paimonsnotebook.config.AppConfig
 import com.lianyi.paimonsnotebook.lib.base.BaseFragment
 import com.lianyi.paimonsnotebook.databinding.*
 import com.lianyi.paimonsnotebook.lib.adapter.HomeBannerAdapter
 import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
 import com.lianyi.paimonsnotebook.lib.information.*
-import com.lianyi.paimonsnotebook.ui.activity.home.AccountManagerActivity
-import com.lianyi.paimonsnotebook.ui.activity.home.DailySignActivity
-import com.lianyi.paimonsnotebook.ui.activity.home.MonthLedgerActivity
+import com.lianyi.paimonsnotebook.ui.activity.home.*
 import com.lianyi.paimonsnotebook.util.*
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.analytics.EventProperties
 
 class HomeFragment : BaseFragment(R.layout.fragment_home) {
-
     lateinit var bind: FragmentHomeBinding
 
     private val nearActivity = mutableListOf<BlackBoardBean.DataBean.ListBean>()
@@ -50,12 +47,19 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
             dailyNoteIsOpen = !dailyNoteIsOpen
         }
 
+        bind.memo.setOnLongClickListener {
+            "你发现了未来的功能入口\n但是这里还没有完工".show()
+            true
+        }
+
         bind.dailySign.setOnClickListener {
             goA<DailySignActivity>()
+            sendEvent(AppCenterEvent.HOME_PAGE_ACTION_DAILY_SIGN)
         }
 
         bind.accountManager.setOnClickListener {
             startActivityForResult(Intent(activity!!,AccountManagerActivity::class.java),ActivityRequestCode.ACCOUNT_MANAGER)
+            sendEvent(AppCenterEvent.HOME_PAGE_ACTION_ACCOUNT_MANAGER)
         }
 
         bind.meInformation.setOnClickListener {
@@ -65,10 +69,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                     bind.meInformation.isEnabled = true
                 }
             }
+            sendEvent(AppCenterEvent.HOME_PAGE_ACTION_ME_INFO)
         }
 
         bind.monthLedge.setOnClickListener {
             goA<MonthLedgerActivity>()
+            sendEvent(AppCenterEvent.HOME_PAGE_ACTION_MONTH_MONTH_LEDGER)
 //            val uiManager = context!!.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
 //
 //            if (uiManager.nightMode == UiModeManager.MODE_NIGHT_YES) {
@@ -89,6 +95,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
             bind.swipe.isRefreshing = false
         }
 
+        bind.goAnnouncement.setOnClickListener {
+            if(sp.getBoolean(AppConfig.SP_HOME_ANNOUNCEMENT_JUMP_TO_LIST,true)){
+                goA<AnnouncementActivity>()
+            }
+        }
+
         //近期活动
         bind.homeNearActivity.adapter =
             ReAdapter(nearActivity, R.layout.item_home_near_activity) { view, listBean, position ->
@@ -98,6 +110,13 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                 item.time.text = "${Format.TIME.format(listBean.start_time.toLong() * 1000)} - ${
                     Format.TIME.format(listBean.end_time.toLong() * 1000)
                 }"
+                item.root.setOnClickListener {
+                    if(sp.getBoolean(AppConfig.SP_HOME_NEAR_ACTIVITY_JUMP_TO_ARTICLE,true)){
+                        ArticleActivity.articleId = MiHoYoApi.getArticlePostIdByUrl(listBean.jump_url)
+                        goA<ArticleActivity>()
+                        sendEvent(AppCenterEvent.HOME_PAGE_ACTION_OPEN_NEAR_ACTIVITY)
+                    }
+                }
             }
 
         //公告
@@ -106,19 +125,15 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                 val item = ItemHomeNoticeBinding.bind(view)
                 loadHomeNoticeImage(item.cover, listBean.banner)
                 item.title.text = listBean.subject
-            }
 
-        //展开时收起
-//        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
-//            override fun handleOnBackPressed() {
-//                if (dailyNoteIsOpen) {
-//                    bind.memo.transitionToStart()
-//                    bind.motion.transitionToStart()
-//                    dailyNoteIsOpen = false
-//                } else {
-//                }
-//            }
-//        })
+                item.root.setOnClickListener {
+                    if(sp.getBoolean(AppConfig.SP_HOME_NOTICE_JUMP_TO_ARTICLE,true)){
+                        ArticleActivity.articleId = listBean.post_id
+                        goA<ArticleActivity>()
+                        sendEvent(AppCenterEvent.HOME_PAGE_ACTION_NOTICE)
+                    }
+                }
+            }
 
         setViewMarginBottomByNavigationBarHeight(bind.homeNotice,bind.memoAnchor)
         refreshData()
@@ -134,14 +149,18 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                 activity?.runOnUiThread {
                     //banner
                     bind.homeBanner.apply {
-                        adapter = HomeBannerAdapter(bannerData)
+                        adapter = HomeBannerAdapter(bannerData){
+                            ArticleActivity.articleId = MiHoYoApi.getArticlePostIdByUrl(it.path)
+                            goA<ArticleActivity>()
+                            sendEvent(AppCenterEvent.HOME_PAGE_ACTION_OPEN_BANNER)
+                        }
                         setBannerGalleryMZ(40)
                     }
                 }
             }
         }
 
-        //近期活动
+        //黑板 筛选近期活动
         Ok.get(MiHoYoApi.BLACK_BOARD) {
             if (it.ok) {
                 val blackBoard = GSON.fromJson(it.toString(), BlackBoardBean::class.java)
@@ -169,10 +188,10 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                 }
             }
         }
-        dailyNoteRefesh()
+        dailyNoteRefresh()
     }
     //树脂详情页和树脂进度条UI更新
-    private fun dailyNoteRefesh() {
+    private fun dailyNoteRefresh() {
         Ok.get(MiHoYoApi.getDailyNoteUrl(mainUser!!.gameUid, mainUser!!.region)){
             if(it.ok){
                 val dailyNoteBean = GSON.fromJson(it.optString("data"),DailyNoteBean::class.java)
@@ -236,6 +255,13 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         }
     }
 
+
+    private fun sendEvent(event: String) {
+        val properties = EventProperties()
+        properties.set(event,1)
+        Analytics.trackEvent(AppCenterEvent.EVENT_HOME_PAGE_ACTION,properties)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -243,7 +269,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
             ActivityRequestCode.ACCOUNT_MANAGER->{
                 //更改默认账号 刷新树脂信息
                 if(resultCode==ActivityResponseCode.DATA_CHANGE){
-                    dailyNoteRefesh()
+                    dailyNoteRefresh()
                 }
             }
         }

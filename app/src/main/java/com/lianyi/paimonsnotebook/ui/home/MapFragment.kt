@@ -54,9 +54,7 @@ class MapFragment : BaseFragment(R.layout.fragment_map){
                     cookieManager.flush()
 
                     //移除顶部二维码
-                    loadUrl("javascript:(function() { " +
-                            "document.getElementsByClassName('mhy-bbs-app-header')[0].style.display = 'none'; " +
-                            "})()")
+                    loadUrl("javascript:(function() {document.getElementsByClassName('mhy-bbs-app-header')[0].style.display = 'none';})()")
                 }
 
             }

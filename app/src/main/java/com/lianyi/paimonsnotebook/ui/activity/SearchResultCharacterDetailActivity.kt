@@ -224,7 +224,7 @@ class SearchResultCharacterDetailActivity : BaseActivity() {
                         bind.itemType.text = "武器"
                         loadImage(bind.show.icon, avatarsBean.weapon.icon)
                         bind.itemName.text = avatarsBean.weapon.name
-                        bind.itemLevel.text = "LV${avatarsBean.level}"
+                        bind.itemLevel.text = "LV${avatarsBean.weapon.level}"
                         bind.itemAffixLevel.show()
                         bind.itemAffixLevel.text = "精炼${avatarsBean.weapon.affix_level}级"
                         bind.itemStar.text = Star.getStarSymbolByStarNum(avatarsBean.weapon.rarity)

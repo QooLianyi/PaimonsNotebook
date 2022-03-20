@@ -7,6 +7,7 @@ import com.lianyi.paimonsnotebook.bean.SpiralAbyssBean
 import com.lianyi.paimonsnotebook.bean.account.UserBean
 import com.lianyi.paimonsnotebook.ui.activity.SearchResultActivity
 import com.lianyi.paimonsnotebook.util.*
+import okio.utf8Size
 import java.lang.StringBuilder
 
 class MiHoYoApi {
@@ -16,7 +17,7 @@ class MiHoYoApi {
 
         //首页公告
         const val OFFICIAL_RECOMMEND_POST = "https://bbs-api.mihoyo.com/post/wapi/getOfficialRecommendedPosts?gids=2"
-        //首页活动
+        //黑板 筛选首页活动
         const val BLACK_BOARD = "https://api-static.mihoyo.com/common/blackboard/ys_obc/v1/get_activity_calendar?app_sn=ys_obc"
 
         //获取详细信息,通过content_id
@@ -24,6 +25,9 @@ class MiHoYoApi {
 
         //首页信息
         const val HOME_PAGER_INFORMATION = "https://bbs-api-static.mihoyo.com/apihub/wapi/webHome?gids=2&page=1&page_size=20"
+
+        //米游社表情
+        const val EMOTICON = "https://bbs-api-static.mihoyo.com/misc/api/emoticon_set"
 
         //大地图
         const val MAP = "https://webstatic.mihoyo.com/app/ys-map-cn/index.html"
@@ -46,6 +50,18 @@ class MiHoYoApi {
 
         //获得角色列表详情 (post) requestBody ={"character_ids":[10000016,10000030...(拥有角色id)],"role_id":"","server":""}
         const val GET_CHARACTER_LIST_DETAIL = "https://api-takumi.mihoyo.com/game_record/app/genshin/api/character"
+
+        //游戏内公告 content
+        val ANNOUNCEMENT_URL by lazy {
+            "https://hk4e-api-static.mihoyo.com/common/hk4e_cn/announcement/api/getAnnContent?game=hk4e&game_biz=hk4e_cn&lang=zh-cn&bundle_id=hk4e_cn&platform=pc&region=${mainUser!!.region}&t=${System.currentTimeMillis()/1000}&level=${mainUser!!.gameLevel}&channel_id=1"
+        }
+
+        //游戏内公告list
+        val ANNOUNCEMENT_LIST_URL by lazy {
+            "https://hk4e-api.mihoyo.com/common/hk4e_cn/announcement/api/getAnnList?game=hk4e&game_biz=hk4e_cn&lang=zh-cn&bundle_id=hk4e_cn&platform=pc&region=${mainUser!!.region}&level=${mainUser!!.gameLevel}&uid=${mainUser!!.gameUid}"
+        }
+
+
 
         //获得便笺url
         fun getDailyNoteUrl(gameUID:String,server:String):String{
@@ -78,6 +94,24 @@ class MiHoYoApi {
                 "https://bbs.mihoyo.com/ys/article$postId"
             }else{
                 postId?:""
+            }
+        }
+
+        //获得帖子JSON url
+        fun getArticleDataUrl(postId:String?):String{
+            return "https://bbs-api.mihoyo.com/post/wapi/getPostFull?gids=2&post_id=${postId}&read=1"
+        }
+
+        //通过帖子url 获得帖子id
+        fun getArticlePostIdByUrl(url:String):String{
+            val tag = "/article/"
+            return if(url.contains(tag)){
+                val articlePosition = url.indexOf(tag)
+                val urlLength = url.length
+                val takeCount = urlLength - articlePosition - tag.length
+                url.takeLast(takeCount)
+            }else{
+                url
             }
         }
 

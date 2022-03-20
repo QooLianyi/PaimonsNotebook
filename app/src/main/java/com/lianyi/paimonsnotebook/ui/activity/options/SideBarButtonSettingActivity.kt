@@ -17,7 +17,6 @@ class SideBarButtonSettingActivity : BaseActivity() {
     lateinit var bind:ActivitySideBarButtonSettingBinding
 
     private var sideBarWidth = 0
-    private var enable = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -31,7 +30,6 @@ class SideBarButtonSettingActivity : BaseActivity() {
     private fun initView() {
         //是否启用
         bind.sideBarEnable.click{
-            enable = it
             if(it){
                 enableOptions()
             }else{
@@ -45,14 +43,14 @@ class SideBarButtonSettingActivity : BaseActivity() {
             if(it){
                 bind.sideBarButtonLeft.show()
                 openAndCloseAnimationHor(bind.sideBarButtonLeft,0,sideBarWidth,400L){
-                    if(enable){
+                    if(bind.sideBarEnable.isChecked){
                         bind.stylePreview.isEnabled = true
                     }
                 }
             }else{
                 openAndCloseAnimationHor(bind.sideBarButtonLeft,sideBarWidth,0,400L){
                     bind.sideBarButtonLeft.gone()
-                    if(enable){
+                    if(bind.sideBarEnable.isChecked){
                         bind.stylePreview.isEnabled = true
                     }
                 }
@@ -74,17 +72,17 @@ class SideBarButtonSettingActivity : BaseActivity() {
         }
 
         sideBarWidth = SideBarButtonSettings.instance.sideBarAreaWidth
-        enable = SideBarButtonSettings.instance.enabled
         setContentMargin(bind.root)
     }
 
     private fun initConfig() {
+        bind.sideBarEnable.isChecked = SideBarButtonSettings.instance.enabled
+        bind.stylePreview.isChecked = SideBarButtonSettings.instance.stylePreview
+        bind.hideDefaultSideBarButton.isChecked = SideBarButtonSettings.instance.hideDefaultSideBarButton
+        bind.sideBarButtonAreaWidth.progress = SideBarButtonSettings.instance.widthProgress
+        bind.sideBarButtonAreaWidthText.text = "${SideBarButtonSettings.instance.sideBarAreaWidth}dp"
+        bind.sideBarAutoPickup.isChecked = sp.getBoolean(AppConfig.SP_HOME_SIDE_BAR_AUTO_PICKUP,false)
         if(SideBarButtonSettings.instance.enabled){
-            bind.sideBarEnable.isChecked = SideBarButtonSettings.instance.enabled
-            bind.stylePreview.isChecked = SideBarButtonSettings.instance.stylePreview
-            bind.hideDefaultSideBarButton.isChecked = SideBarButtonSettings.instance.hideDefaultSideBarButton
-            bind.sideBarButtonAreaWidth.progress = SideBarButtonSettings.instance.widthProgress
-            bind.sideBarButtonAreaWidthText.text = "${SideBarButtonSettings.instance.sideBarAreaWidth}dp"
             enableOptions()
         }else{
             disabledOptions()
@@ -113,8 +111,9 @@ class SideBarButtonSettingActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
+        super.onDestroy()
         val setting = SideBarButtonSettings(
-            enable,
+            bind.sideBarEnable.isChecked,
             bind.stylePreview.isChecked,
             bind.hideDefaultSideBarButton.isChecked,
             bind.sideBarButtonAreaWidth.progress,
@@ -123,27 +122,34 @@ class SideBarButtonSettingActivity : BaseActivity() {
 
         sp.edit().apply {
             putString(AppConfig.SP_SIDE_BAR_BUTTON_SETTINGS,GSON.toJson(setting))
+            putBoolean(AppConfig.SP_HOME_SIDE_BAR_AUTO_PICKUP,bind.sideBarAutoPickup.isChecked)
             apply()
         }
+
+        println(setting.toString())
 
         SideBarButtonSettings.instance = setting
 
         if(setting.enabled){
-            MainActivity.bind.menuAreaSwitch.layoutParams.apply {
+            val lp = MainActivity.bind.menuAreaSwitch.layoutParams
+            MainActivity.bind.menuAreaSwitch.layoutParams = lp.apply {
                 width = sideBarWidth.dp.toInt()
             }
             MainActivity.bind.menuAreaSwitch.show()
-
             if(setting.hideDefaultSideBarButton){
                 MainActivity.bind.menuSwitch.gone()
             }else{
                 MainActivity.bind.menuSwitch.show()
             }
-
+            if(setting.stylePreview){
+                MainActivity.bind.menuAreaSwitch.setBackgroundColor(getColor(R.color.black_alpha_50))
+            }else{
+                MainActivity.bind.menuAreaSwitch.setBackgroundColor(getColor(R.color.transparent))
+            }
         }else{
             MainActivity.bind.menuSwitch.show()
             MainActivity.bind.menuAreaSwitch.gone()
+            MainActivity.bind.menuAreaSwitch.setBackgroundColor(getColor(R.color.transparent))
         }
-        super.onDestroy()
     }
 }

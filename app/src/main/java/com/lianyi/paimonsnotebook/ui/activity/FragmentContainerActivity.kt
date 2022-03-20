@@ -22,37 +22,40 @@ class FragmentContainerActivity : BaseActivity() {
         bind = ActivityFragmentContainerBinding.inflate(layoutInflater)
         setContentView(bind.root)
 
-        when(pagerIndex){
+        val page = when(pagerIndex){
             PagerIndex.DAILY_MATERIALS_PAGE->{
-                supportFragmentManager.beginTransaction().add(R.id.fragment_container,DailyMaterialsFragment())
+                DailyMaterialsFragment()
             }
             PagerIndex.WEEK_MATERIALS_PAGE->{
-                supportFragmentManager.beginTransaction().add(R.id.fragment_container,WeekMaterialsFragment())
+                WeekMaterialsFragment()
             }
             PagerIndex.CHARACTER_PAGE->{
-                supportFragmentManager.beginTransaction().add(R.id.fragment_container,CharacterFragment())
+               CharacterFragment()
             }
             PagerIndex.WEAPON_PAGE->{
-                supportFragmentManager.beginTransaction().add(R.id.fragment_container,WeaponFragment())
+               WeaponFragment()
             }
             PagerIndex.MAP_PAGE->{
-                supportFragmentManager.beginTransaction().add(R.id.fragment_container,MapFragment())
+               MapFragment()
             }
             PagerIndex.WISH_PAGE->{
-                supportFragmentManager.beginTransaction().add(R.id.fragment_container,WishFragment())
+               WishFragment()
             }
             PagerIndex.SEARCH_PAGE->{
-                supportFragmentManager.beginTransaction().add(R.id.fragment_container,SearchFragment())
+               SearchFragment()
             }
             PagerIndex.HUTAO_DATABASE ->{
-                supportFragmentManager.beginTransaction().add(R.id.fragment_container,HutaoDatabaseFragment())
+                HutaoDatabaseFragment()
+            }
+            PagerIndex.CULTIVATE_CALCULATE->{
+                CultivateCalculateFragment()
             }
             else -> {
                 "意外的INDEX".show()
-                supportFragmentManager.beginTransaction().add(R.id.fragment_container,EmptyFragment())
+                EmptyFragment()
             }
-        }.commit()
-
-        setContentMargin(MainActivity.bind.root)
+        }
+        supportFragmentManager.beginTransaction().add(R.id.fragment_container_sub,page).commit()
+        setContentMargin(bind.root)
     }
 }

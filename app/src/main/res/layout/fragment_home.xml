@@ -36,7 +36,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/images_home_background"
+                android:src="@drawable/img_home_background"
                 android:scaleType="fitStart"
                 android:id="@+id/home_background"
                 />
@@ -349,15 +349,43 @@
                                 android:layout_marginBottom="30dp"
                                 >
 
-                                <TextView
-                                    android:layout_width="wrap_content"
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp"
-                                    android:text="公告"
-                                    android:gravity="center_vertical"
-                                    android:textStyle="bold"
-                                    />
+                                    android:orientation="horizontal"
+                                    >
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/black"
+                                        android:textSize="18sp"
+                                        android:text="公告"
+                                        android:gravity="center_vertical"
+                                        android:textStyle="bold"
+                                        />
+
+                                    <LinearLayout
+                                        android:layout_width="80dp"
+                                        android:layout_height="match_parent"
+                                        android:gravity="end"
+                                        android:id="@+id/go_announcement"
+                                        >
+
+                                        <ImageView
+                                            android:layout_width="40dp"
+                                            android:layout_height="match_parent"
+                                            android:src="@drawable/icon_drop_down_02"
+                                            android:tint="@color/black_alpha_50"
+                                            android:rotation="270"
+                                            tools:ignore="UseAppTint"
+                                            />
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
 
                                 <RelativeLayout
                                     android:layout_width="match_parent"

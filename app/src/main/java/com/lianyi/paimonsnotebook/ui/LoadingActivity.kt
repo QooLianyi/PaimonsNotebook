@@ -2,15 +2,14 @@ package com.lianyi.paimonsnotebook.ui
 
 import android.content.Intent
 import android.os.Bundle
+import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.CharacterBean
+import com.lianyi.paimonsnotebook.bean.GetGameRolesByCookieBean
 import com.lianyi.paimonsnotebook.bean.WeaponBean
-import com.lianyi.paimonsnotebook.bean.account.UserBean
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.databinding.ActivityLoadingBinding
-import com.lianyi.paimonsnotebook.lib.information.ActivityRequestCode
-import com.lianyi.paimonsnotebook.lib.information.ActivityResponseCode
-import com.lianyi.paimonsnotebook.lib.information.JsonCacheName
-import com.lianyi.paimonsnotebook.lib.information.MiHoYoApi
+import com.lianyi.paimonsnotebook.lib.data.UpdateInformation
+import com.lianyi.paimonsnotebook.lib.information.*
 import com.lianyi.paimonsnotebook.ui.activity.SetCookieActivity
 import com.lianyi.paimonsnotebook.util.*
 import org.json.JSONArray
@@ -28,6 +27,7 @@ class LoadingActivity : BaseActivity() {
 
         setContentView(bind.root)
 
+        setViewMarginBottomByNavigationBarHeight(bind.setCookie)
         //判断是否有账号是处于登录状态
         checkCookie()
     }
@@ -58,10 +58,28 @@ class LoadingActivity : BaseActivity() {
             }
         }
 
-        thread {
-            goA<MainActivity>()
-            Thread.sleep(500)
-            finish()
+        runOnUiThread {
+            if(sp.getBoolean(Constants.SP_NEED_UPDATE,false)){
+                showFailureAlertDialog(bind.root.context,getString(R.string.paimonsnotebook_need_update_title),getString(R.string.paimonsnotebook_need_update_context),false)
+                thread {
+                    Thread.sleep(5000)
+                    UpdateInformation.getNewVersionApp()
+                }
+            }else{
+//                if(sp.getBoolean("ena",true)){
+                    thread {
+                        goA<MainActivity>()
+                        Thread.sleep(500)
+                        finish()
+                    }
+//                }else{
+//                    showFailureAlertDialog(bind.root.context,getString(R.string.paimonsnotebook_not_support_title),getString(R.string.paimonsnotebook_not_support_context),false)
+//                    thread {
+//                        Thread.sleep(5000)
+//                        error(getString(R.string.paimonsnotebook_not_support_title))
+//                    }
+//                }
+            }
         }
     }
 
@@ -69,16 +87,20 @@ class LoadingActivity : BaseActivity() {
         if(mainUser?.isNull()==true){
             showAddCookieButton()
         }else{
-            thread {
-                Ok.getSync(MiHoYoApi.getAccountInformation(mainUser!!.loginUid), mainUser!!){
-                    if(it.ok){
-                        initInfo()
-                        initFinished = true
-                    }else{
-                        showAddCookieButton()
-                        runOnUiThread {
-                            "$it".showLong()
-                        }
+            SetCookieActivity.checkCookie(mainUser!!.loginUid, mainUser!!.lToken, mainUser!!.cookieToken){ b: Boolean, roles: GetGameRolesByCookieBean? ->
+                if(b){
+                    //更新游戏等级
+                    with(mainUser!!){
+                        gameLevel = roles!!.list.first().level
+                    }
+                    SetCookieActivity.refreshMainUserInformation()
+
+                    initInfo()
+                    initFinished = true
+                }else{
+                    showAddCookieButton()
+                    runOnUiThread {
+                        "Cookie失效,请重新设置Cookie".showLong()
                     }
                 }
             }

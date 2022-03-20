@@ -37,7 +37,6 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
         super.onViewCreated(view, savedInstanceState)
         bind = FragmentDailyMaterialsBinding.bind(view)
 
-
         initView()
     }
 

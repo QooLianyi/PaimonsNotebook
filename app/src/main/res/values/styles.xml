@@ -8,7 +8,7 @@
     </style>
 
 <!--    APP样式-->
-    <style name="paimonsNoteTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="PaimonsNotebookTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/star_color</item>
         <item name="colorPrimaryDark">@color/menu_background_color</item>
         <item name="colorAccent">@color/accent_blue</item>
@@ -35,5 +35,9 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="CustomBottomStyle" parent="@android:style/TextAppearance.Small"
+        >
+        <item name="android:textColor">#fff</item>
+    </style>
 
 </resources>

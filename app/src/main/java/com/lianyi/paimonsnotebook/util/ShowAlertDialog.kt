@@ -1,15 +1,17 @@
 package com.lianyi.paimonsnotebook.util
 
 import android.content.Context
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.viewbinding.ViewBinding
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.databinding.*
 import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
 
-private fun setAlertDialogTransparentBackground(win: AlertDialog){
+fun setAlertDialogTransparentBackground(win: AlertDialog){
     win.window?.setBackgroundDrawableResource(R.color.transparent)
     win.window?.decorView?.setPadding(10.dp.toInt(),0,10.dp.toInt(),0)
     win.window?.setLayout(
@@ -25,12 +27,16 @@ fun showAlertDialog(context: Context, layout: View): AlertDialog {
     return win
 }
 
-fun showAlertDialog(context: Context, id:Int): AlertDialog {
+inline fun <reified VB:ViewBinding> showAlertDialog(context: Context, id:Int,closeable:Boolean = true,block: (VB,win:AlertDialog) -> Unit): AlertDialog {
     val layout = LayoutInflater.from(context).inflate(id,null)
     val win = AlertDialog.Builder(context).setView(layout).create()
-
+    val la = VB::class.java.getMethod("bind",View::class.java).invoke(null,layout) as VB
     setAlertDialogTransparentBackground(win)
+    if(!closeable){
+        win.setCancelable(false)
+    }
     win.show()
+    block(la,win)
     return win
 }
 
@@ -67,16 +73,27 @@ fun showSuccessInformationAlertDialog(context: Context, title:String="成功",me
     win.show()
 }
 
-fun showFailureAlertDialog(context: Context, title: String="失败", message:String=""): AlertDialog {
+fun showFailureAlertDialog(context: Context, title: String="失败", message:String="", closeable:Boolean = true): AlertDialog {
     val layout = PopFailureBinding.bind(LayoutInflater.from(context).inflate(R.layout.pop_failure,null))
     val win = AlertDialog.Builder(context).setView(layout.root).create()
 
     layout.title.text = title
     layout.message.text = message
 
-    layout.close.setOnClickListener {
-        win.dismiss()
+    if(closeable){
+        layout.close.setOnClickListener {
+            win.dismiss()
+        }
+    }else{
+        win.setCancelable(false)
+        win.setOnKeyListener { p0, p1, p2 ->
+            when (p1) {
+                KeyEvent.KEYCODE_BACK -> true
+                else -> false
+            }
+        }
     }
+
     setAlertDialogTransparentBackground(win)
     win.show()
     return win

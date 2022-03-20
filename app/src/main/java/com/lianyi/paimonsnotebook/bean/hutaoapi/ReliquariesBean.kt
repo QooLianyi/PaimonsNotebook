@@ -6,7 +6,7 @@ import com.lianyi.paimonsnotebook.util.sp
 import com.lianyi.paimonsnotebook.util.toList
 import org.json.JSONArray
 
-class ReliquariesBean(val id: Int,val name: String,val url: String) {
+data class ReliquariesBean(val id: Int,val name: String,val url: String) {
     companion object{
         val reliquariesList by lazy {
             val list = mutableListOf<ReliquariesBean>()

@@ -1,530 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    >
+
+<!--    <FrameLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        >-->
+<!--        <ImageView-->
+<!--            android:layout_width="800dp"-->
+<!--            android:layout_height="800dp"-->
+<!--            android:src="@drawable/ic_half_round_line"-->
+<!--            android:rotation="120"-->
+<!--            android:layout_marginStart="-23dp"-->
+<!--            android:layout_marginTop="-330dp"-->
+<!--            app:tint="#FDFB9C" />-->
+
+<!--        <ImageView-->
+<!--            android:layout_width="800dp"-->
+<!--            android:layout_height="800dp"-->
+<!--            android:src="@drawable/ic_half_round_line"-->
+<!--            android:rotation="60"-->
+<!--            android:layout_marginStart="-23dp"-->
+<!--            android:layout_marginTop="272dp"-->
+<!--            app:tint="#FDFB9C"-->
+<!--            />-->
+<!--    </FrameLayout>-->
 
 
-        <!--        树脂展开页面-->
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
         android:layout_height="match_parent"
-        android:background="@color/content_background_color"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/information_detail_span"
-        android:paddingTop="30dp"
-        android:descendantFocusability="blocksDescendants"
+        android:id="@+id/klee"
+        android:clipChildren="false"
         >
 
-        <androidx.cardview.widget.CardView
+        <TextView
+            android:layout_width="1000dp"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:translationX="200dp"
+            />
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            app:cardCornerRadius="4dp"
-            app:cardBackgroundColor="@color/card_background_color"
+            android:layout_height="match_parent"
             >
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:clipChildren="false"
                 >
 
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/icon_resin"
-                    android:padding="6dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginStart="3dp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="原粹树脂"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black_alpha_90"
-                    android:layout_marginStart="45dp"
-                    android:layout_marginTop="6dp"
-                    />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="28dp"
-                    android:layout_marginStart="45dp"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="将于 "
-                        android:textColor="@color/card_content_text_color"
-                        android:textSize="14sp"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/card_content_text_color"
-                        android:textSize="14sp"
-                        android:text="00:00"
-                        android:id="@+id/resin_recover_time"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="后 全部恢复"
-                        android:textSize="14sp"
-                        android:textColor="@color/card_content_text_color"
-                        />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_gravity="end|center"
-                    android:background="@color/card_background_accent_color"
-                    android:gravity="center"
-                    >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="@color/card_content_text_accent_color"
-                        android:textSize="16sp"
-                        android:id="@+id/resin_current"
-                        android:textStyle="bold"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="/"
-                        android:textColor="@color/card_content_text_accent_color"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="160"
-                        android:textSize="16sp"
-                        android:id="@+id/resin_max"
-                        android:textStyle="bold"
-                        android:textColor="@color/card_content_text_accent_color"
-                        />
-                </LinearLayout>
-
-            </FrameLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            app:cardCornerRadius="4dp"
-            app:cardBackgroundColor="@color/card_background_color"
-            >
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/icon_daily_task"
-                    android:padding="6dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginStart="3dp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="每日委托任务"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black_alpha_90"
-                    android:layout_marginStart="45dp"
-                    android:layout_marginTop="6dp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/card_content_text_color"
-                    android:textSize="14sp"
-                    android:text="每日委托奖励还未领取"
-                    android:layout_marginTop="28dp"
-                    android:layout_marginStart="45dp"
-                    android:id="@+id/daily_task_state"
-                    />
-
-                <LinearLayout
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_gravity="end|center"
-                    android:background="@color/card_background_accent_color"
-                    android:gravity="center"
-                    >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="@color/card_content_text_accent_color"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:id="@+id/daily_task_finished_count"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="/"
-                        android:textColor="@color/card_content_text_accent_color"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="160"
-                        android:textSize="16sp"
-                        android:id="@+id/daily_task_max"
-                        android:textStyle="bold"
-                        android:textColor="@color/card_content_text_accent_color"
-                        />
-                </LinearLayout>
-
-            </FrameLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            app:cardCornerRadius="4dp"
-            app:cardBackgroundColor="@color/card_background_color"
-            >
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/icon_home_coin"
-                    android:padding="6dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginStart="3dp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="洞天宝钱"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black_alpha_90"
-                    android:layout_marginStart="45dp"
-                    android:layout_marginTop="6dp"
-                    />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="28dp"
-                    android:layout_marginStart="45dp"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="将于 "
-                        android:textSize="14sp"
-                        android:textColor="@color/card_content_text_color"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:textColor="@color/card_content_text_color"
-                        android:text="00:00"
-                        android:id="@+id/home_icon_time"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="后 全部恢复"
-                        android:textSize="14sp"
-                        android:textColor="@color/card_content_text_color"
-                        />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_gravity="end|center"
-                    android:background="@color/card_background_accent_color"
-                    android:gravity="center"
-                    >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="@color/card_content_text_accent_color"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:id="@+id/home_icon_current"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="/"
-                        android:textColor="@color/card_content_text_accent_color"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="16sp"
-                        android:id="@+id/home_icon_max"
-                        android:textStyle="bold"
-                        android:textColor="@color/card_content_text_accent_color"
-                        />
-                </LinearLayout>
-
-            </FrameLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            app:cardCornerRadius="4dp"
-            app:cardBackgroundColor="@color/card_background_color"
-            >
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/icon_secret_tower"
-                    android:padding="6dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginStart="3dp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="值得铭记的强敌"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black_alpha_90"
-                    android:layout_marginStart="45dp"
-                    android:layout_marginTop="6dp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="@color/card_content_text_color"
-                    android:text="本周已消耗的减半次数"
-                    android:layout_marginTop="28dp"
-                    android:layout_marginStart="45dp"
-                    />
-
-                <LinearLayout
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_gravity="end|center"
-                    android:background="@color/card_background_accent_color"
-                    android:gravity="center"
-                    >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="@color/card_content_text_accent_color"
-                        android:textSize="16sp"
-                        android:id="@+id/resin_discount_num"
-                        android:textStyle="bold"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="/"
-                        android:textSize="16sp"
-                        android:textColor="@color/card_content_text_accent_color"
-                        android:textStyle="bold"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="3"
-                        android:textSize="16sp"
-                        android:textColor="@color/card_content_text_accent_color"
-                        android:id="@+id/resin_discount_num_max"
-                        android:textStyle="bold"
-                        />
-                </LinearLayout>
-
-            </FrameLayout>
-
-        </androidx.cardview.widget.CardView>
-
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            app:cardCornerRadius="4dp"
-            app:cardBackgroundColor="@color/card_background_color"
-            >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="3dp"
-                >
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginEnd="10dp"
-                    android:gravity="center_vertical"
-                    >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="探索派遣"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/black_alpha_90"
-                        android:layout_margin="4dp"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black_alpha_90"
-                        android:text="("
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black_alpha_90"
-                        android:text="0"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:id="@+id/current_expedition_num"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black_alpha_90"
-                        android:text="/"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black_alpha_90"
-                        android:text="5"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:id="@+id/max_expedition_num"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black_alpha_90"
-                        android:text=")"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        />
-
-                </LinearLayout>
-
-                <RelativeLayout
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:translationX="165.5dp"
                     >
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        android:orientation="vertical"
-                        android:overScrollMode="never"
-                        android:scrollbars="none"
-                        android:nestedScrollingEnabled="false"
-                        android:id="@+id/expeditions_list"
-                        android:paddingStart="10dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="10dp"
-                        android:paddingEnd="10dp"
+
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="300dp"
+                        android:translationY="-250dp"
+                        android:translationX="-50dp"
+                        android:background="@color/white"
                         />
-                </RelativeLayout>
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="300dp"
+                        android:translationY="250dp"
+                        android:translationX="-50dp"
+                        android:background="@color/white"
+                        />
 
-        </androidx.cardview.widget.CardView>
+                </FrameLayout>
 
-    </LinearLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:translationX="50dp"
+                    >
 
+                    <ImageView
+                        android:layout_width="400dp"
+                        android:layout_height="500dp"
+                        android:src="@drawable/ic_half_round_line"
+                        android:rotation="110"
+                        app:tint="#FF4262"
+                        android:translationX="100dp"
+                        android:translationY="-295dp"
+                        android:scaleY="1.8"
+                        android:scaleX="1.8"
+                        />
 
-</LinearLayout>
+                    <ImageView
+                        android:layout_width="400dp"
+                        android:layout_height="500dp"
+                        android:src="@drawable/ic_half_round_line"
+                        android:rotation="70"
+                        app:tint="#FF4262"
+                        android:translationX="100dp"
+                        android:translationY="295dp"
+                        android:scaleY="1.8"
+                        android:scaleX="1.8"
+                        />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:translationX="106dp"
+                    >
+
+                    <ImageView
+                        android:layout_width="400dp"
+                        android:layout_height="500dp"
+                        android:src="@drawable/ic_half_round_line"
+                        android:rotation="110"
+                        app:tint="#FDFB9C"
+                        android:translationX="100dp"
+                        android:translationY="-295dp"
+                        android:scaleY="1.8"
+                        android:scaleX="1.8"
+                        />
+
+                    <ImageView
+                        android:layout_width="400dp"
+                        android:layout_height="500dp"
+                        android:src="@drawable/ic_half_round_line"
+                        android:rotation="70"
+                        app:tint="#FDFB9C"
+                        android:translationX="100dp"
+                        android:translationY="295dp"
+                        android:scaleY="1.8"
+                        android:scaleX="1.8"
+                        />
+
+                </FrameLayout>
+
+            </FrameLayout>
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="180dp"
+                android:src="@drawable/icon_klee"
+                android:layout_gravity="center"
+                android:translationX="90dp"
+                />
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+</FrameLayout>

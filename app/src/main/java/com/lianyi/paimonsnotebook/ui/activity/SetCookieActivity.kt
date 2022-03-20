@@ -14,10 +14,47 @@ import com.lianyi.paimonsnotebook.util.*
 import org.json.JSONArray
 
 class SetCookieActivity : BaseActivity() {
-    lateinit var bind :ActivityUserLoginBinding
+    lateinit var bind: ActivityUserLoginBinding
 
-    companion object{
+    companion object {
         var isAddUser = false
+
+        fun checkCookie(
+            account_id: String,
+            ltoken: String,
+            cookie_token: String,
+            block: (Boolean,GetGameRolesByCookieBean?) -> Unit
+        ) {
+            val cookie = "ltuid=${account_id};ltoken=${ltoken};"
+            Ok.getGameRolesByCookie(cookie) {
+                if (it.ok) {
+                    val cookie2 = "account_id=${account_id};cookie_token=${cookie_token}"
+                    Ok.getGameRolesByCookie(cookie2) {
+                        if (it.ok) {
+                            val roles = GSON.fromJson(
+                                it.optString("data"),
+                                GetGameRolesByCookieBean::class.java
+                            )
+                            block(true,roles)
+                        } else {
+                            block(false,null)
+                        }
+                    }
+                }else{
+                    block(false,null)
+                }
+            }
+        }
+
+        fun refreshMainUserInformation(){
+            usp.edit().apply {
+                putString(
+                    JsonCacheName.MAIN_USER_NAME,
+                    GSON.toJson(mainUser)
+                )
+                apply()
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,99 +65,99 @@ class SetCookieActivity : BaseActivity() {
 
 
         bind.setCookie.setOnClickListener {
-            checkCookie()
+            check()
         }
 
         bind.goLogin.setOnClickListener {
-            val intent = Intent(this,HoYoLabLoginActivity::class.java)
+            val intent = Intent(this, HoYoLabLoginActivity::class.java)
             HoYoLabLoginActivity.isAddUser = isAddUser
-            startActivityForResult(intent,ActivityRequestCode.LOGIN)
+            startActivityForResult(intent, ActivityRequestCode.LOGIN)
         }
     }
 
 
-    private fun checkCookie(){
-        if(bind.cookieInput.text.isNullOrEmpty()){
+    private fun check() {
+        if (bind.cookieInput.text.isNullOrEmpty()) {
             "你还没有输入cookie".show()
             return
         }
 
-        val cookieMap = mutableMapOf<String,String>()
-        bind.cookieInput.text.toString().split(";").forEach { split->
+        val cookieMap = mutableMapOf<String, String>()
+        bind.cookieInput.text.toString().split(";").forEach { split ->
             val map = split.split("=")
             cookieMap += map.first() to map.last()
         }
 
-        val account_id = cookieMap[Constants.LTUID_NAME]?:cookieMap[Constants.ACCOUNT_ID_NAME]?:""
-        val ltoken = cookieMap[Constants.LTOKEN_NAME]?:cookieMap["lToken"]?:""
-        val cookie_token = cookieMap[Constants.COOKIE_TOKEN_NAME]?:""
+        val account_id =
+            cookieMap[Constants.LTUID_NAME] ?: cookieMap[Constants.ACCOUNT_ID_NAME] ?: ""
+        val ltoken = cookieMap[Constants.LTOKEN_NAME] ?: cookieMap["lToken"] ?: ""
+        val cookie_token = cookieMap[Constants.COOKIE_TOKEN_NAME] ?: ""
 
-        if(account_id.isNotEmpty()&&ltoken.isNotEmpty()&&cookie_token.isNotEmpty()){
-            val cookie = "ltuid=${account_id};ltoken=${ltoken};"
-            Ok.getGameRolesByCookie(cookie){
+        if (account_id.isNotEmpty() && ltoken.isNotEmpty() && cookie_token.isNotEmpty()) {
+            checkCookie(account_id,ltoken,cookie_token){ b: Boolean, roles: GetGameRolesByCookieBean? ->
                 runOnUiThread {
-                    if(it.ok){
-                        val cookie2 = "account_id=${account_id};cookie_token=${cookie_token}"
-                        Ok.getGameRolesByCookie(cookie2){
-                            runOnUiThread {
-                                if(it.ok){
-                                    val roles = GSON.fromJson(it.optString("data"),
-                                        GetGameRolesByCookieBean::class.java)
+                    if (b) {
+                        roles!!
+                        if (roles.list.size > 0) {
+                            val user = UserBean(
+                                roles.list.first().nickname,
+                                account_id,
+                                roles.list.first().region,
+                                roles.list.first().region_name,
+                                roles.list.first().game_uid,
+                                ltoken,
+                                cookie_token,
+                                roles.list.first().level
+                            )
+                            if (isAddUser) {
+                                val userList = mutableListOf<UserBean>()
+                                JSONArray(
+                                    usp.getString(
+                                        JsonCacheName.USER_LIST,
+                                        "[]"
+                                    )
+                                ).toList(userList)
+                                userList += user
 
-                                    if(roles.list.size>0){
-                                        val user = UserBean(
-                                            roles.list.first().nickname,
-                                            account_id,
-                                            roles.list.first().region,
-                                            roles.list.first().region_name,
-                                            roles.list.first().game_uid,
-                                            ltoken,
-                                            cookie_token,
-                                            roles.list.first().level
-                                        )
-                                        if(isAddUser){
-                                            val userList = mutableListOf<UserBean>()
-                                            JSONArray(usp.getString(JsonCacheName.USER_LIST,"[]")).toList(userList)
-                                            userList+=user
-
-                                            usp.edit().apply {
-                                                putString(JsonCacheName.USER_LIST, GSON.toJson(userList))
-                                                apply()
-                                            }
-                                        }else{
-                                            usp.edit().apply{
-                                                mainUser = user
-                                                putString(JsonCacheName.MAIN_USER_NAME,GSON.toJson(user))
-                                                apply()
-                                            }
-                                        }
-                                        setResult(ActivityResponseCode.OK)
-                                        finish()
-                                        "Cookie设置成功"
-                                    }else{
-                                        "该账号没有原神角色信息"
-                                    }
-                                }else{
-                                    "错误的Cookie"
-                                }.show()
+                                usp.edit().apply {
+                                    putString(
+                                        JsonCacheName.USER_LIST,
+                                        GSON.toJson(userList)
+                                    )
+                                    apply()
+                                }
+                            } else {
+                                usp.edit().apply {
+                                    mainUser = user
+                                    putString(
+                                        JsonCacheName.MAIN_USER_NAME,
+                                        GSON.toJson(user)
+                                    )
+                                    apply()
+                                }
                             }
+                            setResult(ActivityResponseCode.OK)
+                            finish()
+                            "Cookie设置成功"
+                        } else {
+                            "该账号没有原神角色信息"
                         }
-                    }else{
-                        "错误的Cookie".show()
-                    }
+                    } else {
+                        "错误的Cookie"
+                    }.show()
                 }
             }
-        }else{
-           "错误的Cookie".show()
+        } else {
+            "错误的Cookie".show()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(resultCode==ActivityResponseCode.OK){
-            when(requestCode){
-                ActivityRequestCode.LOGIN->{
+        if (resultCode == ActivityResponseCode.OK) {
+            when (requestCode) {
+                ActivityRequestCode.LOGIN -> {
                     setResult(ActivityResponseCode.OK)
                     finish()
                 }

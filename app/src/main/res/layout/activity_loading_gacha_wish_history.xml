@@ -35,7 +35,7 @@
         <ImageView
             android:layout_width="400dp"
             android:layout_height="400dp"
-            android:src="@drawable/icon_text_background_02"
+            android:src="@drawable/img_text_background_02"
             android:layout_gravity="center"
             />
 

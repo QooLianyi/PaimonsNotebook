@@ -11,6 +11,8 @@ enum class PagerIndex {
     WISH_PAGE,
     SEARCH_PAGE,
     HUTAO_DATABASE,
+    SUMMER_LAND,
+    CULTIVATE_CALCULATE,
     EMPTY_PAGE;
 
     companion object{

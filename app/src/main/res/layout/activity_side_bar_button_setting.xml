@@ -28,17 +28,32 @@
             android:layout_height="wrap_content"
             android:textSize="28sp"
             android:textColor="@color/black"
-            android:text="侧边栏呼出区域"
+            android:text="侧边栏设置"
+            />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black_alpha_10"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
             />
 
         <androidx.appcompat.widget.SwitchCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="启用"
+            android:text="侧边栏自动收起"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:layout_marginTop="20dp"
-            android:id="@+id/side_bar_enable"
+            android:id="@+id/side_bar_auto_pickup"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/black_alpha_80"
+            android:text="默认关闭,开启后点击侧边栏选项后会自动收起侧边栏"
             />
 
         <View
@@ -47,6 +62,24 @@
             android:background="@color/black_alpha_10"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="20dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:text="侧边栏呼出区域设置"
+            android:layout_marginBottom="50dp"
+            />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="启用"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:id="@+id/side_bar_enable"
             />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -74,7 +107,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:text="呼出区域宽度(建议默认)"
+            android:text="呼出区域宽度(建议默认40dp)"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
             android:id="@+id/side_bar_button_area_width_option_text"
@@ -83,9 +116,9 @@
         <SeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:progress="30"
+            android:progress="40"
             android:id="@+id/side_bar_button_area_width"
-            android:max="60"
+            android:max="120"
             />
 
         <TextView
@@ -93,7 +126,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:text="30dp"
+            android:text="40dp"
             android:layout_marginBottom="10dp"
             android:gravity="center"
             android:id="@+id/side_bar_button_area_width_text"

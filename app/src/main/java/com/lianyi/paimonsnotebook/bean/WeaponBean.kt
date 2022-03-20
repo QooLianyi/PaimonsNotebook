@@ -24,7 +24,7 @@ import org.json.JSONArray
 * star 星级
 * */
 
-class WeaponBean(val name:String,
+data class WeaponBean(val name:String,
                  val weaponType:Int,
                  val ATK:String,
                  val attributeName:String,

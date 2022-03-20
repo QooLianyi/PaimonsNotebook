@@ -1,7 +1,7 @@
 package com.lianyi.paimonsnotebook.bean.account
 
 
-class UserBean(var nickName:String,
+data class UserBean(var nickName:String,
                var loginUid:String,
                var region:String,
                var regionName:String,

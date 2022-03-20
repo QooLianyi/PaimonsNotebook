@@ -1,6 +1,6 @@
 package com.lianyi.paimonsnotebook.bean.materials
 
-class DailyMaterial(val area:String,val name:String,val star:Int,val key:String,val icon:String) {
+data class DailyMaterial(val area:String,val name:String,val star:Int,val key:String,val icon:String) {
     companion object{
         private val dropDay1 = listOf(1,4,7)
         private val dropDay2 = listOf(2,5,7)

@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,6 +18,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
+
+            <com.lianyi.paimonsnotebook.view.CustomSwitchButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:id="@+id/switch_button"
+                app:textOn="上期"
+                app:textOff="本期"
+                android:visibility="gone"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"

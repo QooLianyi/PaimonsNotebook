@@ -167,6 +167,8 @@ class SearchResultActivity : BaseActivity() {
                     item.starBackground.setImageResource(Star.getStarResourcesByStarNum(character.star,false))
                     item.type.setImageResource(Element.getImageResourceByType(character.element))
                     loadImage(item.icon,character.icon)
+                }else{
+                    loadImage(item.icon,avatarsBean.icon)
                 }
 
                 if(avatarsBean.actived_constellation_num>0){

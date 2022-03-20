@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto"
+    >
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:duration="1000"
+        motion:motionInterpolator="easeInOut"
+        motion:autoTransition="animateToEnd">
+       <KeyFrameSet>
+           <KeyPosition
+               motion:motionTarget="@+id/klee_bg"
+               motion:framePosition="30"
+               motion:percentX="0.6"
+               />
+           <KeyPosition
+               motion:motionTarget="@+id/klee_bg"
+               motion:percentX="1"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star1"
+               motion:framePosition="30"
+               android:scaleX="1"
+               android:scaleY="1"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star1"
+               motion:framePosition="55"
+               android:scaleX="0"
+               android:scaleY="0"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star1"
+               motion:framePosition="70"
+               android:scaleX="1.2"
+               android:scaleY="1.2"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star1"
+               motion:framePosition="100"
+               android:scaleX="0.5"
+               android:scaleY="0.5"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star2"
+               motion:framePosition="40"
+               android:scaleX="0"
+               android:scaleY="0"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star2"
+               motion:framePosition="60"
+               android:scaleX="0.8"
+               android:scaleY="0.8"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star2"
+               motion:framePosition="100"
+               android:scaleX="0"
+               android:scaleY="0"
+               />
+
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star3"
+               motion:framePosition="20"
+               android:scaleX="0"
+               android:scaleY="0"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star3"
+               motion:framePosition="40"
+               android:scaleX="1"
+               android:scaleY="1"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star3"
+               motion:framePosition="60"
+               android:scaleX="0.6"
+               android:scaleY="0.6"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star3"
+               motion:framePosition="80"
+               android:scaleX="1"
+               android:scaleY="1"
+               />
+
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star3"
+               motion:framePosition="100"
+               android:scaleX="0.5"
+               android:scaleY="0.5"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star4"
+               motion:framePosition="40"
+               android:scaleX="0"
+               android:scaleY="0"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star4"
+               motion:framePosition="60"
+               android:scaleX="1.2"
+               android:scaleY="1.2"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star4"
+               motion:framePosition="90"
+               android:scaleX="0"
+               android:scaleY="0"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star4"
+               motion:framePosition="100"
+               android:scaleX="0"
+               android:scaleY="0"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star5"
+               motion:framePosition="30"
+               android:scaleX="0"
+               android:scaleY="0"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star5"
+               motion:framePosition="70"
+               android:scaleX="1"
+               android:scaleY="1"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star5"
+               motion:framePosition="90"
+               android:scaleX="0"
+               android:scaleY="0"
+               />
+
+           <KeyAttribute
+               motion:motionTarget="@+id/star5"
+               motion:framePosition="100"
+               android:scaleX="0"
+               android:scaleY="0"
+               />
+
+       </KeyFrameSet>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/klee"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:translationX="-400dp"
+            />
+        <Constraint
+            android:id="@+id/klee_bg"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:translationX="-300dp"
+            android:layout_width="250dp"
+            android:layout_height="300dp"
+            />
+
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/klee"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:translationX="450dp" />
+        <Constraint
+            android:id="@+id/klee_bg"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_width="250dp"
+            android:layout_height="300dp"
+            />
+    </ConstraintSet>
+</MotionScene>

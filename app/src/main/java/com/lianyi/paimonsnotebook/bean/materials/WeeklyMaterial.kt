@@ -1,6 +1,6 @@
 package com.lianyi.paimonsnotebook.bean.materials
 
-class WeeklyMaterial(val area:String,val name:String,val star:Int,val key:String,val icon:String) {
+data class WeeklyMaterial(val area:String,val name:String,val star:Int,val key:String,val icon:String) {
     companion object{
         fun getGroupNameByKey(key: String):String{
             return when(key){

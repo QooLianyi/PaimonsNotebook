@@ -20,6 +20,8 @@ class SearchFragment : BaseFragment(R.layout.fragment_search){
 
         bind = FragmentSearchBinding.bind(view)
 
+        bind.search.isSubmitButtonEnabled = true
+
         bind.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 if (p0.toString().length != 9) {

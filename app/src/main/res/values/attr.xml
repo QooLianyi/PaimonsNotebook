@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomSwitchButton">
+        <attr name="checked" format="boolean"/>
+        <attr name="textOn" format="string"/>
+        <attr name="textOff" format="string"/>
+        <attr name="padding_hor" format="integer"/>
+        <attr name="padding_ver" format="integer"/>
+        <attr name="button_height" format="integer"/>
+        <attr name="button_width" format="integer"/>
+        <attr name="button_radius" format="integer"/>
+    </declare-styleable>
+</resources>

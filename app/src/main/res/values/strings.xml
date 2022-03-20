@@ -14,6 +14,14 @@
     <string name="information_default_account">1.默认账号\n默认账号用于地图上的标点显示,各种信息查询(如查询其他玩家的信息、获取游戏内公告等)。\n2.删除账号\n当账号有多个时,向左拖拽非默认账号时可显示删除按钮</string>
     <string name="information_entity_materials">此处只展示了所需素材最高级形态,角色突破所需的玉和提升技能所需的智识之冕均未列出,未来可能会显示所需的全部材料及所需数量。</string>
 
+    
+    <string name="paimonsnotebook_not_support_title">此软件已停止支持</string>
+    <string name="paimonsnotebook_not_support_context">感谢您的使用,软件将在5秒后自动退出</string>
+
+    <string name="paimonsnotebook_need_update_title">此版本已不受支持</string>
+    <string name="paimonsnotebook_need_update_context">5秒后跳转浏览器下载最新版本</string>
+
+
 
     <string-array name="week">
         <item>星期一</item>

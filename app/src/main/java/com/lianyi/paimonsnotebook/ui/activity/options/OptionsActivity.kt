@@ -4,11 +4,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.bean.PaimonsNotebookLatestBean
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.databinding.ActivityOptionsBinding
 import com.lianyi.paimonsnotebook.databinding.PopWarningBinding
-import com.lianyi.paimonsnotebook.lib.data.RefreshData
+import com.lianyi.paimonsnotebook.lib.data.UpdateInformation
 import com.lianyi.paimonsnotebook.lib.information.Constants
 import com.lianyi.paimonsnotebook.util.*
 import org.jsoup.Jsoup
@@ -58,13 +57,18 @@ class OptionsActivity : BaseActivity() {
         bind.wishSetting.setOnClickListener {
             goA<WishOptionsActivity>()
         }
+
+        bind.homeSetting.setOnClickListener {
+            goA<HomeOptionsActivity>()
+        }
+
     }
 
     private fun initDataSetting() {
         //更新数据
         bind.getJson.setOnClickListener {
             showLoading(bind.root.context)
-            RefreshData.getJsonData { ok,newDataCount->
+            UpdateInformation.getJsonData { ok, newDataCount->
                 runOnUiThread {
                     if (ok&&newDataCount>0) {
                         "新增${newDataCount}条数据,下次启动时使用".showLong()
@@ -79,12 +83,13 @@ class OptionsActivity : BaseActivity() {
         }
     }
 
+    //关于
     private fun initAboutPaimonsNotebook() {
         bind.checkUpdate.setOnClickListener {
             showLoading(this)
             thread {
                 try {
-                    val document = Jsoup.connect(Constants.JSON_DATA).get()
+                    val document = Jsoup.connect(Constants.PAIMONS_NOTEBOOK_WEB).get()
                     val appLastVersionSelect = "p.app_lastest_version"
                     val appLastVersionCodeSelect = "p.app_last_version_code"
 
@@ -92,16 +97,9 @@ class OptionsActivity : BaseActivity() {
                     val appLastVersionCode = if(document.select(appLastVersionCodeSelect).text().isNullOrEmpty()) 0L else document.select(appLastVersionCodeSelect).text().toLong()
 
                     if(PaiMonsNoteBook.APP_VERSION_CODE<appLastVersionCode){
+                        "发现新版本(${appLastVersion})\n正在通过系统浏览器下载...".showLong()
+                        UpdateInformation.getNewVersionApp()
 
-                        Ok.get(Constants.PAIMONS_NOTE_BOOK_LATEST){
-                            val latestBean = GSON.fromJson(it.toString(),PaimonsNotebookLatestBean::class.java)
-                            runOnUiThread {
-                                val uri = Uri.parse(latestBean.assets.first().browser_download_url)
-                                val intent = Intent(Intent.ACTION_VIEW,uri)
-                                startActivity(intent)
-                                "发现新版本(${appLastVersion})\n正在通过系统的浏览器下载...".showLong()
-                            }
-                        }
 //                            val uri = Uri.parse(Constants.getApkUr(appLastVersion))
 //                            val manager = PaiMonsNoteBook.context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 //                            val requestApk = DownloadManager.Request(uri)
@@ -132,9 +130,37 @@ class OptionsActivity : BaseActivity() {
             }
         }
 
+        //设置版本信息
         bind.appVersion.text = PaiMonsNoteBook.APP_VERSION_NAME
 
         bind.goFeedBack.setOnClickListener {
+            /****************
+             *
+             * 发起添加群流程。群号：派蒙的笔记本() 的 key 为： qhNCaJ5EPHebQIX4-G2mpQu86f-WlAc7
+             * 调用 joinQQGroup(qhNCaJ5EPHebQIX4-G2mpQu86f-WlAc7) 即可发起手Q客户端申请加群 派蒙的笔记本()
+             *
+             * @param key 由官网生成的key
+             * @return 返回true表示呼起手Q成功，返回false表示呼起失败
+             ******************/
+            "正在尝试唤起手机QQ".show()
+            val key = "qhNCaJ5EPHebQIX4-G2mpQu86f-WlAc7"
+            val intent = Intent()
+            intent.data = Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26jump_from%3Dwebapi%26k%3D$key");
+            // 此Flag可根据具体产品需要自定义，如设置，则在加群界面按返回，返回手Q主界面，不设置，按返回会返回到呼起产品界面    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            try {
+                startActivity(intent);
+            } catch (e:Exception) {
+                // 未安装手Q或安装的版本不支持
+                showFailureAlertDialog(bind.root.context,"唤起手机QQ失败","可能是未安装手Q或安装的版本不支持")
+            }
+        }
+
+        //前往github
+        bind.goGithub.setOnClickListener {
+            val uri = Uri.parse(Constants.PAIMONSNOTEBOOK_GITHUB_URL)
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = uri
+            startActivity(intent)
         }
     }
 }

@@ -67,13 +67,13 @@ class ContentMarginActivity : BaseActivity() {
     }
 
     private fun initConfig() {
+        bind.contentMarginEnable.isChecked = ContentMarginSettings.instance.enable
+        bind.contentMarginPreview.isChecked = ContentMarginSettings.instance.marginPreview
+        bind.topContentMarginText.text = "${ContentMarginSettings.instance.topMargin}dp"
+        bind.horizontalContentMarginText.text = "${ContentMarginSettings.instance.horizontalMargin}dp"
+        bind.topContentMargin.progress = ContentMarginSettings.instance.topProgress
+        bind.horizontalContentMargin.progress = ContentMarginSettings.instance.horizontalProgress
         if(enable){
-            bind.contentMarginEnable.isChecked = ContentMarginSettings.instance.enable
-            bind.contentMarginPreview.isChecked = ContentMarginSettings.instance.marginPreview
-            bind.topContentMarginText.text = "${ContentMarginSettings.instance.topMargin}dp"
-            bind.horizontalContentMarginText.text = "${ContentMarginSettings.instance.horizontalMargin}dp"
-            bind.topContentMargin.progress = ContentMarginSettings.instance.topProgress
-            bind.horizontalContentMargin.progress = ContentMarginSettings.instance.horizontalProgress
             enableOptions()
         }else{
             disableOptions()

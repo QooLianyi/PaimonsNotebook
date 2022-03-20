@@ -12,7 +12,6 @@ import com.lianyi.paimonsnotebook.databinding.PopInformationBinding
 import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.lib.information.*
-import com.lianyi.paimonsnotebook.ui.activity.HoYoLabLoginActivity
 import com.lianyi.paimonsnotebook.ui.activity.SetCookieActivity
 import com.lianyi.paimonsnotebook.util.*
 import org.json.JSONArray

@@ -26,7 +26,7 @@ import org.json.JSONArray
 * star 星级
 * */
 
-class CharacterBean(val area:String,
+data class CharacterBean(val area:String,
                     val name:String,
                     val weaponType:Int,
                     val element:Int,

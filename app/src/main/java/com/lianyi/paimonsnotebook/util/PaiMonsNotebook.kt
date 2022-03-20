@@ -1,6 +1,7 @@
 package com.lianyi.paimonsnotebook.util
 
 import android.animation.*
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
@@ -27,8 +28,10 @@ import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.tabs.TabLayout
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.account.UserBean
@@ -39,12 +42,18 @@ import com.lianyi.paimonsnotebook.lib.information.Constants
 import com.lianyi.paimonsnotebook.lib.information.JsonCacheName
 import com.lianyi.paimonsnotebook.lib.listener.AnimatorFinished
 import com.lianyi.paimonsnotebook.util.PaiMonsNoteBook.Companion.context
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.apache.poi.ss.formula.functions.T
+import org.jsoup.Jsoup
+import java.util.*
+import kotlin.concurrent.thread
 
 
 class PaiMonsNoteBook : Application(){
@@ -76,7 +85,10 @@ class PaiMonsNoteBook : Application(){
 
         //初始化自适应
         AutoSizeConfig.getInstance()
-            .setCustomFragment(true)
+            .setCustomFragment(true) //自定义fragment适配
+            .setExcludeFontScale(true) //不跟随系统的字体尺寸
+//            .setUseDeviceSize(true) //是否使用设备的实际尺寸做适配, 默认为 false, 如果设置为 false, 在以屏幕高度为基准进行适配时
+//                //AutoSize 会将屏幕总高度减去状态栏高度来做适配
             .unitsManager
             .supportSubunits = Subunits.MM
 
@@ -86,6 +98,7 @@ class PaiMonsNoteBook : Application(){
         if(mainUser==null){
             mainUser = UserBean()
         }
+        AppCenter.start(this,"3562c119-7950-4211-ad45-b1d2546fc046",Analytics::class.java,Crashes::class.java)
     }
 }
 
@@ -94,10 +107,15 @@ fun loadImage(imageView: ImageView, url:String?){
 }
 
 fun loadHomeNoticeImage(imageView: ImageView, url:String?){
-    Glide.with(imageView)
-        .load(url?:"")
-        .override(240.dp.toInt())
-        .into(imageView)
+    try {
+        Glide.with(imageView)
+            .load(url?:"")
+            .override(context.resources.displayMetrics.widthPixels,Target.SIZE_ORIGINAL)
+            .into(imageView)
+    }catch (e:Exception){
+        e.printStackTrace()
+        "加载${url}图片时发生错误:${e}".show()
+    }
 }
 
 var mainUser: UserBean? = null
@@ -256,6 +274,16 @@ fun SeekBar.onChange(block: (Int) -> Unit){
     })
 }
 
+
+inline fun <reified VB:ViewBinding> Activity.las() = lazy {
+    (VB::class.java.getMethod("inflate",LayoutInflater::class.java).invoke(null,layoutInflater) as VB).apply {
+        setContentView(root)
+    }
+}
+
+inline fun <reified VB:ViewBinding>View.las():VB{
+    return (VB::class.java.getMethod("bind",View::class.java).invoke(null,this) as VB)
+}
 
 //关闭加载窗口
 fun dismissLoadingWindow(){
@@ -454,6 +482,34 @@ fun MotionLayout.onFinished(block: () -> Unit){
 
         override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
             block()
+        }
+
+        override fun onTransitionTrigger(
+            motionLayout: MotionLayout?,
+            triggerId: Int,
+            positive: Boolean,
+            progress: Float
+        ) {
+        }
+    })
+}
+
+
+fun MotionLayout.onPlaying(block: (progress:Float) -> Unit){
+    this.setTransitionListener(object :MotionLayout.TransitionListener{
+        override fun onTransitionStarted(motionLayout: MotionLayout?, startId: Int, endId: Int) {
+        }
+
+        override fun onTransitionChange(
+            motionLayout: MotionLayout?,
+            startId: Int,
+            endId: Int,
+            progress: Float
+        ) {
+            block(progress)
+        }
+
+        override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
         }
 
         override fun onTransitionTrigger(

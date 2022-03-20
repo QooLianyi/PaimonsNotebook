@@ -38,18 +38,26 @@ class Constants {
         const val DAILY_TASK_STATE_NOT_FINISHED = "「每日委托」奖励还未领取"
         const val DAILY_TASK_STATE_FINISHED = "「每日委托」奖励已领取"
 
+        const val SP_NEED_UPDATE = "needUpdate"
+
         //替换占位符
         const val REPLACE_PLACEHOLDER = "#(*PLACEHOLDER!!)"
 
         const val UIGF_EXPORT_APP_NAME = "PaimonsNotebook"
 
+        const val PAIMONSNOTEBOOK_GITHUB_URL = "https://github.com/QooLianyi/PaimonsNotebook"
+
         //UIGF 的页面
         const val UIGF_URL = "https://github.com/DGP-Studio/Snap.Genshin/wiki/StandardFormat"
 
         //角色和武器的更新URL
-        const val JSON_DATA = "https://qoolianyi.github.io/PaimonsNotebook.github.io/"
+        const val PAIMONS_NOTEBOOK_WEB = "https://qoolianyi.github.io/PaimonsNotebook.github.io/"
 
         const val PAIMONS_NOTE_BOOK_LATEST = "https://api.github.com/repos/QooLianyi/PaimonsNotebook/releases/latest"
+
+        const val ENA = "p.isEnable"
+        const val HTML_SELECTOR_PAIMONS_NOTE_BOOK_NOTICE = "p.notice"
+        const val HTML_SELECTOR_PAIMONS_NOTE_BOOK_APP_LASTEST_VERSION_CODE = "p.app_lastest_version_code"
 
         //旅行者札记饼图颜色
         val monthLegendColors = listOf(
@@ -140,5 +148,6 @@ class Constants {
             return colors
         }
 
+        fun getNoticeStatus(noticeId:String):String = "have_seen_${noticeId}"
     }
 }

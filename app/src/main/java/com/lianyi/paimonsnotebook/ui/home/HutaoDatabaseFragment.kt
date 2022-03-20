@@ -3,9 +3,12 @@ package com.lianyi.paimonsnotebook.ui.home
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.edit
 import androidx.core.view.GravityCompat
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.bean.PlayerCharacterInformationBean
 import com.lianyi.paimonsnotebook.bean.PlayerInformationBean
+import com.lianyi.paimonsnotebook.bean.hutaoapi.GenshinItemsBean
 import com.lianyi.paimonsnotebook.bean.hutaoapi.HutaoDatabaseUploadBean
 import com.lianyi.paimonsnotebook.bean.hutaoapi.HutaoLoginBean
 import com.lianyi.paimonsnotebook.bean.hutaoapi.OverViewBean
@@ -141,46 +144,69 @@ class HutaoDatabaseFragment : BaseFragment(R.layout.fragment_hutao_database) {
 
     private fun upLoadData(){
         thread {
-            getPlayerInformation{ characterList: MutableList<HutaoDatabaseUploadBean.PlayerAvatarsBean>, abyssList: MutableList<HutaoDatabaseUploadBean.PlayerSpiralAbyssesLevelsBean> ->
+            getPlayerInformation{ characterList: MutableList<HutaoDatabaseUploadBean.PlayerAvatarsBean>, abyssList: MutableList<HutaoDatabaseUploadBean.PlayerSpiralAbyssesLevelsBean> ,playerCharacterInfo:PlayerCharacterInformationBean->
                 val record = HutaoDatabaseUploadBean(
                     mainUser!!.gameUid,
                     characterList,
                     abyssList
                 )
 
-                Ok.hutaoPost(HuTaoApi.RECORD_UPLOAD, GSON.toJson(record).toMyRequestBody()){
-                    activity?.runOnUiThread {
-                        if(it.ok){
-                            showSuccessInformationAlertDialog(activity!!,"上传成功","感谢您对胡桃数据库的支持(上传的数据每2小时刷新一次)")
-                        }else{
-                            showFailureAlertDialog(activity!!,"上传失败","${it.optString("retcode")}:${it.optString("message")}")
+                val avatars = mutableListOf<GenshinItemsBean.Avatars>()
+                val weapons = mutableListOf<GenshinItemsBean.Weapons>()
+                val reliquaries = mutableListOf<GenshinItemsBean.Reliquaries>()
+                val reliquariesTemp = mutableListOf<GenshinItemsBean.Reliquaries>()
+                playerCharacterInfo.avatars.forEach {
+                    weapons += GenshinItemsBean.Weapons(it.weapon.id,it.weapon.name,it.weapon.icon)
+                    avatars += GenshinItemsBean.Avatars(it.id,it.name,it.icon)
+                    it.reliquaries.forEach {
+                        reliquariesTemp += GenshinItemsBean.Reliquaries(it.id,it.name,it.icon)
+                    }
+                }
+                reliquariesTemp.groupBy { it.id }.forEach {
+                    reliquaries += it.value.first()
+                }
+
+                val genshinItemsBean = GenshinItemsBean(avatars,weapons,reliquaries)
+                usp.edit {
+                    putString("wsww", GSON.toJson(genshinItemsBean))
+                    apply()
+                }
+
+                Ok.hutaoPost(HuTaoApi.POST_GENSHIN_ITEM,GSON.toJson(genshinItemsBean).toMyRequestBody()){
+                    if(it.ok){
+                        Ok.hutaoPost(HuTaoApi.RECORD_UPLOAD, GSON.toJson(record).toMyRequestBody()){
+                            activity?.runOnUiThread {
+                                if(it.ok){
+                                    showSuccessInformationAlertDialog(activity!!,"上传成功","感谢您对胡桃数据库的支持(上传的数据每2小时刷新一次)")
+                                }else{
+                                    showFailureAlertDialog(activity!!,"上传失败","进度2:${it.optString("retcode")}:${it.optString("message")}")
+                                }
+                                dismissLoadingWindow()
+                            }
                         }
-                        dismissLoadingWindow()
+                    }else{
+                        showFailureAlertDialog(activity!!,"上传失败","进度1:${it.optString("retcode")}:${it.optString("message")}")
                     }
                 }
             }
         }
     }
 
-    private fun getPlayerInformation(block:(MutableList<HutaoDatabaseUploadBean.PlayerAvatarsBean>,MutableList<HutaoDatabaseUploadBean.PlayerSpiralAbyssesLevelsBean>)->Unit){
+    private fun getPlayerInformation(block:(MutableList<HutaoDatabaseUploadBean.PlayerAvatarsBean>,MutableList<HutaoDatabaseUploadBean.PlayerSpiralAbyssesLevelsBean>,playerCharacterInfo:PlayerCharacterInformationBean)->Unit){
         MiHoYoApi.getPlayerData(mainUser!!.gameUid){ b: Boolean, playerInformationBean: PlayerInformationBean?, intent: Intent? ->
             if(b){
                 val roleId = intent?.getStringExtra("roleId")?:""
                 val server = intent?.getStringExtra("server")?:""
-                getPlayerAvatars(playerInformationBean!!,roleId,server){ characterList->
+                getPlayerAvatars(playerInformationBean!!,roleId,server){ characterList,playerChacterInfo->
                     getPlayerSpiralAbyssesLevels(roleId,server){ abyssList ->
-                        block(characterList,abyssList)
+                        block(characterList,abyssList,playerChacterInfo)
                     }
-                }
-            }else{
-                activity?.runOnUiThread {
-                    showFailureAlertDialog(activity!!,"上传失败","可能是网络错误导致的,如果一直出现该提示请尝试联系开发者解决。")
                 }
             }
         }
     }
 
-    private fun getPlayerAvatars(playerInformationBean: PlayerInformationBean,roleId:String,server:String,block:(MutableList<HutaoDatabaseUploadBean.PlayerAvatarsBean>)->Unit){
+    private fun getPlayerAvatars(playerInformationBean: PlayerInformationBean,roleId:String,server:String,block:(MutableList<HutaoDatabaseUploadBean.PlayerAvatarsBean>,playerCharacterInfo:PlayerCharacterInformationBean)->Unit){
         val characterList = mutableListOf<HutaoDatabaseUploadBean.PlayerAvatarsBean>()
         MiHoYoApi.getCharacterData(playerInformationBean,roleId,server){
             it.avatars.forEach {
@@ -199,7 +225,7 @@ class HutaoDatabaseFragment : BaseFragment(R.layout.fragment_hutao_database) {
                     reliquarySets
                 )
             }
-            block(characterList)
+            block(characterList,it)
         }
     }
 

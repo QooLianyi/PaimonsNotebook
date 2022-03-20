@@ -1,6 +1,6 @@
 package com.lianyi.paimonsnotebook.bean.gacha
 
-class UIGFJSON(val info:UIGFInfo,val list: List<UIGFJsonBean>) {
+data class UIGFJSON(val info:UIGFInfo,val list: List<UIGFJsonBean>) {
 
     class UIGFInfo(val uid:String,val lang:String,val export_time:String,val export_timestamp:String,val export_app:String,val export_app_version:String,val uigf_version:String){
         override fun toString(): String {

@@ -70,7 +70,7 @@ class TeamCombinationFragment : BaseFragment(R.layout.fragment_team_combination)
                         teamCombinationBean.teams.sortByDescending { it.value }
                         val teams = mutableListOf<TeamCombinationBean.TeamsBean>()
 
-                        repeat(8){
+                        repeat(if(teamCombinationBean.teams.size<8)teamCombinationBean.teams.size else 8){
                             teams += teamCombinationBean.teams[it]
                         }
 
@@ -100,10 +100,11 @@ class TeamCombinationFragment : BaseFragment(R.layout.fragment_team_combination)
                                 }
                             }
 
+                            hutaoCombinationItem.root.measure(0,0)
+                            val fixedValue = hutaoCombinationItem.root.marginTop + hutaoCombinationItem.root.marginBottom + hutaoCombinationItem.root.measuredHeight + hutaoCombinationItem.root.paddingTop +hutaoCombinationItem.root.paddingBottom
                             startHeight += when(position){
                                 0,1,2,3->{
-                                    hutaoCombinationItem.root.measure(0,0)
-                                    hutaoCombinationItem.root.marginTop + hutaoCombinationItem.root.marginBottom + hutaoCombinationItem.root.measuredHeight + hutaoCombinationItem.root.paddingTop +hutaoCombinationItem.root.paddingBottom +20
+                                    fixedValue+20
                                 }
                                 else->{
                                     0
@@ -111,6 +112,20 @@ class TeamCombinationFragment : BaseFragment(R.layout.fragment_team_combination)
                             }
 
                             if(position==3||position==teams.size-1){
+                                startHeight+=when(teams.size){
+                                    1->{
+                                        80
+                                    }
+                                    2->{
+                                        60
+                                    }
+                                    3->{
+                                        40
+                                    }
+                                    else->{
+                                        0
+                                    }
+                                }
                                 val lp = item.root.layoutParams
                                 lp.apply {
                                     height = startHeight

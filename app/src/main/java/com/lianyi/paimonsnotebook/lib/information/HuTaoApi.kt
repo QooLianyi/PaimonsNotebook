@@ -31,6 +31,9 @@ class HuTaoApi {
         const val APP_ID = "08d9e7ea-7b27-45c1-8110-bd996f053d90"
         const val SECRET = "xlcuZ5xS+ER5SHo3LLEfOstNrKxTJfMPWZwIfdXvNPk="
 
+        //上传数据前上传一次genshin_item
+        const val POST_GENSHIN_ITEM = "http://101.35.51.175:5001/GenshinItems/Upload"
+
         //请求的TOKEN sp
         const val SP_TOKEN = "hutao_token"
 

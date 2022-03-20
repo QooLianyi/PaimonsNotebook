@@ -4,77 +4,136 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white"
-    tools:context=".ui.activity.options.OptionsActivity"
-    >
+    android:orientation="vertical"
+    tools:context=".ui.activity.options.OptionsActivity">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:text="常规"
-                android:textStyle="bold"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
-                />
+                android:text="常规"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="3dp"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_pager_settings" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="主页设置"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="主页相关的设置"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="80dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="0dp">
+
+                        <Button
+                            android:id="@+id/home_setting"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="?attr/selectableItemBackground"
+                            android:gravity="center"
+                            android:text="设置"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 app:cardCornerRadius="6dp"
-                app:cardElevation="3dp"
-                >
+                app:cardElevation="3dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="10dp"
-                    >
+                    android:padding="10dp">
 
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/icon_unfold"
-                        />
+                        android:src="@drawable/icon_unfold" />
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
                         android:layout_marginStart="10dp"
-                        >
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="侧边栏设置"
                             android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:text="侧边栏呼出按钮"
-                            />
+                            android:textSize="16sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="关于侧边栏的设置都在这里"
                             android:textColor="@color/black"
-                            android:textSize="14sp"
-                            android:text="悬浮在屏幕一侧的侧边栏呼出区域"
-                            />
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 
@@ -82,21 +141,19 @@
                         android:layout_width="80dp"
                         android:layout_height="35dp"
                         android:layout_gravity="center"
-                        app:cardCornerRadius="6dp"
-                        app:cardElevation="0dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
-                        >
+                        app:cardElevation="0dp">
+
                         <Button
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
-                            android:text="设置"
-                            android:gravity="center"
-                            android:background="?attr/selectableItemBackground"
                             android:id="@+id/sidebar_button_setting"
-                            />
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="?attr/selectableItemBackground"
+                            android:gravity="center"
+                            android:text="设置"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
                     </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
@@ -111,45 +168,39 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 app:cardCornerRadius="6dp"
-                app:cardElevation="3dp"
-                >
+                app:cardElevation="3dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="10dp"
-                    >
+                    android:padding="10dp">
 
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/icon_padding"
-                        />
+                        android:src="@drawable/icon_padding" />
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
                         android:layout_marginStart="10dp"
-                        >
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
                             android:text="内容边距"
-                            />
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
                             android:text="设置内容距离屏幕边缘的距离"
-                            />
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 
@@ -157,22 +208,20 @@
                         android:layout_width="80dp"
                         android:layout_height="35dp"
                         android:layout_gravity="center"
-                        app:cardCornerRadius="6dp"
-                        app:cardElevation="0dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
-                        >
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="0dp">
 
                         <Button
+                            android:id="@+id/screen_margin_setting"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
-                            android:text="设置"
-                            android:gravity="center"
                             android:background="?attr/selectableItemBackground"
-                            android:id="@+id/screen_margin_setting"
-                            />
+                            android:gravity="center"
+                            android:text="设置"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
                     </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
@@ -186,47 +235,41 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 app:cardCornerRadius="6dp"
-                app:cardElevation="3dp"
-                >
+                app:cardElevation="3dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="10dp"
-                    >
+                    android:padding="10dp">
 
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:src="@drawable/icon_menu_wish"
                         android:tint="@color/absolute_black"
-                        tools:ignore="UseAppTint"
-                        />
+                        tools:ignore="UseAppTint" />
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
                         android:layout_marginStart="10dp"
-                        >
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
                             android:text="祈愿设置"
-                            />
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
                             android:text="祈愿相关的设置,如删除祈愿记录"
-                            />
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 
@@ -234,21 +277,20 @@
                         android:layout_width="80dp"
                         android:layout_height="35dp"
                         android:layout_gravity="center"
-                        app:cardCornerRadius="6dp"
-                        app:cardElevation="0dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
-                        >
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="0dp">
+
                         <Button
+                            android:id="@+id/wish_setting"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
-                            android:text="设置"
-                            android:gravity="center"
                             android:background="?attr/selectableItemBackground"
-                            android:id="@+id/wish_setting"
-                            />
+                            android:gravity="center"
+                            android:text="设置"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
                     </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
@@ -256,17 +298,15 @@
 
             </androidx.cardview.widget.CardView>
 
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:text="数据"
-                android:textStyle="bold"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
-                />
+                android:text="数据"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
 
             <androidx.cardview.widget.CardView
@@ -274,45 +314,39 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 app:cardCornerRadius="6dp"
-                app:cardElevation="3dp"
-                >
+                app:cardElevation="3dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="10dp"
-                    >
+                    android:padding="10dp">
 
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/icon_synchronization"
-                        />
+                        android:src="@drawable/icon_synchronization" />
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
                         android:layout_marginStart="10dp"
-                        >
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
                             android:text="重新获取数据"
-                            />
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
                             android:text="当角色或武器缺失时,可尝试同步"
-                            />
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 
@@ -320,21 +354,20 @@
                         android:layout_width="80dp"
                         android:layout_height="35dp"
                         android:layout_gravity="center"
-                        app:cardCornerRadius="6dp"
-                        app:cardElevation="0dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
-                        >
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="0dp">
+
                         <Button
+                            android:id="@+id/get_json"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
-                            android:text="立即同步"
-                            android:gravity="center"
                             android:background="?attr/selectableItemBackground"
-                            android:id="@+id/get_json"
-                            />
+                            android:gravity="center"
+                            android:text="立即同步"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
                     </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
@@ -342,152 +375,145 @@
             </androidx.cardview.widget.CardView>
 
 
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="20sp"-->
-<!--                android:text="胡桃数据库"-->
-<!--                android:textStyle="bold"-->
-<!--                android:layout_marginStart="10dp"-->
-<!--                android:layout_marginTop="20dp"-->
-<!--                />-->
+            <!--            <TextView-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:textColor="@color/black"-->
+            <!--                android:textSize="20sp"-->
+            <!--                android:text="胡桃数据库"-->
+            <!--                android:textStyle="bold"-->
+            <!--                android:layout_marginStart="10dp"-->
+            <!--                android:layout_marginTop="20dp"-->
+            <!--                />-->
 
 
-<!--            <androidx.cardview.widget.CardView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_margin="10dp"-->
-<!--                app:cardCornerRadius="6dp"-->
-<!--                app:cardElevation="3dp"-->
-<!--                >-->
+            <!--            <androidx.cardview.widget.CardView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_margin="10dp"-->
+            <!--                app:cardCornerRadius="6dp"-->
+            <!--                app:cardElevation="3dp"-->
+            <!--                >-->
 
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:orientation="horizontal"-->
-<!--                    android:padding="10dp"-->
-<!--                    >-->
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:orientation="horizontal"-->
+            <!--                    android:padding="10dp"-->
+            <!--                    >-->
 
-<!--                    <ImageView-->
-<!--                        android:layout_width="40dp"-->
-<!--                        android:layout_height="40dp"-->
-<!--                        android:src="@drawable/icon_hutao_database"-->
-<!--                        android:tint="@color/black"-->
-<!--                        tools:ignore="UseAppTint" />-->
+            <!--                    <ImageView-->
+            <!--                        android:layout_width="40dp"-->
+            <!--                        android:layout_height="40dp"-->
+            <!--                        android:src="@drawable/icon_hutao_database"-->
+            <!--                        android:tint="@color/black"-->
+            <!--                        tools:ignore="UseAppTint" />-->
 
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:orientation="vertical"-->
-<!--                        android:layout_marginStart="10dp"-->
-<!--                        >-->
+            <!--                    <LinearLayout-->
+            <!--                        android:layout_width="0dp"-->
+            <!--                        android:layout_weight="1"-->
+            <!--                        android:layout_height="match_parent"-->
+            <!--                        android:orientation="vertical"-->
+            <!--                        android:layout_marginStart="10dp"-->
+            <!--                        >-->
 
-<!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:textColor="@color/black"-->
-<!--                            android:textSize="16sp"-->
-<!--                            android:text="胡桃数据库设置"-->
-<!--                            />-->
+            <!--                        <TextView-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:textColor="@color/black"-->
+            <!--                            android:textSize="16sp"-->
+            <!--                            android:text="胡桃数据库设置"-->
+            <!--                            />-->
 
-<!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:textColor="@color/black"-->
-<!--                            android:textSize="14sp"-->
-<!--                            android:text="关于胡桃数据库的一些设置"-->
-<!--                            />-->
+            <!--                        <TextView-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:textColor="@color/black"-->
+            <!--                            android:textSize="14sp"-->
+            <!--                            android:text="关于胡桃数据库的一些设置"-->
+            <!--                            />-->
 
-<!--                    </LinearLayout>-->
+            <!--                    </LinearLayout>-->
 
-<!--                    <androidx.cardview.widget.CardView-->
-<!--                        android:layout_width="80dp"-->
-<!--                        android:layout_height="35dp"-->
-<!--                        android:layout_gravity="center"-->
-<!--                        app:cardCornerRadius="6dp"-->
-<!--                        app:cardElevation="0dp"-->
-<!--                        android:layout_marginStart="5dp"-->
-<!--                        android:layout_marginEnd="5dp"-->
-<!--                        >-->
-<!--                        <Button-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="match_parent"-->
-<!--                            android:textColor="@color/black"-->
-<!--                            android:textSize="14sp"-->
-<!--                            android:text="设置"-->
-<!--                            android:gravity="center"-->
-<!--                            android:background="?attr/selectableItemBackground"-->
-<!--                            android:id="@+id/hutao_settings"-->
-<!--                            />-->
-<!--                    </androidx.cardview.widget.CardView>-->
+            <!--                    <androidx.cardview.widget.CardView-->
+            <!--                        android:layout_width="80dp"-->
+            <!--                        android:layout_height="35dp"-->
+            <!--                        android:layout_gravity="center"-->
+            <!--                        app:cardCornerRadius="6dp"-->
+            <!--                        app:cardElevation="0dp"-->
+            <!--                        android:layout_marginStart="5dp"-->
+            <!--                        android:layout_marginEnd="5dp"-->
+            <!--                        >-->
+            <!--                        <Button-->
+            <!--                            android:layout_width="match_parent"-->
+            <!--                            android:layout_height="match_parent"-->
+            <!--                            android:textColor="@color/black"-->
+            <!--                            android:textSize="14sp"-->
+            <!--                            android:text="设置"-->
+            <!--                            android:gravity="center"-->
+            <!--                            android:background="?attr/selectableItemBackground"-->
+            <!--                            android:id="@+id/hutao_settings"-->
+            <!--                            />-->
+            <!--                    </androidx.cardview.widget.CardView>-->
 
-<!--                </LinearLayout>-->
+            <!--                </LinearLayout>-->
 
-<!--            </androidx.cardview.widget.CardView>-->
+            <!--            </androidx.cardview.widget.CardView>-->
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:text="关于派蒙的笔记本"
-                android:textStyle="bold"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
-                />
+                android:text="关于派蒙的笔记本"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 app:cardCornerRadius="6dp"
-                app:cardElevation="3dp"
-                >
+                app:cardElevation="3dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
-                    >
+                    android:padding="10dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:src="@drawable/icon_about"
-                            />
+                            android:src="@drawable/icon_about" />
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="match_parent"
-                            android:orientation="vertical"
                             android:layout_marginStart="10dp"
-                            >
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/black"
-                                android:textSize="16sp"
                                 android:text="派蒙的笔记本"
-                                />
+                                android:textColor="@color/black"
+                                android:textSize="16sp" />
 
                             <TextView
+                                android:id="@+id/app_version"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/black"
-                                android:textSize="14sp"
                                 android:text="v1.0.0"
-                                android:id="@+id/app_version"
-                                />
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
 
                         </LinearLayout>
 
@@ -495,21 +521,20 @@
                             android:layout_width="80dp"
                             android:layout_height="35dp"
                             android:layout_gravity="center"
-                            app:cardCornerRadius="6dp"
-                            app:cardElevation="0dp"
                             android:layout_marginStart="5dp"
                             android:layout_marginEnd="5dp"
-                            >
+                            app:cardCornerRadius="6dp"
+                            app:cardElevation="0dp">
+
                             <Button
+                                android:id="@+id/check_update"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:textColor="@color/black"
-                                android:textSize="14sp"
-                                android:text="检查更新"
-                                android:gravity="center"
                                 android:background="?attr/selectableItemBackground"
-                                android:id="@+id/check_update"
-                                />
+                                android:gravity="center"
+                                android:text="检查更新"
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
                         </androidx.cardview.widget.CardView>
 
                     </LinearLayout>
@@ -525,45 +550,39 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 app:cardCornerRadius="6dp"
-                app:cardElevation="3dp"
-                >
+                app:cardElevation="3dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="10dp"
-                    >
+                    android:padding="10dp">
 
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/icon_feed_back"
-                        />
+                        android:src="@drawable/icon_feed_back" />
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
                         android:layout_marginStart="10dp"
-                        >
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
                             android:text="反馈与建议"
-                            />
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
                             android:text="反馈遇到的问题和提出建议"
-                            />
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 
@@ -571,21 +590,82 @@
                         android:layout_width="80dp"
                         android:layout_height="35dp"
                         android:layout_gravity="center"
-                        app:cardCornerRadius="6dp"
-                        app:cardElevation="0dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
-                        >
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="0dp">
+
                         <Button
+                            android:id="@+id/go_feed_back"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
-                            android:text="前往"
-                            android:gravity="center"
                             android:background="?attr/selectableItemBackground"
-                            android:id="@+id/go_feed_back"
-                            />
+                            android:gravity="center"
+                            android:text="前往"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="3dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_github" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Github上的Paimon's Notebook"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="80dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="0dp">
+
+                        <Button
+                            android:id="@+id/go_github"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="?attr/selectableItemBackground"
+                            android:gravity="center"
+                            android:text="前往"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
                     </androidx.cardview.widget.CardView>
 
                 </LinearLayout>

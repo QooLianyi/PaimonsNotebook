@@ -1,5 +1,6 @@
 package com.lianyi.paimonsnotebook.lib.information
 
+import android.annotation.SuppressLint
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
@@ -12,6 +13,8 @@ class Format {
         val TIME_MONTH = SimpleDateFormat("M")
         val TIME_DAY_FULL = SimpleDateFormat("yyyy-MM-dd")
         val TIME_HOUR_MINUTE = SimpleDateFormat("HH:mm")
+        val TIME_HYPHEN_MONTH_DAY = SimpleDateFormat("MM-dd")
+
 
         val DECIMALS_FORMAT = DecimalFormat("0.##")
 

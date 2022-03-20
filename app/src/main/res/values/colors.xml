@@ -43,6 +43,10 @@
     <color name="gray_04">#979797</color>
 
 
+    <color name="blue_alpha50">#80206FBD</color>
+    <color name="blue_alpha80">#CC206FBD</color>
+    <color name="blue_alpha90">#E6206FBD</color>
+
     <color name="wave_ocean_blue_01">#3BE1FA</color>
     <color name="blue_01">#4DD0E1</color>
 
