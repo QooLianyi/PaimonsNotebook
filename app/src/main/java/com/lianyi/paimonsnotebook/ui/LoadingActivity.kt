@@ -2,6 +2,7 @@ package com.lianyi.paimonsnotebook.ui
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.content.edit
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.CharacterBean
 import com.lianyi.paimonsnotebook.bean.GetGameRolesByCookieBean
@@ -30,11 +31,40 @@ class LoadingActivity : BaseActivity() {
         setViewMarginBottomByNavigationBarHeight(bind.setCookie)
         //判断是否有账号是处于登录状态
         checkCookie()
+        test()
     }
+
+    private fun test(){
+//        WorkManager.getInstance(baseContext).cancelUniqueWork(ResinProgressBar.WORKER_NAME)
+//        val repeatRequest = PeriodicWorkRequestBuilder<ResinWorker>(1, TimeUnit.SECONDS)
+//            .build()
+//        WorkManager.getInstance(baseContext).enqueueUniquePeriodicWork(
+//            ResinProgressBar.WORKER_NAME,
+//            ExistingPeriodicWorkPolicy.KEEP,repeatRequest)
+    }
+
 
     //初始化信息
     private fun initInfo(){
-        if(wsp.getString(JsonCacheName.WEAPON_LIST,"").isNullOrEmpty()||csp.getString(JsonCacheName.CHARACTER_LIST,"").isNullOrEmpty()){
+        //判断上次启动时版本号和本次版本号是否相同 不同则刷新列表
+        if(sp.getString(Constants.LAST_LAUNCH_APP_NAME,"")!=PaiMonsNoteBook.APP_VERSION_NAME){
+//            "正在进行JSON数据同步".show()
+//            showLoading(bind.root.context)
+//            UpdateInformation.updateJsonData { b, count ->
+//                runOnUiThread {
+//                    if(b){
+//                        if(count>0){
+//                            "同步成功,新增${count}条数据"
+//                        }else{
+//                            "同步成功,没有发现新数据"
+//                        }.show()
+//                    }else{
+//                        "同步失败啦,请稍后再试吧!\n程序将于5秒后自动退出".showLong()
+//                    }
+//                    dismissLoadingWindow()
+//                }
+//            }
+
             val characterText = resources.assets.open("CharacterList")
             val characterBuff =ByteArray(characterText.available())
             characterText.read(characterBuff)
@@ -54,6 +84,10 @@ class LoadingActivity : BaseActivity() {
             JSONArray(String(weaponBuff, Charset.defaultCharset())).toList(weaponList)
             wsp.edit().apply{
                 putString(JsonCacheName.WEAPON_LIST,GSON.toJson(weaponList))
+                apply()
+            }
+            sp.edit {
+                putString(Constants.LAST_LAUNCH_APP_NAME,PaiMonsNoteBook.APP_VERSION_NAME)
                 apply()
             }
         }

@@ -1,5 +1,8 @@
 package com.lianyi.paimonsnotebook.ui.activity.home
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.lianyi.paimonsnotebook.R
@@ -17,7 +20,7 @@ import com.lianyi.paimonsnotebook.util.*
 import org.json.JSONArray
 
 class AccountManagerActivity : BaseActivity() {
-    lateinit var bind:ActivityAccountManagerBinding
+    lateinit var bind: ActivityAccountManagerBinding
 
     companion object{
         val userList =  mutableListOf<UserBean>()
@@ -60,6 +63,10 @@ class AccountManagerActivity : BaseActivity() {
             }
         }
 
+        bind.account.exportCookie.setOnClickListener {
+            exportCookie(mainUser!!)
+        }
+
         setViewMarginBottomByNavigationBarHeight(bind.accountManagerSpan)
         refreshMainUserInformation()
         setContentMargin(bind.root)
@@ -88,9 +95,9 @@ class AccountManagerActivity : BaseActivity() {
             item.deleteAccount.setOnClickListener {
                 showConfirmAlertDialog(bind.root.context,"提示","你确定要删除账号\"${userBean.nickName}\"吗?"){
                     if(it){
-                        deleteUser(userBean.loginUid)
+                        deleteUser(userBean.gameUid)
                         item.scrollSpan.scrollTo(0,0)
-                        "删除账号${userBean.gameUid}".show()
+                        "删除账号${userBean.nickName}".show()
                     }
                 }
             }
@@ -100,7 +107,7 @@ class AccountManagerActivity : BaseActivity() {
                 showConfirmAlertDialog(bind.root.context,"提示","你确定将账号\"${userBean.nickName}\"设为默认账号吗?"){
                     if(it){
                         with(mainUser!!){
-                            userList+=UserBean(nickName, loginUid, region, regionName, gameUid, lToken, cookieToken, gameLevel)
+                            userList.add(0,UserBean(nickName, loginUid, region, regionName, gameUid, lToken, cookieToken, gameLevel))
                             nickName = userBean.nickName
                             loginUid = userBean.loginUid
                             region = userBean.region
@@ -110,7 +117,7 @@ class AccountManagerActivity : BaseActivity() {
                             cookieToken = userBean.cookieToken
                             gameLevel = userBean.gameLevel
 
-                            deleteUser(userBean.loginUid)
+                            deleteUser(userBean.gameUid)
                             usp.edit().apply {
                                 putString(JsonCacheName.USER_LIST, GSON.toJson(userList))
                                 putString(JsonCacheName.MAIN_USER_NAME, GSON.toJson(mainUser))
@@ -124,6 +131,21 @@ class AccountManagerActivity : BaseActivity() {
                     }
                 }
             }
+
+            item.exportCookie.setOnClickListener {
+                exportCookie(userBean)
+            }
+        }
+    }
+
+    private fun exportCookie(userBean: UserBean){
+        showConfirmAlertDialog(bind.root.context,"导出Cookie","Cookie非常重要!泄露了别人可以通过Cookie来登录你的米游社,切勿外传!(修改密码后cookie会刷新)"){
+           if(it){
+               val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+               val clipData = ClipData.newPlainText("cookie",MiHoYoApi.getCookie(userBean))
+               cm.setPrimaryClip(clipData)
+               "cookie已复制到剪切板\n如果没有复制成功请检查相关权限".showLong()
+           }
         }
     }
 
@@ -157,10 +179,10 @@ class AccountManagerActivity : BaseActivity() {
     }
 
     //删除用户
-    private fun deleteUser(loginUid:String){
-        lateinit var deleteAccount:UserBean
+    private fun deleteUser(gameUID:String){
+        var deleteAccount:UserBean?=null
         userList.forEach {
-            if(it.loginUid == loginUid){
+            if(it.gameUid == gameUID){
                 deleteAccount = it
                 return@forEach
             }

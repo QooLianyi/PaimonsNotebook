@@ -31,6 +31,7 @@ class MiHoYoApi {
 
         //大地图
         const val MAP = "https://webstatic.mihoyo.com/app/ys-map-cn/index.html"
+        const val MAP_V2 = "https://webstatic.mihoyo.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=zh-cn&_markerFps=24"
 
         //米游社登录
         const val LOGIN = "https://m.bbs.mihoyo.com/ys/#/login"
@@ -118,7 +119,6 @@ class MiHoYoApi {
         //获得Cookie
         fun getCookie(user: UserBean):String{
             return "ltuid=${user.loginUid};ltoken=${user.lToken};account_id=${user.loginUid};cookie_token=${user.cookieToken}"
-
         }
 
         //获得查询玩家信息的url

@@ -1,9 +1,12 @@
 package com.lianyi.paimonsnotebook.ui.activity
 
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.forEach
+import androidx.core.view.forEachIndexed
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.CharacterBean
 import com.lianyi.paimonsnotebook.bean.PlayerCharacterInformationBean
@@ -150,6 +153,23 @@ class SearchResultActivity : BaseActivity() {
 
         MiHoYoApi.getCharacterData(playerInfo,roleId,server){
             setCharacterListAdapter(page, it.avatars)
+        }
+
+        page.apply {
+            exportCharacterList.setOnClickListener {
+                val w = list.width
+                val h = list.height
+                val size = list.childCount
+                val paint = Paint()
+                list.forEachIndexed { index, view ->
+                    val holder = list.adapter?.createViewHolder(list,list.adapter?.getItemViewType(index)?:0)
+                    list.adapter?.onBindViewHolder(holder!!,index)
+                    holder?.itemView?.let {
+                        it.measure(View.MeasureSpec.makeMeasureSpec(list.width,list.height),View.MeasureSpec.EXACTLY)
+                        it.layout(0,0,it.measuredWidth,it.measuredHeight)
+                    }
+                }
+            }
         }
         setViewMarginBottomByNavigationBarHeight(page.list)
     }
@@ -306,6 +326,10 @@ class SearchResultActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    private fun exportImage(){
+
     }
 
 }

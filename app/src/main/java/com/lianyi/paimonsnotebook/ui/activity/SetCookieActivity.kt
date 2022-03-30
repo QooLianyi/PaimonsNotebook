@@ -99,16 +99,19 @@ class SetCookieActivity : BaseActivity() {
                     if (b) {
                         roles!!
                         if (roles.list.size > 0) {
-                            val user = UserBean(
-                                roles.list.first().nickname,
-                                account_id,
-                                roles.list.first().region,
-                                roles.list.first().region_name,
-                                roles.list.first().game_uid,
-                                ltoken,
-                                cookie_token,
-                                roles.list.first().level
-                            )
+                            val getUserList = mutableListOf<UserBean>()
+                            roles.list.forEach { gameRole->
+                                getUserList += UserBean(
+                                    gameRole.nickname,
+                                    account_id,
+                                    gameRole.region,
+                                    gameRole.region_name,
+                                    gameRole.game_uid,
+                                    ltoken,
+                                    cookie_token,
+                                    gameRole.level
+                                )
+                            }
                             if (isAddUser) {
                                 val userList = mutableListOf<UserBean>()
                                 JSONArray(
@@ -117,8 +120,9 @@ class SetCookieActivity : BaseActivity() {
                                         "[]"
                                     )
                                 ).toList(userList)
-                                userList += user
-
+                                getUserList.forEach {
+                                    userList.add(0,it)
+                                }
                                 usp.edit().apply {
                                     putString(
                                         JsonCacheName.USER_LIST,
@@ -128,12 +132,29 @@ class SetCookieActivity : BaseActivity() {
                                 }
                             } else {
                                 usp.edit().apply {
-                                    mainUser = user
+                                    mainUser = getUserList.first()
                                     putString(
                                         JsonCacheName.MAIN_USER_NAME,
-                                        GSON.toJson(user)
+                                        GSON.toJson(getUserList.first())
                                     )
                                     apply()
+                                }
+                                if(roles.list.size>1){
+                                    val userList = mutableListOf<UserBean>()
+                                    JSONArray(
+                                        usp.getString(
+                                            JsonCacheName.USER_LIST,
+                                            "[]"
+                                        )
+                                    ).toList(userList)
+                                    userList += getUserList.last()
+                                    usp.edit().apply {
+                                        putString(
+                                            JsonCacheName.USER_LIST,
+                                            GSON.toJson(userList)
+                                        )
+                                        apply()
+                                    }
                                 }
                             }
                             setResult(ActivityResponseCode.OK)
@@ -143,12 +164,12 @@ class SetCookieActivity : BaseActivity() {
                             "该账号没有原神角色信息"
                         }
                     } else {
-                        "错误的Cookie"
+                        "错误的Cookie:验证失败"
                     }.show()
                 }
             }
         } else {
-            "错误的Cookie".show()
+            "错误的Cookie:缺少所需的参数(account_id/ltuid,lToken,cookie_token)".showLong()
         }
     }
 

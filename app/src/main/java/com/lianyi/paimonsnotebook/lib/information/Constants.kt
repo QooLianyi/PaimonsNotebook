@@ -24,6 +24,14 @@ class Constants {
         //游戏武器信息缓存
         const val WSP_NAME ="weapon_info"
 
+        //缓存上一次运行时的APP Name
+        const val LAST_LAUNCH_APP_NAME = "app_version_name"
+
+        //缓存获取更新日志的时间
+        const val GET_UPDATE_NOTE_TIME = "get_update_note_time"
+        //缓存获取的日志
+        const val UPDATE_NOTE_CACHE = "update_note_cache"
+
         //账号COOKIE名称
         const val STOKEN_NAME = ""
         const val ITOKEN_NAME = ""

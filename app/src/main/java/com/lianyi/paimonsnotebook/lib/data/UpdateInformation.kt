@@ -5,6 +5,7 @@ import android.net.Uri
 import com.lianyi.paimonsnotebook.bean.CharacterBean
 import com.lianyi.paimonsnotebook.bean.PaimonsNotebookLatestBean
 import com.lianyi.paimonsnotebook.bean.WeaponBean
+import com.lianyi.paimonsnotebook.bean.dailynote.DailyNoteBean
 import com.lianyi.paimonsnotebook.lib.information.*
 import com.lianyi.paimonsnotebook.util.*
 import org.json.JSONArray
@@ -42,10 +43,15 @@ class UpdateInformation {
                 block(text)
             }else{
                 thread {
-                    document = Jsoup.connect(Constants.PAIMONS_NOTEBOOK_WEB).get()
-                    getDocumentTime = System.currentTimeMillis()
-                    val text = document.select(selector).text()
-                    block(text)
+                    try {
+                        document = Jsoup.connect(Constants.PAIMONS_NOTEBOOK_WEB).get()
+                        getDocumentTime = System.currentTimeMillis()
+                        val text = document.select(selector).text()
+                        block(text)
+                    }catch (e:Exception){
+                        e.printStackTrace()
+                        println("连接超时")
+                    }
                 }
             }
         }
@@ -60,8 +66,8 @@ class UpdateInformation {
             }
         }
 
-        //获取 全部角色、全部武器 所需的数据
-        fun getJsonData(block: (Boolean,count:Int) -> Unit){
+        //覆盖刷新 全部角色、全部武器 所需的数据 返回结果与新增数量
+        fun updateJsonData(block: (Boolean, count:Int) -> Unit){
             thread {
                 try {
                     val document = Jsoup.connect(MiHoYoApi.JSON_DATA).get()
@@ -74,11 +80,11 @@ class UpdateInformation {
                     try {
                         val characterData = mutableListOf<CharacterBean>()
                         JSONArray(document.select(characterJsonSelect).text()).toListUntil(characterData)
+                        newDataCount += characterData.size - CharacterBean.characterList.size
                         csp.edit().apply {
                            putString(JsonCacheName.CHARACTER_LIST,GSON.toJson(characterData))
                            apply()
                         }
-                        newDataCount += characterData.size - CharacterBean.characterList.size
                     }catch (e:Exception){
                         dismissLoadingWindow()
                         e.printStackTrace()
@@ -89,11 +95,11 @@ class UpdateInformation {
                     try{
                         val weaponData = mutableListOf<WeaponBean>()
                         JSONArray(document.select(weaponJsonSelect).text()).toListUntil(weaponData)
+                        newDataCount += weaponData.size - WeaponBean.weaponList.size
                         wsp.edit().apply {
                             putString(JsonCacheName.WEAPON_LIST, GSON.toJson(weaponData))
                             apply()
                         }
-                        newDataCount += weaponData.size - WeaponBean.weaponList.size
                         block(true,newDataCount)
                     }catch (e:Exception){
                         dismissLoadingWindow()
@@ -105,5 +111,17 @@ class UpdateInformation {
                 }
             }
         }
+
+        //获得树脂信息
+        fun getDailyNote(block: (Boolean,DailyNoteBean?) -> Unit){
+            Ok.get(MiHoYoApi.getDailyNoteUrl(mainUser!!.gameUid, mainUser!!.region)){
+                var dailyNoteBean:DailyNoteBean? = null
+                if(it.ok){
+                   dailyNoteBean = GSON.fromJson(it.optString("data"),DailyNoteBean::class.java)
+                }
+                block(it.ok,dailyNoteBean)
+            }
+        }
+
     }
 }

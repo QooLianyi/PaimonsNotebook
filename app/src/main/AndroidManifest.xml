@@ -3,7 +3,7 @@
     package="com.lianyi.paimonsnotebook">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -18,11 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/PaimonsNotebookTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.summerland.SummerLandActivity"></activity>
+        <activity android:name=".ui.summerland.SummerLandActivity" />
         <activity android:name=".ui.activity.home.AnnouncementDetailActivity" />
         <activity android:name=".ui.activity.home.AnnouncementActivity" />
         <activity android:name=".ui.activity.options.HomeOptionsActivity" />
-        <activity android:name=".ui.activity.home.ArticleActivity" android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity
+            android:name=".ui.activity.home.ArticleActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity android:name=".ui.activity.FragmentContainerActivity" />
         <activity android:name=".ui.activity.options.WishOptionsActivity" />
         <activity android:name=".ui.activity.SetCookieActivity" />
@@ -38,7 +40,8 @@
         <activity android:name=".ui.activity.WeaponDetailActivity" />
         <activity android:name=".ui.activity.CharacterDetailActivity" />
         <activity android:name=".ui.activity.EmptyActivity" />
-        <activity android:name=".ui.LoadingActivity">
+        <activity android:name=".ui.LoadingActivity"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -57,6 +60,28 @@
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name" />
+
+<!--        <service android:name=".card.service.ResinService"-->
+<!--            >-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.appwidget.action.APP_WIDGET_SERVICE"/>-->
+<!--            </intent-filter>-->
+<!--        </service>-->
+
+<!--        <receiver android:name=".card.ResinProgressBar"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="true"-->
+<!--            >-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
+<!--                <action android:name="com.lianyi.widget.UPDATE_ACTION"/>-->
+<!--            </intent-filter>-->
+
+<!--            <meta-data-->
+<!--                android:name="android.appwidget.provider"-->
+<!--                android:resource="@xml/resin_progress_bar_info" />-->
+<!--        </receiver>-->
+
     </application>
 
 </manifest>

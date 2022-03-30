@@ -10,4 +10,10 @@
         <attr name="button_width" format="integer"/>
         <attr name="button_radius" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="MarkDownView"
+        >
+        <attr name="text" format="string"/>
+    </declare-styleable>
+
 </resources>

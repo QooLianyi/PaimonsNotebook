@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.home.AnnouncementActivity">
+
+    <com.google.android.material.tabs.TabLayout
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:id="@+id/announcement_tab_layout"
+        app:tabIndicatorFullWidth="false"
+        android:layout_gravity="center"
+        app:tabTextAppearance="@style/tabLayoutTextAppearance"
+        app:tabIndicatorColor="@color/gacha_history_star_5_color"
+        app:tabIndicatorHeight="3dp"
+        app:tabSelectedTextColor="@color/gacha_history_star_5_color"
+        app:tabTextColor="@color/gray_03"
+        />
+
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/announcement_view_pager"
+        />
+
+</LinearLayout>

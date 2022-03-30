@@ -58,16 +58,22 @@ class HoYoLabLoginActivity : BaseActivity() {
                         //当登录完成时
                         if(isLogin && isAddUser){
                             val cookie = "ltuid=${cookieMap[Constants.LTUID_NAME]?:""};ltoken=${cookieMap[Constants.LTOKEN_NAME]?:""};account_id=${cookieMap[Constants.ACCOUNT_ID_NAME]?:""};cookie_token=${cookieMap[Constants.COOKIE_TOKEN_NAME]?:""}"
-                            val userList = mutableListOf<UserBean>()
-                            JSONArray(usp.getString(JsonCacheName.USER_LIST,"[]")).toList(userList)
+
 
                             getGameRolesByCookie(cookie){
-                                if(it!=null){
-                                    userList += it
-                                }
-                                usp.edit().apply {
-                                    putString(JsonCacheName.USER_LIST,GSON.toJson(userList))
-                                    apply()
+                                val gameRoleList = mutableListOf<UserBean>()
+                                it?.list?.forEach { gameRole->
+                                    gameRoleList += UserBean(
+                                        gameRole.nickname,
+                                        cookieMap[Constants.LTUID_NAME]!!,
+                                        gameRole.region,
+                                        gameRole.region_name,
+                                        gameRole.game_uid,
+                                        cookieMap[Constants.LTOKEN_NAME]!!,
+                                        cookieMap[Constants.COOKIE_TOKEN_NAME]!!,
+                                        gameRole.level
+                                    )
+                                    addUserToList(gameRoleList)
                                 }
                                 clearCookie()
                             }
@@ -80,13 +86,31 @@ class HoYoLabLoginActivity : BaseActivity() {
                                 if(it.ok){
                                     val roles = GSON.fromJson(it.optString("data"),
                                         GetGameRolesByCookieBean::class.java)
-
                                     with(roles.list.first()){
                                         mainUser?.gameLevel = level
                                         mainUser?.nickName = nickname
                                         mainUser?.region = region
                                         mainUser?.regionName = region_name
                                         mainUser?.gameUid = game_uid
+                                    }
+
+                                    if(roles.list.size>1){
+                                        val gameRoleList = mutableListOf<UserBean>()
+                                        (1 until roles.list.size).forEach{ index->
+                                            with(roles.list[index]){
+                                                gameRoleList += UserBean(
+                                                    nickname,
+                                                    cookieMap[Constants.LTUID_NAME]!!,
+                                                    region,
+                                                    region_name,
+                                                    game_uid,
+                                                    cookieMap[Constants.LTOKEN_NAME]!!,
+                                                    cookieMap[Constants.COOKIE_TOKEN_NAME]!!,
+                                                    level
+                                                )
+                                            }
+                                        }
+                                        addUserToList(gameRoleList)
                                     }
 
                                     usp.edit().apply{
@@ -106,23 +130,24 @@ class HoYoLabLoginActivity : BaseActivity() {
         setContentMargin(bind.root)
     }
 
-    private fun getGameRolesByCookie(cookie:String,block:(UserBean?)->Unit){
+    private fun addUserToList(gameRoleList:List<UserBean>){
+        val userList = mutableListOf<UserBean>()
+        JSONArray(usp.getString(JsonCacheName.USER_LIST,"[]")).toList(userList)
+        gameRoleList.forEach {
+            userList.add(0,it)
+        }
+        usp.edit().apply {
+            putString(JsonCacheName.USER_LIST,GSON.toJson(userList))
+            apply()
+        }
+    }
+
+    private fun getGameRolesByCookie(cookie:String,block:(GetGameRolesByCookieBean?)->Unit){
         Ok.getGameRolesByCookie(cookie){
             if(it.ok){
                 val roles = GSON.fromJson(it.optString("data"),
                     GetGameRolesByCookieBean::class.java)
-                if(roles.list.size>0){
-                    block(UserBean(
-                        roles.list.first().nickname,
-                        cookieMap[Constants.LTUID_NAME]?:"",
-                        roles.list.first().region,
-                        roles.list.first().region_name,
-                        roles.list.first().game_uid,
-                        cookieMap[Constants.LTOKEN_NAME]?:"",
-                        cookieMap[Constants.COOKIE_TOKEN_NAME]?:"",
-                        roles.list.first().level
-                    ))
-                }
+                block(roles)
             }else{
                 block(null)
             }

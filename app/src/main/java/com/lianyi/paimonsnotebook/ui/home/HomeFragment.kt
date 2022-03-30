@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.bean.dailynote.DailyNoteBean
 import com.lianyi.paimonsnotebook.bean.home.BlackBoardBean
 import com.lianyi.paimonsnotebook.bean.home.HomeInformationBean
 import com.lianyi.paimonsnotebook.bean.home.HomeOfficialCommendPostBean
@@ -14,6 +13,7 @@ import com.lianyi.paimonsnotebook.lib.base.BaseFragment
 import com.lianyi.paimonsnotebook.databinding.*
 import com.lianyi.paimonsnotebook.lib.adapter.HomeBannerAdapter
 import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
+import com.lianyi.paimonsnotebook.lib.data.UpdateInformation
 import com.lianyi.paimonsnotebook.lib.information.*
 import com.lianyi.paimonsnotebook.ui.activity.home.*
 import com.lianyi.paimonsnotebook.util.*
@@ -192,64 +192,63 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     }
     //树脂详情页和树脂进度条UI更新
     private fun dailyNoteRefresh() {
-        Ok.get(MiHoYoApi.getDailyNoteUrl(mainUser!!.gameUid, mainUser!!.region)){
-            if(it.ok){
-                val dailyNoteBean = GSON.fromJson(it.optString("data"),DailyNoteBean::class.java)
-                activity?.runOnUiThread {
-                    with(bind.informationDetailSpan) {
-                        //外部树脂进度条
-                        bind.resinProgressBar.progress =
-                            ((dailyNoteBean.current_resin.toFloat() / dailyNoteBean.max_resin.toFloat()) * 100).toInt()
+        UpdateInformation.getDailyNote {b,it->
+            if(!b) return@getDailyNote
+            val dailyNoteBean = it!!
+            activity?.runOnUiThread {
+                with(bind.informationDetailSpan) {
+                    //外部树脂进度条
+                    bind.resinProgressBar.progress =
+                        ((dailyNoteBean.current_resin.toFloat() / dailyNoteBean.max_resin.toFloat()) * 100).toInt()
 
-                        //树脂
-                        resinCurrent.text = dailyNoteBean.current_resin.toString()
-                        resinMax.text = dailyNoteBean.max_resin.toString()
-                        resinRecoverTime.text =
-                            Format.getRecoverTimeDayText(dailyNoteBean.resin_recovery_time.toLong())
+                    //树脂
+                    resinCurrent.text = dailyNoteBean.current_resin.toString()
+                    resinMax.text = dailyNoteBean.max_resin.toString()
+                    resinRecoverTime.text =
+                        Format.getRecoverTimeDayText(dailyNoteBean.resin_recovery_time.toLong())
 
-                        //每日任务
-                        dailyTaskFinishedCount.text = dailyNoteBean.finished_task_num.toString()
-                        dailyTaskMax.text = dailyNoteBean.total_task_num.toString()
+                    //每日任务
+                    dailyTaskFinishedCount.text = dailyNoteBean.finished_task_num.toString()
+                    dailyTaskMax.text = dailyNoteBean.total_task_num.toString()
 
-                        if(dailyNoteBean.isIs_extra_task_reward_received){
-                            dailyTaskState.text = Constants.DAILY_TASK_STATE_FINISHED
-                        }else{
-                            dailyTaskState.text = Constants.DAILY_TASK_STATE_NOT_FINISHED
-                        }
-
-                        //洞天宝钱
-                        homeIconCurrent.text = dailyNoteBean.current_home_coin.toString()
-                        homeIconMax.text = dailyNoteBean.max_home_coin.toString()
-                        homeIconTime.text = Format.getRecoverTimeHourText(dailyNoteBean.home_coin_recovery_time.toLong())
-
-                        //周本
-                        resinDiscountNum.text =
-                            (dailyNoteBean.resin_discount_num_limit - dailyNoteBean.remain_resin_discount_num).toString()
-                        resinDiscountNumMax.text = dailyNoteBean.resin_discount_num_limit.toString()
-
-                        //派遣
-                        currentExpeditionNum.text = dailyNoteBean.current_expedition_num.toString()
-                        maxExpeditionNum.text = dailyNoteBean.max_expedition_num.toString()
-                        expeditionsList.adapter = ReAdapter(dailyNoteBean.expeditions,R.layout.item_expeditions){
-                            view, expeditionsBean, position ->
-                            val item = ItemExpeditionsBinding.bind(view)
-                            loadImage(item.icon,expeditionsBean.avatar_side_icon)
-                            val leftTime = expeditionsBean.remained_time.toLong()
-                            if(leftTime>0){
-                                item.time.text = Format.getRecoverTimeHourText(leftTime)
-                                item.leftTimeText.show()
-                                item.time.setTextColor(ContextCompat.getColor(activity!!,R.color.the_expedition_circular_ring))
-                                item.circularRing.setColorFilter(ContextCompat.getColor(activity!!,R.color.the_expedition_circular_ring))
-                            }else{
-                                item.leftTimeText.gone()
-                                item.time.text = "探险完成"
-                                item.time.setTextColor(ContextCompat.getColor(activity!!,R.color.expedition_finished))
-                                item.circularRing.setColorFilter(ContextCompat.getColor(activity!!,R.color.expedition_finished))
-                            }
-                        }
-                        //禁用滑动点击
-                        expeditionsList.suppressLayout(true)
+                    if(dailyNoteBean.isIs_extra_task_reward_received){
+                        dailyTaskState.text = Constants.DAILY_TASK_STATE_FINISHED
+                    }else{
+                        dailyTaskState.text = Constants.DAILY_TASK_STATE_NOT_FINISHED
                     }
+
+                    //洞天宝钱
+                    homeIconCurrent.text = dailyNoteBean.current_home_coin.toString()
+                    homeIconMax.text = dailyNoteBean.max_home_coin.toString()
+                    homeIconTime.text = Format.getRecoverTimeHourText(dailyNoteBean.home_coin_recovery_time.toLong())
+
+                    //周本
+                    resinDiscountNum.text =
+                        (dailyNoteBean.resin_discount_num_limit - dailyNoteBean.remain_resin_discount_num).toString()
+                    resinDiscountNumMax.text = dailyNoteBean.resin_discount_num_limit.toString()
+
+                    //派遣
+                    currentExpeditionNum.text = dailyNoteBean.current_expedition_num.toString()
+                    maxExpeditionNum.text = dailyNoteBean.max_expedition_num.toString()
+                    expeditionsList.adapter = ReAdapter(dailyNoteBean.expeditions,R.layout.item_expeditions){
+                            view, expeditionsBean, position ->
+                        val item = ItemExpeditionsBinding.bind(view)
+                        loadImage(item.icon,expeditionsBean.avatar_side_icon)
+                        val leftTime = expeditionsBean.remained_time.toLong()
+                        if(leftTime>0){
+                            item.time.text = Format.getRecoverTimeHourText(leftTime)
+                            item.leftTimeText.show()
+                            item.time.setTextColor(ContextCompat.getColor(activity!!,R.color.the_expedition_circular_ring))
+                            item.circularRing.setColorFilter(ContextCompat.getColor(activity!!,R.color.the_expedition_circular_ring))
+                        }else{
+                            item.leftTimeText.gone()
+                            item.time.text = "探险完成"
+                            item.time.setTextColor(ContextCompat.getColor(activity!!,R.color.expedition_finished))
+                            item.circularRing.setColorFilter(ContextCompat.getColor(activity!!,R.color.expedition_finished))
+                        }
+                    }
+                    //禁用滑动点击
+                    expeditionsList.suppressLayout(true)
                 }
             }
         }

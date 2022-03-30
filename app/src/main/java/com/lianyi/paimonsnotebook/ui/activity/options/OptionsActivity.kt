@@ -3,7 +3,10 @@ package com.lianyi.paimonsnotebook.ui.activity.options
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
+import androidx.core.content.edit
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.bean.PaimonsNotebookLatestBean
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.databinding.ActivityOptionsBinding
 import com.lianyi.paimonsnotebook.databinding.PopWarningBinding
@@ -68,7 +71,7 @@ class OptionsActivity : BaseActivity() {
         //更新数据
         bind.getJson.setOnClickListener {
             showLoading(bind.root.context)
-            UpdateInformation.getJsonData { ok, newDataCount->
+            UpdateInformation.updateJsonData { ok, newDataCount->
                 runOnUiThread {
                     if (ok&&newDataCount>0) {
                         "新增${newDataCount}条数据,下次启动时使用".showLong()
@@ -97,8 +100,10 @@ class OptionsActivity : BaseActivity() {
                     val appLastVersionCode = if(document.select(appLastVersionCodeSelect).text().isNullOrEmpty()) 0L else document.select(appLastVersionCodeSelect).text().toLong()
 
                     if(PaiMonsNoteBook.APP_VERSION_CODE<appLastVersionCode){
-                        "发现新版本(${appLastVersion})\n正在通过系统浏览器下载...".showLong()
-                        UpdateInformation.getNewVersionApp()
+                        runOnUiThread {
+                            "发现新版本(${appLastVersion})\n正在通过系统浏览器下载...".showLong()
+                            UpdateInformation.getNewVersionApp()
+                        }
 
 //                            val uri = Uri.parse(Constants.getApkUr(appLastVersion))
 //                            val manager = PaiMonsNoteBook.context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
@@ -132,6 +137,36 @@ class OptionsActivity : BaseActivity() {
 
         //设置版本信息
         bind.appVersion.text = PaiMonsNoteBook.APP_VERSION_NAME
+
+        bind.showUpdateNote.select {
+            if(it){
+                if(System.currentTimeMillis()-sp.getLong(Constants.GET_UPDATE_NOTE_TIME,0L)>=600000L){
+                    Ok.get(Constants.PAIMONS_NOTE_BOOK_LATEST){
+                        val latestBean = GSON.fromJson(it.toString(), PaimonsNotebookLatestBean::class.java)
+                        sp.edit {
+                            putLong(Constants.GET_UPDATE_NOTE_TIME,System.currentTimeMillis())
+                            putString(Constants.UPDATE_NOTE_CACHE,latestBean.body)
+                            apply()
+                        }
+                        runOnUiThread {
+                            bind.markDown.setText(latestBean.body)
+                            bind.updateNoteSpan.measure(0,0)
+                            openAndCloseAnimationVer(bind.updateNoteSpan,60.dp.toInt(),(bind.updateNoteSpan.measuredHeight*1.215).toInt(),500)
+                        }
+                    }
+                }else{
+                    bind.markDown.setText(sp.getString(Constants.UPDATE_NOTE_CACHE,""))
+                }
+                bind.updateNoteSpan.measure(0,0)
+                openAndCloseAnimationVer(bind.updateNoteSpan,60.dp.toInt(),(bind.updateNoteSpan.measuredHeight*1.215).toInt(),500)
+
+                bind.updateNoteDropDown.rotation = 0f
+            }else{
+                openAndCloseAnimationVer(bind.updateNoteSpan,bind.updateNoteSpan.measuredHeight,60.dp.toInt(),500)
+                bind.updateNoteDropDown.rotation = 180f
+            }
+            bind.updateNoteDropDown.animate().rotationBy(180f).duration = 500
+        }
 
         bind.goFeedBack.setOnClickListener {
             /****************

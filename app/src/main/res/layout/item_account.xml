@@ -85,6 +85,19 @@
                 android:textStyle="bold"
                 android:id="@+id/set_default"
                 />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:text="复制cookie"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:background="@color/export_cookie"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:id="@+id/export_cookie"
+                />
+
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="match_parent"

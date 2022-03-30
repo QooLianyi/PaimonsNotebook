@@ -26,7 +26,7 @@ class MapFragment : BaseFragment(R.layout.fragment_map){
             settings.blockNetworkImage = false
             settings.useWideViewPort = true
 
-            loadUrl(MiHoYoApi.MAP)
+            loadUrl(MiHoYoApi.MAP_V2)
 
             //设置webView跳转到新页面时在当前页面跳转 而不是创建新的意图
             webViewClient = object : WebViewClient(){
@@ -35,13 +35,11 @@ class MapFragment : BaseFragment(R.layout.fragment_map){
                     request: WebResourceRequest?
                 ): Boolean {
                     view?.loadUrl(url?:"")
-
                     return true
                 }
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
-
                     MiHoYoApi.getCookie(mainUser!!).split(";")
 
                     val cookieManager = CookieManager.getInstance()
@@ -67,5 +65,4 @@ class MapFragment : BaseFragment(R.layout.fragment_map){
 
         setViewMarginBottomByNavigationBarHeight(bind.web)
     }
-
 }
