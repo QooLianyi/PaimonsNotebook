@@ -3,6 +3,7 @@ package com.lianyi.paimonsnotebook.ui.summerland
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
+import androidx.appcompat.app.AlertDialog
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.databinding.FragmentSummerLandLoadingLandAnimBinding
 import com.lianyi.paimonsnotebook.lib.base.BaseFragment
@@ -17,6 +18,10 @@ class SummerLandLoadingLandAnimFragment(val delayTime:Long = 0L,var block:(()->U
         super.onViewCreated(view, savedInstanceState)
         bind = view.las()
         bind.root.gone()
+
+        bind.workTable.setOnClickListener {
+            showAlertDialog(bind.root.context,R.layout.pop_clock)
+        }
     }
 
     override fun onResume() {
@@ -45,7 +50,7 @@ class SummerLandLoadingLandAnimFragment(val delayTime:Long = 0L,var block:(()->U
                 bind.loadAnim.transitionToEnd()
                 bind.loadAnim.onFinished {
                     block?.invoke()
-                    "当前页面没有实现任何功能\n未来将会添加".showLong()
+                    "点击合成台可唤出时钟\n(无实际作用)".showLong()
                 }
             }
         }

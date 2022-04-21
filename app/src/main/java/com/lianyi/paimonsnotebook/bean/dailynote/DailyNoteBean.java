@@ -19,7 +19,10 @@ public class DailyNoteBean {
      * max_home_coin :最大洞天宝钱
      * home_coin_recovery_time :洞天宝钱恢复时间
      * expeditions : [{"avatar_side_icon":"https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_Chongyun.png","status":"Finished","remained_time":"0"},{"avatar_side_icon":"https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_Fischl.png","status":"Finished","remained_time":"0"},{"avatar_side_icon":"https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_Bennett.png","status":"Finished","remained_time":"0"},{"avatar_side_icon":"https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_Keqing.png","status":"Finished","remained_time":"0"},{"avatar_side_icon":"https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_Sara.png","status":"Finished","remained_time":"0"}]
+     * calendar_url :
+     *      * transformer : {"obtained":true,"recovery_time":{"Day":0,"Hour":23,"Minute":0,"Second":0,"reached":false},"wiki":"https://bbs.mihoyo.com/ys/obc/content/1562/detail?bbs_presentation_style=no_header"}
      */
+
 
     private int current_resin;
     private int max_resin;
@@ -34,6 +37,8 @@ public class DailyNoteBean {
     private int current_home_coin;
     private int max_home_coin;
     private String home_coin_recovery_time;
+    private String calendar_url;
+    private TransformerBean transformer;
     private List<ExpeditionsBean> expeditions;
 
     public int getCurrent_resin() {
@@ -140,6 +145,22 @@ public class DailyNoteBean {
         this.home_coin_recovery_time = home_coin_recovery_time;
     }
 
+    public String getCalendar_url() {
+        return calendar_url;
+    }
+
+    public void setCalendar_url(String calendar_url) {
+        this.calendar_url = calendar_url;
+    }
+
+    public TransformerBean getTransformer() {
+        return transformer;
+    }
+
+    public void setTransformer(TransformerBean transformer) {
+        this.transformer = transformer;
+    }
+
     public List<ExpeditionsBean> getExpeditions() {
         return expeditions;
     }
@@ -148,9 +169,97 @@ public class DailyNoteBean {
         this.expeditions = expeditions;
     }
 
+    public static class TransformerBean {
+        /**
+         * obtained : true
+         */
+
+        private boolean obtained;
+        private RecoveryTimeBean recovery_time;
+        private String wiki;
+
+        public boolean isObtained() {
+            return obtained;
+        }
+
+        public void setObtained(boolean obtained) {
+            this.obtained = obtained;
+        }
+
+        public RecoveryTimeBean getRecovery_time() {
+            return recovery_time;
+        }
+
+        public void setRecovery_time(RecoveryTimeBean recovery_time) {
+            this.recovery_time = recovery_time;
+        }
+
+        public String getWiki() {
+            return wiki;
+        }
+
+        public void setWiki(String wiki) {
+            this.wiki = wiki;
+        }
+
+        public static class RecoveryTimeBean {
+            /**
+             * Day : 0
+             * Minute : 0
+             * Second : 0
+             * reached : false
+             */
+
+            private int Day;
+            private int Hour;
+            private int Minute;
+            private int Second;
+            private boolean reached;
+
+            public int getDay() {
+                return Day;
+            }
+
+            public void setDay(int Day) {
+                this.Day = Day;
+            }
+
+            public int getHour() {
+                return Hour;
+            }
+
+            public void setHour(int Hour) {
+                this.Hour = Hour;
+            }
+
+            public int getMinute() {
+                return Minute;
+            }
+
+            public void setMinute(int Minute) {
+                this.Minute = Minute;
+            }
+
+            public int getSecond() {
+                return Second;
+            }
+
+            public void setSecond(int Second) {
+                this.Second = Second;
+            }
+
+            public boolean isReached() {
+                return reached;
+            }
+
+            public void setReached(boolean reached) {
+                this.reached = reached;
+            }
+        }
+    }
+
     public static class ExpeditionsBean {
         /**
-         * avatar_side_icon : https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_Chongyun.png
          * status : Finished
          * remained_time : 0
          */

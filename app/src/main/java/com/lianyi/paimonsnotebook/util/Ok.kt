@@ -132,38 +132,6 @@ class Ok {
             clientC.newCall(request.build()).enqueue(MyCallBack(block))
         }
 
-        fun hutaoGet(url: String,block: (JSONObject) -> Unit){
-            val request = Request.Builder()
-                .addHeader("Authorization",sp.getString(HuTaoApi.SP_TOKEN,"")!!)
-                .url(url)
-                .build()
-            clientC.newCall(request).enqueue(MyCallBack(block))
-        }
-
-        fun hutaoPost(url:String,requestBody: RequestBody,block: (JSONObject) -> Unit){
-            val request = Request.Builder().addHeader("Authorization",sp.getString(HuTaoApi.SP_TOKEN,"")!!)
-                .url(url)
-                .post(requestBody)
-                .build()
-            clientC.newCall(request).enqueue(MyCallBack(block))
-        }
-
-        fun hutaoLogin(block: (JSONObject) -> Unit){
-            val request = Request.Builder()
-                .url(HuTaoApi.LOGIN)
-                .post(HuTaoApi.LOGIN_REQUEST_BODY)
-                .build()
-            clientC.newCall(request).enqueue(MyCallBack(block))
-        }
-
-        private fun hutaoCheckLogin(block: (JSONObject) -> Unit){
-            val request = Request.Builder()
-                .addHeader("Authorization",sp.getString(HuTaoApi.SP_TOKEN,"")!!)
-                .url(HuTaoApi.OVER_VIEW)
-                .get()
-                .build()
-            clientC.newCall(request).enqueue(MyCallBack(block))
-        }
     }
 }
 

@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.ui.activity.CharacterDetailActivity
+import com.lianyi.paimonsnotebook.ui.activity.detail.CharacterDetailActivity
 import com.lianyi.paimonsnotebook.lib.base.BaseFragment
 import com.lianyi.paimonsnotebook.bean.CharacterBean
 import com.lianyi.paimonsnotebook.databinding.FragmentCharacterBinding
@@ -53,7 +53,7 @@ class CharacterFragment : BaseFragment(R.layout.fragment_character) {
             item.root.setOnClickListener {
                 CharacterDetailActivity.character = character
                 startActivity(
-                    Intent(activity!!,CharacterDetailActivity::class.java),
+                    Intent(activity!!, CharacterDetailActivity::class.java),
                     ActivityOptions.makeSceneTransitionAnimation(activity!!,item.icon,"icon").toBundle()
                 )
             }

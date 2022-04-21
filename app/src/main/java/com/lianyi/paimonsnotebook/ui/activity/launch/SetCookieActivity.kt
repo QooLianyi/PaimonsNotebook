@@ -1,4 +1,4 @@
-package com.lianyi.paimonsnotebook.ui.activity
+package com.lianyi.paimonsnotebook.ui.activity.launch
 
 import android.content.Intent
 import android.os.Bundle

@@ -39,14 +39,14 @@ class HutaoDatabaseFragment : BaseFragment(R.layout.fragment_hutao_database) {
 
     //重新获取胡桃API TOKEN 并重新获取数据
     private fun loginAndInit(){
-        Ok.hutaoLogin {
+        HuTaoApi.login {
             if(it.ok){
                 sp.edit().apply{
                     putString(HuTaoApi.SP_TOKEN,GSON.fromJson(it.optString("data"),HutaoLoginBean::class.java).accessToken)
                     apply()
                 }
 
-                Ok.hutaoGet(HuTaoApi.GET_AVATARS){
+                HuTaoApi.get(HuTaoApi.GET_AVATARS){
                     if(it.ok){
                         csp.edit().apply{
                             putString(JsonCacheName.HUTAO_AVATARS_LIST,it.optString("data"))
@@ -56,7 +56,7 @@ class HutaoDatabaseFragment : BaseFragment(R.layout.fragment_hutao_database) {
                     }
                 }
 
-                Ok.hutaoGet(HuTaoApi.GET_WEAPONS){
+                HuTaoApi.get(HuTaoApi.GET_WEAPONS){
                     if(it.ok){
                         wsp.edit().apply {
                             putString(JsonCacheName.HUTAO_WEAPON_LIST,it.optString("data"))
@@ -65,7 +65,7 @@ class HutaoDatabaseFragment : BaseFragment(R.layout.fragment_hutao_database) {
                         checkStatus()
                     }
                 }
-                Ok.hutaoGet(HuTaoApi.GET_RELIQUARIES){
+                HuTaoApi.get(HuTaoApi.GET_RELIQUARIES){
                     if(it.ok){
                         sp.edit().apply {
                             putString(JsonCacheName.HUTAO_RELIQUARIES_LIST,it.optString("data"))
@@ -74,7 +74,8 @@ class HutaoDatabaseFragment : BaseFragment(R.layout.fragment_hutao_database) {
                         checkStatus()
                     }
                 }
-                Ok.hutaoGet(HuTaoApi.OVER_VIEW){
+                HuTaoApi.get(HuTaoApi.OVER_VIEW){
+
                     if(it.ok){
                         val overView = GSON.fromJson(it.optString("data"), OverViewBean::class.java)
                         activity?.runOnUiThread {
@@ -167,14 +168,10 @@ class HutaoDatabaseFragment : BaseFragment(R.layout.fragment_hutao_database) {
                 }
 
                 val genshinItemsBean = GenshinItemsBean(avatars,weapons,reliquaries)
-                usp.edit {
-                    putString("wsww", GSON.toJson(genshinItemsBean))
-                    apply()
-                }
 
-                Ok.hutaoPost(HuTaoApi.POST_GENSHIN_ITEM,GSON.toJson(genshinItemsBean).toMyRequestBody()){
+                HuTaoApi.post(HuTaoApi.POST_GENSHIN_ITEM,GSON.toJson(genshinItemsBean).toMyRequestBody()){
                     if(it.ok){
-                        Ok.hutaoPost(HuTaoApi.RECORD_UPLOAD, GSON.toJson(record).toMyRequestBody()){
+                        HuTaoApi.post(HuTaoApi.RECORD_UPLOAD, GSON.toJson(record).toMyRequestBody()){
                             activity?.runOnUiThread {
                                 if(it.ok){
                                     showSuccessInformationAlertDialog(activity!!,"上传成功","感谢您对胡桃数据库的支持(上传的数据每2小时刷新一次)")

@@ -222,6 +222,37 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                     homeIconMax.text = dailyNoteBean.max_home_coin.toString()
                     homeIconTime.text = Format.getRecoverTimeHourText(dailyNoteBean.home_coin_recovery_time.toLong())
 
+                    val qualityConvertRecoverTimeTextStringBuffer = StringBuffer()
+                    with(dailyNoteBean.transformer.recovery_time){
+                        if(day>0)
+                            qualityConvertRecoverTimeTextStringBuffer.append("${day}天")
+                        if(hour>0)
+                            qualityConvertRecoverTimeTextStringBuffer.append("${hour}小时")
+                        if(minute>0)
+                            qualityConvertRecoverTimeTextStringBuffer.append("${day}分钟")
+                        if(second>0)
+                            qualityConvertRecoverTimeTextStringBuffer.append("${day}秒")
+                        if(qualityConvertRecoverTimeTextStringBuffer.isNotEmpty()){
+                            qualityConvertRecoverTimeTextStringBuffer.append("后可再次使用")
+                        }else{
+                            qualityConvertRecoverTimeTextStringBuffer.append("已准备完成")
+                        }
+                    }
+
+                    qualityConvertRecoverTime.text =qualityConvertRecoverTimeTextStringBuffer.toString()
+                    qualityConvertState.text = if(dailyNoteBean.transformer.recovery_time.isReached){
+                        "可使用"
+                    }else{
+                        "冷却中"
+                    }
+
+                    //没有道具则隐藏此条
+                    if(dailyNoteBean.transformer.isObtained){
+                        qualityConvertSpan.show()
+                    }else{
+                        qualityConvertSpan.gone()
+                    }
+
                     //周本
                     resinDiscountNum.text =
                         (dailyNoteBean.resin_discount_num_limit - dailyNoteBean.remain_resin_discount_num).toString()

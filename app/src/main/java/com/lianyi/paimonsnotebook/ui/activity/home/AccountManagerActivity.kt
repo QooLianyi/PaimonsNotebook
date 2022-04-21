@@ -15,7 +15,7 @@ import com.lianyi.paimonsnotebook.databinding.PopInformationBinding
 import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.lib.information.*
-import com.lianyi.paimonsnotebook.ui.activity.SetCookieActivity
+import com.lianyi.paimonsnotebook.ui.activity.launch.SetCookieActivity
 import com.lianyi.paimonsnotebook.util.*
 import org.json.JSONArray
 
@@ -49,7 +49,7 @@ class AccountManagerActivity : BaseActivity() {
             }
 
             SetCookieActivity.isAddUser = true
-            startActivityForResult(Intent(this,SetCookieActivity::class.java),ActivityRequestCode.LOGIN)
+            startActivityForResult(Intent(this, SetCookieActivity::class.java),ActivityRequestCode.LOGIN)
         }
 
         bind.defaultAccountInformation.setOnClickListener {

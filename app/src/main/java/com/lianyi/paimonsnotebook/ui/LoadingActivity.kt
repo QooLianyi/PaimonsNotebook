@@ -1,18 +1,30 @@
 package com.lianyi.paimonsnotebook.ui
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import androidx.core.app.NotificationCompat
+import androidx.core.app.Person
+import androidx.core.content.ContextCompat
 import androidx.core.content.edit
+import androidx.core.graphics.drawable.IconCompat
+import androidx.core.graphics.drawable.toBitmap
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.CharacterBean
 import com.lianyi.paimonsnotebook.bean.GetGameRolesByCookieBean
 import com.lianyi.paimonsnotebook.bean.WeaponBean
+import com.lianyi.paimonsnotebook.card.service.ForegroundTest
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.databinding.ActivityLoadingBinding
 import com.lianyi.paimonsnotebook.lib.data.UpdateInformation
 import com.lianyi.paimonsnotebook.lib.information.*
-import com.lianyi.paimonsnotebook.ui.activity.SetCookieActivity
+import com.lianyi.paimonsnotebook.ui.activity.launch.SetCookieActivity
 import com.lianyi.paimonsnotebook.util.*
+import com.lianyi.paimonsnotebook.util.NotificationManager.Companion.manager
 import org.json.JSONArray
 import java.nio.charset.Charset
 import kotlin.concurrent.thread
@@ -31,16 +43,80 @@ class LoadingActivity : BaseActivity() {
         setViewMarginBottomByNavigationBarHeight(bind.setCookie)
         //判断是否有账号是处于登录状态
         checkCookie()
-        test()
+//        test()
     }
 
     private fun test(){
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(Intent(this,ForegroundTest::class.java))
+        }else{
+            startService(Intent(this,ForegroundTest::class.java))
+        }
+
+
 //        WorkManager.getInstance(baseContext).cancelUniqueWork(ResinProgressBar.WORKER_NAME)
 //        val repeatRequest = PeriodicWorkRequestBuilder<ResinWorker>(1, TimeUnit.SECONDS)
 //            .build()
 //        WorkManager.getInstance(baseContext).enqueueUniquePeriodicWork(
 //            ResinProgressBar.WORKER_NAME,
 //            ExistingPeriodicWorkPolicy.KEEP,repeatRequest)
+//
+//        val person = Person.Builder()
+//            .setIcon(IconCompat.createWithResource(bind.root.context,R.drawable.icon_klee))
+//            .setName("用户名称A")
+//            .setKey("UserAKey")
+//            .build()
+//
+//        val person1 = Person.Builder()
+//            .setIcon(IconCompat.createWithResource(bind.root.context,R.drawable.icon_klee))
+//            .setName("用户名称A")
+//            .setKey("UserAKey")
+//            .build()
+//        val person2 = Person.Builder()
+//            .setIcon(IconCompat.createWithResource(bind.root.context,R.drawable.icon_klee))
+//            .setName("用户名称B")
+//            .setKey("UserBKey")
+//            .build()
+//        val person3 = Person.Builder()
+//            .setIcon(IconCompat.createWithResource(bind.root.context,R.drawable.icon_klee))
+//            .setName("用户名称C")
+//            .setKey("UserCKey")
+//            .build()
+//        val line = NotificationCompat.MessagingStyle(person).addMessage("发布的内容",System.currentTimeMillis(),person)
+//
+//
+//        val channelId = "notice"
+//        val bit = ContextCompat.getDrawable(this,R.drawable.img_home_background)!!.toBitmap()
+//        val builder = NotificationCompat.Builder(this,channelId)
+//            .setSmallIcon(R.drawable.icon_klee)
+//            .setContentTitle("这是一个标题")
+//            .setContentText("这是发送的内容")
+//            .setStyle(NotificationCompat.MessagingStyle(person)
+//                .addMessage("这是一条消息A",System.currentTimeMillis(),person1)
+//                .addMessage("这是一条消息B",System.currentTimeMillis(),person2)
+//                .addMessage("这是一条消息C",System.currentTimeMillis(),person3)
+//            )
+
+//            .setLargeIcon(bit)
+//            .setStyle(NotificationCompat.InboxStyle()
+//                .addLine("A")
+//                .addLine("B")
+//                .addLine("C")
+//                .addLine("D")
+//                .addLine("E")
+//                .addLine("F")
+//                .addLine("G")
+//            )
+//            .setStyle(NotificationCompat.BigPictureStyle()
+//                .bigPicture(bit))
+//            .build()
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            val channel = NotificationChannel(channelId,"name",NotificationManager.IMPORTANCE_DEFAULT)
+//            manager.createNotificationChannel(channel)
+//        }
+//        manager.notify(1,builder)
+
     }
 
 
@@ -48,48 +124,7 @@ class LoadingActivity : BaseActivity() {
     private fun initInfo(){
         //判断上次启动时版本号和本次版本号是否相同 不同则刷新列表
         if(sp.getString(Constants.LAST_LAUNCH_APP_NAME,"")!=PaiMonsNoteBook.APP_VERSION_NAME){
-//            "正在进行JSON数据同步".show()
-//            showLoading(bind.root.context)
-//            UpdateInformation.updateJsonData { b, count ->
-//                runOnUiThread {
-//                    if(b){
-//                        if(count>0){
-//                            "同步成功,新增${count}条数据"
-//                        }else{
-//                            "同步成功,没有发现新数据"
-//                        }.show()
-//                    }else{
-//                        "同步失败啦,请稍后再试吧!\n程序将于5秒后自动退出".showLong()
-//                    }
-//                    dismissLoadingWindow()
-//                }
-//            }
-
-            val characterText = resources.assets.open("CharacterList")
-            val characterBuff =ByteArray(characterText.available())
-            characterText.read(characterBuff)
-            characterText.close()
-            val characterList = mutableListOf<CharacterBean>()
-            JSONArray(String(characterBuff, Charset.defaultCharset())).toList(characterList)
-            csp.edit().apply{
-                putString(JsonCacheName.CHARACTER_LIST,GSON.toJson(characterList))
-                apply()
-            }
-
-            val weaponText = resources.assets.open("WeaponList")
-            val weaponBuff =ByteArray(weaponText.available())
-            weaponText.read(weaponBuff)
-            weaponText.close()
-            val weaponList = mutableListOf<WeaponBean>()
-            JSONArray(String(weaponBuff, Charset.defaultCharset())).toList(weaponList)
-            wsp.edit().apply{
-                putString(JsonCacheName.WEAPON_LIST,GSON.toJson(weaponList))
-                apply()
-            }
-            sp.edit {
-                putString(Constants.LAST_LAUNCH_APP_NAME,PaiMonsNoteBook.APP_VERSION_NAME)
-                apply()
-            }
+            UpdateInformation.refreshJSON()
         }
 
         runOnUiThread {
@@ -100,19 +135,8 @@ class LoadingActivity : BaseActivity() {
                     UpdateInformation.getNewVersionApp()
                 }
             }else{
-//                if(sp.getBoolean("ena",true)){
-                    thread {
-                        goA<MainActivity>()
-                        Thread.sleep(500)
-                        finish()
-                    }
-//                }else{
-//                    showFailureAlertDialog(bind.root.context,getString(R.string.paimonsnotebook_not_support_title),getString(R.string.paimonsnotebook_not_support_context),false)
-//                    thread {
-//                        Thread.sleep(5000)
-//                        error(getString(R.string.paimonsnotebook_not_support_title))
-//                    }
-//                }
+                goA<MainActivity>()
+                finish()
             }
         }
     }
@@ -153,7 +177,7 @@ class LoadingActivity : BaseActivity() {
 
     //前往登录
     private fun goLogin(){
-        val intent = Intent(this,SetCookieActivity::class.java)
+        val intent = Intent(this, SetCookieActivity::class.java)
         startActivityForResult(intent,ActivityRequestCode.SET_COOKIE)
     }
 

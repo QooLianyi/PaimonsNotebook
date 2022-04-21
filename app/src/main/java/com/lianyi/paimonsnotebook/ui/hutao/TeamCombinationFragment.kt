@@ -1,9 +1,11 @@
 package com.lianyi.paimonsnotebook.ui.hutao
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.View
 import androidx.core.view.marginBottom
 import androidx.core.view.marginTop
+import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lianyi.paimonsnotebook.R
@@ -36,7 +38,7 @@ class TeamCombinationFragment : BaseFragment(R.layout.fragment_team_combination)
     }
 
     private fun initView() {
-        Ok.hutaoGet(HuTaoApi.TEAM_COMBINATION){
+        HuTaoApi.get(HuTaoApi.TEAM_COMBINATION){
             if(it.ok){
                 val list = mutableListOf<TeamCombinationBean>()
                 JSONArray(it.optString("data")).toList(list)
@@ -96,6 +98,8 @@ class TeamCombinationFragment : BaseFragment(R.layout.fragment_team_combination)
                                     }
                                     loadImage(characterItem.icon,characterBean.icon)
                                     characterItem.valueName.gone()
+                                    TextViewCompat.setAutoSizeTextTypeWithDefaults(characterItem.value,TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM)
+                                    TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(characterItem.value,4,12,1,TypedValue.COMPLEX_UNIT_SP)
                                     characterItem.value.text = characterBean.name
                                 }
                             }

@@ -27,6 +27,18 @@ class DailySignActivity : BaseActivity() {
         bind = ActivityDailySignBinding.inflate(layoutInflater)
         setContentView(bind.root)
 
+        check()
+    }
+
+    private fun check(){
+        if(mainUser?.isNull()==true){
+            "你还没有进行登录哦~".showLong()
+        }else{
+            initView()
+        }
+    }
+
+    private fun initView(){
         val showAccountList = mutableListOf<String>()
         val accountList = mutableListOf<UserBean>()
         showAccountList.add(mainUser!!.gameUid)

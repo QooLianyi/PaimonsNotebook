@@ -1,11 +1,10 @@
-package com.lianyi.paimonsnotebook.ui.activity
+package com.lianyi.paimonsnotebook.ui.activity.search
 
 import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.view.forEach
 import androidx.core.view.forEachIndexed
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.CharacterBean
@@ -21,7 +20,6 @@ import com.lianyi.paimonsnotebook.lib.information.Format
 import com.lianyi.paimonsnotebook.lib.information.MiHoYoApi
 import com.lianyi.paimonsnotebook.lib.information.Star
 import com.lianyi.paimonsnotebook.util.*
-import java.lang.StringBuilder
 
 class SearchResultActivity : BaseActivity() {
 

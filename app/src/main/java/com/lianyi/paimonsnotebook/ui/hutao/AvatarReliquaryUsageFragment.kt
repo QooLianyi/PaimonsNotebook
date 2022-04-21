@@ -38,7 +38,7 @@ class AvatarReliquaryUsageFragment : BaseFragment(R.layout.fragment_avatar_reliq
     }
 
     private fun initView() {
-        Ok.hutaoGet(HuTaoApi.AVATAR_RELIQUARY_USAGE) {
+        HuTaoApi.get(HuTaoApi.AVATAR_RELIQUARY_USAGE) {
             if (it.ok) {
                 val list = mutableListOf<AvatarReliquaryUsageBean>()
                 JSONArray(it.optString("data")).toList(list)

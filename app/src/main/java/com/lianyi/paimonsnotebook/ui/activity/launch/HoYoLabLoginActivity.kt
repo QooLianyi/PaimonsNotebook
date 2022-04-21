@@ -1,4 +1,4 @@
-package com.lianyi.paimonsnotebook.ui.activity
+package com.lianyi.paimonsnotebook.ui.activity.launch
 
 import android.os.Bundle
 import android.webkit.*

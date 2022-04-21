@@ -1,9 +1,5 @@
 package com.lianyi.paimonsnotebook.config
 
-import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.ui.activity.WeaponDetailActivity
-import java.text.SimpleDateFormat
-
 /*
 * 此处存放各类常量值
 *

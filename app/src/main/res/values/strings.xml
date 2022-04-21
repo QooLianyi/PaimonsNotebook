@@ -22,6 +22,17 @@
     <string name="paimonsnotebook_need_update_context">5秒后跳转浏览器下载最新版本</string>
 
 
+    <string name="text">占位符</string>
+
+    <string name="desktop_name_summer_land">夏日海岛</string>
+    <string name="desktop_name_daily_sign">每日签到</string>
+    <string name="desktop_name_materials_checklist">材料清单</string>
+    <string name="desktop_name_daily_materials">每日材料</string>
+    <string name="desktop_name_">夏日海岛</string>
+
+
+    <string name="desktop_action_disabled">被禁用的功能</string>
+
     <string-array name="week">
         <item>星期一</item>
         <item>星期二</item>

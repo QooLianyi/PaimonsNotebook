@@ -40,6 +40,14 @@ inline fun <reified VB:ViewBinding> showAlertDialog(context: Context, id:Int,clo
     return win
 }
 
+inline fun showAlertDialog(context: Context, id:Int): AlertDialog {
+    val layout = LayoutInflater.from(context).inflate(id,null)
+    val win = AlertDialog.Builder(context).setView(layout).create()
+    setAlertDialogTransparentBackground(win)
+    win.show()
+    return win
+}
+
 fun showConfirmAlertDialog(context: Context, title:String="提示", content:String="你确定吗", block: (isConfirm:Boolean) -> Unit){
     val layout = PopConfirmBinding.bind(LayoutInflater.from(context).inflate(R.layout.pop_confirm,null))
     val win = showAlertDialog(context,layout.root)

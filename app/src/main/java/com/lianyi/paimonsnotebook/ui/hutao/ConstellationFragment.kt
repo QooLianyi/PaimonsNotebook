@@ -29,7 +29,7 @@ class ConstellationFragment : BaseFragment(R.layout.fragment_constellation) {
     }
 
     private fun initView() {
-        Ok.hutaoGet(HuTaoApi.CONSTELLATION){
+        HuTaoApi.get(HuTaoApi.CONSTELLATION){
             if(it.ok){
                 val list = mutableListOf<ConstellationBean>()
                 JSONArray(it.optString("data")).toList(list)

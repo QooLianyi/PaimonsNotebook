@@ -5,20 +5,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.ui.activity.WeaponDetailActivity
+import com.lianyi.paimonsnotebook.ui.activity.detail.WeaponDetailActivity
 import com.lianyi.paimonsnotebook.lib.base.BaseFragment
 import com.lianyi.paimonsnotebook.bean.WeaponBean
-import com.lianyi.paimonsnotebook.bean.config.SideBarButtonSettings
 import com.lianyi.paimonsnotebook.databinding.FragmentWeaponBinding
 import com.lianyi.paimonsnotebook.databinding.ItemEntityBinding
 import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
-import com.lianyi.paimonsnotebook.lib.information.JsonCacheName
 import com.lianyi.paimonsnotebook.lib.information.Star
 import com.lianyi.paimonsnotebook.lib.information.WeaponType
-import com.lianyi.paimonsnotebook.ui.MainActivity
-import com.lianyi.paimonsnotebook.ui.activity.CharacterDetailActivity
 import com.lianyi.paimonsnotebook.util.*
-import org.json.JSONArray
 
 class WeaponFragment : BaseFragment(R.layout.fragment_weapon) {
 

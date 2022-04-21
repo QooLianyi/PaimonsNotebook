@@ -2,7 +2,6 @@ package com.lianyi.paimonsnotebook.ui.home
 
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.CharacterBean
 import com.lianyi.paimonsnotebook.bean.materials.WeeklyMaterial
@@ -14,8 +13,7 @@ import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
 import com.lianyi.paimonsnotebook.lib.base.BaseFragment
 import com.lianyi.paimonsnotebook.lib.information.Element
 import com.lianyi.paimonsnotebook.lib.information.Star
-import com.lianyi.paimonsnotebook.ui.activity.CharacterDetailActivity
-import com.lianyi.paimonsnotebook.util.dp
+import com.lianyi.paimonsnotebook.ui.activity.detail.CharacterDetailActivity
 import com.lianyi.paimonsnotebook.util.goA
 import com.lianyi.paimonsnotebook.util.loadImage
 import com.lianyi.paimonsnotebook.util.setViewMarginBottomByNavigationBarHeight

@@ -117,5 +117,7 @@
 
     <color name="information_border_color">#D5BF93</color>
 
+    <color name="element_water">#34CDFE</color>
+
 
 </resources>

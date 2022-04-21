@@ -29,7 +29,7 @@ class TeamCollocationFragment : BaseFragment(R.layout.fragment_team_collocation)
     }
 
     private fun initView() {
-        Ok.hutaoGet(HuTaoApi.TEAM_COLLOCATION){
+        HuTaoApi.get(HuTaoApi.TEAM_COLLOCATION){
             val list = mutableListOf<TeamCollocationBean>()
             JSONArray(it.optString("data")).toList(list)
 

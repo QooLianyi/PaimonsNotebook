@@ -16,6 +16,10 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
+    <style name="PaimonsNotebookLaunchTheme" parent="PaimonsNotebookTheme">
+<!--        <item name="android:windowBackground">@drawable/icon_klee</item>-->
+    </style>
+
 <!--    -->
     <style name="homeTopMenuTextStyle">
         <item name="android:textColor">@color/menu_un_select_color</item>

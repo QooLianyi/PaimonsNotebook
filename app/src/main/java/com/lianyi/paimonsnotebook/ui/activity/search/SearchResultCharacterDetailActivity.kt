@@ -1,4 +1,4 @@
-package com.lianyi.paimonsnotebook.ui.activity
+package com.lianyi.paimonsnotebook.ui.activity.search
 
 import android.os.Bundle
 import android.text.Html

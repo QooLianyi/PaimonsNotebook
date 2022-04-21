@@ -61,11 +61,14 @@ class Constants {
         //角色和武器的更新URL
         const val PAIMONS_NOTEBOOK_WEB = "https://qoolianyi.github.io/PaimonsNotebook.github.io/"
 
+        //未来更新计划
+        const val PAIMONSNOTEBOOK_UPDATE_PLAN_URL = "https://github.com/QooLianyi/PaimonsNotebook.github.io/blob/main/PaimonsNotebookUpdateProject.md"
+
         const val PAIMONS_NOTE_BOOK_LATEST = "https://api.github.com/repos/QooLianyi/PaimonsNotebook/releases/latest"
 
         const val ENA = "p.isEnable"
         const val HTML_SELECTOR_PAIMONS_NOTE_BOOK_NOTICE = "p.notice"
-        const val HTML_SELECTOR_PAIMONS_NOTE_BOOK_APP_LASTEST_VERSION_CODE = "p.app_lastest_version_code"
+        const val HTML_SELECTOR_PAIMONS_NOTE_BOOK_APP_LASTEST_VERSION_CODE = "p.app_last_version_code"
 
         //旅行者札记饼图颜色
         val monthLegendColors = listOf(

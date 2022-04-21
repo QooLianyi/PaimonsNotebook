@@ -45,7 +45,6 @@
                 android:layout_height="wrap_content"
                 android:text="原粹树脂"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 android:textColor="@color/black_alpha_90"
                 android:layout_marginStart="45dp"
                 android:layout_marginTop="6dp"
@@ -154,7 +153,6 @@
                 android:layout_height="wrap_content"
                 android:text="每日委托任务"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 android:textColor="@color/black_alpha_90"
                 android:layout_marginStart="45dp"
                 android:layout_marginTop="6dp"
@@ -242,7 +240,6 @@
                 android:layout_height="wrap_content"
                 android:text="洞天宝钱"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 android:textColor="@color/black_alpha_90"
                 android:layout_marginStart="45dp"
                 android:layout_marginTop="6dp"
@@ -330,6 +327,76 @@
         android:layout_marginBottom="5dp"
         app:cardCornerRadius="4dp"
         app:cardBackgroundColor="@color/card_background_color"
+        android:id="@+id/quality_convert_span"
+        >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/icon_quality_convert"
+                android:padding="6dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginStart="3dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="参量质变仪"
+                android:textSize="16sp"
+                android:textColor="@color/black_alpha_90"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="6dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/card_content_text_color"
+                android:layout_marginTop="28dp"
+                android:layout_marginStart="45dp"
+                android:id="@+id/quality_convert_recover_time"
+                />
+
+            <LinearLayout
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_gravity="end|center"
+                android:background="@color/card_background_accent_color"
+                android:gravity="center"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="冷却中"
+                    android:textColor="@color/card_content_text_accent_color"
+                    android:textSize="16sp"
+                    android:id="@+id/quality_convert_state"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        app:cardCornerRadius="4dp"
+        app:cardBackgroundColor="@color/card_background_color"
         >
 
         <FrameLayout
@@ -351,7 +418,6 @@
                 android:layout_height="wrap_content"
                 android:text="值得铭记的强敌"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 android:textColor="@color/black_alpha_90"
                 android:layout_marginStart="45dp"
                 android:layout_marginTop="6dp"
@@ -440,7 +506,6 @@
                     android:layout_height="wrap_content"
                     android:text="探索派遣"
                     android:textSize="16sp"
-                    android:textStyle="bold"
                     android:textColor="@color/black_alpha_90"
                     android:layout_margin="4dp"
                     />
@@ -451,7 +516,6 @@
                     android:textColor="@color/black_alpha_90"
                     android:text="("
                     android:textSize="16sp"
-                    android:textStyle="bold"
                     />
 
                 <TextView
@@ -460,7 +524,6 @@
                     android:textColor="@color/black_alpha_90"
                     android:text="0"
                     android:textSize="16sp"
-                    android:textStyle="bold"
                     android:id="@+id/current_expedition_num"
                     />
 
@@ -470,7 +533,6 @@
                     android:textColor="@color/black_alpha_90"
                     android:text="/"
                     android:textSize="16sp"
-                    android:textStyle="bold"
                     />
 
                 <TextView
@@ -479,7 +541,6 @@
                     android:textColor="@color/black_alpha_90"
                     android:text="5"
                     android:textSize="16sp"
-                    android:textStyle="bold"
                     android:id="@+id/max_expedition_num"
                     />
 
@@ -489,7 +550,6 @@
                     android:textColor="@color/black_alpha_90"
                     android:text=")"
                     android:textSize="16sp"
-                    android:textStyle="bold"
                     />
 
             </LinearLayout>

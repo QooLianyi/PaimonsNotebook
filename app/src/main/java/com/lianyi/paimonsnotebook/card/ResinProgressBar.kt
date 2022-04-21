@@ -1,5 +1,6 @@
 package com.lianyi.paimonsnotebook.card
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
@@ -10,6 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.edit
 import androidx.work.*
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.card.service.GoSummerLandService
 import com.lianyi.paimonsnotebook.card.worker.ResinWorker
 import com.lianyi.paimonsnotebook.util.sp
 import java.lang.Exception
@@ -34,6 +36,8 @@ class ResinProgressBar : AppWidgetProvider() {
                     val text = context.getSharedPreferences("cache_info",Context.MODE_PRIVATE).getString("rand","-100")
                     println("rand = ${text}")
                     setTextViewText(R.id.appwidget_text,text)
+                    setOnClickPendingIntent(R.id.go_home, PendingIntent.getService(context,0,
+                        Intent(context,GoSummerLandService::class.java),0))
                 }
                 appWidgetManager.updateAppWidget(it,view)
             }
@@ -48,6 +52,7 @@ class ResinProgressBar : AppWidgetProvider() {
     //接收小组件点击时发送的广播
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
+        context!!.startService(Intent(context,GoSummerLandService::class.java))
 //        if(intent?.action == UPDATE_ACTION){
 //            //更新
 //            updateAllViews(context!!, AppWidgetManager.getInstance(context))

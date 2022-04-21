@@ -13,9 +13,10 @@ import com.lianyi.paimonsnotebook.bean.WeaponBean
 import com.lianyi.paimonsnotebook.databinding.*
 import com.lianyi.paimonsnotebook.lib.adapter.PagerAdapter
 import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
+import com.lianyi.paimonsnotebook.lib.data.UpdateInformation
 import com.lianyi.paimonsnotebook.lib.information.*
-import com.lianyi.paimonsnotebook.ui.activity.CharacterDetailActivity
-import com.lianyi.paimonsnotebook.ui.activity.WeaponDetailActivity
+import com.lianyi.paimonsnotebook.ui.activity.detail.CharacterDetailActivity
+import com.lianyi.paimonsnotebook.ui.activity.detail.WeaponDetailActivity
 import com.lianyi.paimonsnotebook.util.*
 import org.json.JSONArray
 
@@ -50,6 +51,12 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
         bind.weekSelectSpan.setOnClickListener {
             bind.weekSelect.performClick()
         }
+
+        //判断上次启动时版本号和本次版本号是否相同 不同则刷新列表
+        if(sp.getString(Constants.LAST_LAUNCH_APP_NAME,"")!=PaiMonsNoteBook.APP_VERSION_NAME){
+            UpdateInformation.refreshJSON()
+        }
+
         //加载角色和武器
         JSONArray(csp.getString(JsonCacheName.CHARACTER_LIST,"")!!).toList(allCharacter)
         JSONArray(wsp.getString(JsonCacheName.WEAPON_LIST,"")!!).toList(allWeapon)
@@ -131,7 +138,7 @@ class DailyMaterialsFragment : BaseFragment(R.layout.fragment_daily_materials) {
                             characterItem.root.setOnClickListener {
                                 CharacterDetailActivity.character = characterBean
                                 startActivity(
-                                    Intent(activity!!,CharacterDetailActivity::class.java),
+                                    Intent(activity!!, CharacterDetailActivity::class.java),
                                     ActivityOptions.makeSceneTransitionAnimation(activity!!,characterItem.icon,"icon").toBundle()
                                 )
                             }

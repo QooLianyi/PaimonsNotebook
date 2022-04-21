@@ -31,7 +31,7 @@ class WeaponUsageFragment : BaseFragment(R.layout.fragment_weapon_usage) {
     }
 
     private fun initView() {
-        Ok.hutaoGet(HuTaoApi.WEAPON_USAGE){
+        HuTaoApi.get(HuTaoApi.WEAPON_USAGE){
             if(it.ok){
                 val list = mutableListOf<WeaponUsageBean>()
                 JSONArray(it.optString("data")).toList(list)

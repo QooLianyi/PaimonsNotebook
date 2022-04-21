@@ -2,6 +2,7 @@ package com.lianyi.paimonsnotebook.lib.data
 
 import android.content.Intent
 import android.net.Uri
+import androidx.core.content.edit
 import com.lianyi.paimonsnotebook.bean.CharacterBean
 import com.lianyi.paimonsnotebook.bean.PaimonsNotebookLatestBean
 import com.lianyi.paimonsnotebook.bean.WeaponBean
@@ -12,6 +13,7 @@ import org.json.JSONArray
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.lang.Exception
+import java.nio.charset.Charset
 import kotlin.concurrent.thread
 
 /*
@@ -50,7 +52,7 @@ class UpdateInformation {
                         block(text)
                     }catch (e:Exception){
                         e.printStackTrace()
-                        println("连接超时")
+                        println("getPaimonsNotebookWeb:连接超时")
                     }
                 }
             }
@@ -63,6 +65,52 @@ class UpdateInformation {
                 val intent = Intent(Intent.ACTION_VIEW,uri)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 PaiMonsNoteBook.context.startActivity(intent)
+            }
+        }
+
+        //刷新本地json
+        fun refreshJSON(){
+            //            "正在进行JSON数据同步".show()
+//            showLoading(bind.root.context)
+//            UpdateInformation.updateJsonData { b, count ->
+//                runOnUiThread {
+//                    if(b){
+//                        if(count>0){
+//                            "同步成功,新增${count}条数据"
+//                        }else{
+//                            "同步成功,没有发现新数据"
+//                        }.show()
+//                    }else{
+//                        "同步失败啦,请稍后再试吧!\n程序将于5秒后自动退出".showLong()
+//                    }
+//                    dismissLoadingWindow()
+//                }
+//            }
+
+            val characterText = PaiMonsNoteBook.context.resources.assets.open("CharacterList")
+            val characterBuff =ByteArray(characterText.available())
+            characterText.read(characterBuff)
+            characterText.close()
+            val characterList = mutableListOf<CharacterBean>()
+            JSONArray(String(characterBuff, Charset.defaultCharset())).toList(characterList)
+            csp.edit().apply{
+                putString(JsonCacheName.CHARACTER_LIST,GSON.toJson(characterList))
+                apply()
+            }
+
+            val weaponText = PaiMonsNoteBook.context.resources.assets.open("WeaponList")
+            val weaponBuff =ByteArray(weaponText.available())
+            weaponText.read(weaponBuff)
+            weaponText.close()
+            val weaponList = mutableListOf<WeaponBean>()
+            JSONArray(String(weaponBuff, Charset.defaultCharset())).toList(weaponList)
+            wsp.edit().apply{
+                putString(JsonCacheName.WEAPON_LIST,GSON.toJson(weaponList))
+                apply()
+            }
+            sp.edit {
+                putString(Constants.LAST_LAUNCH_APP_NAME,PaiMonsNoteBook.APP_VERSION_NAME)
+                apply()
             }
         }
 

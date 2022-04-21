@@ -24,7 +24,7 @@ class OptionsActivity : BaseActivity() {
         bind = ActivityOptionsBinding.inflate(layoutInflater)
         setContentView(bind.root)
         setContentMargin(bind.root)
-
+        setViewMarginBottomByNavigationBarHeight(bind.root)
         initView()
     }
 
@@ -169,14 +169,6 @@ class OptionsActivity : BaseActivity() {
         }
 
         bind.goFeedBack.setOnClickListener {
-            /****************
-             *
-             * 发起添加群流程。群号：派蒙的笔记本() 的 key 为： qhNCaJ5EPHebQIX4-G2mpQu86f-WlAc7
-             * 调用 joinQQGroup(qhNCaJ5EPHebQIX4-G2mpQu86f-WlAc7) 即可发起手Q客户端申请加群 派蒙的笔记本()
-             *
-             * @param key 由官网生成的key
-             * @return 返回true表示呼起手Q成功，返回false表示呼起失败
-             ******************/
             "正在尝试唤起手机QQ".show()
             val key = "qhNCaJ5EPHebQIX4-G2mpQu86f-WlAc7"
             val intent = Intent()
@@ -188,6 +180,13 @@ class OptionsActivity : BaseActivity() {
                 // 未安装手Q或安装的版本不支持
                 showFailureAlertDialog(bind.root.context,"唤起手机QQ失败","可能是未安装手Q或安装的版本不支持")
             }
+        }
+
+        bind.updatePlan.setOnClickListener {
+            val uri = Uri.parse(Constants.PAIMONSNOTEBOOK_UPDATE_PLAN_URL)
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = uri
+            startActivity(intent)
         }
 
         //前往github

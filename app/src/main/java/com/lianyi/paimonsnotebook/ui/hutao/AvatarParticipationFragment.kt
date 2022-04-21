@@ -33,7 +33,7 @@ class AvatarParticipationFragment : BaseFragment(R.layout.fragment_avatar_partic
     }
 
     private fun initView() {
-        Ok.hutaoGet(HuTaoApi.AVATAR_PARTICIPATION){
+        HuTaoApi.get(HuTaoApi.AVATAR_PARTICIPATION){
             if(it.ok){
                 val list = mutableListOf<AvatarParticipationBean>()
                 JSONArray(it.optString("data")).toList(list)

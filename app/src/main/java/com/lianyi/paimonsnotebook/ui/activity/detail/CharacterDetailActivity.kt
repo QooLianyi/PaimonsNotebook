@@ -1,12 +1,14 @@
-package com.lianyi.paimonsnotebook.ui.activity
+package com.lianyi.paimonsnotebook.ui.activity.detail
 
 import android.os.Bundle
 import android.view.ViewAnimationUtils
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
-import com.lianyi.paimonsnotebook.bean.WeaponBean
-import com.lianyi.paimonsnotebook.databinding.ActivityWeaponDetailBinding
+import com.lianyi.paimonsnotebook.bean.CharacterBean
+import com.lianyi.paimonsnotebook.databinding.ActivityCharacterDetailBinding
 import com.lianyi.paimonsnotebook.databinding.PopInformationBinding
+import com.lianyi.paimonsnotebook.lib.information.Area
+import com.lianyi.paimonsnotebook.lib.information.Element
 import com.lianyi.paimonsnotebook.lib.information.Star
 import com.lianyi.paimonsnotebook.lib.information.WeaponType
 import com.lianyi.paimonsnotebook.util.loadImage
@@ -14,37 +16,40 @@ import com.lianyi.paimonsnotebook.util.setContentMargin
 import com.lianyi.paimonsnotebook.util.showAlertDialog
 import kotlin.math.sqrt
 
-class WeaponDetailActivity : BaseActivity() {
+class CharacterDetailActivity : BaseActivity() {
+
     companion object{
-        lateinit var weapon:WeaponBean
+        lateinit var character:CharacterBean
     }
-    lateinit var bind: ActivityWeaponDetailBinding
+
+    lateinit var bind: ActivityCharacterDetailBinding
     private var animationFlag = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        bind = ActivityWeaponDetailBinding.inflate(layoutInflater)
+        bind = ActivityCharacterDetailBinding.inflate(layoutInflater)
         setContentView(bind.root)
 
         with(bind){
-            loadImage(icon, weapon.icon)
-            name.text = weapon.name
-            subName.text = weapon.name
-            weaponType.text = WeaponType.getNameByType(weapon.weaponType)
-            star.text = Star.getStarSymbolByStarNum(weapon.star)
+            area.text = Area.getNameByArea(character.area)
+            characterProperty.text = Element.getNameByType(character.element)
+            equipType.text = WeaponType.getNameByType(character.weaponType)
+            name.text = character.name
+            loadImage(icon, character.icon)
+            starBackground.setImageResource(Star.getStarResourcesByStarNum(character.star,false))
 
-            attribute.text = weapon.attributeName
-            attributeValue.text = weapon.attributeNameValue
-            atk.text = weapon.ATK
-            effectName.text = weapon.effectName
-            effect.text = weapon.effect
-            story.text = weapon.describe.trim()
+            baseAtk.text = character.baseATK
+            baseDef.text = character.baseDEF
+            baseHp.text = character.baseHP
 
-            starBackground.setImageResource(Star.getStarResourcesByStarNum(weapon.star,false))
+            upAttribute.text = character.upAttribute
+            upAttributeValue.text = character.upAttributeValue
 
-            Star.setStarBackgroundAndIcon(dailyMaterial,weapon.dailyMaterials.icon, weapon.dailyMaterials.star)
-            Star.setStarBackgroundAndIcon(eliteMaterial,weapon.eliteMonsterMaterial.icon, weapon.eliteMonsterMaterial.star)
-            Star.setStarBackgroundAndIcon(monsterMaterial,weapon.monsterMaterials.icon, weapon.monsterMaterials.star)
+            Star.setStarBackgroundAndIcon(localMaterial, character.localMaterials.icon, character.localMaterials.star)
+            Star.setStarBackgroundAndIcon(monsterMaterial, character.monsterMaterials.icon, character.monsterMaterials.star)
+            Star.setStarBackgroundAndIcon(bossMaterial, character.bossMaterial.icon, character.bossMaterial.star)
+            Star.setStarBackgroundAndIcon(dailyMaterial, character.dailyMaterials.icon, character.dailyMaterials.star)
+            Star.setStarBackgroundAndIcon(weeklyMaterial, character.weeklyMaterials.icon, character.weeklyMaterials.star)
 
         }
 
@@ -72,7 +77,5 @@ class WeaponDetailActivity : BaseActivity() {
             ViewAnimationUtils.createCircularReveal(bind.starBackground,starBackGroundWidth/2,starBackGroundHeight/2,0f,endRadius).setDuration(900L).start()
             animationFlag = false
         }
-
     }
-
 }

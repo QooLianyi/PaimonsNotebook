@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
     <application
         android:name=".util.PaiMonsNoteBook"
         android:allowBackup="true"
@@ -18,6 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/PaimonsNotebookTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ui.activity.detail.CharacterDetailV2Activity"></activity>
+        <activity android:name=".ui.activity.RedirectToDailyMaterialsActivity" />
         <activity android:name=".ui.summerland.SummerLandActivity" />
         <activity android:name=".ui.activity.home.AnnouncementDetailActivity" />
         <activity android:name=".ui.activity.home.AnnouncementActivity" />
@@ -27,28 +31,34 @@
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity android:name=".ui.activity.FragmentContainerActivity" />
         <activity android:name=".ui.activity.options.WishOptionsActivity" />
-        <activity android:name=".ui.activity.SetCookieActivity" />
+        <activity android:name=".ui.activity.launch.SetCookieActivity" />
         <activity android:name=".ui.activity.options.ContentMarginActivity" />
         <activity android:name=".ui.activity.options.SideBarButtonSettingActivity" />
-        <activity android:name=".ui.activity.SearchResultCharacterDetailActivity" />
-        <activity android:name=".ui.activity.SearchResultActivity" />
+        <activity android:name=".ui.activity.search.SearchResultCharacterDetailActivity" />
+        <activity android:name=".ui.activity.search.SearchResultActivity" />
         <activity android:name=".ui.activity.home.MonthLedgerActivity" />
         <activity android:name=".ui.activity.home.AccountManagerActivity" />
         <activity android:name=".ui.activity.LoadingGachaWishHistoryActivity" />
         <activity android:name=".ui.activity.home.DailySignActivity" />
-        <activity android:name=".ui.activity.HoYoLabLoginActivity" />
-        <activity android:name=".ui.activity.WeaponDetailActivity" />
-        <activity android:name=".ui.activity.CharacterDetailActivity" />
+        <activity android:name=".ui.activity.launch.HoYoLabLoginActivity" />
+        <activity android:name=".ui.activity.detail.WeaponDetailActivity" />
+        <activity android:name=".ui.activity.detail.CharacterDetailActivity" />
         <activity android:name=".ui.activity.EmptyActivity" />
-        <activity android:name=".ui.LoadingActivity"
-            >
+        <activity android:name=".ui.activity.options.OptionsActivity" />
+        <activity
+            android:name=".ui.LoadingActivity"
+            android:theme="@style/PaimonsNotebookLaunchTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/desktop_actions" />
         </activity>
-        <activity android:name=".ui.activity.options.OptionsActivity" />
+        <activity
+            android:name=".ui.MainActivity"
+            android:label="@string/app_name" />
 
         <meta-data
             android:name="design_width_in_dp"
@@ -57,31 +67,27 @@
             android:name="design_height_in_dp"
             android:value="700" />
 
-        <activity
-            android:name=".ui.MainActivity"
-            android:label="@string/app_name" />
-
-<!--        <service android:name=".card.service.ResinService"-->
-<!--            >-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.appwidget.action.APP_WIDGET_SERVICE"/>-->
-<!--            </intent-filter>-->
-<!--        </service>-->
 
 <!--        <receiver android:name=".card.ResinProgressBar"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="true"-->
-<!--            >-->
-<!--            <intent-filter>-->
+<!--            android:exported="false"-->
+<!--            android:enabled="false"-->
+<!--             >-->
+<!--             <intent-filter>-->
 <!--                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
-<!--                <action android:name="com.lianyi.widget.UPDATE_ACTION"/>-->
-<!--            </intent-filter>-->
-
-<!--            <meta-data-->
-<!--                android:name="android.appwidget.provider"-->
-<!--                android:resource="@xml/resin_progress_bar_info" />-->
+<!--             </intent-filter>-->
+<!--             <meta-data android:name="android.appwidget.provider"-->
+<!--                 android:resource="@xml/resin_progress_bar_info"-->
+<!--                 />-->
 <!--        </receiver>-->
 
+
+        <service android:name=".card.service.ForegroundTest"
+            android:enabled="true"
+            />
+
+        <service android:name=".card.service.GoSummerLandService"
+            android:enabled="true"
+        />
     </application>
 
 </manifest>

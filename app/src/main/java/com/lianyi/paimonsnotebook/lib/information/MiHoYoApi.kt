@@ -5,9 +5,8 @@ import com.lianyi.paimonsnotebook.bean.PlayerCharacterInformationBean
 import com.lianyi.paimonsnotebook.bean.PlayerInformationBean
 import com.lianyi.paimonsnotebook.bean.SpiralAbyssBean
 import com.lianyi.paimonsnotebook.bean.account.UserBean
-import com.lianyi.paimonsnotebook.ui.activity.SearchResultActivity
+import com.lianyi.paimonsnotebook.ui.activity.search.SearchResultActivity
 import com.lianyi.paimonsnotebook.util.*
-import okio.utf8Size
 import java.lang.StringBuilder
 
 class MiHoYoApi {

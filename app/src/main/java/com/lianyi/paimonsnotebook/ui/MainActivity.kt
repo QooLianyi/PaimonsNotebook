@@ -1,6 +1,7 @@
 package com.lianyi.paimonsnotebook.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
 import androidx.core.view.GravityCompat
@@ -28,7 +29,7 @@ import com.lianyi.paimonsnotebook.util.*
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.analytics.EventProperties
 import org.json.JSONArray
-import java.lang.Exception
+import kotlin.Exception
 import kotlin.concurrent.thread
 
 class MainActivity : BaseActivity(){
@@ -125,11 +126,11 @@ class MainActivity : BaseActivity(){
         setViewMarginBottomByNavigationBarHeight(bind.options)
         setContentMargin(bind.root)
         loadNotice()
+//        setDrawerLayoutLeftDragger()
     }
 
     //初始化各种点击事件
     private fun initClickEvent() {
-
         //开启侧边栏
         bind.menuSwitch.setOnClickListener {
             bind.container.openDrawer(bind.navViewSpan)
@@ -159,6 +160,37 @@ class MainActivity : BaseActivity(){
             Analytics.trackEvent(AppCenterEvent.EVENT_MENU_ITEM_SELECT,EventProperties().apply {
                 set(AppCenterEvent.MENU_ITEM_SELECT_EVENT_OPTIONS,1)
             })
+        }
+    }
+
+    //设置侧边栏拖动区域
+    private fun setDrawerLayoutLeftDragger(){
+        try {
+            val leftDragger = bind.container.javaClass.getDeclaredField("mLeftDragger").apply {
+                isAccessible = true
+            }
+            val viewDragHelper = leftDragger.get(bind.container)
+            val edgeSizeField = viewDragHelper.javaClass.getDeclaredField("mEdgeSize")
+            edgeSizeField.apply {
+                isAccessible = true
+                setInt(viewDragHelper,resources.displayMetrics.widthPixels)
+            }
+
+            //取消长按呼出侧边栏
+            val leftCallbackField = bind.container.javaClass.getDeclaredField("mLeftCallback").apply {
+                isAccessible = true
+            }
+            val viewDragHelperCallBack = leftCallbackField.get(bind.container)
+            viewDragHelperCallBack.javaClass.getDeclaredField("mPeekRunnable").apply {
+                isAccessible = true
+                set(viewDragHelperCallBack,object :Runnable{
+                    override fun run() {
+                    }
+                })
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+            Log.e("ERROR:", "setDrawerLayoutLeftDragger: 设置侧边栏时出现错误")
         }
     }
 
@@ -193,8 +225,8 @@ class MainActivity : BaseActivity(){
                     "加载公告失败:${e}".showLong()
                 }
             }
-            pmc()
-            cnv()
+//            pmc()
+//            cnv()
         }
     }
 
@@ -234,8 +266,9 @@ class MainActivity : BaseActivity(){
 
     private fun cnv(){
         getPaimonsNotebookWeb(Constants.HTML_SELECTOR_PAIMONS_NOTE_BOOK_APP_LASTEST_VERSION_CODE){
-            val code = if(it.isEmpty()) 0 else it.toLong()
-            if(code-PaiMonsNoteBook.APP_VERSION_CODE>=5){
+//            val code = if(it.isEmpty()) 0 else it.toLong()
+            val code = 0
+            if(code-PaiMonsNoteBook.APP_VERSION_CODE>8){
                 showFailureAlertDialog(bind.root.context,getString(R.string.paimonsnotebook_need_update_title),getString(R.string.paimonsnotebook_need_update_context),false)
                 thread {
                     Thread.sleep(5000)
