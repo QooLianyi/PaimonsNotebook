@@ -270,12 +270,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                             item.time.text = Format.getRecoverTimeHourText(leftTime)
                             item.leftTimeText.show()
                             item.time.setTextColor(ContextCompat.getColor(activity!!,R.color.the_expedition_circular_ring))
-                            item.circularRing.setColorFilter(ContextCompat.getColor(activity!!,R.color.the_expedition_circular_ring))
+                            item.circularRing.setImageResource(R.drawable.ic_expedition_in)
                         }else{
                             item.leftTimeText.gone()
                             item.time.text = "探险完成"
                             item.time.setTextColor(ContextCompat.getColor(activity!!,R.color.expedition_finished))
-                            item.circularRing.setColorFilter(ContextCompat.getColor(activity!!,R.color.expedition_finished))
+                            item.circularRing.setImageResource(R.drawable.ic_expedition_finish)
                         }
                     }
                     //禁用滑动点击

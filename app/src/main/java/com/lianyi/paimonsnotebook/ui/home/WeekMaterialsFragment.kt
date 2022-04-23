@@ -1,5 +1,7 @@
 package com.lianyi.paimonsnotebook.ui.home
 
+import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.lianyi.paimonsnotebook.R
@@ -42,17 +44,20 @@ class WeekMaterialsFragment : BaseFragment(R.layout.fragment_week_materials) {
 
                 item.list.adapter = ReAdapter(pair.second,R.layout.item_entity){
                     view, characterBean, position ->
-                    val characterItem = ItemEntityBinding.bind(view)
-                    loadImage(characterItem.icon,characterBean.icon)
-                    characterItem.name.text = characterBean.name
-                    characterItem.type.setImageResource(Element.getImageResourceByType(characterBean.element))
-                    characterItem.starBackground.setBackgroundResource(Star.getStarResourcesByStarNum(characterBean.star,false))
-
-                    item.root.setOnClickListener {
-                        CharacterDetailActivity.character = characterBean
-                        goA<CharacterDetailActivity>()
-                        activity?.overridePendingTransition(R.anim.activity_fade_in,R.anim.activity_fade_out)
+                    ItemEntityBinding.bind(view).apply {
+                        loadImage(icon,characterBean.icon)
+                        name.text = characterBean.name
+                        type.setImageResource(Element.getImageResourceByType(characterBean.element))
+                        starBackground.setBackgroundResource(Star.getStarResourcesByStarNum(characterBean.star,false))
+                        root.setOnClickListener {
+                            CharacterDetailActivity.character = characterBean
+                            startActivity(
+                                Intent(activity!!, CharacterDetailActivity::class.java),
+                                ActivityOptions.makeSceneTransitionAnimation(activity!!,icon,"icon").toBundle()
+                            )
+                        }
                     }
+
                 }
             }
         }

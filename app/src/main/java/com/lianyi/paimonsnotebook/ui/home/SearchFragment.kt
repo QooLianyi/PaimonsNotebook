@@ -8,7 +8,7 @@ import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.PlayerInformationBean
 import com.lianyi.paimonsnotebook.databinding.FragmentSearchBinding
 import com.lianyi.paimonsnotebook.lib.base.BaseFragment
-import com.lianyi.paimonsnotebook.lib.information.MiHoYoApi.Companion.getPlayerData
+import com.lianyi.paimonsnotebook.lib.information.MiHoYoApi.getPlayerData
 import com.lianyi.paimonsnotebook.ui.activity.search.SearchResultActivity
 import com.lianyi.paimonsnotebook.util.*
 
