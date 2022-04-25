@@ -8,18 +8,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.widget.RemoteViews
-import androidx.annotation.RequiresApi
-import androidx.core.content.edit
 import androidx.work.*
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.card.service.ForegroundTest
 import com.lianyi.paimonsnotebook.card.service.GetDailyNoteService
 import com.lianyi.paimonsnotebook.card.service.GetMonthLedgerService
 import com.lianyi.paimonsnotebook.card.service.GoSummerLandService
-import com.lianyi.paimonsnotebook.card.worker.ResinWorker
-import com.lianyi.paimonsnotebook.util.sp
-import java.lang.Exception
-import java.util.concurrent.TimeUnit
 
 class ResinProgressBar : AppWidgetProvider() {
 
@@ -67,33 +61,33 @@ class ResinProgressBar : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        mContext = context
-        sp.edit().apply {
-            putInt("update_count",sp.getInt("update_count",0)+1)
-            apply()
-        }
-        println("update count = ${sp.getInt("update_count",-100)}")
-        remoteViews = RemoteViews(context.packageName,R.layout.card_resin_progress_bar)
-        remoteViews.setOnClickPendingIntent(
-            R.id.go_home,
-            registerGoSummerLandAction(context)
-        )
-        remoteViews.setOnClickPendingIntent(
-            R.id.start_service,
-            registerDailyNotebook(context)
-        )
-
-        remoteViews.setImageViewResource(
-            R.id.img,
-            if(isPaimon){
-                R.drawable.icon_klee
-            }else{
-                R.drawable.icon_paimon
-            }
-        )
-        appWidgetIds.forEach {
-            appWidgetManager.updateAppWidget(it,remoteViews)
-        }
+//        mContext = context
+//        sp.edit().apply {
+//            putInt("update_count",sp.getInt("update_count",0)+1)
+//            apply()
+//        }
+//        println("update count = ${sp.getInt("update_count",-100)}")
+//        remoteViews = RemoteViews(context.packageName,R.layout.card_resin_progress_bar)
+//        remoteViews.setOnClickPendingIntent(
+//            R.id.go_home,
+//            registerGoSummerLandAction(context)
+//        )
+//        remoteViews.setOnClickPendingIntent(
+//            R.id.start_service,
+//            registerDailyNotebook(context)
+//        )
+//
+//        remoteViews.setImageViewResource(
+//            R.id.img,
+//            if(isPaimon){
+//                R.drawable.icon_klee
+//            }else{
+//                R.drawable.icon_paimon
+//            }
+//        )
+//        appWidgetIds.forEach {
+//            appWidgetManager.updateAppWidget(it,remoteViews)
+//        }
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -159,26 +153,26 @@ class ResinProgressBar : AppWidgetProvider() {
     }
 
     private fun setUpWorker(context:Context){
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED) //当有可用网络时执行
-            .setRequiresDeviceIdle(true) //设备空闲时执行
-            .build()
-
-        val repeatRequest = PeriodicWorkRequestBuilder<ResinWorker>(15,TimeUnit.MINUTES)
-            .setConstraints(constraints)
-            .build()
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(WORKER_NAME,ExistingPeriodicWorkPolicy.KEEP,repeatRequest)
+//        val constraints = Constraints.Builder()
+//            .setRequiredNetworkType(NetworkType.CONNECTED) //当有可用网络时执行
+//            .setRequiresDeviceIdle(true) //设备空闲时执行
+//            .build()
+//
+//        val repeatRequest = PeriodicWorkRequestBuilder<ResinWorker>(15,TimeUnit.MINUTES)
+//            .setConstraints(constraints)
+//            .build()
+//        WorkManager.getInstance(context).enqueueUniquePeriodicWork(WORKER_NAME,ExistingPeriodicWorkPolicy.KEEP,repeatRequest)
     }
 
     override fun onEnabled(context: Context) {
         // Enter relevant functionality for when the first widget is created
-        setUpWorker(context)
+//        setUpWorker(context)
     }
 
     override fun onDeleted(context: Context?, appWidgetIds: IntArray?) {
         appWidgetIds?.forEach {
             idsSet.remove(it)
-            WorkManager.getInstance(context!!).cancelUniqueWork(ResinWorker.getWorkName(it))
+//            WorkManager.getInstance(context!!).cancelUniqueWork(ResinWorker.getWorkName(it))
         }
         super.onDeleted(context, appWidgetIds)
     }

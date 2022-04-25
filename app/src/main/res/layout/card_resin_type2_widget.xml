@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/card_rounded_white_10dp"
+    android:gravity="center"
+    android:padding="10dp"
+    android:orientation="horizontal"
+    android:id="@+id/root"
+    >
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/icon_resin"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textColor="@color/black_alpha_80"
+        android:layout_marginStart="5dp"
+        android:textStyle="bold"
+        android:id="@+id/current_resin"
+        />
+
+</LinearLayout>

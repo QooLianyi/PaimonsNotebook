@@ -1,18 +1,28 @@
 package com.lianyi.paimonsnotebook.card
 
+import android.app.Service
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.widget.Toast
+import androidx.core.content.edit
 import com.google.gson.Gson
+import com.lianyi.paimonsnotebook.CatchException
 import com.lianyi.paimonsnotebook.bean.MonthLedgerBean
 import com.lianyi.paimonsnotebook.bean.account.UserBean
 import com.lianyi.paimonsnotebook.bean.dailynote.DailyNoteBean
+import kotlinx.coroutines.*
 import java.lang.StringBuilder
+import kotlin.reflect.KProperty
 
 object CardUtil {
     lateinit var context:Context
 
+    //小组件类型
     const val TYPE_RESIN_TYPE1 = "card_resin_type_1"
+    const val TYPE_RESIN_TYPE2 = "card_resin_type_2"
+    const val TYPE_RESIN_TYPE3 = "card_resin_type_3"
     const val TYPE_DAILY_NOTE_OVERVIEW = "card_daily_note_overview"
 
     const val APPWIDGET_UPDATE = "android.appwidget.action.APPWIDGET_UPDATE"
@@ -26,11 +36,7 @@ object CardUtil {
     private const val USP_NAME = "user_info"
     private const val MAIN_USER_NAME = "main_user"
 
-    val mainUser: UserBean by lazy {
-        Gson().fromJson(
-            context.getSharedPreferences(USP_NAME, Context.MODE_PRIVATE).getString(
-                MAIN_USER_NAME,"{}")!!, UserBean::class.java)
-    }
+    val mainUser: UserBean by UserPreference()
 
     val gson by lazy {
         Gson()
@@ -46,6 +52,32 @@ object CardUtil {
 
     fun String.cShowLong(){
         Toast.makeText(context,this, Toast.LENGTH_LONG).show()
+    }
+
+    //设置服务超时操作,超时应当直接关闭自身
+    fun setServiceTimeOut(service:Service): Job {
+        return MainScope().launch {
+            delay(15000L)
+            println("${service::class.java.name} TimeOut!")
+            service.stopSelf()
+        }
+    }
+
+    fun addCatchException(exception: CatchException){
+
+    }
+
+    fun setValue(name:String,value:Any){
+        sp.edit {
+            when(value){
+                is Int-> putInt(name,value)
+                is Long -> putLong(name,value)
+                is Float ->putFloat(name,value)
+                is String -> putString(name,value)
+                is Boolean ->putBoolean(name,value)
+            }
+            apply()
+        }
     }
 
     fun getCacheDailyNoteBean(uid:String): DailyNoteBean = Gson().fromJson(
@@ -88,11 +120,11 @@ object CardUtil {
         }else{
             sb.append("0:")
         }
-        val minute = recoverTime%60
+        val minute = recoverTime%3600/60
         if(minute==0L){
             sb.append("00")
         }else if(minute<10){
-            sb.append(0)
+            sb.append("0${minute}")
         }else{
             sb.append(recoverTime%60)
         }
@@ -120,11 +152,46 @@ object CardUtil {
         return qualityConvertRecoverTimeTextStringBuffer.toString()
     }
 
-    fun checkMainUser(ok:()->Unit,fail:()->Unit){
+    fun checkStatus(ok:()->Unit, fail:(String)->Unit){
         if(mainUser.isNull()){
-            fail()
+            fail("没有默认用户,请登录后再次尝试更新小组件")
         }else{
-            ok()
+            (context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).apply {
+                if(getNetworkCapabilities(activeNetwork)?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)==true){
+                    ok()
+                }else{
+                    fail("更新失败:没有网络连接")
+                }
+            }
         }
     }
+
+    class UserPreference{
+        private lateinit var prop:UserBean
+        val sp: SharedPreferences by lazy {
+            context.getSharedPreferences("cache_info", Context.MODE_PRIVATE)
+        }
+
+        operator fun getValue(any: Any,property:KProperty<*>):UserBean{
+
+            if(sp.getBoolean("main_user_change",false)){
+                sp.edit {
+                    putBoolean("main_user_change",false)
+                    apply()
+                }
+                prop = Gson().fromJson(
+                    context.getSharedPreferences(USP_NAME, Context.MODE_PRIVATE).getString(
+                        MAIN_USER_NAME,"{}")!!, UserBean::class.java)
+            }
+
+            if(!this::prop.isInitialized){
+                prop = Gson().fromJson(
+                    context.getSharedPreferences(USP_NAME, Context.MODE_PRIVATE).getString(
+                        MAIN_USER_NAME,"{}")!!, UserBean::class.java)
+            }
+
+            return prop
+        }
+    }
+
 }

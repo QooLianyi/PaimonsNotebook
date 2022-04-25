@@ -14,12 +14,15 @@ import com.lianyi.paimonsnotebook.card.CardUtil
 import com.lianyi.paimonsnotebook.card.CardUtil.cShowLong
 import com.lianyi.paimonsnotebook.card.appwidget.CardDailyNoteOverviewWidget
 import com.lianyi.paimonsnotebook.card.appwidget.CardResinType1Widget
+import com.lianyi.paimonsnotebook.card.appwidget.CardResinType2Widget
+import kotlinx.coroutines.Job
 import org.json.JSONObject
 
 class GetDailyNoteService:Service() {
     override fun onBind(p0: Intent?): IBinder?  = null
-    lateinit var cardType:String
-    lateinit var action:String
+    private lateinit var cardType:String
+    private lateinit var action:String
+    private lateinit var timeOutJob:Job
 
     private lateinit var context: Context
 
@@ -27,63 +30,60 @@ class GetDailyNoteService:Service() {
         //每次请求需要间隔10秒
         private const val SP_CACHE_TIME = "daily_note_get_time"
         private const val MIN_CACHE_TIME = 10000
-        val requestQueue = mutableListOf<Intent>()
+        private val requestQueue = mutableListOf<Intent>()
+        private var isWorking = false
     }
 
     override fun onCreate() {
         super.onCreate()
         println("GetDailyNoteService Start")
+
         context = baseContext
+        CardUtil.context = context
         CardRequest.context = context
+        timeOutJob = CardUtil.setServiceTimeOut(this)
         sendNotification()
-        CardUtil.checkMainUser({
-            //请求时间如果小于10秒钟直接发送更新广播
-            val cacheTime = CardUtil.sp.getLong(SP_CACHE_TIME,0L)
-            if(System.currentTimeMillis()-cacheTime>= MIN_CACHE_TIME){
-                CardRequest.getDailyNote {
-                    setDailyNotebook(it)
-                }
-            }else{
-                notifyUpdate()
-            }
-        },{
-            "没有默认用户,请登录后再次尝试更新AppWidget".cShowLong()
-            stopSelf()
-        })
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        requestQueue.removeIf {
-            val iType = it.getStringExtra("type")
-            val iAction = it.getStringExtra("action")
-            iType==cardType&&iAction==action
-        }
-        if(requestQueue.isNotEmpty()){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(requestQueue.first())
-            } else {
-                context.startService(requestQueue.first())
-            }
-        }
+        requestQueue.clear()
+        isWorking = false
         println("GetDailyNoteService End")
+    }
+
+    private fun getDailyNote(){
+        CardUtil.checkStatus({
+            //请求时间如果小于10秒钟直接发送更新广播
+            val cacheTime = CardUtil.sp.getLong(SP_CACHE_TIME, 0L)
+            if (System.currentTimeMillis() - cacheTime >= MIN_CACHE_TIME) {
+                CardRequest.getDailyNote {
+                    setDailyNotebook(it)
+                }
+            } else {
+                notifyUpdate()
+            }
+        }, {
+            it.cShowLong()
+            stopSelf()
+        })
     }
 
     private fun setDailyNotebook(it:JSONObject){
         if(it.optString("retcode")=="0"){
             CardUtil.setDailyNote(CardUtil.mainUser.gameUid,it.optString("data"))
+            CardUtil.setValue(SP_CACHE_TIME, System.currentTimeMillis())
             notifyUpdate()
-            stopSelf()
         }else{
             Handler(Looper.getMainLooper()).post {
-                "请求每日便笺失败:${it.optString("message")}".cShowLong()
+                "获取每日便笺失败:${it.optString("message")}".cShowLong()
                 stopSelf()
             }
         }
     }
 
+    //发送广播 通知更新并关闭服务
     private fun notifyUpdate(){
-        //发送广播 通知更新
         sendBroadcast(Intent(
             when(action){
                 CardUtil.CLICK_ACTION->CardUtil.CLICK_UPDATE_ACTION
@@ -94,10 +94,29 @@ class GetDailyNoteService:Service() {
                 context,
                 when(cardType){
                     CardUtil.TYPE_RESIN_TYPE1->CardResinType1Widget::class.java
+                    CardUtil.TYPE_RESIN_TYPE2->CardResinType2Widget::class.java
                     CardUtil.TYPE_DAILY_NOTE_OVERVIEW->CardDailyNoteOverviewWidget::class.java
                     else->CardResinType1Widget::class.java
                 })
         })
+        checkRequestQueue()
+    }
+
+    //检查队列内是否还有请求
+    private fun checkRequestQueue(){
+        requestQueue.removeIf {
+            val iType = it.getStringExtra("type")
+            val iAction = it.getStringExtra("action")
+            iType==cardType&&iAction==action
+        }
+        if(requestQueue.isNotEmpty()){
+            cardType = requestQueue.first().getStringExtra("type")?:CardUtil.TYPE_RESIN_TYPE1
+            action = requestQueue.first().getStringExtra("action")?:CardUtil.UPDATE_ACTION
+            getDailyNote()
+        }else{
+            timeOutJob.cancel()
+            stopSelf()
+        }
     }
 
     private fun sendNotification(){
@@ -128,6 +147,12 @@ class GetDailyNoteService:Service() {
         cardType = intent?.getStringExtra("type")?:CardUtil.TYPE_RESIN_TYPE1
         action = intent?.getStringExtra("action")?:CardUtil.UPDATE_ACTION
         requestQueue += intent!!
+
+        if(!isWorking){
+           getDailyNote()
+            isWorking = true
+        }
+
         return START_STICKY
     }
 }

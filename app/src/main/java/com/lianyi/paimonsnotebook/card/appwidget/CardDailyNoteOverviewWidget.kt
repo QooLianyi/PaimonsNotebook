@@ -37,7 +37,6 @@ class CardDailyNoteOverviewWidget : AppWidgetProvider() {
         appWidgetIds.forEach {
             appWidgetManager.updateAppWidget(it,remoteViews)
         }
-        startUpdateService(CardUtil.APPWIDGET_UPDATE)
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -52,7 +51,7 @@ class CardDailyNoteOverviewWidget : AppWidgetProvider() {
             }
             CardUtil.CLICK_UPDATE_ACTION -> {
                 flag = !flag
-                if(flag){
+                if(flag&&GetMonthLedgerService.requestOk){
                     "总览小组件更新".cShow()
                     updateUI()
                 }
@@ -76,7 +75,7 @@ class CardDailyNoteOverviewWidget : AppWidgetProvider() {
             setTextViewText(R.id.current_resin,"${dailyNoteBean.current_resin}/${dailyNoteBean.max_resin}(${CardUtil.getRecoverTime(dailyNoteBean.resin_recovery_time.toLong())})")
             setTextViewText(R.id.daily_task_count,"${dailyNoteBean.finished_task_num}/${dailyNoteBean.total_task_num}")
             setTextViewText(R.id.current_home_coin,"${dailyNoteBean.current_home_coin}/${dailyNoteBean.max_home_coin}(${CardUtil.getRecoverTime(dailyNoteBean.home_coin_recovery_time.toLong())})")
-            setTextViewText(R.id.weekly_challenge_count,"${dailyNoteBean.remain_resin_discount_num}/${dailyNoteBean.resin_discount_num_limit}")
+            setTextViewText(R.id.weekly_challenge_count,"${dailyNoteBean.resin_discount_num_limit-dailyNoteBean.remain_resin_discount_num}/${dailyNoteBean.resin_discount_num_limit}")
             setTextViewText(R.id.quality_convert_recover_time,CardUtil.getQualityConvertTime(dailyNoteBean))
             if(monthLedgerBean!=null){
                 setTextViewText(R.id.month_gemstone,"${monthLedgerBean.month_data.current_primogems}(${monthLedgerBean.month_data.primogems_rate}%)")

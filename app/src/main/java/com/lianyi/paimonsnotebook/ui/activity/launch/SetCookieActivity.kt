@@ -83,7 +83,7 @@ class SetCookieActivity : BaseActivity() {
         }
 
         val cookieMap = mutableMapOf<String, String>()
-        bind.cookieInput.text.toString().split(";").forEach { split ->
+        bind.cookieInput.text.toString().filter { !it.isWhitespace()}.split(";").forEach { split ->
             val map = split.split("=")
             cookieMap += map.first() to map.last()
         }

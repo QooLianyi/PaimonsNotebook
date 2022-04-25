@@ -54,7 +54,6 @@ class LoadingActivity : BaseActivity() {
             startService(Intent(this,ForegroundTest::class.java))
         }
 
-
 //        WorkManager.getInstance(baseContext).cancelUniqueWork(ResinProgressBar.WORKER_NAME)
 //        val repeatRequest = PeriodicWorkRequestBuilder<ResinWorker>(1, TimeUnit.SECONDS)
 //            .build()

@@ -6,29 +6,31 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.widget.RemoteViews
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.bean.dailynote.DailyNoteBean
 import com.lianyi.paimonsnotebook.card.CardUtil
 import com.lianyi.paimonsnotebook.card.CardUtil.cShow
 import com.lianyi.paimonsnotebook.card.service.GetDailyNoteService
 
-class CardResinType1Widget : AppWidgetProvider() {
+class CardResinType2Widget : AppWidgetProvider() {
 
-    private lateinit var remoteViews: RemoteViews
+    lateinit var remoteViews: RemoteViews
+    lateinit var mContext:Context
 
-    private lateinit var mContext:Context
-
-    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+    override fun onUpdate(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetIds: IntArray
+    ) {
+        remoteViews = RemoteViews(context.packageName,R.layout.card_resin_type2_widget)
         mContext = context
-        remoteViews = RemoteViews(context.packageName,R.layout.card_resin_type1_widget)
-
-        //设置手动更新
-        remoteViews.setOnClickPendingIntent(R.id.root,registerUpdateService(context))
-
+        remoteViews.apply {
+            setOnClickPendingIntent(R.id.root,registerUpdateService(context))
+        }
         appWidgetIds.forEach {
-            appWidgetManager.updateAppWidget(it, remoteViews)
+            appWidgetManager.updateAppWidget(it,remoteViews)
         }
     }
 
@@ -51,22 +53,19 @@ class CardResinType1Widget : AppWidgetProvider() {
     }
 
     private fun updateUI(){
-        val dailyNoteBean = getCacheDailyNoteBean(CardUtil.mainUser.gameUid)
         if(!this::remoteViews.isInitialized){
-            remoteViews = RemoteViews(mContext.packageName,R.layout.card_resin_type1_widget)
+            remoteViews = RemoteViews(mContext.packageName,R.layout.card_resin_type2_widget)
         }
         remoteViews.apply {
-            setTextViewText(R.id.current_resin,dailyNoteBean.current_resin.toString())
-            setTextViewText(R.id.max_resin,dailyNoteBean.max_resin.toString())
-            setTextViewText(R.id.time,CardUtil.formatTime(dailyNoteBean.resin_recovery_time.toLong()))
+            val dailyNoteBean = CardUtil.getCacheDailyNoteBean(CardUtil.mainUser.gameUid)
+            setTextViewText(R.id.current_resin,"${dailyNoteBean.current_resin}/${dailyNoteBean.max_resin}")
         }
-        val componentName = ComponentName(mContext,CardResinType1Widget::class.java)
-        AppWidgetManager.getInstance(mContext).updateAppWidget(componentName,remoteViews)
+        AppWidgetManager.getInstance(mContext).updateAppWidget(ComponentName(mContext,CardResinType2Widget::class.java),remoteViews)
     }
 
     private fun startGetDailyNoteService(action:String){
         val intent = Intent(mContext, GetDailyNoteService::class.java).apply {
-            putExtra("type",CardUtil.TYPE_RESIN_TYPE1)
+            putExtra("type",CardUtil.TYPE_RESIN_TYPE2)
             putExtra("action",action)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -76,19 +75,18 @@ class CardResinType1Widget : AppWidgetProvider() {
         }
     }
 
-    private fun registerUpdateService(context: Context):PendingIntent{
+    private fun registerUpdateService(context: Context): PendingIntent {
         val intent = Intent(CardUtil.CLICK_ACTION).apply {
-            component = ComponentName(context,CardResinType1Widget::class.java)
+            component = ComponentName(context,CardResinType2Widget::class.java)
         }
-        return PendingIntent.getBroadcast(context,233,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getBroadcast(context,233,intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    private fun getCacheDailyNoteBean(uid:String):DailyNoteBean = CardUtil.gson.fromJson(CardUtil.sp.getString("daily_note_cache_${uid}",""),DailyNoteBean::class.java)
-
-
     override fun onEnabled(context: Context) {
+        // Enter relevant functionality for when the first widget is created
     }
 
     override fun onDisabled(context: Context) {
+        // Enter relevant functionality for when the last widget is disabled
     }
 }

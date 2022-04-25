@@ -67,24 +67,22 @@
         <meta-data
             android:name="design_height_in_dp"
             android:value="700" />
-
-        <receiver
-            android:name=".card.ResinProgressBar"
-            android:enabled="false"
-            android:exported="false">
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/resin_progress_bar_info" />
-
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.SCREEN_ON" />
-                <action android:name="android.intent.action.SCREEN_OFF" />
-                <action android:name="com.lianyi.widget.UPDATE_ACTION" />
-                <action android:name="com.lianyi.widget.GET_DAILY_NOTE" />
-            </intent-filter>
-        </receiver>
+        <!-- <receiver -->
+        <!-- android:name=".card.ResinProgressBar" -->
+        <!-- android:enabled="false" -->
+        <!-- android:exported="false"> -->
+        <!-- <meta-data -->
+        <!-- android:name="android.appwidget.provider" -->
+        <!-- android:resource="@xml/resin_progress_bar_info" /> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.appwidget.action.APPWIDGET_UPDATE" /> -->
+        <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
+        <!-- <action android:name="android.intent.action.SCREEN_ON" /> -->
+        <!-- <action android:name="android.intent.action.SCREEN_OFF" /> -->
+        <!-- <action android:name="com.lianyi.widget.UPDATE_ACTION" /> -->
+        <!-- <action android:name="com.lianyi.widget.GET_DAILY_NOTE" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
 
         <receiver android:name=".card.appwidget.CardResinType1Widget">
             <intent-filter>
@@ -99,7 +97,21 @@
                 android:resource="@xml/card_resin_type1_widget_info" />
         </receiver>
 
-        <receiver android:name=".card.appwidget.CardDailyNoteOverviewWidget">
+        <receiver android:name=".card.appwidget.CardResinType2Widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.lianyi.widget.UPDATE_ACTION" />
+                <action android:name="com.lianyi.widget.CLICK_UPDATE_ACTION" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/card_resin_type2_widget_info" />
+        </receiver>
+
+        <receiver android:name=".card.appwidget.CardDailyNoteOverviewWidget"
+            >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -112,25 +124,17 @@
                 android:resource="@xml/card_daily_note_overview_widget_info" />
         </receiver>
 
-        <service
-            android:name=".card.service.ForegroundTest"
-            android:enabled="false" />
-        <service
-            android:name=".card.service.GoSummerLandService"
-            android:enabled="false" />
+
         <service
             android:name=".card.service.GetDailyNoteService"
             android:enabled="true" />
-
-        <service android:name=".card.service.GetMonthLedgerService"
+        <service
+            android:name=".card.service.GetMonthLedgerService"
+            android:enabled="true" />
+        <service
+            android:name=".card.service.ExpeditionListViewAdapterService"
             android:enabled="true"
-            />
-
-        <service android:name=".card.service.ExpeditionListViewAdapterService"
-            android:enabled="true"
-            android:permission="android.permission.BIND_REMOTEVIEWS"
-            />
-
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>

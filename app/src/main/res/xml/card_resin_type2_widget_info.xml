@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialKeyguardLayout="@layout/card_resin_type2_widget"
+    android:initialLayout="@layout/card_resin_type2_widget"
+    android:minWidth="110dp"
+    android:minHeight="40dp"
+    android:previewImage="@drawable/icon_resin"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="home_screen">
+</appwidget-provider>

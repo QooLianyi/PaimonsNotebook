@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.content.edit
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.bean.account.AccountBean
 import com.lianyi.paimonsnotebook.bean.account.UserBean
@@ -36,7 +37,7 @@ class AccountManagerActivity : BaseActivity() {
     }
 
     private fun initView() {
-        originalMainUserId = mainUser!!.gameUid
+        originalMainUserId = mainUser!!.gameUid+""
         refreshUserListData()
         if(userList.size>0){
             setAccountListAdapter()
@@ -211,6 +212,10 @@ class AccountManagerActivity : BaseActivity() {
     override fun onBackPressed() {
         if(originalMainUserId!= mainUser!!.gameUid){
             setResult(ActivityResponseCode.DATA_CHANGE)
+            sp.edit {
+                putBoolean("main_user_change",true)
+                apply()
+            }
         }
         finish()
     }
