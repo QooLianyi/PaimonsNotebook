@@ -19,6 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/PaimonsNotebookTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ui.activity.PluginContainerActivity"/>
+        <activity android:name=".ui.activity.options.AppwidgetOptionsActivity"></activity>
         <activity android:name=".ui.activity.detail.CharacterDetailV2Activity" />
         <activity android:name=".ui.activity.RedirectToDailyMaterialsActivity" />
         <activity android:name=".ui.summerland.SummerLandActivity" />
@@ -66,8 +68,7 @@
             android:value="400" />
         <meta-data
             android:name="design_height_in_dp"
-            android:value="700" />
-        <!-- <receiver -->
+            android:value="700" /> <!-- <receiver -->
         <!-- android:name=".card.ResinProgressBar" -->
         <!-- android:enabled="false" -->
         <!-- android:exported="false"> -->
@@ -83,7 +84,6 @@
         <!-- <action android:name="com.lianyi.widget.GET_DAILY_NOTE" /> -->
         <!-- </intent-filter> -->
         <!-- </receiver> -->
-
         <receiver android:name=".card.appwidget.CardResinType1Widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -96,7 +96,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/card_resin_type1_widget_info" />
         </receiver>
-
         <receiver android:name=".card.appwidget.CardResinType2Widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -109,9 +108,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/card_resin_type2_widget_info" />
         </receiver>
-
-        <receiver android:name=".card.appwidget.CardDailyNoteOverviewWidget"
-            >
+        <receiver android:name=".card.appwidget.CardDailyNoteOverviewWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -123,7 +120,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/card_daily_note_overview_widget_info" />
         </receiver>
-
 
         <service
             android:name=".card.service.GetDailyNoteService"

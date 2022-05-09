@@ -41,10 +41,10 @@ class GetMonthLedgerService:Service() {
         println("GetMonthLedgerService Start")
 
         context = baseContext
+        sendNotification()
         CardUtil.context = context
         CardRequest.context = context
         timeOutJob = CardUtil.setServiceTimeOut(this)
-        sendNotification()
     }
 
     override fun onDestroy() {
@@ -54,6 +54,7 @@ class GetMonthLedgerService:Service() {
     }
 
     private fun getMonthLedger(){
+        isWorking = true
         CardUtil.checkStatus({
             val cacheTime = CardUtil.sp.getLong(SP_CACHE_TIME, 0L)
             if (System.currentTimeMillis() - cacheTime >= MIN_CACHE_TIME) {
@@ -73,7 +74,6 @@ class GetMonthLedgerService:Service() {
         if(it.optString("retcode")=="0"){
             CardUtil.setMonthLedgerCache(CardUtil.mainUser.gameUid,it.optString("data"))
             CardUtil.setValue(SP_CACHE_TIME, System.currentTimeMillis())
-            requestOk = true
             notifyUpdate()
         }else{
             Handler(Looper.getMainLooper()).post {
@@ -84,6 +84,7 @@ class GetMonthLedgerService:Service() {
     }
 
     private fun notifyUpdate(){
+        requestOk = true
         sendBroadcast(Intent(
             when(action){
                 CardUtil.CLICK_ACTION->CardUtil.CLICK_UPDATE_ACTION
@@ -112,7 +113,6 @@ class GetMonthLedgerService:Service() {
             getMonthLedger()
         }else{
             timeOutJob.cancel()
-            requestOk = false
             stopSelf()
         }
     }
@@ -147,7 +147,6 @@ class GetMonthLedgerService:Service() {
 
         if(!isWorking){
             getMonthLedger()
-            isWorking = true
         }
 
         return START_STICKY

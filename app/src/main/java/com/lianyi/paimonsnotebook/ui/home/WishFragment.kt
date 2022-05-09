@@ -1,8 +1,9 @@
 package com.lianyi.paimonsnotebook.ui.home
 
 import android.app.Activity
-import android.content.Intent
+import android.content.ComponentName
 import android.content.pm.PackageManager
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
@@ -30,6 +31,7 @@ import com.lianyi.paimonsnotebook.lib.excel.SheetHandler
 import com.lianyi.paimonsnotebook.lib.information.*
 import com.lianyi.paimonsnotebook.ui.activity.LoadingGachaWishHistoryActivity
 import com.lianyi.paimonsnotebook.util.*
+import dalvik.system.DexClassLoader
 import org.apache.poi.openxml4j.opc.OPCPackage
 import org.apache.poi.openxml4j.opc.PackageAccess
 import org.apache.poi.xssf.eventusermodel.ReadOnlySharedStringsTable
@@ -40,6 +42,7 @@ import org.apache.poi.xssf.usermodel.XSSFRichTextString
 import org.json.JSONArray
 import org.xml.sax.InputSource
 import org.xml.sax.helpers.XMLReaderFactory
+import java.io.File
 import java.nio.charset.Charset
 import kotlin.concurrent.thread
 
@@ -117,6 +120,7 @@ class WishFragment : BaseFragment(R.layout.fragment_wish) {
 //                            apply()
 //                        }
                         "将要完成的功能".show()
+//                        pluginUIGFExcel()
                     }
                     popupMenu.menu.getItem(1) -> {
                         showUrlEditDialog()
@@ -162,6 +166,22 @@ class WishFragment : BaseFragment(R.layout.fragment_wish) {
                 true
             }
         }
+    }
+
+    fun pluginUIGFExcel(){
+        val path = PaiMonsNoteBook.context.getExternalFilesDir(null)
+        val cachePath = File(path,"cache")
+        if(!cachePath.exists()){
+            cachePath.mkdirs()
+        }
+        val classLoaderDex = DexClassLoader("${path}/plugin/uigf-excel-debug.apk",cachePath.absolutePath,"",activity!!.classLoader)
+        val cls = classLoaderDex.loadClass("com.paimonsnotebook.plugin.uigf_excel.MainActivity")
+//        startActivity(Intent(bind.root.context,cls::class.java))
+        val componentName = ComponentName("com.paimonsnotebook.plugin.uigf_excel","com.paimonsnotebook.plugin.uigf_excel.MainActivity")
+        val intent = Intent().apply {
+            component = componentName
+        }
+        startActivityForResult(intent,233)
     }
 
     fun checkData(){
@@ -789,8 +809,16 @@ class WishFragment : BaseFragment(R.layout.fragment_wish) {
         when(requestCode){
             ActivityRequestCode.DATA_MANAGER_UIGF_EXCEL->{
                 if (resultCode == Activity.RESULT_OK) {
-                    val uri = data?.data
-                    importUIGFExcel(uri!!)
+                    try {
+                        val uri = data?.data
+                        if(uri!=null){
+                            importUIGFExcel(uri)
+                        }else{
+                            showFailure("导入失败:","选择了NULL文件")
+                        }
+                    }catch (e:Exception){
+                        showFailure("导入失败:","ERROR:${e}")
+                    }
                 } else {
                     "取消选择".show()
                 }

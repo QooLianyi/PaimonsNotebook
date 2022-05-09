@@ -23,7 +23,7 @@ class ExpeditionListViewAdapterService:RemoteViewsService() {
 
         override fun onCreate() {
             CardUtil.context = context
-            CardUtil.getCacheDailyNoteBean(CardUtil.mainUser.gameUid).expeditions.forEach {
+            CardUtil.getCacheDailyNoteBean(CardUtil.mainUser.gameUid)?.expeditions?.forEach {
                 expeditionList+=it
             }
         }
@@ -31,7 +31,7 @@ class ExpeditionListViewAdapterService:RemoteViewsService() {
         override fun onDataSetChanged() {
             expeditionList.clear()
             CardUtil.context = context
-            CardUtil.getCacheDailyNoteBean(CardUtil.mainUser.gameUid).expeditions.forEach {
+            CardUtil.getCacheDailyNoteBean(CardUtil.mainUser.gameUid)?.expeditions?.forEach {
                 expeditionList+=it
             }
         }

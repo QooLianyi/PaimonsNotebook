@@ -30,5 +30,6 @@
 -keep public class * extends android.app.backup.BackupAgentHelper
 -keep public class * extends android.preference.Preference
 
+
 # 是否混淆第三方jar
 -dontskipnonpubliclibraryclasses

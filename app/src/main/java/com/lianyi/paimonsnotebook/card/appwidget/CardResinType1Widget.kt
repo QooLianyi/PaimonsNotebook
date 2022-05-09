@@ -35,6 +35,7 @@ class CardResinType1Widget : AppWidgetProvider() {
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
         mContext = context!!
+        CardUtil.context = context
         when(intent?.action){
             //系统调用更新
             CardUtil.APPWIDGET_UPDATE,CardUtil.CLICK_ACTION->{
@@ -51,14 +52,16 @@ class CardResinType1Widget : AppWidgetProvider() {
     }
 
     private fun updateUI(){
-        val dailyNoteBean = getCacheDailyNoteBean(CardUtil.mainUser.gameUid)
+        val dailyNoteBean = CardUtil.getCacheDailyNoteBean(CardUtil.mainUser.gameUid)
         if(!this::remoteViews.isInitialized){
             remoteViews = RemoteViews(mContext.packageName,R.layout.card_resin_type1_widget)
         }
         remoteViews.apply {
-            setTextViewText(R.id.current_resin,dailyNoteBean.current_resin.toString())
-            setTextViewText(R.id.max_resin,dailyNoteBean.max_resin.toString())
-            setTextViewText(R.id.time,CardUtil.formatTime(dailyNoteBean.resin_recovery_time.toLong()))
+           if(dailyNoteBean!=null){
+               setTextViewText(R.id.current_resin,dailyNoteBean.current_resin.toString())
+               setTextViewText(R.id.max_resin,dailyNoteBean.max_resin.toString())
+               setTextViewText(R.id.time,CardUtil.formatTime(dailyNoteBean.resin_recovery_time.toLong()))
+           }
         }
         val componentName = ComponentName(mContext,CardResinType1Widget::class.java)
         AppWidgetManager.getInstance(mContext).updateAppWidget(componentName,remoteViews)
@@ -82,9 +85,6 @@ class CardResinType1Widget : AppWidgetProvider() {
         }
         return PendingIntent.getBroadcast(context,233,intent,PendingIntent.FLAG_UPDATE_CURRENT)
     }
-
-    private fun getCacheDailyNoteBean(uid:String):DailyNoteBean = CardUtil.gson.fromJson(CardUtil.sp.getString("daily_note_cache_${uid}",""),DailyNoteBean::class.java)
-
 
     override fun onEnabled(context: Context) {
     }

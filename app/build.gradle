@@ -10,15 +10,15 @@ android {
         applicationId "com.lianyi.paimonsnotebook"
         minSdkVersion 25
         targetSdkVersion 30
-        versionCode 17
-        versionName "1.3.11"
+        versionCode 19
+        versionName "1.3.13"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -42,7 +42,6 @@ android {
             url "https://jetpack.io"
         }
     }
-
 }
 
 dependencies {

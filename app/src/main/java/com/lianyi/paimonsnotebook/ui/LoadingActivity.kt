@@ -24,9 +24,6 @@ import com.lianyi.paimonsnotebook.lib.data.UpdateInformation
 import com.lianyi.paimonsnotebook.lib.information.*
 import com.lianyi.paimonsnotebook.ui.activity.launch.SetCookieActivity
 import com.lianyi.paimonsnotebook.util.*
-import com.lianyi.paimonsnotebook.util.NotificationManager.Companion.manager
-import org.json.JSONArray
-import java.nio.charset.Charset
 import kotlin.concurrent.thread
 
 class LoadingActivity : BaseActivity() {
@@ -156,11 +153,20 @@ class LoadingActivity : BaseActivity() {
                     initFinished = true
                 }else{
                     showAddCookieButton()
+                    removeMainUser()
                     runOnUiThread {
                         "Cookie失效,请重新设置Cookie".showLong()
                     }
                 }
             }
+        }
+    }
+
+    //移除usp缓存的默认账号
+    private fun removeMainUser(){
+        usp.edit {
+            remove(JsonCacheName.MAIN_USER_NAME)
+            apply()
         }
     }
 

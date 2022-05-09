@@ -34,7 +34,7 @@ class Format {
 
         fun getRecoverTimeHourText(recoverTime:Long):String{
             return if(recoverTime>3600){
-                "${recoverTime/3600}小时${recoverTime%60}分钟"
+                "${recoverTime/3600}小时${recoverTime%3600/60}分钟"
             }else{
                 "${recoverTime%60}分钟"
             }

@@ -39,10 +39,10 @@ class GetDailyNoteService:Service() {
         println("GetDailyNoteService Start")
 
         context = baseContext
+        sendNotification()
         CardUtil.context = context
         CardRequest.context = context
         timeOutJob = CardUtil.setServiceTimeOut(this)
-        sendNotification()
     }
 
     override fun onDestroy() {
@@ -53,6 +53,7 @@ class GetDailyNoteService:Service() {
     }
 
     private fun getDailyNote(){
+        isWorking = true
         CardUtil.checkStatus({
             //请求时间如果小于10秒钟直接发送更新广播
             val cacheTime = CardUtil.sp.getLong(SP_CACHE_TIME, 0L)
@@ -150,7 +151,6 @@ class GetDailyNoteService:Service() {
 
         if(!isWorking){
            getDailyNote()
-            isWorking = true
         }
 
         return START_STICKY

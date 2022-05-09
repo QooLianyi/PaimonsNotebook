@@ -2,8 +2,10 @@ package com.lianyi.paimonsnotebook.ui.activity.launch
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.content.edit
 import com.lianyi.paimonsnotebook.bean.GetGameRolesByCookieBean
 import com.lianyi.paimonsnotebook.bean.account.UserBean
+import com.lianyi.paimonsnotebook.card.CardUtil
 import com.lianyi.paimonsnotebook.databinding.ActivityUserLoginBinding
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.lib.information.ActivityRequestCode
@@ -137,6 +139,10 @@ class SetCookieActivity : BaseActivity() {
                                         JsonCacheName.MAIN_USER_NAME,
                                         GSON.toJson(getUserList.first())
                                     )
+                                    apply()
+                                }
+                                sp.edit {
+                                    putBoolean("main_user_change",true)
                                     apply()
                                 }
                                 if(roles.list.size>1){

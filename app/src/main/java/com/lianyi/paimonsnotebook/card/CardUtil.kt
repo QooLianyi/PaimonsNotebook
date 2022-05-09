@@ -80,7 +80,7 @@ object CardUtil {
         }
     }
 
-    fun getCacheDailyNoteBean(uid:String): DailyNoteBean = Gson().fromJson(
+    fun getCacheDailyNoteBean(uid:String): DailyNoteBean? = Gson().fromJson(
         sp.getString("daily_note_cache_${uid}",""), DailyNoteBean::class.java)
 
     fun getMonthLedgerBean(uid: String): MonthLedgerBean? = gson.fromJson(
@@ -126,7 +126,7 @@ object CardUtil {
         }else if(minute<10){
             sb.append("0${minute}")
         }else{
-            sb.append(recoverTime%60)
+            sb.append(minute)
         }
 
         return sb.toString()

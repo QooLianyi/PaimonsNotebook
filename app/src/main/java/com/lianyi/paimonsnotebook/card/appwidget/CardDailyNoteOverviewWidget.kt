@@ -30,6 +30,7 @@ class CardDailyNoteOverviewWidget : AppWidgetProvider() {
         appWidgetIds: IntArray
     ) {
         mContext = context
+        CardUtil.context = mContext
         remoteViews = RemoteViews(context.packageName,R.layout.card_daily_note_overview_widget)
         remoteViews.apply {
             setOnClickPendingIntent(R.id.root,registerUpdateService(context))
@@ -42,6 +43,7 @@ class CardDailyNoteOverviewWidget : AppWidgetProvider() {
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
         mContext = context!!
+        CardUtil.context = context
         when(intent?.action){
             CardUtil.APPWIDGET_UPDATE,CardUtil.CLICK_ACTION->{
                 startUpdateService(intent.action!!)
@@ -51,7 +53,8 @@ class CardDailyNoteOverviewWidget : AppWidgetProvider() {
             }
             CardUtil.CLICK_UPDATE_ACTION -> {
                 flag = !flag
-                if(flag&&GetMonthLedgerService.requestOk){
+                if (flag && GetMonthLedgerService.requestOk) {
+                    GetMonthLedgerService.requestOk = false
                     "总览小组件更新".cShow()
                     updateUI()
                 }
@@ -72,11 +75,13 @@ class CardDailyNoteOverviewWidget : AppWidgetProvider() {
         remoteViews.apply {
             setRemoteAdapter(R.id.grid_view,adapter)
 //            setEmptyView(R.id.list,R.layout.item_world_expeditions_small)
-            setTextViewText(R.id.current_resin,"${dailyNoteBean.current_resin}/${dailyNoteBean.max_resin}(${CardUtil.getRecoverTime(dailyNoteBean.resin_recovery_time.toLong())})")
-            setTextViewText(R.id.daily_task_count,"${dailyNoteBean.finished_task_num}/${dailyNoteBean.total_task_num}")
-            setTextViewText(R.id.current_home_coin,"${dailyNoteBean.current_home_coin}/${dailyNoteBean.max_home_coin}(${CardUtil.getRecoverTime(dailyNoteBean.home_coin_recovery_time.toLong())})")
-            setTextViewText(R.id.weekly_challenge_count,"${dailyNoteBean.resin_discount_num_limit-dailyNoteBean.remain_resin_discount_num}/${dailyNoteBean.resin_discount_num_limit}")
-            setTextViewText(R.id.quality_convert_recover_time,CardUtil.getQualityConvertTime(dailyNoteBean))
+            if(dailyNoteBean!=null){
+                setTextViewText(R.id.current_resin,"${dailyNoteBean.current_resin}/${dailyNoteBean.max_resin}(${CardUtil.getRecoverTime(dailyNoteBean.resin_recovery_time.toLong())})")
+                setTextViewText(R.id.daily_task_count,"${dailyNoteBean.finished_task_num}/${dailyNoteBean.total_task_num}")
+                setTextViewText(R.id.current_home_coin,"${dailyNoteBean.current_home_coin}/${dailyNoteBean.max_home_coin}(${CardUtil.getRecoverTime(dailyNoteBean.home_coin_recovery_time.toLong())})")
+                setTextViewText(R.id.weekly_challenge_count,"${dailyNoteBean.resin_discount_num_limit-dailyNoteBean.remain_resin_discount_num}/${dailyNoteBean.resin_discount_num_limit}")
+                setTextViewText(R.id.quality_convert_recover_time,CardUtil.getQualityConvertTime(dailyNoteBean))
+            }
             if(monthLedgerBean!=null){
                 setTextViewText(R.id.month_gemstone,"${monthLedgerBean.month_data.current_primogems}(${monthLedgerBean.month_data.primogems_rate}%)")
                 setTextViewText(R.id.month_mora,"${monthLedgerBean.month_data.current_mora}(${monthLedgerBean.month_data.mora_rate}%)")

@@ -38,7 +38,7 @@ object CardRequest {
     fun getMonthLedger(block:(JSONObject)->Unit){
         val month = Calendar.getInstance().get(Calendar.MONTH)
         client.newCall(
-            Request.Builder().url(getMonthLedgerUrl(month, mainUser.gameUid, mainUser.region)).build()
+            Request.Builder().url(getMonthLedgerUrl(0, mainUser.gameUid, mainUser.region)).build()
         ).enqueue(MyCallBack{
             block(it)
         })
@@ -52,7 +52,7 @@ object CardRequest {
         })
     }
 
-    fun getMonthLedgerUrl(month:Int, gameUID: String, server: String):String{
+    private fun getMonthLedgerUrl(month:Int = 0, gameUID: String, server: String):String{
         return "https://hk4e-api.mihoyo.com/event/ys_ledger/monthInfo?month=$month&bind_uid=$gameUID&bind_region=$server&bbs_presentation_style=fullscreen&bbs_auth+required=true&mys_source=GameRecord"
     }
 

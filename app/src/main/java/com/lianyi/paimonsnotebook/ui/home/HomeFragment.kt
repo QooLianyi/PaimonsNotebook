@@ -15,6 +15,7 @@ import com.lianyi.paimonsnotebook.lib.adapter.HomeBannerAdapter
 import com.lianyi.paimonsnotebook.lib.adapter.ReAdapter
 import com.lianyi.paimonsnotebook.lib.data.UpdateInformation
 import com.lianyi.paimonsnotebook.lib.information.*
+import com.lianyi.paimonsnotebook.ui.activity.PluginContainerActivity
 import com.lianyi.paimonsnotebook.ui.activity.home.*
 import com.lianyi.paimonsnotebook.util.*
 import com.microsoft.appcenter.analytics.Analytics

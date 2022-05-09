@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.core.content.edit
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.bean.GetGameRolesByCookieBean
 import com.lianyi.paimonsnotebook.bean.account.AccountBean
 import com.lianyi.paimonsnotebook.bean.account.UserBean
 import com.lianyi.paimonsnotebook.config.AppConfig
@@ -107,28 +108,38 @@ class AccountManagerActivity : BaseActivity() {
             item.setDefault.setOnClickListener {
                 showConfirmAlertDialog(bind.root.context,"提示","你确定将账号\"${userBean.nickName}\"设为默认账号吗?"){
                     if(it){
-                        with(mainUser!!){
-                            userList.add(0,UserBean(nickName, loginUid, region, regionName, gameUid, lToken, cookieToken, gameLevel))
-                            nickName = userBean.nickName
-                            loginUid = userBean.loginUid
-                            region = userBean.region
-                            regionName = userBean.regionName
-                            gameUid = userBean.gameUid
-                            lToken = userBean.lToken
-                            cookieToken = userBean.cookieToken
-                            gameLevel = userBean.gameLevel
+                        SetCookieActivity.checkCookie(userBean.loginUid,userBean.lToken,userBean.cookieToken){ b: Boolean, getGameRolesByCookieBean: GetGameRolesByCookieBean? ->
+                            if(b){
+                                runOnUiThread {
+                                    with(mainUser!!){
+                                        userList.add(0,UserBean(nickName, loginUid, region, regionName, gameUid, lToken, cookieToken, gameLevel))
+                                        nickName = userBean.nickName
+                                        loginUid = userBean.loginUid
+                                        region = userBean.region
+                                        regionName = userBean.regionName
+                                        gameUid = userBean.gameUid
+                                        lToken = userBean.lToken
+                                        cookieToken = userBean.cookieToken
+                                        gameLevel = userBean.gameLevel
 
-                            deleteUser(userBean.gameUid)
-                            usp.edit().apply {
-                                putString(JsonCacheName.USER_LIST, GSON.toJson(userList))
-                                putString(JsonCacheName.MAIN_USER_NAME, GSON.toJson(mainUser))
-                                apply()
+                                        deleteUser(userBean.gameUid)
+                                        usp.edit().apply {
+                                            putString(JsonCacheName.USER_LIST, GSON.toJson(userList))
+                                            putString(JsonCacheName.MAIN_USER_NAME, GSON.toJson(mainUser))
+                                            apply()
+                                        }
+                                    }
+                                    item.scrollSpan.scrollTo(0,0)
+                                    "已将默认账号更改为${userBean.gameUid}".show()
+                                    refreshUserListData()
+                                    refreshMainUserInformation()
+                                }
+                            }else{
+                                runOnUiThread {
+                                    "更改失败:所选账号Cookie过期".show()
+                                }
                             }
                         }
-                        item.scrollSpan.scrollTo(0,0)
-                        "已将默认账号更改为${userBean.gameUid}".show()
-                        refreshUserListData()
-                        refreshMainUserInformation()
                     }
                 }
             }

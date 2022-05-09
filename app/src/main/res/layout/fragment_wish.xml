@@ -118,7 +118,7 @@
                 android:gravity="center_vertical"
                 >
                 <Spinner
-                    android:layout_width="100dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/select_account"
                     android:background="@color/white"

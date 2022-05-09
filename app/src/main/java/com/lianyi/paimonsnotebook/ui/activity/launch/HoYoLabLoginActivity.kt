@@ -2,6 +2,7 @@ package com.lianyi.paimonsnotebook.ui.activity.launch
 
 import android.os.Bundle
 import android.webkit.*
+import androidx.core.content.edit
 import com.lianyi.paimonsnotebook.lib.base.BaseActivity
 import com.lianyi.paimonsnotebook.bean.GetGameRolesByCookieBean
 import com.lianyi.paimonsnotebook.bean.account.UserBean
@@ -115,6 +116,11 @@ class HoYoLabLoginActivity : BaseActivity() {
 
                                     usp.edit().apply{
                                         putString(JsonCacheName.MAIN_USER_NAME,GSON.toJson(mainUser))
+                                        apply()
+                                    }
+
+                                    sp.edit {
+                                        putBoolean("main_user_change",true)
                                         apply()
                                     }
 
