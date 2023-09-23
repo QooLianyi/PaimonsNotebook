@@ -1,0 +1,22 @@
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Desktop/Project/Genshin/PaiMonsNoteBook/project/PaimonsNotebook/app/src/main/res/drawable/ic_cookie.xml" value="0.1245" />
+        <entry key="..\:/Desktop/Project/Genshin/PaiMonsNoteBook/project/PaimonsNotebook/app/src/main/res/drawable/ic_delete.xml" value="0.1245" />
+        <entry key="..\:/Desktop/Project/Genshin/PaiMonsNoteBook/project/PaimonsNotebook/app/src/main/res/drawable/ic_pause.xml" value="0.131" />
+        <entry key="..\:/Desktop/Project/Genshin/PaiMonsNoteBook/project/PaimonsNotebook/app/src/main/res/drawable/ic_resin_line.xml" value="0.131" />
+        <entry key="..\:/Desktop/Project/Genshin/PaiMonsNoteBook/project/PaimonsNotebook/app/src/main/res/drawable/ic_web.xml" value="0.131" />
+        <entry key="..\:/Desktop/Project/Genshin/PaiMonsNoteBook/project/PaimonsNotebook/app/src/main/res/drawable/icon_play.xml" value="0.1105" />
+        <entry key="..\:/Desktop/Project/Genshin/PaiMonsNoteBook/project/PaimonsNotebook/app/src/main/res/drawable/video_player_progress_bar_style.xml" value="0.1335" />
+        <entry key="..\:/Desktop/Project/Genshin/PaiMonsNoteBook/project/PaimonsNotebook/app/src/main/res/layout/activity_normal_empty_acitivty.xml" value="0.11197916666666667" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

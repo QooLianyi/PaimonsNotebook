@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">派蒙笔记本-Preview</string>
+    <string name="title_activity_typography_screen">TypographyScreen</string>
+    <string name="title_activity_character_list_screen">CharacterListScreen</string>
+
+    <string name="url_home_screen_domain">https://bbs-api.mihoyo.com</string>
+    <string name="title_activity_article_screen">ArticleScreen</string>
+    <string name="title_activity_web_view_screen">WebViewScreen</string>
+    <string name="title_activity_componenets_testing">ComponenetsTesting</string>
+    <string name="title_activity_video_play_screen">VideoPlayScreen</string>
+    <string name="title_activity_guide_screen">GuideScreen</string>
+    <string name="title_activity_login_screen">LoginScreen</string>
+    <string name="title_activity_launch_screen">派蒙笔记本-Preview</string>
+    <string name="title_activity_account_manager_screen">AccountManagerScreen</string>
+    <string name="title_activity_test_screen">TestScreen</string>
+    <string name="title_activity_web_view_test_screen">WebViewTestScreen</string>
+    <string name="title_activity_settings_screen">SettingsScreen</string>
+    <string name="title_activity_gacha_record_screen">GachaRecordScreen</string>
+    <string name="title_activity_resource_manager_screen">ResourceManagerScreen</string>
+    <string name="title_activity_appwidget_binding_screen">AppwidgetBindingScreen</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+
+    <!--小组件组件label-->
+    <string name="appwidget_label_common_1_1">标准小组件1*1</string>
+    <string name="appwidget_label_common_2_1">标准小组件2*1</string>
+    <string name="appwidget_label_common_2_2">标准小组件2*2</string>
+    <string name="appwidget_label_common_3_1">标准小组件3*1</string>
+    <string name="appwidget_label_common_3_2">标准小组件3*2</string>
+    <string name="appwidget_label_common_4_3">标准小组件4*3</string>
+
+    <!--远端视图描述-->
+    <string name="remote_views_description_default">此组件没有特殊的要求</string>
+    <string name="remote_views_description_validate_required">此组件更新时可能需要进行验证</string>
+
+    <!--Others-->
+    <string name="content_request_overlay_permission">你开启了悬浮窗,但程序没有悬浮窗权限,这会导致悬浮窗相关的功能不能正常运行,点击确认前往授权</string>
+    <string name="no_permission">缺少权限</string>
+
+    <string name="content_first_entry_appwidget_configuration_screen">重要!部分系统(如MIUI)需要给予程序创建桌面快捷方式权限才能够自动创建桌面组件,缺少相应权限会导致自动添加组件的功能失效;通过手动添加桌面组件并进行配置的行为不受影响</string>
+
+</resources>

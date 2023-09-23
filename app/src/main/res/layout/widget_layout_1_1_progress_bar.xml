@@ -1,0 +1,28 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:id="@+id/container"
+    android:background="@drawable/bg_widget_light"
+    >
+
+    <ImageView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/icon_resin"
+        android:layout_gravity="center"
+        android:id="@+id/icon"
+        />
+
+    <ProgressBar
+        android:layout_width="61dp"
+        android:layout_height="61dp"
+        android:layout_gravity="center"
+        style="@style/RingProgressBar"
+        android:progressDrawable="@drawable/bg_ring_progress_bar"
+        android:progress="0"
+        android:max="100"
+        android:id="@+id/progress_bar"
+        />
+
+</FrameLayout>

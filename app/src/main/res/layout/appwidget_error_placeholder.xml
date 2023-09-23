@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:id="@+id/container"
+    android:background="@drawable/bg_widget_light"
+    >
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/emotion_icon_paimon_error"
+        android:id="@+id/image"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="发生了一个错误"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:id="@+id/text"
+        />
+
+</LinearLayout>

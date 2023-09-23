@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:id="@+id/container"
+    >
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/icon_resin"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginStart="8dp"
+        android:text="160/160"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:id="@+id/resin"
+        />
+
+</LinearLayout>

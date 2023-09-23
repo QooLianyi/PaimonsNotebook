@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
+
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"
+        tools:ignore="ScopedStorage" />
+
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+    <application
+        android:name=".common.application.PaimonsNotebookApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_paimonsnotebook"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_paimonsnotebook"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.PaimonsNotebook"
+        tools:targetApi="33">
+        <activity
+            android:name=".common.view.HoyolabWebActivity"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.app_widget.view.AppWidgetConfigurationScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.app_widget.view.AppWidgetBindingScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.app_widget.view.AppWidgetScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.resource_manager.view.ResourceManagerScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.gacha.view.GachaRecordScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.gacha.view.GachaRecordOptionScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.daily_note.view.DailyNoteScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.setting.view.SettingsScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.login.view.MihoyoLoginActivity"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.develop.WebViewTestScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.develop.NormalEmptyActivity"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.account.view.AccountManagerScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.splash.view.SplashScreen"
+            android:exported="true"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.screen.account.view.LoginScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.guide.view.GuideScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".common.view.VideoPlayScreen"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".common.view.WebViewScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.home.view.PostDetailScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.items.view.AvatarScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.items.view.WeaponScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.items.view.CultivationMaterialScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.develop.TypographyScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.develop.ComponentsTesting"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.develop.DatabaseTestingScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.home.view.HomeScreen"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/Theme.PaimonsNotebook" />
+
+        <service android:name=".common.service.overlay.debug.DebugOverlayService" />
+
+        <receiver
+            android:name=".ui.widgets.widget.AppWidgetCommon1X1"
+            android:exported="false"
+            android:label="@string/appwidget_label_common_1_1">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.UPDATE_APPWIDGET" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.GO_VALIDATE" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.GO_CONFIGURATION" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_common_1x1" />
+        </receiver>
+
+        <receiver
+            android:name=".ui.widgets.widget.AppWidgetCommon2X1"
+            android:exported="false"
+            android:label="@string/appwidget_label_common_2_1">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.UPDATE_APPWIDGET" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.GO_VALIDATE" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.GO_CONFIGURATION" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_common_2x1" />
+        </receiver>
+
+        <receiver
+            android:name=".ui.widgets.widget.AppWidgetCommon2X2"
+            android:exported="false"
+            android:label="@string/appwidget_label_common_2_2">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.UPDATE_APPWIDGET" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.GO_VALIDATE" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.GO_CONFIGURATION" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_common_2x2" />
+        </receiver>
+
+        <receiver
+            android:name=".ui.widgets.widget.AppWidgetCommon3X1"
+            android:exported="false"
+            android:label="@string/appwidget_label_common_3_1">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.UPDATE_APPWIDGET" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.GO_VALIDATE" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.GO_CONFIGURATION" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_common_3x1" />
+        </receiver>
+
+        <receiver
+            android:name=".ui.widgets.widget.AppWidgetCommon3X2"
+            android:exported="false"
+            android:label="@string/appwidget_label_common_3_2">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.UPDATE_APPWIDGET" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.GO_VALIDATE" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.GO_CONFIGURATION" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_common_3x2" />
+        </receiver>
+
+        <receiver
+            android:name=".ui.widgets.widget.AppWidgetCommon4X3"
+            android:exported="false"
+            android:label="@string/appwidget_label_common_4_3">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.UPDATE_APPWIDGET" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.GO_VALIDATE" />
+                <action android:name="com.lianyi.paimonsnotebook.appwidget.action.GO_CONFIGURATION" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_common_4x3" />
+        </receiver>
+
+    </application>
+
+</manifest>

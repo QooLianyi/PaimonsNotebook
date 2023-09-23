@@ -1,0 +1,25 @@
+<resources>
+
+    <style name="Widget.PaimonsNotebook.AppWidget.Container" parent="android:Widget">
+        <item name="android:id">@android:id/background</item>
+        <item name="android:background">?android:attr/colorBackground</item>
+    </style>
+
+    <style name="Widget.PaimonsNotebook.AppWidget.InnerView" parent="android:Widget">
+        <item name="android:background">?android:attr/colorBackground</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="RingProgressBar">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/bg_ring_progress_bar</item>
+    </style>
+
+    <style name="HorizontalProgressBar">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/bg_horizontal_progress_bar</item>
+    </style>
+
+
+
+</resources>

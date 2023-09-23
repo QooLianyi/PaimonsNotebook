@@ -1,0 +1,143 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+
+android {
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.lianyi.paimonsnotebook"
+        minSdk 26
+        targetSdk 34
+        versionCode 2
+        versionName '1.4.1-beta'
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
+
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            //debug app共存 直接在包名后添加了FunctionTestPackage
+            applicationIdSuffix "FunctionTestPackage"
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    buildFeatures {
+        compose true
+        viewBinding true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_compiler_version
+    }
+    packagingOptions {
+        resources {
+            excludes += 'META-INF/*'
+        }
+    }
+    namespace 'com.lianyi.paimonsnotebook'
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.activity:activity-compose:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    //Compose
+    implementation "androidx.compose.material:material:$compose_version"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+
+    //Lifecycle
+    def lifecycle_version = "2.6.1"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+    implementation("androidx.lifecycle:lifecycle-process:$lifecycle_version")
+
+    // For AppWidgets support
+    def glance_version = "1.0.0-alpha05"
+    implementation("androidx.glance:glance-appwidget:$glance_version")
+    implementation("androidx.glance:glance-appwidget:$glance_version")
+
+    //Coil
+    def coil_version = "2.4.0"
+    implementation("io.coil-kt:coil-compose:$coil_version")
+    implementation("io.coil-kt:coil-gif:$coil_version")
+
+    //Retrofit2
+    def retrofit2_version = "2.9.0"
+    implementation("com.squareup.retrofit2:retrofit:$retrofit2_version")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofit2_version")
+
+    //Room
+    def room_version = "2.5.2"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:$room_version"
+
+    //Pager
+    // https://mvnrepository.com/artifact/com.google.accompanist/accompanist-pager
+    implementation("com.google.accompanist:accompanist-pager:0.28.0")
+
+    //System UI Controller
+    implementation 'com.google.accompanist:accompanist-systemuicontroller:0.31.1-alpha'
+
+    //Jsoup
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    implementation("org.jsoup:jsoup:1.15.3")
+
+    //Gson
+    implementation "com.google.code.gson:gson:2.9.0"
+
+    //Datastore
+    implementation 'androidx.datastore:datastore-preferences:1.0.0'
+
+    implementation 'androidx.core:core-splashscreen:1.0.0'
+
+    //GeeTest
+    implementation 'com.geetest.sensebot:sensebot:4.3.10'
+
+    //ColorPicker
+    implementation("com.github.skydoves:colorpicker-compose:1.0.2")
+
+    implementation 'com.godaddy.android.colorpicker:compose-color-picker:0.7.0'
+
+    // debugImplementation because LeakCanary should only run in debug builds.
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
+
+
+    //为测试导入json包
+    testImplementation 'org.json:json:20140107'
+}
