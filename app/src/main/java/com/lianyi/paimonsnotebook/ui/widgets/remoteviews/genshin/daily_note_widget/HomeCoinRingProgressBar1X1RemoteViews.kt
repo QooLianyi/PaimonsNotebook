@@ -5,9 +5,7 @@ import android.widget.RemoteViews
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.database.app_widget_binding.entity.AppWidgetBinding
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.daily_note.DailyNoteWidgetData
-import com.lianyi.paimonsnotebook.ui.widgets.common.extensions.setBackgroundResource
 import com.lianyi.paimonsnotebook.ui.widgets.core.BaseRemoteViews
-import com.lianyi.paimonsnotebook.ui.widgets.util.AppWidgetHelper
 import com.lianyi.paimonsnotebook.ui.widgets.widget.AppWidgetCommon1X1
 
 /*
@@ -35,10 +33,7 @@ internal class HomeCoinRingProgressBar1X1RemoteViews(
     }
 
     override suspend fun onUpdateContent(intent: Intent?): RemoteViews? {
-        setBackgroundResource(
-            R.id.container,
-            AppWidgetHelper.getAppWidgetBackgroundResource(appWidgetBinding.configuration.backgroundPattern)
-        )
+        setCommonStyle(appWidgetBinding.configuration)
 
         return super.onUpdateContent(intent)
     }

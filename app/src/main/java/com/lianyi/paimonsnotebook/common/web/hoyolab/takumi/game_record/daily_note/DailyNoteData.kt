@@ -5,6 +5,7 @@ data class DailyNoteData(
     val current_expedition_num: Int,
     val current_home_coin: Int,
     val current_resin: Int,
+    val daily_task: DailyTask,
     val expeditions: List<Expedition>,
     val finished_task_num: Int,
     val home_coin_recovery_time: String,
@@ -16,13 +17,22 @@ data class DailyNoteData(
     val resin_discount_num_limit: Int,
     val resin_recovery_time: String,
     val total_task_num: Int,
-    val transformer: Transformer,
-) {
+    val transformer: Transformer
+){
+
+    data class DailyTask(
+        val attendance_rewards: List<AttendanceReward>,
+        val attendance_visible: Boolean,
+        val finished_num: Int,
+        val is_extra_task_reward_received: Boolean,
+        val task_rewards: List<TaskReward>,
+        val total_num: Int
+    )
 
     data class Expedition(
         val avatar_side_icon: String,
         val remained_time: String,
-        val status: String,
+        val status: String
     )
 
     data class Transformer(
@@ -30,14 +40,23 @@ data class DailyNoteData(
         val noticed: Boolean,
         val obtained: Boolean,
         val recovery_time: RecoveryTime,
-        val wiki: String,
-    ) {
-        data class RecoveryTime(
-            val Day: Int,
-            val Hour: Int,
-            val Minute: Int,
-            val Second: Int,
-            val reached: Boolean,
-        )
-    }
+        val wiki: String
+    )
+
+    data class AttendanceReward(
+        val progress: Int,
+        val status: String
+    )
+
+    data class TaskReward(
+        val status: String
+    )
+
+    data class RecoveryTime(
+        val Day: Int,
+        val Hour: Int,
+        val Minute: Int,
+        val Second: Int,
+        val reached: Boolean
+    )
 }

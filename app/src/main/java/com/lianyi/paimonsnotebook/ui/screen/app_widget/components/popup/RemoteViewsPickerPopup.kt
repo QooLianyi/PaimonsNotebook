@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -26,9 +25,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.placeholder.EmptyPlaceholder
 import com.lianyi.paimonsnotebook.common.components.popup.BasePopup
-import com.lianyi.paimonsnotebook.common.components.spacer.NavigationPaddingSpacer
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.RemoteViewsPreviewAnimData
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
@@ -68,10 +67,10 @@ internal fun RemoteViewsPickerPopup(
                         .fillMaxSize()
                         .background(BackGroundColor)
                 ) {
-                    LazyColumn(
+                    ContentSpacerLazyColumn(
                         modifier = Modifier
                             .fillMaxSize(),
-                        contentPadding = PaddingValues(6.dp,12.dp)
+                        contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top = 6.dp)
                     ) {
                         items(list) { pair ->
                             Column(
@@ -106,10 +105,6 @@ internal fun RemoteViewsPickerPopup(
                                     }
                                 }
                             }
-                        }
-
-                        item {
-                            NavigationPaddingSpacer()
                         }
                     }
 

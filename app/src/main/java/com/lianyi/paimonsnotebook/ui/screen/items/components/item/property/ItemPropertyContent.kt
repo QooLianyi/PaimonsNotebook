@@ -28,7 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.common.components.blur_card.widget.ItemSlider
+import com.lianyi.paimonsnotebook.common.components.layout.blur_card.widget.ItemSlider
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.format.FightPropertyFormat
 import com.lianyi.paimonsnotebook.ui.screen.items.components.information.InformationItem
@@ -47,7 +47,7 @@ internal fun ItemPropertyContent(
     compareItemPropertyList: List<FightPropertyFormat>,
     showPromotedButton:Boolean = true,
     onClickCompareAvatar: () -> Unit,
-    onLevelChange: (Float) -> Unit,
+    onLevelChange: (Int) -> Unit,
     onPromotedChange: (Boolean) -> Unit,
     informationSlot: @Composable () -> Unit
 ) {
@@ -150,7 +150,7 @@ internal fun ItemPropertyContent(
                 range = (1f..90f),
                 onValueChange = {
                     level = it.roundToInt()
-                    onLevelChange.invoke(it)
+                    onLevelChange.invoke(level)
                 }
             )
         }

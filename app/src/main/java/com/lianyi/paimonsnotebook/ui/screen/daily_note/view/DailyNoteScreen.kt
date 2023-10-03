@@ -6,8 +6,17 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -27,9 +36,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.dialog.LazyColumnDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.LoadingDialog
+import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
+import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.components.text.TitleText
 import com.lianyi.paimonsnotebook.common.components.widget.TextSlider
-import com.lianyi.paimonsnotebook.common.extension.modifier.padding.paddingEnd
 import com.lianyi.paimonsnotebook.common.extension.modifier.padding.paddingTop
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.util.compose.provider.NoRippleThemeProvides
@@ -63,15 +73,17 @@ class DailyNoteScreen : ComponentActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .background(BackGroundColor)
+                        .padding(12.dp, 0.dp)
                         .pullRefresh(pullRefreshState)
                 ) {
 
                     Column(modifier = Modifier.fillMaxSize()) {
+                        StatusBarPaddingSpacer()
+
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(6.dp, 0.dp)
-                                .paddingTop(12.dp)
+                                .paddingTop(6.dp)
                         ) {
 
                             TitleText(
@@ -84,12 +96,13 @@ class DailyNoteScreen : ComponentActivity() {
                                 contentDescription = null,
                                 tint = Black,
                                 modifier = Modifier
-                                    .paddingEnd(10.dp)
                                     .size(30.dp)
                                     .radius(2.dp)
                                     .clickable {
                                         viewModel.goHoyolabActivity()
                                     })
+
+                            Spacer(modifier = Modifier.width(10.dp))
 
                             Icon(painter = painterResource(id = R.drawable.ic_add),
                                 contentDescription = null,
@@ -102,10 +115,10 @@ class DailyNoteScreen : ComponentActivity() {
                                     })
                         }
 
-                        LazyColumn(
+                        ContentSpacerLazyColumn(
                             modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(6.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                            statusBarPaddingEnabled = false
                         ) {
 
                             items(viewModel.dailyNoteList, { it.role.game_uid }) {
@@ -180,7 +193,11 @@ class DailyNoteScreen : ComponentActivity() {
                                     )
                                 }
 
-                                Text(text = "*值最大的记录会排在第一位", fontSize = 16.sp, color = Info)
+                                Text(
+                                    text = "*值最大的记录会排在第一位",
+                                    fontSize = 16.sp,
+                                    color = Info
+                                )
                             }
                         }
                     }

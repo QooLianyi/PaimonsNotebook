@@ -24,7 +24,6 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ui_avataricon_side_fischl"
             android:id="@+id/avatar"
             android:layout_gravity="center"
             android:translationY="-5dp"
@@ -36,7 +35,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:text="999:999"
         android:textColor="@color/black"
         android:id="@+id/text"
         />

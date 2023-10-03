@@ -2,12 +2,11 @@ package com.lianyi.paimonsnotebook.ui.screen.resource_manager.components.page
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
-import com.lianyi.paimonsnotebook.common.components.spacer.NavigationPaddingSpacer
+import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.ui.screen.resource_manager.components.card.DiskCacheImageGroupCard
 import com.lianyi.paimonsnotebook.ui.screen.resource_manager.data.DiskCacheGroupData
 
@@ -21,8 +20,9 @@ fun ResourceManagerHomePage(
     onEnableMultipleSelect: () -> Unit,
 ) {
 
-    LazyColumn(modifier = Modifier
-        .fillMaxSize()) {
+    ContentSpacerLazyColumn(modifier = Modifier
+        .fillMaxSize()
+    ) {
 
         items(diskCacheDataList) { group ->
 
@@ -46,11 +46,6 @@ fun ResourceManagerHomePage(
             }
 
         }
-
-        item {
-            NavigationPaddingSpacer()
-        }
-
     }
 
 }

@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.components.blur_card.widget.ItemSlider
+import com.lianyi.paimonsnotebook.common.components.layout.blur_card.widget.ItemSlider
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
 import com.lianyi.paimonsnotebook.common.components.text.RichText
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
@@ -107,7 +107,7 @@ internal fun AvatarSkillContent(
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        skill.proud.descriptions(skill.currentLevel.toInt()).forEach {
+                        skill.proud.descriptions(skill.currentLevel).forEach {
                             Row(
                                 modifier = Modifier
                                     .radius(4.dp)

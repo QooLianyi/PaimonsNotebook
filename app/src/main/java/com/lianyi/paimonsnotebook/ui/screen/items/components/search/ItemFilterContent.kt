@@ -16,9 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
@@ -30,7 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.common.components.spacer.NavigationPaddingSpacer
+import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
+import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyVerticalGrid
+import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.components.widget.InputTextFiled
 import com.lianyi.paimonsnotebook.common.util.enums.ListLayoutStyle
 import com.lianyi.paimonsnotebook.ui.screen.items.components.widget.BlurButton
@@ -60,7 +60,8 @@ internal fun <T> ItemFilterContent(
                 .fillMaxSize()
                 .background(BackGroundColor)
         ) {
-
+            StatusBarPaddingSpacer()
+            
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -99,11 +100,12 @@ internal fun <T> ItemFilterContent(
             }
 
             Box {
-                LazyColumn(
+                ContentSpacerLazyColumn(
                     modifier = Modifier
                         .fillMaxSize(),
                     contentPadding = PaddingValues(8.dp),
                     verticalArrangement = Arrangement.spacedBy(6.dp),
+                    statusBarPaddingEnabled = false
                 ) {
                     items(itemFilterViewModel.searchOptionList) { pair ->
                         SearchOptionGroup(
@@ -116,7 +118,6 @@ internal fun <T> ItemFilterContent(
                 }
 
                 Column {
-
                     AnimatedVisibility(
                         visible = itemFilterViewModel.showResultList,
                         enter = slideInVertically { it },
@@ -124,14 +125,14 @@ internal fun <T> ItemFilterContent(
                     ) {
                         when (itemFilterViewModel.itemListLayoutStyle) {
                             ListLayoutStyle.ListVertical -> {
-
-                                LazyColumn(
+                                ContentSpacerLazyColumn(
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .background(BackGroundColor),
                                     verticalArrangement = Arrangement.spacedBy(8.dp),
                                     contentPadding = PaddingValues(8.dp),
-                                    state = itemFilterViewModel.lazyListState
+                                    state = itemFilterViewModel.lazyListState,
+                                    statusBarPaddingEnabled = false
                                 ) {
 
                                     items(itemFilterViewModel.itemList,
@@ -143,14 +144,11 @@ internal fun <T> ItemFilterContent(
                                             itemFilterViewModel.orderByType
                                         )
                                     }
-                                    item {
-                                        NavigationPaddingSpacer()
-                                    }
                                 }
                             }
 
                             ListLayoutStyle.GridVertical -> {
-                                LazyVerticalGrid(
+                                ContentSpacerLazyVerticalGrid(
                                     columns = GridCells.Adaptive(60.dp),
                                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -158,7 +156,8 @@ internal fun <T> ItemFilterContent(
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .background(BackGroundColor),
-                                    state = itemFilterViewModel.lazyGridState
+                                    state = itemFilterViewModel.lazyGridState,
+                                    statusBarPaddingEnabled = false
                                 ) {
                                     items(
                                         itemFilterViewModel.itemList,
@@ -170,20 +169,14 @@ internal fun <T> ItemFilterContent(
                                             itemFilterViewModel.orderByType
                                         )
                                     }
-                                    item {
-                                        NavigationPaddingSpacer()
-                                    }
                                 }
                             }
 
                             else -> {}
                         }
-
                     }
                 }
             }
-
-            NavigationPaddingSpacer()
         }
     }
 }

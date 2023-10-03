@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.components.spacer.NavigationPaddingSpacer
+import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.database.app_widget_binding.entity.AppWidgetBinding
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.AppWidgetAlreadyData
@@ -32,11 +31,10 @@ internal fun AlreadyBindingAppWidgetPage(
         list.groupBy { it.aid.ifEmpty { "默认组件" } }.toList()
     }
 
-    LazyColumn(
+    ContentSpacerLazyColumn(
         modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(6.dp, 12.dp)
     ) {
         items(groupBy) { pair ->
-
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
@@ -56,10 +54,6 @@ internal fun AlreadyBindingAppWidgetPage(
                     }
                 }
             }
-        }
-
-        item {
-            NavigationPaddingSpacer()
         }
     }
 

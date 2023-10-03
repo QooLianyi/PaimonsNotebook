@@ -9,13 +9,12 @@ import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widg
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.HomeCoinRingProgressBar1X1RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.Resin2X1RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.ResinProgressBarRecoverTime3X2RemoteViews
+import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.ResinRecoverTime2X1RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.ResinRingProgressBar1X1RemoteViews
-import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.ResinRecoverTime2X2RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.util.DailyMaterial3X2RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.util.Shortcut3X2RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.widget.AppWidgetCommon1X1
 import com.lianyi.paimonsnotebook.ui.widgets.widget.AppWidgetCommon2X1
-import com.lianyi.paimonsnotebook.ui.widgets.widget.AppWidgetCommon2X2
 import com.lianyi.paimonsnotebook.ui.widgets.widget.AppWidgetCommon3X1
 import com.lianyi.paimonsnotebook.ui.widgets.widget.AppWidgetCommon3X2
 
@@ -30,21 +29,24 @@ object RemoteViewsIndexes {
         remoteViewsIndexesInfo.map { it.value }
     }
 
-    private val defaultConfigurationOptionsGameRole by lazy {
+    private val defaultConfigurationOption by lazy {
         setOf(
-            AppWidgetConfigurationOption.GameRole,
             AppWidgetConfigurationOption.ChangeWidget,
-            AppWidgetConfigurationOption.BackgroundPatten,
+            AppWidgetConfigurationOption.BackgroundColor,
+            AppWidgetConfigurationOption.BackgroundRadius,
             AppWidgetConfigurationOption.TextColor
         )
     }
+
+    private val defaultConfigurationOptionsGameRole by lazy {
+        setOf(
+            AppWidgetConfigurationOption.GameRole
+        ) + defaultConfigurationOption
+    }
     private val defaultConfigurationOptionsUser by lazy {
         setOf(
-            AppWidgetConfigurationOption.User,
-            AppWidgetConfigurationOption.ChangeWidget,
-            AppWidgetConfigurationOption.BackgroundPatten,
-            AppWidgetConfigurationOption.TextColor
-        )
+            AppWidgetConfigurationOption.User
+        ) + defaultConfigurationOption
     }
 
     //远端视图索引信息
@@ -82,11 +84,11 @@ object RemoteViewsIndexes {
                 remoteViewsType = RemoteViewsType.DailyNoteResin,
                 configurationOptions = defaultConfigurationOptionsUser
             ),
-            ResinRecoverTime2X2RemoteViews::class.java.name to RemoteViewsInfo(
-                appWidgetClass = AppWidgetCommon2X2::class.java,
-                remoteViewsClass = ResinRecoverTime2X2RemoteViews::class.java,
+            ResinRecoverTime2X1RemoteViews::class.java.name to RemoteViewsInfo(
+                appWidgetClass = AppWidgetCommon2X1::class.java,
+                remoteViewsClass = ResinRecoverTime2X1RemoteViews::class.java,
                 dataType = setOf(RemoteViewsDataType.DailyNoteWidget),
-                remoteViewsName = "原粹树脂恢复时间2*2",
+                remoteViewsName = "原粹树脂恢复时间2*1",
                 remoteViewsType = RemoteViewsType.DailyNoteResin,
                 configurationOptions = defaultConfigurationOptionsUser
             ),
@@ -125,7 +127,7 @@ object RemoteViewsIndexes {
                 )
             ),
             Shortcut3X2RemoteViews::class.java.name to RemoteViewsInfo(
-                appWidgetClass = AppWidgetCommon3X2::class.java,
+                appWidgetClass = AppWidgetCommon3X1::class.java,
                 remoteViewsClass = Shortcut3X2RemoteViews::class.java,
                 remoteViewsName = "快捷启动3*2",
                 remoteViewsType = RemoteViewsType.Util,
@@ -134,7 +136,7 @@ object RemoteViewsIndexes {
                     AppWidgetConfigurationOption.TextColor,
                     AppWidgetConfigurationOption.ImageTintColor
                 )
-            ),
+            )
         )
     }
 

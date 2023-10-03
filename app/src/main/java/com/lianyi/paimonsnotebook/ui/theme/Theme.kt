@@ -13,16 +13,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Density
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.lianyi.paimonsnotebook.common.components.components.PaimonsNotebookNotificationComponents
 import com.lianyi.paimonsnotebook.common.components.components.SlideExitBox
-import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
-import com.lianyi.paimonsnotebook.common.util.data_store.datastorePf
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
-import kotlin.system.measureTimeMillis
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
@@ -57,34 +49,20 @@ fun PaimonsNotebookTheme(
         LightColorPalette
     }
 
-    //沉浸模式
-    val systemUiController = rememberSystemUiController()
-
-    //设置状态栏与底部导航栏颜色
-    systemUiController.apply {
-        setStatusBarColor(Black_50, false)
-        setNavigationBarColor(White_80, false)
-    }
-
     val view = LocalView.current
-
-    val fullScreen = runBlocking {
-        view.context.datastorePf.data.first()[PreferenceKeys.FullScreenMode] ?: false
-    }
-
-    if (!view.isInEditMode && fullScreen) {
+    if (!view.isInEditMode) {
         val window = (view.context as Activity).window
-
         SideEffect {
             WindowCompat.setDecorFitsSystemWindows(window, false)
             WindowCompat.getInsetsController(window, view).apply {
                 //设置状态栏与底部导航栏的显示模式(Light/Night) true为黑色
                 isAppearanceLightStatusBars = false
                 isAppearanceLightNavigationBars = true
+
                 //隐藏状态栏
-                hide(WindowInsetsCompat.Type.statusBars())
-                systemBarsBehavior =
-                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+//                    hide(WindowInsetsCompat.Type.statusBars())
+//                systemBarsBehavior =
+//                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }
         }
     }

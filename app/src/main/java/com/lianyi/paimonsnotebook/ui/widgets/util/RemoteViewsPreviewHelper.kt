@@ -19,7 +19,7 @@ import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widg
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.HomeCoinRingProgressBar1X1RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.Resin2X1RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.ResinProgressBarRecoverTime3X2RemoteViews
-import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.ResinRecoverTime2X2RemoteViews
+import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.ResinRecoverTime2X1RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.ResinRingProgressBar1X1RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.util.DailyMaterial3X2RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.util.Shortcut3X2RemoteViews
@@ -35,7 +35,7 @@ object RemoteViewsPreviewHelper {
         mapOf<String, @Composable (RemoteViewsPreviewAnimData) -> Unit>(
             Resin2X1RemoteViews::class.java.name to { RemoteViews2X1Preview(it) },
             Expedition3X1RemoteViews::class.java.name to { Expedition3X1RemoteViewsPreview(it) },
-            ResinRecoverTime2X2RemoteViews::class.java.name to { RemoteViews2X2Preview(it) },
+            ResinRecoverTime2X1RemoteViews::class.java.name to { RemoteViews2X2Preview(it) },
             ResinRingProgressBar1X1RemoteViews::class.java.name to { ResinRingProgressBar1X1RemoteViewsPreview(it) },
             ResinProgressBarRecoverTime3X2RemoteViews::class.java.name to { ResinProgressBarRecoverTime3X2RemoteViewsPreview(it) },
             Shortcut3X2RemoteViews::class.java.name to { Shortcut3X2Preview(it) },

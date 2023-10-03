@@ -3,9 +3,13 @@ package com.lianyi.paimonsnotebook.ui.widgets.util
 import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.ui.graphics.toArgb
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
+import com.lianyi.paimonsnotebook.ui.theme.Black
+import com.lianyi.paimonsnotebook.ui.theme.Transparent
+import com.lianyi.paimonsnotebook.ui.theme.White
 
 object AppWidgetHelper {
     private val context by lazy {
@@ -115,7 +119,7 @@ object AppWidgetHelper {
         return true
     }
 
-    //获取小组件背景
+    //获取桌面组件背景
     fun getAppWidgetBackgroundResource(type: String?) =
         when (type) {
             PATTERN_DARK -> R.drawable.bg_widget_dark
@@ -123,7 +127,15 @@ object AppWidgetHelper {
             else -> R.drawable.bg_widget_light
         }
 
-    //获取小组件选择背景
+    //获取桌面组件背景颜色
+    fun getAppWidgetBackgroundColor(type: String?)=
+        when (type) {
+            PATTERN_DARK -> Black.toArgb()
+            PATTERN_TRANSPARENT -> Transparent.toArgb()
+            else -> White.toArgb()
+        }
+
+    //获取桌面组件选择背景
     fun getAppWidgetOptionBackgroundResource(type: String?) =
         when (type) {
             PATTERN_DARK -> R.drawable.bg_widget_option_dark

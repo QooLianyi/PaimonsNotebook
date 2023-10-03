@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.components.spacer.NavigationPaddingSpacer
+import com.lianyi.paimonsnotebook.common.components.spacer.NavigationBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.RemoteViewsPreviewAnimData
@@ -56,7 +56,7 @@ internal fun AppWidgetOverview() {
     ) {
         items(list) { pair ->
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(text = pair.first, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                Text(text = pair.first, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
 
                 Spacer(
                     modifier = Modifier
@@ -100,7 +100,7 @@ internal fun AppWidgetOverview() {
         }
 
         item {
-            NavigationPaddingSpacer()
+            NavigationBarPaddingSpacer()
         }
     }
 }

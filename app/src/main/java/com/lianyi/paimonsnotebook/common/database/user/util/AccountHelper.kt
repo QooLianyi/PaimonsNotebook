@@ -165,7 +165,7 @@ object AccountHelper {
         UserListFlow.value = list
 
         dao.delete(user)
-        //删除绑定的小组件
+        //删除绑定的桌面组件
         appWidgetBindingDao.deleteByUserMid(user.mid)
     }
 

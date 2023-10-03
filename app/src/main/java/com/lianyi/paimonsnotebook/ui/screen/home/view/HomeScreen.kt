@@ -1,10 +1,8 @@
 package com.lianyi.paimonsnotebook.ui.screen.home.view
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.ActivityResult
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,12 +27,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
 import com.lianyi.paimonsnotebook.common.components.loading.LoadingAnimationPlaceholder
-import com.lianyi.paimonsnotebook.common.components.spacer.NavigationPaddingSpacer
+import com.lianyi.paimonsnotebook.common.components.spacer.NavigationBarPaddingSpacer
+import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
+import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
+import com.lianyi.paimonsnotebook.common.service.overlay.util.OverlayHelper
 import com.lianyi.paimonsnotebook.ui.screen.account.view.AccountManagerScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.components.card.account.AccountInfoCard
 import com.lianyi.paimonsnotebook.ui.screen.home.components.home.HomeContent
-import com.lianyi.paimonsnotebook.ui.screen.home.components.home.HomeContentSimple
 import com.lianyi.paimonsnotebook.ui.screen.home.components.menu.SideBarMenuList
 import com.lianyi.paimonsnotebook.ui.screen.home.viewmodel.HomeScreenViewModel
 import com.lianyi.paimonsnotebook.ui.screen.setting.util.configuration_enum.HomeScreenDisplayState
@@ -44,8 +44,7 @@ import com.lianyi.paimonsnotebook.ui.theme.Black_90
 import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
 import com.lianyi.paimonsnotebook.ui.theme.White
 
-class HomeScreen : ComponentActivity() {
-
+class HomeScreen : BaseActivity() {
     private val viewModel by lazy {
         ViewModelProvider(this)[HomeScreenViewModel::class.java]
     }
@@ -54,20 +53,11 @@ class HomeScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        registerPressedCallback()
+        registerRequestPermissionsResult()
+        viewModel.startActivity = registerStartActivityForResult()
+
         viewModel.init()
-
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                viewModel.onBackPressed {
-                    moveTaskToBack(false)
-                }
-            }
-        })
-
-        viewModel.startActivity = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-            viewModel::onActivityResult
-        )
 
         setContent {
             PaimonsNotebookTheme {
@@ -95,14 +85,16 @@ class HomeScreen : ComponentActivity() {
                                 colorFilter = ColorFilter.tint(Black_90),
                                 modifier = Modifier
                                     .padding(8.dp)
-                                    .radius(4.dp)
-                                    .size(24.dp)
+                                    .radius(2.dp)
+                                    .size(36.dp)
                                     .align(Alignment.Start)
                                     .clickable {
                                         viewModel.functionNavigate(SettingsScreen::class.java)
-                                    })
+                                    }
+                                    .padding(4.dp)
+                            )
 
-                            NavigationPaddingSpacer()
+                            NavigationBarPaddingSpacer()
                         }
                     },
                     drawerBackgroundColor = BackGroundColor
@@ -120,21 +112,29 @@ class HomeScreen : ComponentActivity() {
                             .background(White)
                     ) {
 
-                        Icon(painter = painterResource(id = R.drawable.ic_navigation),
-                            contentDescription = null,
+                        Column(
                             modifier = Modifier
                                 .align(Alignment.TopStart)
                                 .zIndex(3f)
-                                .padding(start = 8.dp, top = 16.dp)
-                                .radius(2.dp)
-                                .size(24.dp)
-                                .clickable {
-                                    viewModel.toggleModalDrawer(
-                                        drawerState,
-                                        coroutineScope
-                                    )
-                                }
-                        )
+                        ) {
+                            StatusBarPaddingSpacer()
+
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_navigation),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .radius(3.dp)
+                                    .size(32.dp)
+                                    .clickable {
+                                        viewModel.toggleModalDrawer(
+                                            drawerState,
+                                            coroutineScope
+                                        )
+                                    }
+                                    .padding(4.dp)
+                            )
+                        }
 
                         Crossfade(
                             targetState = viewModel.configurationData.homeScreenDisplayState,
@@ -184,15 +184,16 @@ class HomeScreen : ComponentActivity() {
                     ConfirmDialog(
                         title = getString(R.string.no_permission),
                         content = getString(R.string.content_request_overlay_permission),
-                        onConfirm = {
-                            viewModel.requestOverlayPermission()
-                        }, onCancel = {
-                            viewModel.removeOverlayPermissionFlag()
-                        })
+                        onConfirm = viewModel::requestOverlayPermission,
+                        onCancel = viewModel::removeOverlayPermissionFlag
+                    )
                 }
             }
         }
     }
 
+    override fun onStartActivityForResult(result: ActivityResult) {
+        viewModel.onActivityResult(result)
+    }
 }
 

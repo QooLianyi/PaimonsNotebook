@@ -34,7 +34,7 @@ object PreferenceKeys {
         stringPreferencesKey("homeScreenDisplayState")
     }
 
-    //小组件是否以当前选择的用户为绑定目标
+    //桌面组件是否以当前选择的用户为绑定目标
     val AppwidgetAlwaysUseSelectedUser by lazy {
         booleanPreferencesKey("appwidgetAlwaysUseSelectedUser")
     }
@@ -49,7 +49,7 @@ object PreferenceKeys {
         longPreferencesKey("generateGachaRecordId")
     }
 
-    //小组件快捷方式当前页面
+    //桌面组件快捷方式组件当前页面
     val AppWidgetShortcutCurrentPage by lazy {
         intPreferencesKey("appWidgetShortcutCurrentPage")
     }
@@ -74,7 +74,7 @@ object PreferenceKeys {
         booleanPreferencesKey("fullScreenMode")
     }
 
-    //小组件快捷方式当前页面
+    //桌面组件快捷方式当前页面
     val AppWidgetDailyMaterialCurrentPage by lazy {
         intPreferencesKey("appWidgetDailyMaterialCurrentPage")
     }

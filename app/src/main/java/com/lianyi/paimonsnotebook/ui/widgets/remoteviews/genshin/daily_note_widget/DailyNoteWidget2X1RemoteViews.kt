@@ -5,10 +5,7 @@ import android.widget.RemoteViews
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.database.app_widget_binding.entity.AppWidgetBinding
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.daily_note.DailyNoteWidgetData
-import com.lianyi.paimonsnotebook.ui.widgets.common.extensions.setBackgroundResource
-import com.lianyi.paimonsnotebook.ui.widgets.common.extensions.setTextColor
 import com.lianyi.paimonsnotebook.ui.widgets.core.BaseRemoteViews
-import com.lianyi.paimonsnotebook.ui.widgets.util.AppWidgetHelper
 import com.lianyi.paimonsnotebook.ui.widgets.widget.AppWidgetCommon2X1
 
 class DailyNoteWidget2X1RemoteViews(
@@ -39,16 +36,17 @@ class DailyNoteWidget2X1RemoteViews(
     }
 
     override suspend fun onUpdateContent(intent: Intent?): RemoteViews? {
-        setBackgroundResource(
-            R.id.container,
-            AppWidgetHelper.getAppWidgetBackgroundResource(appWidgetBinding.configuration.backgroundPattern)
+        val textIds = intArrayOf(
+            R.id.resin_text,
+            R.id.daily_task_text,
+            R.id.home_coin_text,
         )
 
-        val textColor = appWidgetBinding.configuration.textColor
+        setCommonStyle(
+            appWidgetBinding.configuration,
+            textIds
+        )
 
-        setTextColor(R.id.resin_text, textColor)
-        setTextColor(R.id.daily_task_text, textColor)
-        setTextColor(R.id.home_coin_text, textColor)
         return super.onUpdateContent(intent)
     }
 

@@ -44,7 +44,7 @@ class AppWidgetScreenViewModel : ViewModel() {
         }
     }
 
-    val tabs = arrayOf("小组件", "我的组件")
+    val tabs = arrayOf("桌面组件", "我的组件")
 
     var currentTabIndex by mutableIntStateOf(0)
 

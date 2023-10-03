@@ -18,6 +18,7 @@ import com.lianyi.paimonsnotebook.common.extension.value.toPx
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.RemoteViewsPreviewAnimData
 import com.lianyi.paimonsnotebook.ui.theme.Primary_4
 import com.lianyi.paimonsnotebook.ui.theme.Primary_9
+import kotlin.math.roundToInt
 
 @Composable
 fun HomeCoinRingProgressBar1X1RemoteViewsPreview(
@@ -30,7 +31,7 @@ fun HomeCoinRingProgressBar1X1RemoteViewsPreview(
 
     Box(
         modifier = Modifier
-            .radius(8.dp)
+            .radius(previewAnimData.backgroundRadius.value.roundToInt().dp)
             .size(60.dp)
             .background(previewAnimData.backgroundColor.value)
             .padding(6.dp)

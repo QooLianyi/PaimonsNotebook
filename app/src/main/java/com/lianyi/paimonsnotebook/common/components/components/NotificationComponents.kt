@@ -7,6 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.components.widget.PaimonsNotebookNotificationCard
 import com.lianyi.paimonsnotebook.common.util.notification.PaimonsNotebookNotification
 
@@ -48,6 +49,8 @@ fun PaimonsNotebookNotificationComponents() {
                 .padding(12.dp, 12.dp, 12.dp, 0.dp),
             horizontalAlignment = Alignment.End
         ) {
+            StatusBarPaddingSpacer()
+
             PaimonsNotebookNotification.notifications.forEachIndexed { index, data ->
                 key(data.notificationId) {
                     if (index != 0) {

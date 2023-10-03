@@ -1,27 +1,29 @@
 package com.lianyi.paimonsnotebook.ui.screen.home.components.card.daily_note_card
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import com.lianyi.paimonsnotebook.common.components.media.Indicator
 import com.lianyi.paimonsnotebook.common.data.hoyolab.game_record.DailyNote
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.util.compose.provider.NoOverscrollEffectThemeProvides
 import com.lianyi.paimonsnotebook.ui.theme.*
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun DailyNoteCardGroup(
     list:List<DailyNote>,
     startIndex: Int = 0,
 ) {
-    val state = rememberPagerState(startIndex)
+    val state = rememberPagerState(startIndex){
+        list.size
+    }
 
     val currentIndex = state.currentPage
 
@@ -33,7 +35,6 @@ internal fun DailyNoteCardGroup(
     ) {
         NoOverscrollEffectThemeProvides {
             HorizontalPager(
-                count = list.size,
                 state = state
             ) {
                 Row(modifier = Modifier.padding(12.dp, 0.dp)) {

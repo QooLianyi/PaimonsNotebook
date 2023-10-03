@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.RemoteViewsPreviewAnimData
+import kotlin.math.roundToInt
 
 @Composable
 fun RemoteViews2X1Preview(
@@ -25,7 +26,7 @@ fun RemoteViews2X1Preview(
 ) {
     Row(
         modifier = Modifier
-            .radius(8.dp)
+            .radius(previewAnimData.backgroundRadius.value.roundToInt().dp)
             .background(previewAnimData.backgroundColor.value)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,

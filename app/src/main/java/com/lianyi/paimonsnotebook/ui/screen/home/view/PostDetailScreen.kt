@@ -12,41 +12,39 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
-import com.lianyi.paimonsnotebook.common.components.placeholder.ErrorPlaceholder
 import com.lianyi.paimonsnotebook.common.components.loading.LoadingAnimationPlaceholder
-import com.lianyi.paimonsnotebook.common.components.text.TitleText
+import com.lianyi.paimonsnotebook.common.components.media.FullScreenImage
+import com.lianyi.paimonsnotebook.common.components.placeholder.EmptyPlaceholder
+import com.lianyi.paimonsnotebook.common.components.placeholder.ErrorPlaceholder
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.util.enums.LoadingState
 import com.lianyi.paimonsnotebook.common.view.WebViewScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.components.post.PostStructureContentList
+import com.lianyi.paimonsnotebook.ui.screen.home.util.PostHelper
 import com.lianyi.paimonsnotebook.ui.screen.home.viewmodel.PostDetailViewModel
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
 import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
 
 class PostDetailScreen : BaseActivity() {
-    companion object {
-        const val PostId = "postId"
-        const val WebStaticUrl = "webstaticUrl"
-    }
-
     private val viewModel by lazy { ViewModelProvider(this)[PostDetailViewModel::class.java] }
 
-    private val webstaticUrl by lazy {
-        intent.getStringExtra(WebStaticUrl)
+    private val webStaticUrl by lazy {
+        intent.getStringExtra(PostHelper.PARAM_WEB_STATIC_URL)
     }
-    private val webstatic get() = !webstaticUrl.isNullOrBlank()
+
+    private val webStatic get() = !webStaticUrl.isNullOrBlank()
 
     private val articleId by lazy {
-        intent.getLongExtra(PostId, 0L)
+        intent.getLongExtra(PostHelper.PARAM_POST_ID, 0L)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (webstatic) {
+        if (webStatic) {
             //todo 更改为使用js bridge的webview并设置为默认用户的cookie
             startActivity(Intent(this, WebViewScreen::class.java).apply {
-                putExtra("url", webstaticUrl)
+                putExtra("url", webStaticUrl)
             })
             finish()
         } else {
@@ -54,12 +52,11 @@ class PostDetailScreen : BaseActivity() {
         }
 
         setContent {
-
             PaimonsNotebookTheme(this) {
                 Crossfade(
                     targetState = viewModel.postLoadingState, modifier = Modifier
                         .fillMaxSize()
-                        .background(BackGroundColor)
+                        .background(BackGroundColor), label = ""
                 ) {
                     when (it) {
                         LoadingState.Loading -> {
@@ -72,7 +69,7 @@ class PostDetailScreen : BaseActivity() {
                         }
 
                         LoadingState.Success -> {
-                            LoadingSuccessScreen()
+                            Content()
                         }
 
                         LoadingState.Error -> {
@@ -80,7 +77,7 @@ class PostDetailScreen : BaseActivity() {
                         }
 
                         else -> {
-                            TitleText(text = "默认", fontSize = 18.sp)
+                            EmptyPlaceholder()
                         }
                     }
                 }
@@ -90,10 +87,22 @@ class PostDetailScreen : BaseActivity() {
     }
 
     @Composable
-    fun LoadingSuccessScreen() {
-
+    fun Content() {
         if (viewModel.postFullData != null) {
-            PostStructureContentList(viewModel.postFullData!!, fontSize = 14.sp)
+            PostStructureContentList(
+                viewModel.postFullData!!,
+                fontSize = 14.sp,
+                onClickImage = viewModel::showFullScreenImage,
+                onClickLink = viewModel::hyperlinkNavigate,
+                onClickLinkCard = viewModel::hyperlinkNavigate
+            )
+        }
+
+        if (viewModel.showFullScreenImage) {
+            FullScreenImage(
+                url = viewModel.fullScreenImgUrl,
+                onClick = viewModel::dismissFullScreenImage
+            )
         }
     }
 }

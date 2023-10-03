@@ -74,8 +74,8 @@ interface GachaItemsDao {
     fun getAllGameUidFlow(): Flow<List<String>>
 
 
-    @Query("select count(*) from gacha_items where id = :id")
-    fun isExist(id: String): Boolean
+    @Query("select count(*) from gacha_items where id = :id and uid = :uid")
+    fun isExist(id: String,uid: String): Boolean
 
     /*
     * 从本地获取各个uid祈愿卡池各个星级的距离上一个记录的个数(距离下次保底的次数)

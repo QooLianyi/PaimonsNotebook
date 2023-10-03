@@ -1,8 +1,9 @@
 package com.lianyi.paimonsnotebook.ui.screen.home.viewmodel
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
+import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.DrawerState
@@ -12,10 +13,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.data.hoyolab.game_record.DailyNote
 import com.lianyi.paimonsnotebook.common.data.hoyolab.user.User
-import com.lianyi.paimonsnotebook.common.database.daily_note.util.DailyNoteUtil
+import com.lianyi.paimonsnotebook.common.database.daily_note.util.DailyNoteHelper
 import com.lianyi.paimonsnotebook.common.database.gacha.data.GachaRecordOverview
 import com.lianyi.paimonsnotebook.common.database.user.util.AccountHelper
 import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
@@ -40,6 +40,7 @@ import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.common.GachaPoolData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.common.TakumiCommonClient
 import com.lianyi.paimonsnotebook.ui.screen.home.data.ModalItemData
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
+import com.lianyi.paimonsnotebook.ui.screen.home.util.PostHelper
 import com.lianyi.paimonsnotebook.ui.screen.home.util.PostType
 import com.lianyi.paimonsnotebook.ui.screen.home.view.PostDetailScreen
 import com.lianyi.paimonsnotebook.ui.screen.setting.data.ConfigurationData
@@ -78,7 +79,7 @@ class HomeScreenViewModel : ViewModel() {
                 }
             }
             launch {
-                DailyNoteUtil.dailyNoteFlow.collect {
+                DailyNoteHelper.dailyNoteFlow.collect {
                     dailyNoteList.clear()
                     dailyNoteList.addAll(it)
                 }
@@ -94,7 +95,7 @@ class HomeScreenViewModel : ViewModel() {
                     "发现新的元数据,正在更新...".notify()
                     MetadataHelper.updateMetadata(
                         onFailed = {
-                            "更新元数据时发生错误,现在使用的仍是旧数据".errorNotify()
+                            "更新元数据时发生错误,现在使用的仍是旧数据,显示的内容可能会与最新的游戏内容有所差异".errorNotify()
                         },
                         onSuccess = {
                             "元数据更新完毕".notify()
@@ -202,6 +203,10 @@ class HomeScreenViewModel : ViewModel() {
         }
     }
 
+    val overlayPermission by lazy {
+        arrayOf(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+    }
+
     private suspend fun getWebHome() {
         webHomeClient.getWebHome().apply {
             if (success) {
@@ -266,39 +271,26 @@ class HomeScreenViewModel : ViewModel() {
     fun goPostDetail(
         postId: String,
         postType: PostType = PostType.Default,
-        context: Context = PaimonsNotebookApplication.context,
     ) {
-        val intent = Intent(context, PostDetailScreen::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
+        val bundle = Bundle()
         when (postType) {
-            PostType.Default -> {
-                intent.putExtra(PostDetailScreen.PostId, getArticleIdFromUrl(postId))
-            }
-
-            PostType.Notice -> {
-                intent.putExtra(PostDetailScreen.PostId, getArticleIdFromUrl(postId))
+            PostType.Default,PostType.Notice -> {
+                bundle.putLong(PostHelper.PARAM_POST_ID, getArticleIdFromUrl(postId))
             }
 
             PostType.Banner, PostType.ActivityCalendar -> {
                 //判断是否为网页
                 val tag = "/article/"
                 if (postId.contains(tag)) {
-                    intent.putExtra(
-                        PostDetailScreen.PostId,
-                        getArticleIdFromUrl(postId)
-                    )
+                    bundle.putLong(PostHelper.PARAM_POST_ID, getArticleIdFromUrl(postId))
                 } else {
                     //网页时，帖子id为网页url
-                    intent.putExtra(PostDetailScreen.WebStaticUrl, postId)
+                    bundle.putString(PostHelper.PARAM_WEB_STATIC_URL, postId)
                 }
             }
         }
-        context.startActivity(intent)
-    }
 
-    fun goAnnouncementScreen() {
-        startActivity.launch(Intent())
+        HomeHelper.goActivity(PostDetailScreen::class.java,bundle)
     }
 
     //转换文章的ID
@@ -324,7 +316,9 @@ class HomeScreenViewModel : ViewModel() {
     }
 
     fun requestOverlayPermission() {
-        OverlayHelper.requestPermission(startActivity)
+        if(this::startActivity.isInitialized){
+            OverlayHelper.requestPermission(startActivity)
+        }
     }
 
     fun removeOverlayPermissionFlag() {
@@ -376,6 +370,9 @@ class HomeScreenViewModel : ViewModel() {
         when (activityResult.resultCode) {
             0 -> {
                 checkOverlayPermission()
+                if(showConfirm){
+                    removeOverlayPermissionFlag()
+                }
             }
 
             200 -> {

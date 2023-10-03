@@ -29,8 +29,6 @@ object SettingsHelper {
                         enableOverlay = preferences[PreferenceKeys.EnableOverlay] ?: false
                         appwidgetAlwaysUseSelectedUser =
                             preferences[PreferenceKeys.AppwidgetAlwaysUseSelectedUser] ?: false
-                        fullScreenMode =
-                            preferences[PreferenceKeys.FullScreenMode] ?: false
                     }
             }
         }

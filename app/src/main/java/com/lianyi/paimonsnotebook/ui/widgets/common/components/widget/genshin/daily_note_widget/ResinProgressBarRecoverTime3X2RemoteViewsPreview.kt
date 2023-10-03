@@ -28,6 +28,7 @@ import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.RemoteViewsPreviewAnimData
 import com.lianyi.paimonsnotebook.ui.theme.Primary_4
 import com.lianyi.paimonsnotebook.ui.theme.Primary_9
+import kotlin.math.roundToInt
 
 @Composable
 fun ResinProgressBarRecoverTime3X2RemoteViewsPreview(
@@ -35,7 +36,7 @@ fun ResinProgressBarRecoverTime3X2RemoteViewsPreview(
 ) {
     Column(
         modifier = Modifier
-            .radius(8.dp)
+            .radius(previewAnimData.backgroundRadius.value.roundToInt().dp)
             .size(270.dp, 80.dp)
             .background(previewAnimData.backgroundColor.value)
             .padding(6.dp),

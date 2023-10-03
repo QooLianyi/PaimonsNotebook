@@ -2,6 +2,7 @@ package com.lianyi.paimonsnotebook.ui.screen.items.components.widget
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,9 +17,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.extension.value.toPx
+import com.lianyi.paimonsnotebook.common.util.compose.remember.rememberStatusBarHeightPx
 import kotlin.math.roundToInt
 
 /*
@@ -32,13 +34,14 @@ internal fun BoxWithConstraintsScope.ItemScreenTopBar(
     onClickListButton: () -> Unit,
     onClickAddButton: () -> Unit = {}
 ) {
-
     val bottomButtonHeightPx = remember {
         59.dp.toPx().roundToInt()
     }
 
+    val statusBarHeight = rememberStatusBarHeightPx()
+
     val maxHeightPx = remember {
-        (this.maxHeight * .6f).toPx().roundToInt()
+        ((this.maxHeight * .6f).toPx() + statusBarHeight).roundToInt()
     }
 
     val offsetY by remember {
@@ -61,24 +64,26 @@ internal fun BoxWithConstraintsScope.ItemScreenTopBar(
         }
     }
 
-    Row(
-        modifier = Modifier
-            .padding(10.dp)
-            .fillMaxWidth()
-            .offset { IntOffset(0, offsetY) }
-            .zIndex(2f),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
+    Column {
+        StatusBarPaddingSpacer()
 
-        ItemActionButton(
-            iconResId = R.drawable.ic_navigation,
-            text = text
+        Row(
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth()
+                .offset { IntOffset(0, offsetY) },
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            onClickListButton.invoke()
-        }
 
-        //todo 添加素材占位
-        Spacer(modifier = Modifier.width(1.dp))
+            ItemActionButton(
+                iconResId = R.drawable.ic_navigation,
+                text = text
+            ) {
+                onClickListButton.invoke()
+            }
+
+            //todo 添加素材占位
+            Spacer(modifier = Modifier.width(1.dp))
 
 //        val addBackgroundColorAnim by animateColorAsState(
 //            targetValue = if (added) Black else BlurCardBackgroundColor,
@@ -105,5 +110,6 @@ internal fun BoxWithConstraintsScope.ItemScreenTopBar(
 //                tint = addIconTintColorAnim
 //            )
 //        }
+        }
     }
 }

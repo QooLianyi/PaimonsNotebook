@@ -15,6 +15,8 @@ enum class AppWidgetConfigurationOption {
     BackgroundPatten,
     //背景圆角半径
     BackgroundRadius,
+    //背景颜色
+    BackgroundColor,
     //字体颜色
     TextColor,
     //图片颜色

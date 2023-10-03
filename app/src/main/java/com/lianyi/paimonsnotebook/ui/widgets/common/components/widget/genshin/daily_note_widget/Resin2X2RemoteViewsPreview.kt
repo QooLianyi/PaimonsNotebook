@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.RemoteViewsPreviewAnimData
+import kotlin.math.roundToInt
 
 @Composable
 fun RemoteViews2X2Preview(
@@ -27,7 +27,7 @@ fun RemoteViews2X2Preview(
 ) {
     Column(
         modifier = Modifier
-            .radius(8.dp)
+            .radius(previewAnimData.backgroundRadius.value.roundToInt().dp)
             .background(previewAnimData.backgroundColor.value)
             .padding(16.dp)
     ) {
@@ -54,22 +54,12 @@ fun RemoteViews2X2Preview(
                     fontSize = 18.sp,
                     color = previewAnimData.textColor.value
                 )
+                Text(
+                    text = "恢复时间:99小时99分钟",
+                    fontSize = 10.sp,
+                    color = previewAnimData.textColor.value
+                )
             }
         }
-
-        Spacer(modifier = Modifier.height(36.dp))
-
-        Text(
-            text = "剩余恢复时间",
-            fontSize = 10.sp,
-            color = previewAnimData.textColor.value
-        )
-        Text(
-            text = "99小时60分钟",
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 16.sp,
-            color = previewAnimData.textColor.value
-        )
-
     }
 }

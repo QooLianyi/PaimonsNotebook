@@ -26,5 +26,5 @@ data class User(
     var isSelected: Boolean
 ) {
     val cookies:String
-        get() = "${cookieToken};${ltoken};${stoken};"
+        get() = "${cookieToken}${ltoken}${stoken}"
 }

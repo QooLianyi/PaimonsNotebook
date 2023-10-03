@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
@@ -25,14 +26,13 @@ import com.lianyi.paimonsnotebook.ui.theme.ElementGrassColor
 * */
 @Composable
 fun ContentLoadingPlaceholder(
-    modifier: Modifier = Modifier,
     iconResId: Int = -1,
     progressIndicatorColor: Color = ElementGrassColor,
-    text: String = "界面正在加载中"
+    text: String = "内容正在加载中..."
 ) {
 
     Column(
-        modifier = modifier,
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -40,12 +40,12 @@ fun ContentLoadingPlaceholder(
         Image(
             painter = painterResource(id = if (iconResId != -1) iconResId else R.drawable.emotion_icon_nahida_drink),
             contentDescription = null,
-            modifier = Modifier.size(80.dp)
+            modifier = Modifier.size(120.dp)
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text(text = text, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+        Text(text = text, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
 
         Spacer(modifier = Modifier.height(12.dp))
 

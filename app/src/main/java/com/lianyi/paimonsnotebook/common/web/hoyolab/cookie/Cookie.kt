@@ -6,7 +6,7 @@ package com.lianyi.paimonsnotebook.common.web.hoyolab.cookie
 class Cookie {
     private val map = mutableMapOf<String, String>()
 
-    override fun toString(): String = map.map { "${it.key}=${it.value}" }.joinToString(";")
+    override fun toString(): String = map.map { "${it.key}=${it.value}" }.joinToString(separator = ";", postfix = ";")
 
     operator fun set(key: String, value: String) {
         map[key] = value

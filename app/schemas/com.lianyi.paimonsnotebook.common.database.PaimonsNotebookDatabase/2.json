@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "33ee801132a7df324e9c8d364a0af583",
+    "identityHash": "04cda17f3b81992bae93dbc9e0c4537a",
     "entities": [
       {
         "tableName": "gacha_items",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`count` TEXT NOT NULL, `gacha_type` TEXT NOT NULL, `id` TEXT NOT NULL, `item_id` TEXT NOT NULL, `item_type` TEXT NOT NULL, `lang` TEXT NOT NULL, `name` TEXT NOT NULL, `rank_type` TEXT NOT NULL, `time` TEXT NOT NULL, `uid` TEXT NOT NULL, `uigf_gacha_type` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`count` TEXT NOT NULL, `gacha_type` TEXT NOT NULL, `id` TEXT NOT NULL, `item_id` TEXT NOT NULL, `item_type` TEXT NOT NULL, `lang` TEXT NOT NULL, `name` TEXT NOT NULL, `rank_type` TEXT NOT NULL, `time` TEXT NOT NULL, `uid` TEXT NOT NULL, `uigf_gacha_type` TEXT NOT NULL, PRIMARY KEY(`id`, `uid`))",
         "fields": [
           {
             "fieldPath": "count",
@@ -78,7 +78,8 @@
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "id"
+            "id",
+            "uid"
           ]
         },
         "indices": [
@@ -172,10 +173,10 @@
       },
       {
         "tableName": "appwidget_binding",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`appwidget_id` INTEGER NOT NULL, `user_entity_mid` TEXT NOT NULL, `game_uid` TEXT NOT NULL, `appwidget_class_name` TEXT NOT NULL, `configuration` TEXT NOT NULL, PRIMARY KEY(`appwidget_id`), FOREIGN KEY(`user_entity_mid`) REFERENCES `users`(`mid`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`appwidget_id` INTEGER NOT NULL, `user_entity_mid` TEXT NOT NULL, `data_type` TEXT NOT NULL, `remote_views_class_name` TEXT NOT NULL, `configuration` TEXT NOT NULL, PRIMARY KEY(`appwidget_id`))",
         "fields": [
           {
-            "fieldPath": "appwidgetId",
+            "fieldPath": "appWidgetId",
             "columnName": "appwidget_id",
             "affinity": "INTEGER",
             "notNull": true
@@ -187,14 +188,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "gameUid",
-            "columnName": "game_uid",
+            "fieldPath": "dataType",
+            "columnName": "data_type",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "appwidgetClassName",
-            "columnName": "appwidget_class_name",
+            "fieldPath": "remoteViewsClassName",
+            "columnName": "remote_views_class_name",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -222,19 +223,7 @@
             "createSql": "CREATE INDEX IF NOT EXISTS `index_user_entity_mid` ON `${TABLE_NAME}` (`user_entity_mid`)"
           }
         ],
-        "foreignKeys": [
-          {
-            "table": "users",
-            "onDelete": "CASCADE",
-            "onUpdate": "CASCADE",
-            "columns": [
-              "user_entity_mid"
-            ],
-            "referencedColumns": [
-              "mid"
-            ]
-          }
-        ]
+        "foreignKeys": []
       },
       {
         "tableName": "users",
@@ -288,7 +277,7 @@
       },
       {
         "tableName": "daily_note",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` TEXT NOT NULL, `user_mid` TEXT NOT NULL, `daily_note` TEXT NOT NULL, `sort` INTEGER NOT NULL, PRIMARY KEY(`uid`), FOREIGN KEY(`user_mid`) REFERENCES `users`(`mid`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` TEXT NOT NULL, `user_mid` TEXT NOT NULL, `daily_note` TEXT NOT NULL, `sort` INTEGER NOT NULL, `update_time` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`uid`), FOREIGN KEY(`user_mid`) REFERENCES `users`(`mid`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "uid",
@@ -313,6 +302,13 @@
             "columnName": "sort",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "updateTime",
+            "columnName": "update_time",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
           }
         ],
         "primaryKey": {
@@ -345,12 +341,66 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "daily_note_widget",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_mid` TEXT NOT NULL, `daily_note_widget` TEXT NOT NULL, `update_time` INTEGER NOT NULL, PRIMARY KEY(`user_mid`), FOREIGN KEY(`user_mid`) REFERENCES `users`(`mid`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "userMid",
+            "columnName": "user_mid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dailyNoteWidget",
+            "columnName": "daily_note_widget",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updateTime",
+            "columnName": "update_time",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "user_mid"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_daily_note_widget_user_mid",
+            "unique": false,
+            "columnNames": [
+              "user_mid"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_daily_note_widget_user_mid` ON `${TABLE_NAME}` (`user_mid`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "users",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "user_mid"
+            ],
+            "referencedColumns": [
+              "mid"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '33ee801132a7df324e9c8d364a0af583')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '04cda17f3b81992bae93dbc9e0c4537a')"
     ]
   }
 }

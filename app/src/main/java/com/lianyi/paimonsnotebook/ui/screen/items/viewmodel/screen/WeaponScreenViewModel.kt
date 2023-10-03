@@ -22,7 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class WeaponScreenViewModel : ViewModel() {
-    private var currentItemLevel = 1f
+    private var currentItemLevel = 1
 
     var currentItem by mutableStateOf<WeaponData?>(null)
 
@@ -116,7 +116,7 @@ class WeaponScreenViewModel : ViewModel() {
 
         propertyList = weaponService.getFightPropertyFormatList(
             currentItem!!,
-            currentItemLevel.toInt(),
+            currentItemLevel,
             promoted
         )
     }
@@ -131,7 +131,7 @@ class WeaponScreenViewModel : ViewModel() {
         }
         compareItemPropertyList = weaponService.getFightPropertyFormatList(
             compareItem!!,
-            currentItemLevel.toInt(),
+            currentItemLevel,
             promoted
         )
     }
@@ -196,7 +196,7 @@ class WeaponScreenViewModel : ViewModel() {
     }
 
     //当更改等级时
-    fun onChangeItemLevel(value: Float) {
+    fun onChangeItemLevel(value: Int) {
         currentItemLevel = value
 
         updateProperty()

@@ -12,14 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.extension.modifier.animation.drawArcBorder
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.extension.value.toPx
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.RemoteViewsPreviewAnimData
 import com.lianyi.paimonsnotebook.ui.theme.Primary_4
 import com.lianyi.paimonsnotebook.ui.theme.Primary_9
-import com.lianyi.paimonsnotebook.ui.theme.White
+import kotlin.math.roundToInt
 
 @Composable
 fun ResinRingProgressBar1X1RemoteViewsPreview(
@@ -32,7 +31,7 @@ fun ResinRingProgressBar1X1RemoteViewsPreview(
 
     Box(
         modifier = Modifier
-            .radius(8.dp)
+            .radius(previewAnimData.backgroundRadius.value.roundToInt().dp)
             .size(60.dp)
             .background(previewAnimData.backgroundColor.value)
             .padding(6.dp)

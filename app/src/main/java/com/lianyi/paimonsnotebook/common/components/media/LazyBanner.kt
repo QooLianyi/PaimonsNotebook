@@ -1,18 +1,17 @@
 package com.lianyi.paimonsnotebook.common.components.media
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerScope
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerScope
-import com.google.accompanist.pager.rememberPagerState
-import com.lianyi.paimonsnotebook.common.extension.modifier.padding.paddingBottom
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
@@ -33,7 +32,7 @@ import kotlinx.coroutines.yield
 *
 * */
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun <T> LazyBanner(
     bannerData: List<T>,
@@ -52,10 +51,12 @@ fun <T> LazyBanner(
 
     //开始索引
     val startIndex by remember {
-        mutableStateOf((Int.MAX_VALUE / 2) - (Int.MAX_VALUE / 2) % bannerData.size)
+        mutableIntStateOf((Int.MAX_VALUE / 2) - (Int.MAX_VALUE / 2) % bannerData.size)
     }
     val scope = rememberCoroutineScope()
-    val pagerState = rememberPagerState(startIndex)
+    val pagerState = rememberPagerState(initialPage = startIndex) {
+        Int.MAX_VALUE
+    }
 
     val isDragged by pagerState.interactionSource.collectIsFocusedAsState()
 
@@ -68,14 +69,16 @@ fun <T> LazyBanner(
                 val target = pagerState.currentPage + 1
                 scope.launch {
                     val realTarget = when (target) {
-                        Int.MAX_VALUE -> {
+                        Int.MAX_VALUE -1 -> {
                             pagerState.scrollToPage(0)
                             0
                         }
+
                         1 -> {
                             pagerState.scrollToPage(startIndex)
                             startIndex
                         }
+
                         else -> pagerState.currentPage + 1
                     }
                     pagerState.animateScrollToPage(realTarget)
@@ -86,11 +89,10 @@ fun <T> LazyBanner(
 
     Box {
         HorizontalPager(
-            count = Int.MAX_VALUE,
             modifier = modifier,
             state = pagerState,
             contentPadding = contentPaddingValues,
-            itemSpacing = itemSpacing
+            pageSpacing = itemSpacing
         ) { currentIndex ->
 
             val index = currentIndex % bannerData.size
@@ -105,7 +107,7 @@ fun <T> LazyBanner(
             .offset {
                 indicatorOffset
             }) {
-            indicator(bannerData.size , pagerState.currentPage % bannerData.size)
+            indicator(bannerData.size, pagerState.currentPage % bannerData.size)
         }
     }
 }
@@ -115,7 +117,7 @@ fun <T> LazyBanner(
 * 实现默认指示器的banner
 *
 * */
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun <T> LazyBanner(
     bannerData: List<T>,
@@ -136,7 +138,7 @@ fun <T> LazyBanner(
         itemSpacing = itemSpacing,
         content = content,
         indicator = { index, currentPageIndex ->
-//            Indicator(currentPageIndex,index, modifier = Modifier.paddingBottom(8.dp))
+            Indicator(currentPageIndex,index, modifier = Modifier.padding(bottom = 4.dp))
         }
     )
 

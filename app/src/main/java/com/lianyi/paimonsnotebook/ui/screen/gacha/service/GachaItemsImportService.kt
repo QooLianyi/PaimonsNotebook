@@ -262,9 +262,9 @@ class GachaItemsImportService(
         val stmt = if (stmtMap[size] != null) {
             stmtMap[size]!!
         } else {
-            //重复主键忽略
+            //重复主键更新
             val sb =
-                StringBuilder("INSERT OR IGNORE INTO gacha_items(count,gacha_type,id,item_id,item_type,lang,name,rank_type,time,uid,uigf_gacha_type) VALUES ")
+                StringBuilder("INSERT OR REPLACE INTO gacha_items(count,gacha_type,id,item_id,item_type,lang,name,rank_type,time,uid,uigf_gacha_type) VALUES ")
 
             repeat(list.size) {
                 when (it) {
@@ -285,7 +285,7 @@ class GachaItemsImportService(
 
         list.forEachIndexed { index, uigfGachaItem ->
             val gachaItemId =
-                uigfGachaItem.id.takeIf { it.isNotBlank() } ?: "${generateGachaLogItemId()}"
+                uigfGachaItem.id.takeIf { it.isNotBlank() } ?: "${generateGachaLogItemId(uigfGachaItem.uid)}"
 
             uigfGachaItem.apply {
                 stmt.bindString(11 * index + 1, count)
@@ -306,7 +306,7 @@ class GachaItemsImportService(
     }
 
     //生成ID
-    private suspend fun generateGachaLogItemId(): Long {
+    private suspend fun generateGachaLogItemId(uid:String): Long {
         //获取从本地存储生成的祈愿记录id并+1
         var id = PaimonsNotebookApplication.context.datastorePf.data.map {
             (it[PreferenceKeys.GenerateGachaRecordId] ?: 1000000000000000000L) + 1L
@@ -314,7 +314,7 @@ class GachaItemsImportService(
 
         //1300000000000000000往后的值已经被占用了
         while (id < 1300000000000000000L) {
-            if (!dao.isExist("$id")) {
+            if (!dao.isExist("$id",uid)) {
                 break
             }
             id++

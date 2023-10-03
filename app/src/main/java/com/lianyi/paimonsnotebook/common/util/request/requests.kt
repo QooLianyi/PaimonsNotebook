@@ -14,6 +14,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 import java.lang.reflect.ParameterizedType
 import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -59,7 +60,7 @@ suspend fun Request.getAsText(client: OkHttpClient = emptyOkHttpClient) =
         try {
             client.newCall(this@getAsText).await().body?.string() ?: ""
         } catch (e: Exception) {
-            val (code, msg) = if (e is SocketTimeoutException) {
+            val (code, msg) = if (e is SocketTimeoutException || e is UnknownHostException) {
                 ResultData.NETWORK_ERROR to "网络异常"
             } else {
                 ResultData.UNKNOWN_EXCEPTION to "未知错误"

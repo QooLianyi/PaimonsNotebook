@@ -15,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -71,7 +72,8 @@ internal fun PostLinkCard(
             diskCache = diskCache,
             modifier = Modifier
                 .radius(2.dp)
-                .size(size)
+                .size(size),
+            contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.width(8.dp))
 

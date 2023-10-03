@@ -13,7 +13,6 @@ import com.lianyi.paimonsnotebook.common.util.request.getAsText
 import com.lianyi.paimonsnotebook.common.util.request.post
 import com.lianyi.paimonsnotebook.common.web.ApiEndpoints
 import com.lianyi.paimonsnotebook.common.web.hoyolab.cookie.CookieHelper
-import okhttp3.internal.and
 import org.json.JSONObject
 import java.net.URLEncoder
 import java.security.Key
@@ -74,7 +73,7 @@ class GeeTestClient {
                     ajaxData.data.validate
                 )
                 if (verificationData.success) {
-                    return verificationData.data.challenge ?: "error"
+                    return verificationData.data.challenge
                 }
             }
         }
@@ -193,36 +192,6 @@ class GeeTestClient {
                 }))
             }.post(this)
         }.getAsText()
-
-    fun m65810a(bArr: ByteArray): String {
-        val sb2 = StringBuilder()
-        val f36704a =
-            charArrayOf(
-                '0',
-                '1',
-                '2',
-                '3',
-                '4',
-                '5',
-                '6',
-                '7',
-                '8',
-                '9',
-                'A',
-                'B',
-                'C',
-                'D',
-                'E',
-                'F'
-            )
-
-        for (i in bArr.indices) {
-            val cArr: CharArray = f36704a
-            sb2.append(cArr[bArr[i].toInt() shr 4 and 15])
-            sb2.append(cArr[bArr[i] and 15])
-        }
-        return sb2.toString()
-    }
 
 
     private suspend fun verifyVerification(

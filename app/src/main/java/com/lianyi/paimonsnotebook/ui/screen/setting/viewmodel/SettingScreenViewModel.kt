@@ -72,21 +72,6 @@ class SettingScreenViewModel : ViewModel() {
                     checked = configurationData.homeScreenDisplayState == HomeScreenDisplayState.Community
                 )
             }
-        ),
-        OptionListData(
-            name = "全屏模式",
-            description = "勾选后开启全屏模式,隐藏状态栏",
-            onClick = {
-                viewModelScope.launch(Dispatchers.IO) {
-                    configurationData.fullScreenMode = !configurationData.fullScreenMode
-                    PreferenceKeys.FullScreenMode.editValue(configurationData.fullScreenMode)
-                }
-            },
-            slot = {
-                SettingsOptionSwitch(
-                    checked = configurationData.fullScreenMode
-                )
-            }
         )
     )
 

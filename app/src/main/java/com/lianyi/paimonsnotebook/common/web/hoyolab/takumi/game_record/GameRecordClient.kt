@@ -12,6 +12,7 @@ import com.lianyi.paimonsnotebook.common.util.request.getAsJson
 import com.lianyi.paimonsnotebook.common.web.ApiEndpoints
 import com.lianyi.paimonsnotebook.common.web.hoyolab.cookie.CookieHelper
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.binding.UserGameRoleData
+import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.abyss.SpiralAbyssData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.daily_note.DailyNoteData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.daily_note.DailyNoteWidgetData
 import com.lianyi.paimonsnotebook.common.database.user.entity.User as UserEntity
@@ -21,14 +22,14 @@ class GameRecordClient {
         user: UserAndUid,
         challenge: String = "",
     ): ResultData<DailyNoteData> =
-        etgDailyNote(user.userEntity, user.playerUid, challenge)
+        getDailyNote(user.userEntity, user.playerUid, challenge)
 
     suspend fun getDailyNote(
         user: UserEntity,
         role: UserGameRoleData.Role,
         challenge: String = "",
     ): ResultData<DailyNoteData> =
-        etgDailyNote(user, PlayerUid(role.game_uid, role.region), challenge)
+        getDailyNote(user, PlayerUid(role.game_uid, role.region), challenge)
 
     suspend fun getDailyNoteForWidget(user: UserEntity) = buildRequest {
         url(ApiEndpoints.CardWidgetDataV2)
@@ -37,7 +38,7 @@ class GameRecordClient {
         setDynamicSecret(DynamicSecret.SaltType.K2)
     }.getAsJson<DailyNoteWidgetData>()
 
-    private suspend fun etgDailyNote(
+    private suspend fun getDailyNote(
         user: UserEntity,
         playerUid: PlayerUid,
         challenge: String = "",
@@ -60,5 +61,16 @@ class GameRecordClient {
 
         return result
     }
+
+    suspend fun getSpiralAbyssData(
+        user: UserAndUid,
+        scheduleType:String,
+    )= buildRequest {
+        url(ApiEndpoints.gameRecordSpiralAbyss(scheduleType = scheduleType, uid = user.playerUid))
+
+        setUser(user.userEntity,CookieHelper.Type.Cookie)
+        //client_type = 5时使用 X4
+        setDynamicSecret(DynamicSecret.SaltType.X6,DynamicSecret.Version.Gen2)
+    }.getAsJson<SpiralAbyssData>()
 
 }

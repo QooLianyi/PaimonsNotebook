@@ -1,89 +1,104 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="110dp"
+    android:layout_height="match_parent"
     android:minHeight="110dp"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:paddingHorizontal="12dp"
-    android:id="@+id/container"
+    android:id="@id/container"
     >
 
-    <LinearLayout
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/icon_resin" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="原粹树脂"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-    <ProgressBar
-        style="@style/HorizontalProgressBar"
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:max="100"
-        android:progress="50"
-        android:layout_marginVertical="12dp"
-        android:id="@+id/progress_bar"
+        android:layout_height="match_parent"
+        android:id="@+id/background"
         />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:paddingHorizontal="12dp"
+        android:id="@+id/container"
+        android:gravity="center"
+        >
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="剩余恢复时间"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                />
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/icon_resin" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="999:999"
-                android:textColor="@color/info"
-                android:textSize="12sp"
-                android:id="@+id/recover_time"
+                android:layout_marginStart="4dp"
+                android:text="原粹树脂"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 />
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="160/160"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:id="@+id/resin"
+        <ProgressBar
+            style="@style/HorizontalProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:max="100"
+            android:progress="50"
+            android:layout_marginVertical="12dp"
+            android:id="@+id/progress_bar"
             />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="剩余恢复时间"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="999:999"
+                    android:textColor="@color/info"
+                    android:textSize="12sp"
+                    android:id="@+id/recover_time"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="160/160"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:id="@+id/resin"
+                />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-
-</LinearLayout>
+</FrameLayout>

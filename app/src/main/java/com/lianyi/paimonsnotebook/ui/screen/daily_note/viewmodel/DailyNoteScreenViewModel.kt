@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lianyi.paimonsnotebook.common.data.hoyolab.game_record.DailyNote
 import com.lianyi.paimonsnotebook.common.data.hoyolab.user.User
-import com.lianyi.paimonsnotebook.common.database.daily_note.util.DailyNoteUtil
+import com.lianyi.paimonsnotebook.common.database.daily_note.util.DailyNoteHelper
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.database.disk_cache.util.DiskCacheDataType
 import com.lianyi.paimonsnotebook.common.database.user.util.AccountHelper
@@ -37,16 +37,13 @@ class DailyNoteScreenViewModel : ViewModel() {
                 }
             }
             launch {
-                DailyNoteUtil.dailyNoteFlow.collect {
+                DailyNoteHelper.dailyNoteFlow.collect {
                     dailyNoteList.clear()
                     dailyNoteList.addAll(it)
-                    it.forEach {
-                        println("list = ${it.dailyNoteEntity.sort}")
-                    }
                 }
             }
             launch {
-                DailyNoteUtil.notInDailyNoteDBUserListFlow.collect {
+                DailyNoteHelper.notInDailyNoteDBUserListFlow.collect {
                     allowAddDailyNoteUserList.clear()
                     allowAddDailyNoteUserList.addAll(it)
                 }
@@ -67,20 +64,20 @@ class DailyNoteScreenViewModel : ViewModel() {
             "正在获取最新的实时便笺".notify()
             showLoading = true
 
-            DailyNoteUtil.reloadDailyNote()
+            DailyNoteHelper.reloadDailyNote()
             showLoading = false
         }
     }
 
     fun deleteDailyNote(dailyNote: DailyNote) {
-        DailyNoteUtil.deleteDailyNote(dailyNote)
+        DailyNoteHelper.deleteDailyNote(dailyNote)
 
         "[${dailyNote.role.nickname}]已被删除".warnNotify(false)
     }
 
     fun showSelectGameRoleDialog() {
         if (allowAddDailyNoteUserList.isEmpty()) {
-            "已经没有能够添加的账号了".notify()
+            "已经没有能够添加的角色了".notify()
             return
         }
 
@@ -98,7 +95,7 @@ class DailyNoteScreenViewModel : ViewModel() {
             showSelectGameRoleDialog = false
             showLoading = true
 
-            DailyNoteUtil.addDailyNote(user, role)
+            DailyNoteHelper.addDailyNote(user, role)
             showLoading = false
         }
     }
@@ -118,8 +115,10 @@ class DailyNoteScreenViewModel : ViewModel() {
     }
 
     private fun confirmUpdateDailyNote() {
-        DailyNoteUtil.updateDailyNote(optionDailyNote.dailyNoteEntity.copy(sort = optionSortValue.toInt()))
-        "修改成功".notify()
+        viewModelScope.launch(Dispatchers.IO) {
+            DailyNoteHelper.updateDailyNote(optionDailyNote.dailyNoteEntity.copy(sort = optionSortValue.toInt()))
+            "修改成功".notify()
+        }
     }
 
     fun goHoyolabActivity() {

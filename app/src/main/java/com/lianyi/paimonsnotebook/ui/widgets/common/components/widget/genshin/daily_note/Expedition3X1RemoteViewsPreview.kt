@@ -22,6 +22,7 @@ import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.RemoteViewsPreviewAnimData
 import com.lianyi.paimonsnotebook.ui.theme.Black
 import com.lianyi.paimonsnotebook.ui.theme.Success
+import kotlin.math.roundToInt
 
 @Composable
 fun Expedition3X1RemoteViewsPreview(
@@ -38,7 +39,7 @@ fun Expedition3X1RemoteViewsPreview(
     }
     Row(
         modifier = Modifier
-            .radius(8.dp)
+            .radius(previewAnimData.backgroundRadius.value.roundToInt().dp)
             .background(previewAnimData.backgroundColor.value)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,

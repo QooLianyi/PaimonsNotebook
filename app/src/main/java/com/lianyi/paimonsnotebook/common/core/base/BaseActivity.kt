@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 
@@ -35,6 +36,7 @@ open class BaseActivity(private val enableGesture: Boolean = true) : ComponentAc
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 setTranslucent(enableGesture)
             }
+
         } catch (_: Exception) {
         }
     }
@@ -58,6 +60,13 @@ open class BaseActivity(private val enableGesture: Boolean = true) : ComponentAc
             onStartActivityForResult(it)
         }
 
+    protected fun registerPressedCallback() =
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBackPressedCallback()
+            }
+        })
+
     //检查存储权限
     protected fun checkStoragePermission() = checkPermissions(storagePermissions)
 
@@ -66,15 +75,15 @@ open class BaseActivity(private val enableGesture: Boolean = true) : ComponentAc
 
     //检查权限 true为全部获取
     protected fun checkPermissions(
-        permissions:Array<String>
+        permissions: Array<String>
     ) = permissions.count {
         checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED
     } == permissions.size
 
     //申请权限
     protected fun requestPermissions(
-        permissions:Array<String>
-    ){
+        permissions: Array<String>
+    ) {
         requestPermissions(
             permissions,
             100
@@ -86,4 +95,7 @@ open class BaseActivity(private val enableGesture: Boolean = true) : ComponentAc
 
     //Activity返回结果
     protected open fun onStartActivityForResult(result: ActivityResult) {}
+
+    //当点击返回时
+    protected open fun onBackPressedCallback() {}
 }

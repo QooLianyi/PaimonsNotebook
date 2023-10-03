@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
-import com.lianyi.paimonsnotebook.common.components.blur_card.widget.ItemSlider
+import com.lianyi.paimonsnotebook.common.components.layout.blur_card.widget.ItemSlider
 import com.lianyi.paimonsnotebook.common.components.text.RichText
 import com.lianyi.paimonsnotebook.ui.screen.items.components.content.ItemScreenContent
 import com.lianyi.paimonsnotebook.ui.screen.items.components.information.InformationItem

@@ -1,6 +1,7 @@
 package com.lianyi.paimonsnotebook.ui.screen.items.components.content
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,8 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.media.FullScreenImage
-import com.lianyi.paimonsnotebook.common.components.spacer.NavigationPaddingSpacer
+import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.util.enums.ListLayoutStyle
 import com.lianyi.paimonsnotebook.ui.screen.items.components.item.base.ItemBaseInfo
 import com.lianyi.paimonsnotebook.ui.screen.items.components.item.list_card.ItemGridListCard
@@ -47,11 +48,11 @@ internal fun <T> ItemScreenContent(
     baseInfoStarCount: Int,
     baseInfoIconUrl: String,
     tabs: Array<String>,
-    enabledItemShadow:Boolean = false,
+    enabledItemShadow: Boolean = false,
     itemBackgroundResId: Int = -1,
     itemFilterViewModel: ItemFilterViewModel<T>,
     onClickListButton: () -> Unit,
-    itemImageContentScale:ContentScale = ContentScale.Crop,
+    itemImageContentScale: ContentScale = ContentScale.Crop,
     getListItemDataContent: (T, ItemFilterType, Boolean) -> String,
     getItemListCardData: (T) -> ItemListCardData,
     informationContentSlot: @Composable (T) -> Unit,
@@ -71,19 +72,21 @@ internal fun <T> ItemScreenContent(
         val lazyListState =
             rememberLazyListState()
 
-        ItemScreenTopBar(
-            onClickListButton = onClickListButton,
-            lazyListState = lazyListState,
-            text = listButtonText
-        )
-
-        LazyColumn(
+        ContentSpacerLazyColumn(
             modifier = Modifier.fillMaxSize(),
-            state = lazyListState
+            state = lazyListState,
+            statusBarPaddingEnabled = false
         ) {
 
             item {
-                Spacer(modifier = Modifier.height(this@ItemInformationContentLayout.maxHeight * .6f))
+                Column {
+                    StatusBarPaddingSpacer()
+
+                    Spacer(
+                        modifier = Modifier
+                            .height(this@ItemInformationContentLayout.maxHeight * .6f)
+                    )
+                }
             }
 
             item {
@@ -127,11 +130,13 @@ internal fun <T> ItemScreenContent(
                     cardContent.invoke(currentTabIndex)
                 }
             }
-
-            item {
-                NavigationPaddingSpacer()
-            }
         }
+
+        ItemScreenTopBar(
+            onClickListButton = onClickListButton,
+            lazyListState = lazyListState,
+            text = listButtonText
+        )
 
         ItemFilterContent(
             itemFilterViewModel = itemFilterViewModel,

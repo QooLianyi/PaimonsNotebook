@@ -1,12 +1,12 @@
 package com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget
 
+import android.content.Intent
+import android.widget.RemoteViews
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.database.app_widget_binding.entity.AppWidgetBinding
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.daily_note.DailyNoteWidgetData
-import com.lianyi.paimonsnotebook.ui.widgets.common.extensions.setBackgroundResource
 import com.lianyi.paimonsnotebook.ui.widgets.core.BaseRemoteViews
-import com.lianyi.paimonsnotebook.ui.widgets.util.AppWidgetHelper
 import com.lianyi.paimonsnotebook.ui.widgets.widget.AppWidgetCommon3X1
 
 /*
@@ -24,8 +24,6 @@ internal class ResinProgressBarRecoverTime3X2RemoteViews(
     }
 
     override suspend fun setDailyNoteWidget(dailyNoteWidgetData: DailyNoteWidgetData) {
-        val configuration = appWidgetBinding.configuration
-
         setProgressBar(
             R.id.progress_bar,
             dailyNoteWidgetData.max_resin,
@@ -41,10 +39,11 @@ internal class ResinProgressBarRecoverTime3X2RemoteViews(
             R.id.recover_time,
             TimeHelper.getRecoverTime(dailyNoteWidgetData.resin_recovery_time.toLongOrNull() ?: 0L)
         )
+    }
 
-        setBackgroundResource(
-            R.id.container,
-            AppWidgetHelper.getAppWidgetBackgroundResource(configuration.backgroundPattern)
-        )
+    override suspend fun onUpdateContent(intent: Intent?): RemoteViews? {
+        setCommonStyle(appWidgetBinding.configuration)
+
+        return super.onUpdateContent(intent)
     }
 }

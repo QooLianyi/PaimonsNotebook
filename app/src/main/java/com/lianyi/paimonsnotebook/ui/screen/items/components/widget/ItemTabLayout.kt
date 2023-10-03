@@ -3,7 +3,7 @@ package com.lianyi.paimonsnotebook.ui.screen.items.components.widget
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.runtime.Composable
-import com.lianyi.paimonsnotebook.common.components.blur_card.card.BlurCardTabButton
+import com.lianyi.paimonsnotebook.common.components.layout.blur_card.card.BlurCardTabButton
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

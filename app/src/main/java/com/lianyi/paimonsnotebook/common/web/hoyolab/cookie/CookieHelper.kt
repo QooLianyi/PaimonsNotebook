@@ -20,6 +20,7 @@ object CookieHelper {
         const val Ltoken = 0x0010
         const val Stoken = 0x0100
         const val None = 0x00000
+        const val Cookie = CookieToken or Ltoken
     }
 
     fun stringToCookieMap(cookieString: String?): Map<String, String> {

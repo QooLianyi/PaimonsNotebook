@@ -2,7 +2,6 @@ package com.lianyi.paimonsnotebook.common.components.widget
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,7 +39,7 @@ fun TabBar(
     modifier: Modifier = Modifier,
     tabs: Array<String>,
     indicatorColor: Color = Primary_2,
-    requiredWidthIn: Pair<Dp, Dp> = 50.dp to 100.dp,
+    requiredWidthIn: Pair<Dp, Dp> = 50.dp to 120.dp,
     textSelectColor: Color = Black,
     textUnSelectColor: Color = Black_20,
     textSelectSize: TextUnit = 20.sp,
@@ -105,7 +104,6 @@ fun TabBar(
                 }
 
             }
-
         }
     }
 }

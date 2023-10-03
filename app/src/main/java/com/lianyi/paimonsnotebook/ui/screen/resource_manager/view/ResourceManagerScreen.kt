@@ -4,9 +4,12 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -17,8 +20,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.dialog.PropertiesDialog
 import com.lianyi.paimonsnotebook.common.components.widget.TabBar
@@ -31,13 +32,13 @@ import com.lianyi.paimonsnotebook.ui.screen.resource_manager.components.popup.Po
 import com.lianyi.paimonsnotebook.ui.screen.resource_manager.viewmodel.ResourceManagerViewModel
 import com.lianyi.paimonsnotebook.ui.theme.*
 
+//todo 图片管理界面 等待重构
 class ResourceManagerScreen : BaseActivity() {
-
     private val viewModel by lazy {
         ViewModelProvider(this)[ResourceManagerViewModel::class.java]
     }
 
-    @OptIn(ExperimentalPagerApi::class)
+    @OptIn(ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -51,9 +52,7 @@ class ResourceManagerScreen : BaseActivity() {
 
         setContent {
             PaimonsNotebookTheme(this) {
-
                 BoxWithConstraints {
-
                     val imageSize = maxWidth / 4
 
                     Column(
@@ -186,11 +185,15 @@ class ResourceManagerScreen : BaseActivity() {
                             }
                         }
 
-                        LaunchedEffect(viewModel.currentTabIndex) {
-                            viewModel.pageState.animateScrollToPage(viewModel.currentTabIndex)
+                        val pageState = rememberPagerState {
+                            viewModel.tabs.size
                         }
 
-                        HorizontalPager(count = viewModel.tabs.size, state = viewModel.pageState) {
+                        LaunchedEffect(viewModel.currentTabIndex) {
+                            pageState.animateScrollToPage(viewModel.currentTabIndex)
+                        }
+
+                        HorizontalPager(state = pageState) {
                             when (it) {
                                 0 -> ResourceManagerHomePage(
                                     diskCacheDataList = viewModel.diskCacheDataList,

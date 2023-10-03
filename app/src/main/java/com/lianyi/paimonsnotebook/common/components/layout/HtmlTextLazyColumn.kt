@@ -1,13 +1,11 @@
 package com.lianyi.paimonsnotebook.common.components.layout
 
-import android.app.Activity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -34,12 +32,12 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.core.graphics.toColorInt
 import androidx.core.text.HtmlCompat
 import androidx.core.text.toSpannable
+import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.media.FullScreenImage
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
 import com.lianyi.paimonsnotebook.common.components.placeholder.ImageLoadingPlaceholder
 import com.lianyi.paimonsnotebook.common.components.placeholder.TextPlaceholder
 import com.lianyi.paimonsnotebook.common.components.placeholder.VideoPlayerPlaceholder
-import com.lianyi.paimonsnotebook.common.components.spacer.NavigationPaddingSpacer
 import com.lianyi.paimonsnotebook.common.components.text.FoldTextContent
 import com.lianyi.paimonsnotebook.common.data.html.HtmlSpanData
 import com.lianyi.paimonsnotebook.common.data.html.HtmlTextData
@@ -68,7 +66,6 @@ import org.jsoup.nodes.Element
 fun HtmlTextLazyColumn(
     htmlText: String,
     diskCacheTemplate: DiskCache,
-    activity: Activity,
     horizontalPadding: Dp = 10.dp,
     verticalPadding: Dp = 5.dp,
     fontSize: TextUnit = 16.sp,
@@ -86,7 +83,7 @@ fun HtmlTextLazyColumn(
         mutableStateOf("")
     }
 
-    LazyColumn(
+    ContentSpacerLazyColumn(
         modifier = Modifier
             .fillMaxWidth()
     ) {
@@ -211,10 +208,6 @@ fun HtmlTextLazyColumn(
                     }
                 }
             }
-        }
-
-        item {
-            NavigationPaddingSpacer()
         }
     }
 

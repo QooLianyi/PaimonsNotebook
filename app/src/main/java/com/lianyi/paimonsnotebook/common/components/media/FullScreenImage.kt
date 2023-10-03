@@ -70,6 +70,6 @@ fun FullScreenImage(
                 scaleY = scale,
                 translationX = offset.x,
                 translationY = offset.y
-            ), contentScale = ContentScale.FillWidth)
+            ), contentScale = ContentScale.Inside)
     }
 }

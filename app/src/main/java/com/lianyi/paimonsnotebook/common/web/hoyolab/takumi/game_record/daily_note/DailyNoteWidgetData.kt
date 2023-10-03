@@ -4,6 +4,7 @@ data class DailyNoteWidgetData(
     val current_expedition_num: Int,
     val current_home_coin: Int,
     val current_resin: Int,
+    val daily_task: DailyNoteData.DailyTask,
     val expeditions: List<Expedition>,
     val finished_task_num: Int,
     val has_signed: Boolean,
@@ -22,4 +23,3 @@ data class DailyNoteWidgetData(
         val status: String
     )
 }
-

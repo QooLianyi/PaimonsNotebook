@@ -1,32 +1,32 @@
 package com.lianyi.paimonsnotebook.ui.screen.home.components.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.media.LazyBanner
-import com.lianyi.paimonsnotebook.common.components.spacer.NavigationPaddingSpacer
+import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.components.text.TitleText
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.database.disk_cache.util.DiskCacheDataType
 import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.NearActivityData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.OfficialRecommendedPostsData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.WebHomeData
-import com.lianyi.paimonsnotebook.ui.screen.home.components.WebHomeNearActivity
 import com.lianyi.paimonsnotebook.ui.screen.home.components.BannerItem
+import com.lianyi.paimonsnotebook.ui.screen.home.components.WebHomeNearActivity
 import com.lianyi.paimonsnotebook.ui.screen.home.components.notice.HomeEventNotice
 import com.lianyi.paimonsnotebook.ui.screen.home.util.PostType
 import com.lianyi.paimonsnotebook.ui.theme.White
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun HomeContent(
     bannerList: List<WebHomeData.Carousel>,
@@ -35,7 +35,6 @@ internal fun HomeContent(
     goPostDetail: (String, PostType) -> Unit,
 ) {
     Box {
-
         //顶部背景
         Image(
             painter = painterResource(id = R.drawable.bg_home_background),
@@ -46,9 +45,9 @@ internal fun HomeContent(
             contentScale = ContentScale.Crop
         )
 
-        LazyColumn(Modifier.fillMaxSize()) {
+        ContentSpacerLazyColumn(Modifier.fillMaxSize()) {
             item {
-                Spacer(modifier = Modifier.height(1.dp))
+                StatusBarPaddingSpacer()
             }
             //轮播图
             item {
@@ -56,7 +55,7 @@ internal fun HomeContent(
                     bannerData = bannerList,
                     contentPaddingValues = PaddingValues(30.dp, 0.dp),
                     modifier = Modifier
-                        .height(200.dp),
+                        .height(180.dp),
                     enableAutoLoop = true,
                     itemSpacing = (-30).dp
                 ) { item, index, pageCurrent ->
@@ -136,10 +135,6 @@ internal fun HomeContent(
                 ) { data ->
                     goPostDetail(data.post_id, PostType.Notice)
                 }
-            }
-
-            item {
-                NavigationPaddingSpacer()
             }
         }
 

@@ -232,7 +232,7 @@ object FileHelper {
         context.getExternalFilesDir(null)?.resolve("debug")
     }
 
-    val debug by lazy {
-        df?.exists() == true
-    }
+    val debug:Boolean
+        get() =
+            df?.exists() == true
 }

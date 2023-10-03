@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.RemoteViewsPreviewAnimData
+import kotlin.math.roundToInt
 
 @Composable
 internal fun DailyNoteWidget2X1RemoteViewsPreview(
@@ -34,7 +35,7 @@ internal fun DailyNoteWidget2X1RemoteViewsPreview(
 
     Column(
         modifier = Modifier
-            .radius(8.dp)
+            .radius(previewAnimData.backgroundRadius.value.roundToInt().dp)
             .size(120.dp, 60.dp)
             .background(previewAnimData.backgroundColor.value),
         verticalArrangement = Arrangement.Center,

@@ -33,13 +33,13 @@
         android:theme="@style/Theme.PaimonsNotebook"
         tools:targetApi="33">
         <activity
+            android:name=".ui.screen.abyss.view.AbyssScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
             android:name=".common.view.HoyolabWebActivity"
             android:theme="@style/Theme.PaimonsNotebook" />
         <activity
             android:name=".ui.screen.app_widget.view.AppWidgetConfigurationScreen"
-            android:theme="@style/Theme.PaimonsNotebook" />
-        <activity
-            android:name=".ui.screen.app_widget.view.AppWidgetBindingScreen"
             android:theme="@style/Theme.PaimonsNotebook" />
         <activity
             android:name=".ui.screen.app_widget.view.AppWidgetScreen"
@@ -81,9 +81,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.screen.account.view.LoginScreen"
-            android:theme="@style/Theme.PaimonsNotebook" />
         <activity
             android:name=".ui.screen.guide.view.GuideScreen"
             android:theme="@style/Theme.PaimonsNotebook" />

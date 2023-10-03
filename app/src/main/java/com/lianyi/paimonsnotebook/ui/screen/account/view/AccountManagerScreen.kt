@@ -1,7 +1,6 @@
 package com.lianyi.paimonsnotebook.ui.screen.account.view
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -10,9 +9,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.DropdownMenu
@@ -29,9 +26,11 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.LoadingDialog
-import com.lianyi.paimonsnotebook.common.components.spacer.NavigationPaddingSpacer
+import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
+import com.lianyi.paimonsnotebook.common.components.spacer.NavigationBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.components.text.TitleText
 import com.lianyi.paimonsnotebook.common.components.widget.IconButton
+import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.database.user.util.AccountHelper
 import com.lianyi.paimonsnotebook.common.extension.modifier.padding.paddingStart
 import com.lianyi.paimonsnotebook.common.extension.modifier.state.isScrollToEnd
@@ -40,7 +39,7 @@ import com.lianyi.paimonsnotebook.ui.screen.account.components.CookieInputDialog
 import com.lianyi.paimonsnotebook.ui.screen.account.viewmodel.AccountManagerScreenViewModel
 import com.lianyi.paimonsnotebook.ui.theme.*
 
-class AccountManagerScreen : ComponentActivity() {
+class AccountManagerScreen : BaseActivity() {
 
     private val viewModel by lazy {
         ViewModelProvider(this)[AccountManagerScreenViewModel::class.java]
@@ -73,7 +72,7 @@ class AccountManagerScreen : ComponentActivity() {
                         .background(BackGroundColor)
                 ) {
 
-                    LazyColumn(state = state, modifier = Modifier.fillMaxSize()) {
+                    ContentSpacerLazyColumn(state = state, modifier = Modifier.fillMaxSize()) {
                         item {
                             TitleText(text = "账号列表", fontSize = 20.sp, modifier = Modifier
                                 .paddingStart(8.dp)
@@ -158,7 +157,7 @@ class AccountManagerScreen : ComponentActivity() {
                             }
                         }
 
-                        NavigationPaddingSpacer()
+                        NavigationBarPaddingSpacer()
                     }
 
                     //通过cookie添加账号对话框

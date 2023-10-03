@@ -8,10 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -28,13 +26,10 @@ import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.RemoteViewsPreviewAnimData
-import com.lianyi.paimonsnotebook.ui.theme.Black
-import com.lianyi.paimonsnotebook.ui.theme.Black_10
 import com.lianyi.paimonsnotebook.ui.theme.Black_40
 import com.lianyi.paimonsnotebook.ui.theme.Black_5
-import com.lianyi.paimonsnotebook.ui.theme.Black_50
 import com.lianyi.paimonsnotebook.ui.theme.Transparent
-import com.lianyi.paimonsnotebook.ui.theme.White
+import kotlin.math.roundToInt
 
 @Composable
 internal fun Shortcut3X2Preview(
@@ -42,8 +37,8 @@ internal fun Shortcut3X2Preview(
 ) {
     Column(
         Modifier
+            .radius(previewAnimData.backgroundRadius.value.roundToInt().dp)
             .width(240.dp)
-            .radius(8.dp)
             .background(previewAnimData.backgroundColor.value)
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)

@@ -2,6 +2,7 @@ package com.lianyi.paimonsnotebook.ui.screen.app_widget.data
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
@@ -22,21 +23,26 @@ import com.lianyi.paimonsnotebook.ui.widgets.util.RemoteViewsDataType
 import com.lianyi.paimonsnotebook.ui.widgets.util.RemoteViewsPreviewHelper
 
 /*
-* 小组件配置类
+* 桌面组件配置类
 * */
 class AppWidgetConfigurationData {
     private val previewAnim by lazy {
         RemoteViewsPreviewAnimData(
             textColor = textColor,
             backgroundColor = backgroundColor,
-            imageTintColor = imageTintColor
+            imageTintColor = imageTintColor,
+            backgroundRadius = backgroundRadius
         )
     }
 
-    private val backgroundPatternDefault = AppWidgetHelper.PATTERN_LIGHT
-    var backgroundPattern by mutableStateOf(backgroundPatternDefault)
+    private val backgroundColorDefault = White
+    var backgroundColor by mutableStateOf(backgroundColorDefault)
         private set
-    var backgroundColor by mutableStateOf(White)
+
+    var customBackgroundColor by mutableStateOf(backgroundColorDefault)
+
+    private val backgroundRadiusDefault = 8f
+    var backgroundRadius by mutableFloatStateOf(backgroundRadiusDefault)
         private set
 
     private val textColorDefault = Black
@@ -67,7 +73,8 @@ class AppWidgetConfigurationData {
 
     var appWidgetId = -1
 
-    private var previewComponent by mutableStateOf<@Composable (RemoteViewsPreviewAnimData) -> Unit>({})
+    private var previewComponent by mutableStateOf<@Composable (RemoteViewsPreviewAnimData) -> Unit>(
+        {})
 
     private var configurationOptions = setOf<AppWidgetConfigurationOption>()
 
@@ -78,9 +85,13 @@ class AppWidgetConfigurationData {
         get() =
             configurationOptions.contains(AppWidgetConfigurationOption.GameRole)
 
-    val showBackgroundPatten
+    val showBackgroundColor
         get() =
-            configurationOptions.contains(AppWidgetConfigurationOption.BackgroundPatten)
+            configurationOptions.contains(AppWidgetConfigurationOption.BackgroundColor)
+
+    val showBackgroundRadius
+        get() =
+            configurationOptions.contains(AppWidgetConfigurationOption.BackgroundRadius)
 
     val showTextColor
         get() =
@@ -127,11 +138,22 @@ class AppWidgetConfigurationData {
     }
 
     suspend fun setBackgroundPattern(pattern: String) {
-        backgroundPattern = pattern
+        if(backgroundColor == backgroundColorDefault) return
 
         val color = getColorByPattern(pattern)
-
         backgroundColor = color
+        previewAnim.changeBackgroundColor(color)
+    }
+
+    suspend fun setBackgroundRadius(value:Float){
+        backgroundRadius = value
+
+        previewAnim.changeBackgroundRadius(backgroundRadius)
+    }
+
+    suspend fun setBackgroundColor(color: Color){
+        backgroundColor = color
+
         previewAnim.changeBackgroundColor(color)
     }
 
@@ -139,6 +161,7 @@ class AppWidgetConfigurationData {
         imageTintColor = color
         previewAnim.changeImageTintColor(color)
     }
+
 
     private fun getColorByPattern(pattern: String) =
         when (pattern) {
@@ -165,8 +188,11 @@ class AppWidgetConfigurationData {
 
         val configuration = AppWidgetConfiguration(
             textColor = if (textColor != textColorDefault) textColor.toArgb() else null,
-            backgroundPattern = if (backgroundPattern != backgroundPatternDefault) backgroundPattern else null,
-            imageTintColor = if (imageTintColor != imageTintColorDefault) imageTintColor.toArgb() else null
+            imageTintColor = if (imageTintColor != imageTintColorDefault) imageTintColor.toArgb() else null,
+            background = AppWidgetConfiguration.AppWidgetBackground(
+                backgroundColor = if(backgroundColor != backgroundColorDefault) backgroundColor.toArgb() else null,
+                backgroundRadius = if (backgroundRadius != backgroundRadiusDefault) backgroundRadius else null
+            )
         )
 
         if (showUser) {
@@ -225,8 +251,8 @@ class AppWidgetConfigurationData {
     fun setValueForConfiguration(configuration: AppWidgetConfiguration) {
         textColor = configuration.textColor?.parseColor() ?: textColorDefault
         imageTintColor = configuration.imageTintColor?.parseColor() ?: imageTintColorDefault
-        backgroundPattern = configuration.backgroundPattern ?: backgroundPatternDefault
-        backgroundColor = getColorByPattern(backgroundPattern)
+        backgroundRadius = configuration.background?.backgroundRadius ?: backgroundRadiusDefault
+        backgroundColor = configuration.background?.backgroundColor?.parseColor() ?: backgroundColorDefault
 
         bindGameRole = configuration.bindingGameRole
     }

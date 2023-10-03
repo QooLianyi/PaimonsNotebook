@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,9 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,7 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.common.components.spacer.NavigationPaddingSpacer
+import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.data.hoyolab.game_record.DailyNote
 import com.lianyi.paimonsnotebook.common.database.gacha.data.GachaRecordOverview
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
@@ -40,8 +37,6 @@ import com.lianyi.paimonsnotebook.ui.screen.home.components.card.gacha_record.Ga
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
 import com.lianyi.paimonsnotebook.ui.theme.Black
 import com.lianyi.paimonsnotebook.ui.theme.CardBackGroundColor_Light_1
-import com.lianyi.paimonsnotebook.ui.theme.Gray_F6F7FC
-import com.lianyi.paimonsnotebook.ui.theme.White
 
 @Composable
 internal fun HomeContentSimple(
@@ -51,7 +46,7 @@ internal fun HomeContentSimple(
     eventList: List<AnnouncementData.AnnouncementList.AnnouncementItem>,
     onNavigationClick: () -> Unit,
 ) {
-    LazyColumn(
+    ContentSpacerLazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(BackGroundColor), contentPadding = PaddingValues(12.dp)
@@ -181,11 +176,6 @@ internal fun HomeContentSimple(
                 EventCardGroup("祈愿活动", gachaEventList)
             }
         }
-
-        item {
-            NavigationPaddingSpacer()
-        }
-
     }
 
 }

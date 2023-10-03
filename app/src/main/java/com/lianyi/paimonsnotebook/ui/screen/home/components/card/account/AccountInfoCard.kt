@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
+import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.components.text.TitleText
 import com.lianyi.paimonsnotebook.common.data.hoyolab.user.User
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
@@ -44,76 +45,80 @@ internal fun AccountInfoCard(
             contentScale = ContentScale.Crop
         )
 
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            Box(modifier = Modifier
-                .drawBehind {
-                    drawCircle(White_20, 86f, style = Stroke(50f))
-                    drawCircle(White_10, 125f, style = Stroke(2f))
-                }
+        Column(modifier = Modifier.fillMaxSize()) {
+            StatusBarPaddingSpacer()
+
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
             ) {
+                Box(modifier = Modifier
+                    .drawBehind {
+                        drawCircle(White_20, 86f, style = Stroke(50f))
+                        drawCircle(White_10, 125f, style = Stroke(2f))
+                    }
+                ) {
 
-                if (user != null) {
-                    NetworkImage(
-                        url = user.userInfo.avatar_url,
-                        modifier = Modifier
-                            .size(70.dp)
-                            .padding(3.dp)
-                            .clip(CircleShape)
-                            .background(White)
-                            .border(3.dp, White, CircleShape),
-                        contentScale = ContentScale.Crop,
-                        diskCache = DiskCache(
+                    if (user != null) {
+                        NetworkImage(
                             url = user.userInfo.avatar_url,
-                            name = "默认账户头像",
-                            createFrom = "首页",
-                            description = "默认账户头像",
-                            type = DiskCacheDataType.Stable,
-                            lastUseFrom = "首页"
+                            modifier = Modifier
+                                .size(70.dp)
+                                .padding(3.dp)
+                                .clip(CircleShape)
+                                .background(White)
+                                .border(3.dp, White, CircleShape),
+                            contentScale = ContentScale.Crop,
+                            diskCache = DiskCache(
+                                url = user.userInfo.avatar_url,
+                                name = "默认账户头像",
+                                createFrom = "首页",
+                                description = "默认账户头像",
+                                type = DiskCacheDataType.Stable,
+                                lastUseFrom = "首页"
+                            )
                         )
-                    )
-                } else {
-                    Image(
-                        painter = painterResource(id = R.drawable.icon_klee),
-                        contentDescription = null,
+                    } else {
+                        Image(
+                            painter = painterResource(id = R.drawable.icon_offline_avatar),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(70.dp)
+                                .padding(3.dp)
+                                .clip(CircleShape)
+                                .background(White)
+                                .border(3.dp, White, CircleShape)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column {
+                    TitleText(
+                        text = user?.userInfo?.nickname
+                            ?: "旅行者",
+                        fontSize = 16.sp,
+                        color = White,
                         modifier = Modifier
-                            .size(70.dp)
-                            .padding(3.dp)
-                            .clip(CircleShape)
-                            .background(White)
-                            .border(3.dp, White, CircleShape)
+                            .background(Black_10)
+                            .paddingStart(5.dp)
+                            .fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    TitleText(
+                        text = user?.getSelectedGameRole()?.game_uid ?: "当前未选择角色",
+                        fontSize = 13.sp,
+                        color = Info_1,
+                        modifier = Modifier
+                            .background(Black_10)
+                            .paddingStart(6.dp)
+                            .fillMaxWidth()
                     )
                 }
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column {
-                TitleText(
-                    text = user?.userInfo?.nickname
-                        ?: "旅行者",
-                    fontSize = 16.sp,
-                    color = White,
-                    modifier = Modifier
-                        .background(Black_10)
-                        .paddingStart(5.dp)
-                        .fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                TitleText(
-                    text = user?.getSelectedGameRole()?.game_uid ?: "当前未选择角色",
-                    fontSize = 13.sp,
-                    color = Info_1,
-                    modifier = Modifier
-                        .background(Black_10)
-                        .paddingStart(6.dp)
-                        .fillMaxWidth()
-                )
             }
         }
 

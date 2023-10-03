@@ -28,6 +28,7 @@ import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugDynamicSecretC
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugGachaContent
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugMetadataContent
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugPostContent
+import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugTempContent
 import com.lianyi.paimonsnotebook.ui.overlay.debug.viewmodel.DebugOverlayViewModel
 import com.lianyi.paimonsnotebook.ui.theme.White
 
@@ -122,6 +123,14 @@ fun DebugOverlayContent(overlayState: OverlayState) {
                 Text(text = "祈愿", fontSize = 20.sp)
             }) {
                 DebugGachaContent()
+            }
+        }
+
+        item {
+            FoldTextContent(titleSlot = {
+                Text(text = "临时测试功能", fontSize = 20.sp)
+            }) {
+                DebugTempContent()
             }
         }
     }

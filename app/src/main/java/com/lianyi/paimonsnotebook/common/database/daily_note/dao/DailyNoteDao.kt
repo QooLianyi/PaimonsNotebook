@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface DailyNoteDao {
     @Upsert
-    fun insert(dailyNote: DailyNote)
+    fun upsert(dailyNote: DailyNote)
 
     @Update
     fun update(dailyNote: DailyNote)

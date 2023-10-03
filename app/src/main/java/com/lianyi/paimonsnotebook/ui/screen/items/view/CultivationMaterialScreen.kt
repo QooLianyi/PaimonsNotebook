@@ -9,33 +9,25 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DropdownMenu
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
-import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyVerticalGrid
+import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
-import com.lianyi.paimonsnotebook.ui.screen.items.components.item.icon.ItemIconCard
 import com.lianyi.paimonsnotebook.ui.screen.items.components.item.list_card.ItemGridListCard
 import com.lianyi.paimonsnotebook.ui.screen.items.components.state.ItemScreenLoadingState
 import com.lianyi.paimonsnotebook.ui.screen.items.data.ItemListCardData
@@ -61,10 +53,12 @@ class CultivationMaterialScreen : BaseActivity() {
                             .fillMaxWidth()
                             .background(BackGroundColor)
                     ) {
+                        StatusBarPaddingSpacer()
+
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(8.dp),
+                                .padding(12.dp,4.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
@@ -95,20 +89,21 @@ class CultivationMaterialScreen : BaseActivity() {
                                                 .clickable {
                                                     viewModel.onSelectDropMenuItem(pair)
                                                 }
-                                                .padding(6.dp,3.dp)
+                                                .padding(6.dp, 3.dp)
                                         )
                                     }
                                 }
                             }
                         }
 
-                        LazyVerticalGrid(
+                        ContentSpacerLazyVerticalGrid(
                             columns = GridCells.Adaptive(60.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(8.dp),
+                            contentPadding = PaddingValues(12.dp,6.dp),
                             modifier = Modifier
                                 .fillMaxSize(),
+                            statusBarPaddingEnabled = false
                         ) {
                             if (viewModel.avatarList.isNotEmpty()) {
                                 item(span = {

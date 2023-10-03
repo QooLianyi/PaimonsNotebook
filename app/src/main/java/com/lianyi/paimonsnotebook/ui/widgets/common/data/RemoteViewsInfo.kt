@@ -8,7 +8,7 @@ import com.lianyi.paimonsnotebook.ui.widgets.util.RemoteViewsType
 
 /*
 * 远端视图信息
-* appWidgetClass:所需的小组件
+* appWidgetClass:所需的桌面组件
 * remoteViewsClass:所需的视图
 * dataType:所需的数据类型
 * remoteViewsName:远端视图名称
@@ -23,7 +23,7 @@ data class RemoteViewsInfo(
     val remoteViewsType: RemoteViewsType = RemoteViewsType.Default
 ) {
     companion object {
-        //远端试图默认配置选项
+        //远端视图默认配置选项
         private val defaultConfigurationOptions by lazy {
             setOf(
                 AppWidgetConfigurationOption.GameRole,

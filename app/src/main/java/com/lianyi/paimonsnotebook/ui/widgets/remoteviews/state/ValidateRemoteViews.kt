@@ -9,11 +9,12 @@ import com.lianyi.paimonsnotebook.ui.widgets.core.BaseRemoteViews
 * */
 internal class ValidateRemoteViews(
     appWidgetId:Int,
+    mid:String,
     cls: Class<out BaseAppWidget>
 ) : BaseRemoteViews(appWidgetId, cls, R.layout.appwidget_error_placeholder) {
     init {
         setTextViewText(R.id.text,"需要验证")
         setImageViewResource(R.id.image,R.drawable.emotion_icon_ambor_failure)
-        setOnClickPendingIntent(R.id.container, goValidatePendingIntent)
+        setOnClickPendingIntent(R.id.container, getValidatePendingIntent(mid))
     }
 }

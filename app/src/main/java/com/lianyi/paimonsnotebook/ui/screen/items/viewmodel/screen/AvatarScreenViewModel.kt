@@ -90,7 +90,7 @@ class AvatarScreenViewModel : ViewModel() {
         loadingState = LoadingState.Error
     }
 
-    private var currentItemLevel = 1f
+    private var currentItemLevel = 1
 
     //是否选择对比角色
     var selectCompareItem = false
@@ -133,7 +133,7 @@ class AvatarScreenViewModel : ViewModel() {
 
         propertyList = avatarService.getFightPropertyFormatList(
             currentItem!!,
-            currentItemLevel.toInt(),
+            currentItemLevel,
             promoted
         )
     }
@@ -148,7 +148,7 @@ class AvatarScreenViewModel : ViewModel() {
         }
         compareItemPropertyList = avatarService.getFightPropertyFormatList(
             compareItem!!,
-            currentItemLevel.toInt(),
+            currentItemLevel,
             promoted
         )
     }
@@ -228,7 +228,7 @@ class AvatarScreenViewModel : ViewModel() {
     }
 
     //当更改等级时
-    fun onChangeItemLevel(value: Float) {
+    fun onChangeItemLevel(value: Int) {
         currentItemLevel = value
 
         updateProperty()

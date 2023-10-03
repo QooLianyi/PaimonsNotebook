@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.LazyColumnDialog
+import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.loading.LoadingAnimationPlaceholder
 import com.lianyi.paimonsnotebook.common.components.widget.ProgressBar
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
@@ -55,16 +54,19 @@ class GachaRecordOptionScreen : BaseActivity() {
 
     @Composable
     private fun Content() {
-        Column(
+        ContentSpacerLazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .background(BackGroundColor)
                 .padding(12.dp, 8.dp)
         ) {
-            SettingOptionGroup(groupName = "祈愿记录", list = viewModel.gachaSettings)
-            SettingOptionGroup(groupName = "记录获取", list = viewModel.importSettings)
-            SettingOptionGroup(groupName = "记录导出", list = viewModel.exportSettings)
+           item {
+               Column {
+                   SettingOptionGroup(groupName = "祈愿记录", list = viewModel.gachaSettings)
+                   SettingOptionGroup(groupName = "记录获取", list = viewModel.importSettings)
+                   SettingOptionGroup(groupName = "记录导出", list = viewModel.exportSettings)
+               }
+           }
         }
 
         if (viewModel.showLoadingDialog) {
@@ -104,6 +106,7 @@ class GachaRecordOptionScreen : BaseActivity() {
             ConfirmDialog(title = "缺少权限",
                 content = "使用相应功能需要存储权限,点击确定前往申请",
                 onConfirm = {
+                    viewModel.showRequestPermissionDialog = false
                     requestStoragePermission()
                 },
                 onCancel = {

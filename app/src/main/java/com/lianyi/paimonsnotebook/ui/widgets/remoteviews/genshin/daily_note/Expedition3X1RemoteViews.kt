@@ -6,11 +6,8 @@ import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.database.app_widget_binding.entity.AppWidgetBinding
 import com.lianyi.paimonsnotebook.common.util.image.PaimonsNotebookImageLoader
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.daily_note.DailyNoteData
-import com.lianyi.paimonsnotebook.ui.widgets.common.extensions.setBackgroundResource
-import com.lianyi.paimonsnotebook.ui.widgets.common.extensions.setTextColor
 import com.lianyi.paimonsnotebook.ui.widgets.core.BaseRemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.state.ErrorRemoteViews
-import com.lianyi.paimonsnotebook.ui.widgets.util.AppWidgetHelper
 import com.lianyi.paimonsnotebook.ui.widgets.widget.AppWidgetCommon3X1
 
 /*
@@ -28,7 +25,7 @@ internal class Expedition3X1RemoteViews(
     }
 
     override suspend fun setDailyNote(dailyNoteData: DailyNoteData) {
-        removeAllViews(R.id.container)
+        removeAllViews(R.id.linear_layout)
 
         if (dailyNoteData.expeditions.isEmpty()) {
             val views = ErrorRemoteViews(
@@ -37,16 +34,16 @@ internal class Expedition3X1RemoteViews(
                 "没有派遣委托哦",
                 R.drawable.emotion_icon_nahida_drink
             )
-            addView(R.id.container, views)
+            addView(R.id.linear_layout, views)
             return
         }
-
-        val configuration = appWidgetBinding.configuration
 
         loadImage(
             urls = dailyNoteData.expeditions.map { it.avatar_side_icon }.toTypedArray(),
             diskCacheName = "派遣角色头像"
         )
+
+        val textIds = mutableListOf<Int>()
 
         dailyNoteData.expeditions.forEach { expedition ->
             val itemView =
@@ -69,19 +66,17 @@ internal class Expedition3X1RemoteViews(
                     } else {
                         "已完成"
                     }
+
                     setTextViewText(
                         R.id.text,
                         timeText
                     )
 
-                    setTextColor(R.id.text, configuration.textColor)
+                    textIds += R.id.text
                 }
-            addView(R.id.container, itemView)
+            addView(R.id.linear_layout, itemView)
         }
 
-        setBackgroundResource(
-            R.id.container,
-            AppWidgetHelper.getAppWidgetBackgroundResource(configuration.backgroundPattern)
-        )
+        setCommonStyle(appWidgetBinding.configuration,textIds.toIntArray())
     }
 }

@@ -1,17 +1,22 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
+    android:layout_height="wrap_content"
+    android:minHeight="120dp"
+    android:id="@+id/container"
     >
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/background"
+        />
+
     <LinearLayout
-        android:layout_width="210dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:id="@+id/container"
-        android:background="@drawable/bg_widget_light"
         android:padding="6dp"
+        android:gravity="center_vertical"
         >
 
         <LinearLayout
@@ -111,7 +116,7 @@
             android:id="@+id/list1"
             android:orientation="horizontal"
             android:layout_marginTop="2dp"
-            android:gravity="start"
+            android:gravity="fill_horizontal"
             />
 
         <LinearLayout
@@ -120,9 +125,18 @@
             android:id="@+id/list2"
             android:orientation="horizontal"
             android:layout_marginTop="2dp"
-            android:gravity="start"
+            android:gravity="fill_horizontal"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/list3"
+            android:orientation="horizontal"
+            android:layout_marginTop="2dp"
+            android:gravity="fill_horizontal"
             />
 
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>

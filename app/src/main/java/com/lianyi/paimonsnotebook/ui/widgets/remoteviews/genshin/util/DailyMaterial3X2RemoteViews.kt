@@ -18,8 +18,6 @@ import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.QualityType
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.item.Material
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.item.Materials
-import com.lianyi.paimonsnotebook.ui.widgets.common.extensions.setBackgroundResource
-import com.lianyi.paimonsnotebook.ui.widgets.common.extensions.setImageTint
 import com.lianyi.paimonsnotebook.ui.widgets.common.extensions.setTextColor
 import com.lianyi.paimonsnotebook.ui.widgets.core.BaseRemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.state.ErrorRemoteViews
@@ -37,7 +35,7 @@ class DailyMaterial3X2RemoteViews(
     AppWidgetCommon3X2::class.java,
     R.layout.widget_layout_daily_material_3_2
 ) {
-    private val count = 10
+    private val count = 15
 
     private var serviceInit = true
     private val materialService = MaterialService {
@@ -52,9 +50,6 @@ class DailyMaterial3X2RemoteViews(
         dataStoreValuesFirst {
             val tempValue =
                 intent?.getIntExtra(AppWidgetHelper.PARAM_SHORTCUT_CURRENT_PAGE, -1) ?: -1
-
-            val configuration = appWidgetBinding.configuration
-
 
             val pair = Materials.getMaterialsIdByWeek(
                 week = LocalDateTime.now().dayOfWeek.value,
@@ -75,44 +70,15 @@ class DailyMaterial3X2RemoteViews(
 
             PreferenceKeys.AppWidgetDailyMaterialCurrentPage.editValue(page)
 
-            val start = (if(page >= maxPage) 0 else page) * count
+            val start = (if (page >= maxPage) 0 else page) * count
             val end = start + count
 
             setOnClickPendingIntent(
                 R.id.next,
                 changePage(if (page + 1 >= maxPage) page else page + 1)
             )
+
             setOnClickPendingIntent(R.id.pre, changePage(if (page - 1 < 0) 0 else page - 1))
-
-            setBackgroundResource(
-                R.id.container,
-                AppWidgetHelper.getAppWidgetBackgroundResource(configuration.backgroundPattern)
-            )
-
-            setBackgroundResource(
-                R.id.next_image,
-                AppWidgetHelper.getAppWidgetOptionBackgroundResource(configuration.backgroundPattern)
-            )
-
-            setBackgroundResource(
-                R.id.pre_image,
-                AppWidgetHelper.getAppWidgetOptionBackgroundResource(configuration.backgroundPattern)
-            )
-
-            configuration.textColor?.let { color ->
-                //如果背景主题为透明,选项按钮颜色跟随字体颜色
-                val actionImageColor =
-                    if (configuration.backgroundPattern != AppWidgetHelper.PATTERN_TRANSPARENT) {
-                        AppWidgetHelper.getAppWidgetOptionTintColorResource(configuration.backgroundPattern)
-                    } else {
-                        color
-                    }
-                setImageTint(R.id.pre_image, actionImageColor)
-                setImageTint(R.id.next_image, actionImageColor)
-            }
-
-            setTextColor(R.id.text, configuration.textColor)
-            setTextColor(R.id.page_text, configuration.textColor)
 
             setTextViewText(R.id.page_text, "${page + 1}/${maxPage}")
             setTextViewText(R.id.text, "今天是[${TimeHelper.getWeekName(week = pair.second)}]")
@@ -126,14 +92,31 @@ class DailyMaterial3X2RemoteViews(
 
             removeAllViews(R.id.list1)
             removeAllViews(R.id.list2)
+            removeAllViews(R.id.list3)
 
             val materialList = list.split(5)
 
-            addMaterialListItemView(R.id.list1, materialList.first(), configuration)
+            val configuration = appWidgetBinding.configuration
+
+            val textIds = mutableListOf(
+                R.id.text, R.id.page_text
+            )
+
+            textIds += addMaterialListItemView(R.id.list1, materialList.first(), configuration)
 
             if (materialList.size > 1) {
-                addMaterialListItemView(R.id.list2, materialList.last(), configuration)
+                textIds += addMaterialListItemView(R.id.list2, materialList[1], configuration)
             }
+
+            if(materialList.size >2){
+                textIds += addMaterialListItemView(R.id.list3, materialList[2], configuration)
+            }
+
+            setCommonStyle(
+                appWidgetBinding.configuration,
+                textIds.toIntArray(),
+                intArrayOf(R.id.pre_image, R.id.next_image)
+            )
         }
 
         return super.onUpdateContent(intent)
@@ -142,8 +125,9 @@ class DailyMaterial3X2RemoteViews(
     private fun addMaterialListItemView(
         targetViewId: Int,
         list: List<Material>,
-        configuration:AppWidgetConfiguration
-    ) {
+        configuration: AppWidgetConfiguration
+    ): List<Int> {
+        val ids = mutableListOf<Int>()
         list.forEach { itemData ->
             val itemViews =
                 RemoteViews(
@@ -159,11 +143,13 @@ class DailyMaterial3X2RemoteViews(
                     setTextViewText(R.id.text, itemData.Name)
 
                     setTextColor(R.id.text, configuration.textColor)
-                    setTextColor(R.id.page_text, configuration.textColor)
+
+                    ids += R.id.text
                 }
 
             addView(targetViewId, itemViews)
         }
+        return ids
     }
 
     private suspend fun changePage(page: Int): PendingIntent {

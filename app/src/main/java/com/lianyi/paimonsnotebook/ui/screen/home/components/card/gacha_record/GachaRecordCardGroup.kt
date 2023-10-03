@@ -1,28 +1,29 @@
 package com.lianyi.paimonsnotebook.ui.screen.home.components.card.gacha_record
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import com.lianyi.paimonsnotebook.common.components.media.Indicator
 import com.lianyi.paimonsnotebook.common.database.gacha.data.GachaRecordOverview
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.util.compose.provider.NoOverscrollEffectThemeProvides
 import com.lianyi.paimonsnotebook.ui.theme.*
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun GachaRecordCardGroup(
     gachaRecordOverviewList: List<GachaRecordOverview>,
     startIndex: Int = 0,
 ) {
-    val state = rememberPagerState(startIndex)
-
+    val state = rememberPagerState(startIndex){
+        gachaRecordOverviewList.size
+    }
     val currentIndex = state.currentPage
 
     Column(
@@ -32,7 +33,7 @@ internal fun GachaRecordCardGroup(
             .padding(0.dp, 12.dp)
     ) {
         NoOverscrollEffectThemeProvides {
-            HorizontalPager(count = gachaRecordOverviewList.size, state = state) {
+            HorizontalPager( state = state) {
                 Row(modifier = Modifier.padding(12.dp, 0.dp)) {
                     GachaRecordCard(item = gachaRecordOverviewList[it])
                 }

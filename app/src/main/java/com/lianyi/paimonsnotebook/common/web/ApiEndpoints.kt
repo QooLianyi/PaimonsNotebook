@@ -195,11 +195,11 @@ object ApiEndpoints {
     /// <summary>
     /// 深渊信息
     /// </summary>
-    /// <param name="scheduleType">深渊类型</param>
+    /// <param name="scheduleType">深渊类型</param> 1当期 2上期
     /// <param name="uid">Uid</param>
     /// <returns>深渊信息字符串</returns>
-    fun GameRecordSpiralAbyss(scheduleType: String, uid: PlayerUid) =
-        "${ApiTakumiRecordApi}/spiralAbyss?schedule_type=${scheduleType}&role_id=${uid.value}&server={uid.region}"
+    fun gameRecordSpiralAbyss(scheduleType: String, uid: PlayerUid) =
+        "${ApiTakumiRecordApi}/spiralAbyss?role_id=${uid.value}&schedule_type=${scheduleType}&server=${uid.region}"
 
     /// <summary>
     /// 计算器角色列表 size 20

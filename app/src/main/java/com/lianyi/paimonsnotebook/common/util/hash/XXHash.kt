@@ -2,7 +2,7 @@ package com.lianyi.paimonsnotebook.common.util.hash
 
 /**
  * 摘要算法
- * from:https://github.com/prasanthj/hasher/blob/master/src/main/java/hasher/com.lianyi.paimonsnotebook.common.util.hash.XXHash.java
+ * from:https://github.com/prasanthj/hasher/blob/master/src/main/java/hasher/XXHash.java
  */
 class XXHash {
     companion object {

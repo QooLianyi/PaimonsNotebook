@@ -1,8 +1,11 @@
 package com.lianyi.paimonsnotebook.ui.screen.resource_manager.components.page
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -11,8 +14,9 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.loading.LoadingAnimationPlaceholder
-import com.lianyi.paimonsnotebook.common.components.spacer.NavigationPaddingSpacer
+import com.lianyi.paimonsnotebook.common.components.spacer.NavigationBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.extension.modifier.padding.paddingTop
 import com.lianyi.paimonsnotebook.ui.screen.resource_manager.components.card.DiskCacheImageGroupCard
 import com.lianyi.paimonsnotebook.ui.screen.resource_manager.data.DiskCacheGroupData
@@ -24,7 +28,7 @@ fun ResourceManagerPlanDeletePage(
     imageSize: Dp,
     onRemoveDeletePlanFromDatabase: (DiskCacheGroupData.GroupItem) -> Unit,
 ) {
-    Crossfade(targetState = planDeleteDiskCacheList.isEmpty()) {
+    Crossfade(targetState = planDeleteDiskCacheList.isEmpty(), label = "") {
         if (it) {
             Column(
                 modifier = Modifier
@@ -43,7 +47,7 @@ fun ResourceManagerPlanDeletePage(
                 )
             }
         } else {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
+            ContentSpacerLazyColumn(modifier = Modifier.fillMaxSize()) {
                 item {
                     DiskCacheImageGroupCard(
                         list = planDeleteDiskCacheList,
@@ -59,7 +63,7 @@ fun ResourceManagerPlanDeletePage(
                     )
                 }
                 item {
-                    NavigationPaddingSpacer()
+                    NavigationBarPaddingSpacer()
                 }
             }
         }

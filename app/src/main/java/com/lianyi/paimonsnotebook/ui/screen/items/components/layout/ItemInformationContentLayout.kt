@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
+import com.lianyi.paimonsnotebook.common.util.compose.remember.rememberStatusBarHeightDp
 import com.lianyi.paimonsnotebook.ui.theme.Black_60
 
 /*
@@ -31,8 +32,10 @@ internal fun ItemInformationContentLayout(
 ) {
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
 
+        val statusBarHeight = rememberStatusBarHeightDp()
+
         val imageHeight = remember {
-            maxHeight * .6f + 49.dp
+            maxHeight * .6f + 49.dp + statusBarHeight
         }
 
         //背景
@@ -48,7 +51,8 @@ internal fun ItemInformationContentLayout(
         if(itemBackgroundResId != -1){
             Image(
                 painter = painterResource(id = itemBackgroundResId), contentDescription = null,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .height(imageHeight),
                 contentScale = ContentScale.FillHeight
             )

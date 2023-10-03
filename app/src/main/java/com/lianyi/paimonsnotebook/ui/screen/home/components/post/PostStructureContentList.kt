@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -32,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -49,18 +47,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
 import com.lianyi.paimonsnotebook.common.components.placeholder.ImageLoadingPlaceholder
 import com.lianyi.paimonsnotebook.common.components.placeholder.TextPlaceholder
-import com.lianyi.paimonsnotebook.common.components.spacer.NavigationPaddingSpacer
+import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.components.text.DividerText
 import com.lianyi.paimonsnotebook.common.components.text.FoldTextContent
 import com.lianyi.paimonsnotebook.common.components.text.TitleText
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.util.html.RichTextParser
-import com.lianyi.paimonsnotebook.common.util.time.TimeStampType
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
+import com.lianyi.paimonsnotebook.common.util.time.TimeStampType
 import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.post.PostFullData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.post.PostStructuredContent
 import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.post.StructuredBackupText
@@ -80,22 +79,20 @@ import com.lianyi.paimonsnotebook.ui.theme.LinkColor
 internal fun PostStructureContentList(
     postFull: PostFullData,
     fontSize: TextUnit = 12.sp,
+    onClickLink: (String) -> Unit,
+    onClickLinkCard: (String) -> Unit,
+    onClickImage: (String) -> Unit
 ) {
     //处理结构内容,将文字与链接整合到一起
     val structuredContent = remember(postFull.post.post.post_id) {
         RichTextParser.parseGroup(postFull.post.post.structured_content)
     }
 
-    LazyColumn(
+    ContentSpacerLazyColumn(
         modifier = Modifier
-            .fillMaxSize()
-            .pointerInteropFilter {
-                println("x = ${it.x} y = ${it.y}")
-                false
-            },
+            .fillMaxSize(),
         contentPadding = PaddingValues(12.dp, 6.dp)
     ) {
-
         item {
             Column(modifier = Modifier.fillMaxWidth()) {
                 TitleText(text = postFull.post.post.subject, fontSize = 18.sp)
@@ -126,7 +123,7 @@ internal fun PostStructureContentList(
                 }
 
                 StructuredContentType.Text -> {
-                    TextBuildAnnotatedSpannableString(data = item.second, fontSize = fontSize)
+                    TextBuildAnnotatedSpannableString(data = item.second, fontSize = fontSize, block = onClickLink)
                 }
 
                 StructuredContentType.Vod -> {
@@ -135,8 +132,12 @@ internal fun PostStructureContentList(
 
                 StructuredContentType.Image -> {
                     val data = item.second.first()
+
+                    val imageUrl by lazy {
+                        data.insert.url ?: ""
+                    }
                     NetworkImage(
-                        url = data.insert.url ?: "",
+                        url = imageUrl,
                         modifier = Modifier
                             .padding(0.dp, 8.dp)
                             .apply {
@@ -149,7 +150,7 @@ internal fun PostStructureContentList(
                             }
                             .clip(RoundedCornerShape(4.dp))
                             .clickable {
-//                                imageFullScreen = true
+                                onClickImage.invoke(imageUrl)
                             },
                         contentScale = ContentScale.FillWidth,
                         diskCache = DiskCache(
@@ -167,7 +168,7 @@ internal fun PostStructureContentList(
                     val linkCard = item.second.first().insert.linkCard
                     if (linkCard != null) {
                         PostLinkCard(item = linkCard) {
-
+                            onClickLinkCard.invoke(it.origin_url)
                         }
                     }
                 }
@@ -216,7 +217,6 @@ internal fun PostStructureContentList(
         }
 
         item {
-
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -257,10 +257,6 @@ internal fun PostStructureContentList(
                     )
                 }
             }
-        }
-
-        item {
-            NavigationPaddingSpacer()
         }
     }
 }

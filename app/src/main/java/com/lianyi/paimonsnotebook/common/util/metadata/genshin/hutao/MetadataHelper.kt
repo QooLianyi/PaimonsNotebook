@@ -23,7 +23,9 @@ object MetadataHelper {
             FileNameWeapon,
             FileNameWeaponCurve,
             FileNameWeaponPromote,
-            FileNameMaterial
+            FileNameMaterial,
+            FileNameMonster,
+            FileNameTowerSchedule
         )
     }
 

@@ -1,16 +1,9 @@
 package com.lianyi.paimonsnotebook.ui.screen.gacha.viewmodel
 
-import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.os.storage.StorageManager
-import android.provider.DocumentsContract
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -25,11 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
-import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.components.dialog.LazyColumnDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.PropertiesDialog
 import com.lianyi.paimonsnotebook.common.components.widget.InputTextFiled
@@ -44,7 +34,6 @@ import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.util.data_store.dataStoreValues
 import com.lianyi.paimonsnotebook.common.util.file.FileHelper
-import com.lianyi.paimonsnotebook.common.util.system_service.SystemService
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
 import com.lianyi.paimonsnotebook.common.web.hoyolab.hk4e.event.gacha_info.GachaInfoClient
 import com.lianyi.paimonsnotebook.common.web.hoyolab.hk4e.event.gacha_info.GachaQueryConfigData
@@ -527,11 +516,11 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
         showRequestPermissionDialog =
             !(this::storagePermission.isInitialized && storagePermission.invoke())
 
-        if (!showRequestPermissionDialog) {
-            startActivity.launch(Intent(Intent.ACTION_GET_CONTENT).apply {
-                type = "application/json"
-            })
-        }
+        if (showRequestPermissionDialog) return
+
+        startActivity.launch(Intent(Intent.ACTION_GET_CONTENT).apply {
+            type = "application/json"
+        })
     }
 
     fun activityResult(result: ActivityResult) {
@@ -604,6 +593,11 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
             "当前没有选中用户".warnNotify(false)
             return
         }
+
+        showRequestPermissionDialog =
+            !(this::storagePermission.isInitialized && storagePermission.invoke())
+
+        if (showRequestPermissionDialog) return
 
         loadingDialogTitle = "导出祈愿记录"
         loadingDialogDescription = "正在导出数据,导出的时长与数据量有关"

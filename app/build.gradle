@@ -11,8 +11,8 @@ android {
         applicationId "com.lianyi.paimonsnotebook"
         minSdk 26
         targetSdk 34
-        versionCode 2
-        versionName '1.4.1-beta'
+        versionCode 3
+        versionName '1.4.2-beta'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -35,7 +35,7 @@ android {
         }
         debug {
             //debug app共存 直接在包名后添加了FunctionTestPackage
-            applicationIdSuffix "FunctionTestPackage"
+            applicationIdSuffix ".FunctionTestPackage"
         }
     }
     compileOptions {
@@ -61,15 +61,15 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.10.0'
-    implementation 'androidx.activity:activity-compose:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.6.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.activity:activity-compose:1.8.0-rc01'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     //Compose
     implementation "androidx.compose.material:material:$compose_version"
@@ -86,9 +86,10 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-process:$lifecycle_version")
 
     // For AppWidgets support
-    def glance_version = "1.0.0-alpha05"
-    implementation("androidx.glance:glance-appwidget:$glance_version")
-    implementation("androidx.glance:glance-appwidget:$glance_version")
+    // 暂时无相关需求
+//    def glance_version = "1.0.0-alpha05"
+//    implementation("androidx.glance:glance-appwidget:$glance_version")
+//    implementation("androidx.glance:glance-appwidget:$glance_version")
 
     //Coil
     def coil_version = "2.4.0"
@@ -109,10 +110,10 @@ dependencies {
 
     //Pager
     // https://mvnrepository.com/artifact/com.google.accompanist/accompanist-pager
-    implementation("com.google.accompanist:accompanist-pager:0.28.0")
+    //implementation("com.google.accompanist:accompanist-pager:0.28.0")
 
     //System UI Controller
-    implementation 'com.google.accompanist:accompanist-systemuicontroller:0.31.1-alpha'
+//    implementation 'com.google.accompanist:accompanist-systemuicontroller:0.31.1-alpha'
 
     //Jsoup
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
@@ -124,15 +125,14 @@ dependencies {
     //Datastore
     implementation 'androidx.datastore:datastore-preferences:1.0.0'
 
-    implementation 'androidx.core:core-splashscreen:1.0.0'
+    //SplashScreen
+//    implementation 'androidx.core:core-splashscreen:1.0.0'
 
     //GeeTest
     implementation 'com.geetest.sensebot:sensebot:4.3.10'
 
     //ColorPicker
-    implementation("com.github.skydoves:colorpicker-compose:1.0.2")
-
-    implementation 'com.godaddy.android.colorpicker:compose-color-picker:0.7.0'
+    implementation("com.github.skydoves:colorpicker-compose:1.0.4")
 
     // debugImplementation because LeakCanary should only run in debug builds.
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'

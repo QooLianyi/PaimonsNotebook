@@ -17,6 +17,4 @@ class ConfigurationData{
     var enableOverlay by mutableStateOf(false)
     //小组件总是选择默认用户的角色
     var appwidgetAlwaysUseSelectedUser by mutableStateOf(false)
-    //全屏模式
-    var fullScreenMode by mutableStateOf(false)
 }

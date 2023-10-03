@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModelProvider
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.lianyi.paimonsnotebook.common.components.media.VideoPlayer
 import com.lianyi.paimonsnotebook.common.extension.string.show
 import com.lianyi.paimonsnotebook.common.util.json.JSON
@@ -23,8 +22,8 @@ class VideoPlayScreen : ComponentActivity() {
         initData()
         setContent {
             PaimonsNotebookTheme {
-                val uiController = rememberSystemUiController()
-                uiController.isNavigationBarVisible = false
+//                val uiController = rememberSystemUiController()
+//                uiController.isNavigationBarVisible = false
 
                 VideoPlayer(videoList = viewModel.videoList){
                     requestedOrientation = if(it){

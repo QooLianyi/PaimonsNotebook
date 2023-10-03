@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.ui.theme.Info
@@ -17,9 +18,9 @@ import com.lianyi.paimonsnotebook.ui.theme.Info
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun AppWidgetBackgroundConfiguration(
-    backgroundOptions: List<Pair<String, String>>,
-    currentBackgroundOption: String,
-    onClickOption: (Pair<String, String>) -> Unit,
+    backgroundOptions: List<Pair<String, Color>>,
+    currentBackgroundColor: Color,
+    onClickOption: (Color) -> Unit,
 ) {
     Column {
         Text(
@@ -34,18 +35,10 @@ internal fun AppWidgetBackgroundConfiguration(
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             backgroundOptions.forEach { option ->
-                AppWidgetOptionText(text = option.first, currentBackgroundOption == option.second) {
-                    onClickOption.invoke(option)
+                AppWidgetOptionText(text = option.first, currentBackgroundColor == option.second) {
+                    onClickOption.invoke(option.second)
                 }
             }
         }
-//
-//        Spacer(modifier = Modifier.height(6.dp))
-//
-//        Text(
-//            text = "*自定义背景颜色只有特定的组件能够设置",
-//            fontSize = 10.sp,
-//            color = Info
-//        )
     }
 }

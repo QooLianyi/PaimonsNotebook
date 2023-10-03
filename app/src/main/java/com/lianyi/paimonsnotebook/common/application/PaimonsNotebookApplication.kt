@@ -4,18 +4,14 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.content.Context
-import android.content.Intent
-import android.content.pm.ShortcutInfo
+import android.content.pm.ApplicationInfo
 import android.content.pm.ShortcutManager
-import android.graphics.drawable.Icon
 import android.os.Bundle
-import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.lianyi.paimonsnotebook.BuildConfig
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.util.image.PaimonsNotebookImageLoader
-import com.lianyi.paimonsnotebook.ui.screen.daily_note.view.DailyNoteScreen
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 
@@ -41,6 +37,10 @@ class PaimonsNotebookApplication : Application()  {
 
         val githubUrl by lazy {
             "https://github.com/QooLianyi/PaimonsNotebook"
+        }
+
+        val isDebug by lazy {
+            context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
         }
     }
 

@@ -7,7 +7,10 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.PointF
+import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -25,12 +28,14 @@ import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.extension.list.takeFirstIf
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.common.extension.string.notify
+import com.lianyi.paimonsnotebook.common.extension.string.showLong
 import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.util.data_store.datastorePf
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.binding.UserGameRoleData
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.AppWidgetConfigurationData
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.util.ColorPickerType
+import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
 import com.lianyi.paimonsnotebook.ui.theme.Black
 import com.lianyi.paimonsnotebook.ui.theme.White
 import com.lianyi.paimonsnotebook.ui.widgets.common.data.RemoteViewsInfo
@@ -54,14 +59,8 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
         PaimonsNotebookApplication.context
     }
 
-    val defaultBackgroundConfiguration = listOf(
-        "浅色" to AppWidgetHelper.PATTERN_LIGHT,
-        "深色" to AppWidgetHelper.PATTERN_DARK,
-        "透明" to AppWidgetHelper.PATTERN_TRANSPARENT
-    )
-
     val firstEntryDialogButtons by lazy {
-        arrayOf("不再显示", "关闭")
+        arrayOf("不再显示","前往设置","关闭")
     }
 
     val defaultColorList = mutableStateListOf(
@@ -92,6 +91,8 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
     var textColorSelectedIndex by mutableIntStateOf(1)
 
     var imageTintColorSelectedIndex by mutableIntStateOf(1)
+
+    var backgroundColorSelectedIndex by mutableIntStateOf(1)
 
     private var colorPickerType = ColorPickerType.None
 
@@ -191,11 +192,22 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
     }
 
     fun onFirstEntryDialogButtonSelect(index: Int) {
-        if (index == 0) {
-            viewModelScope.launch {
-                PreferenceKeys.FirstEntryAppWidgetConfigurationScreen.editValue(false)
+        when(index){
+            0->{
+                viewModelScope.launch {
+                    PreferenceKeys.FirstEntryAppWidgetConfigurationScreen.editValue(false)
+                }
             }
+            1->{
+                HomeHelper.goActivityByIntent {
+                    action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                    data = Uri.fromParts("package",context.packageName,null)
+                }
+                "请手动给予[桌面快捷方式]权限".showLong()
+            }
+            else->{}
         }
+
         firstEntry = false
     }
 
@@ -204,7 +216,6 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
     }
 
     fun dismissColorPickerPopup() {
-        println("dismissColorPickerPopup")
         showColorPickerPopup = false
     }
 
@@ -238,9 +249,16 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
         configuration.setValueForRemoteViewsInfo(remoteViewsInfo)
     }
 
-    fun changeBackgroundPattern(pair: Pair<String, String>, scope: CoroutineScope) {
+    fun changeBackgroundColor(color: Color,index: Int, scope: CoroutineScope) {
+        if (index == 0) {
+            showColorPickerPopup()
+            colorPickerType = ColorPickerType.Background
+        }
+
+        backgroundColorSelectedIndex = index
+
         scope.launch {
-            configuration.setBackgroundPattern(pattern = pair.second)
+            configuration.setBackgroundColor(color)
         }
     }
 
@@ -269,7 +287,13 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
         }
     }
 
-    fun onColorPickerSelectedColor(color: Color, scope: CoroutineScope) {
+    fun changeBackgroundRadius(float: Float,scope: CoroutineScope){
+        scope.launch {
+            configuration.setBackgroundRadius(float)
+        }
+    }
+
+    fun onColorPickerSelectedColor(color: Color,pointF: PointF, scope: CoroutineScope) {
         when (colorPickerType) {
             ColorPickerType.Image -> {
                 changeImageTintColor(color, 0, scope)
@@ -281,10 +305,34 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
                 configuration.customTextColor = color
             }
 
+            ColorPickerType.Background->{
+                changeBackgroundColor(color,0,scope)
+                configuration.customBackgroundColor = color
+            }
+
             else -> {}
         }
         dismissColorPickerPopup()
     }
+
+    fun getColorPickerPopupInitialColor(): Color =
+        when (colorPickerType) {
+            ColorPickerType.Image -> {
+                configuration.customImageTintColor
+            }
+
+            ColorPickerType.Text -> {
+                configuration.customTextColor
+            }
+
+            ColorPickerType.Background->{
+                configuration.customBackgroundColor
+            }
+
+            else -> {
+                White
+            }
+        }
 
     fun changeGameRole(user: User, role: UserGameRoleData.Role) {
         configuration.setGameRole(role)
@@ -319,7 +367,7 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
         val appWidgetBinding = configuration.toAppWidgetBinding()
 
         if (appWidgetBinding == null) {
-            "修改小组件时发生了错误".errorNotify()
+            "修改桌面组件时发生了错误".errorNotify()
             return
         }
 
@@ -328,9 +376,9 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
             val success = AppWidgetHelper.updateAppWidgetContentById(appWidgetBinding.appWidgetId)
 
             if (success) {
-                "小组件修改完毕".notify()
+                "桌面组件修改完毕".notify()
             } else {
-                "修改小组件时发生错误".errorNotify()
+                "修改桌面组件时发生错误".errorNotify()
             }
         }
     }
@@ -350,7 +398,7 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
 
             appWidgetManager.requestPinAppWidget(componentName, null, broadcast)
         } else {
-            "你的系统不支持通过程序添加小组件".warnNotify()
+            "你的系统不支持通过程序添加桌面组件".warnNotify()
         }
     }
 
@@ -360,8 +408,8 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
                 val appWidgetManager = AppWidgetManager.getInstance(context)
 
                 /*
-                * 从intent中获取携带的小组件id
-                * 在一些系统中(如MIUI)successCallback的intent不会携带小组件id(EXTRA_APPWIDGET_ID)
+                * 从intent中获取携带的桌面组件id
+                * 在一些系统中(如MIUI)successCallback的intent不会携带桌面组件id(EXTRA_APPWIDGET_ID)
                 * 当没有id时,根据添加的类型获取全部的id并获取最大值作为更新的id
                 * */
                 val appwidgetId = intent?.extras?.getInt(
@@ -378,7 +426,7 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
                     configuration.toAppWidgetBinding(appwidgetId)
 
                 if (appWidgetBinding == null) {
-                    "小组件创建完成,但自动配置失败,请通过已创建的小组件进行配置".errorNotify()
+                    "桌面组件创建完成,但自动配置失败,请通过已创建的桌面组件进行配置".errorNotify()
                     return
                 }
 
@@ -386,12 +434,12 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
                     try {
                         dao.insert(appWidgetBinding)
                     } catch (e: Exception) {
-                        "小组件添加本地数据时出现异常".errorNotify()
+                        "桌面组件添加本地数据时出现异常".errorNotify()
                         return@launch
                     }
 
                     AppWidgetHelper.updateAppWidgetContentById(appwidgetId)
-                    "小组件添加并配置成功".notify()
+                    "桌面组件添加并配置成功".notify()
 
                     if(this@AppWidgetConfigurationScreenViewModel::finishActivity.isInitialized){
                         finishActivity.invoke()

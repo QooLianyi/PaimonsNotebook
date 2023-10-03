@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -34,10 +33,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.dialog.InformationDialog
 import com.lianyi.paimonsnotebook.common.components.layout.ShowIf
+import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.popup.ColorPickerPopup
-import com.lianyi.paimonsnotebook.common.components.spacer.NavigationPaddingSpacer
 import com.lianyi.paimonsnotebook.common.components.text.TitleText
 import com.lianyi.paimonsnotebook.common.components.widget.TextButton
+import com.lianyi.paimonsnotebook.common.components.widget.TextSlider
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.ui.screen.account.components.dialog.UserDialog
 import com.lianyi.paimonsnotebook.ui.screen.account.components.dialog.UserGameRolesDialog
@@ -45,7 +45,6 @@ import com.lianyi.paimonsnotebook.ui.screen.app_widget.components.color.AppWidge
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.components.popup.RemoteViewsPickerPopup
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.components.preview.GameRoleBindPreview
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.components.preview.GameUserBindPreview
-import com.lianyi.paimonsnotebook.ui.screen.app_widget.components.text.AppWidgetBackgroundConfiguration
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.viewmodel.AppWidgetConfigurationScreenViewModel
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
 import com.lianyi.paimonsnotebook.ui.theme.Black
@@ -53,6 +52,7 @@ import com.lianyi.paimonsnotebook.ui.theme.Black_10
 import com.lianyi.paimonsnotebook.ui.theme.BlurCardBackgroundColor
 import com.lianyi.paimonsnotebook.ui.theme.Info
 import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
+import kotlin.math.roundToInt
 
 class AppWidgetConfigurationScreen : BaseActivity() {
     private val viewModel by lazy {
@@ -77,7 +77,7 @@ class AppWidgetConfigurationScreen : BaseActivity() {
     @Composable
     private fun Content() {
         val scope = rememberCoroutineScope()
-        LazyColumn(
+        ContentSpacerLazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(BackGroundColor),
@@ -147,17 +147,19 @@ class AppWidgetConfigurationScreen : BaseActivity() {
                     )
                 }
 
+            }
+
+            item {
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(0.dp, 16.dp)
                         .height(.5.dp)
                         .background(Black_10)
                 )
             }
 
-            if (viewModel.configuration.showUser) {
-                item {
+            item {
+                ShowIf(show = viewModel.configuration.showUser) {
                     Column {
                         Text(
                             text = "绑定的用户",
@@ -176,8 +178,8 @@ class AppWidgetConfigurationScreen : BaseActivity() {
                 }
             }
 
-            if (viewModel.configuration.showGameRole) {
-                item {
+            item {
+                ShowIf(show = viewModel.configuration.showGameRole) {
                     Column {
                         Text(
                             text = "绑定的角色",
@@ -198,42 +200,60 @@ class AppWidgetConfigurationScreen : BaseActivity() {
             }
 
             item {
-                ShowIf(show = viewModel.configuration.showBackgroundPatten) {
-                    AppWidgetBackgroundConfiguration(
-                        backgroundOptions = viewModel.defaultBackgroundConfiguration,
-                        currentBackgroundOption = viewModel.configuration.backgroundPattern
-                    ) {
-                        viewModel.changeBackgroundPattern(it, scope)
+                ShowIf(show = viewModel.configuration.showBackgroundColor) {
+                    AppWidgetColorConfiguration(
+                        title = "背景颜色",
+                        colors = viewModel.defaultColorList,
+                        customColor = viewModel.configuration.customBackgroundColor,
+                        selectedIndex = viewModel.backgroundColorSelectedIndex,
+                    ) { color: Color, i: Int ->
+                        viewModel.changeBackgroundColor(color, i, scope)
                     }
                 }
             }
 
-//            item {
-//                Column {
-//                    Text(
-//                        text = "背景圆角半径",
-//                        fontSize = 14.sp,
-//                        color = Info
-//                    )
-//                    Spacer(modifier = Modifier.height(4.dp))
-//
-//                    var sliderValue by remember {
-//                        mutableStateOf(0f)
-//                    }
-//
-//                    TextSlider(value = sliderValue, onValueChange = {
-//                        sliderValue = it
-//                    }, range = (0f..100f), text = {
-//                        "${it.toInt()}"
-//                    })
-//
-//                    Text(
-//                        text = "*背景圆角半径只有特定的组件能够设置",
-//                        fontSize = 10.sp,
-//                        color = Info
-//                    )
-//                }
-//            }
+            item {
+                ShowIf(show = viewModel.configuration.showBackgroundRadius) {
+                    Column {
+                        Text(
+                            text = "背景圆角半径",
+                            fontSize = 14.sp,
+                            color = Info
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        TextSlider(
+                            value = viewModel.configuration.backgroundRadius,
+                            onValueChange = {
+                                viewModel.changeBackgroundRadius(it, scope)
+                            },
+                            range = (0f..100f),
+                            text = {
+                                "${it.roundToInt()}"
+                            })
+
+                        Text(
+                            text = "*背景圆角在一些系统下会被强制设置一个最小值",
+                            fontSize = 10.sp,
+                            color = Info
+                        )
+                    }
+                }
+            }
+
+            item {
+                ShowIf(show = viewModel.configuration.showImageTintColor) {
+                    AppWidgetColorConfiguration(
+                        title = "背景颜色",
+                        colors = viewModel.defaultColorList,
+                        customColor = viewModel.configuration.customImageTintColor,
+                        selectedIndex = viewModel.imageTintColorSelectedIndex,
+                    ) { color: Color, i: Int ->
+                        viewModel.changeImageTintColor(color, i, scope)
+                    }
+                }
+            }
+
 
             item {
                 ShowIf(show = viewModel.configuration.showImageTintColor) {
@@ -269,17 +289,14 @@ class AppWidgetConfigurationScreen : BaseActivity() {
                     viewModel.submit()
                 }
             }
-
-            item {
-                NavigationPaddingSpacer()
-            }
         }
 
         ColorPickerPopup(
             visible = viewModel.showColorPickerPopup,
+            initialColor = viewModel.getColorPickerPopupInitialColor(),
             onRequestDismiss = viewModel::dismissColorPickerPopup,
-            onSelectColor = {
-                viewModel.onColorPickerSelectedColor(it, scope)
+            onSelectColor = { color, pointF ->
+                viewModel.onColorPickerSelectedColor(color, pointF, scope)
             }
         )
 

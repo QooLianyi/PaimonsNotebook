@@ -5,8 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.annotation.ExperimentalCoilApi
 import coil.memory.MemoryCache
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.PagerState
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.database.disk_cache.util.DiskCacheDataType
@@ -21,7 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
-@OptIn(ExperimentalPagerApi::class)
 class ResourceManagerViewModel : ViewModel() {
 
     private val database by lazy {
@@ -38,9 +35,7 @@ class ResourceManagerViewModel : ViewModel() {
 
     val tabs = arrayOf("最近", "计划删除")
 
-    val pageState = PagerState()
-
-    var currentTabIndex by mutableStateOf(0)
+    var currentTabIndex by mutableIntStateOf(0)
 
     var isMultipleSelect by mutableStateOf(false)
 
@@ -83,9 +78,9 @@ class ResourceManagerViewModel : ViewModel() {
                 }
             }
             launch {
-                snapshotFlow { pageState.currentPage }.collect {
-                    currentTabIndex = it
-                }
+//                snapshotFlow { pageState.currentPage }.collect {
+//                    currentTabIndex = it
+//                }
             }
         }
     }
@@ -100,7 +95,7 @@ class ResourceManagerViewModel : ViewModel() {
 
             v.forEach { diskCacheData ->
 
-                val diskCache = imageLoader.diskCache?.get(diskCacheData.url)?.data?.toFile()
+                val diskCache = imageLoader.diskCache?.openSnapshot(diskCacheData.url)?.data?.toFile()
                 val groupItem = DiskCacheGroupData.GroupItem(diskCacheData, diskCache)
 
                 if (diskCacheData.isPlanDelete) {

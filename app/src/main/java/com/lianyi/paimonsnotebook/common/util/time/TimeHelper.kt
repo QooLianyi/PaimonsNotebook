@@ -80,7 +80,14 @@ object TimeHelper {
             TimeStampType.DD_HH_MM -> DD_HH_MM
             TimeStampType.DD_HH -> DD_HH
         }
-        return sdf.format(timeStamp)
+
+        return sdf.format(
+            if(timeStamp < 9999999999L){
+                timeStamp * 1000
+            }else{
+                timeStamp
+            }
+        )
     }
 
 

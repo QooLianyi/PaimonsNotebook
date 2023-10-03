@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.lianyi.paimonsnotebook.common.components.loading.ContentLoadingPlaceholder
 import com.lianyi.paimonsnotebook.common.components.placeholder.ErrorPlaceholder
@@ -17,7 +16,7 @@ internal fun ItemScreenLoadingState(
     loadingState: LoadingState,
     content:@Composable ()->Unit
 ){
-    Crossfade(targetState = loadingState) {
+    Crossfade(targetState = loadingState, label = "") {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -31,7 +30,6 @@ internal fun ItemScreenLoadingState(
                 LoadingState.Loading ->
                     ContentLoadingPlaceholder(
                         text = "正在加载所需的数据",
-                        modifier = Modifier.align(Alignment.Center)
                     )
 
                 else -> {}

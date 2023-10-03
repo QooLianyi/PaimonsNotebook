@@ -3,7 +3,6 @@ package com.lianyi.paimonsnotebook.ui.screen.splash.view
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,20 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.lianyi.paimonsnotebook.common.components.loading.ContentLoadingPlaceholder
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
-import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
-import com.lianyi.paimonsnotebook.common.util.data_store.dataStoreValues
-import com.lianyi.paimonsnotebook.common.util.data_store.datastorePf
-import com.lianyi.paimonsnotebook.ui.screen.guide.view.GuideScreen
-import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
+import com.lianyi.paimonsnotebook.ui.screen.develop.TypographyScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.view.HomeScreen
 import com.lianyi.paimonsnotebook.ui.screen.splash.viewmodel.SplashScreenViewModel
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
 import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
 @SuppressLint("CustomSplashScreen")
 class SplashScreen : BaseActivity(false) {
@@ -50,6 +42,7 @@ class SplashScreen : BaseActivity(false) {
         viewModel.init {
             goHomeScreen()
         }
+//        goDebugPage()
 
         setContent {
             PaimonsNotebookTheme {
@@ -70,6 +63,13 @@ class SplashScreen : BaseActivity(false) {
 
     private fun goHomeScreen() {
         startActivity(Intent(this@SplashScreen, HomeScreen::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
+        finish()
+    }
+
+    private fun goDebugPage(){
+        startActivity(Intent(this@SplashScreen, TypographyScreen::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         })
         finish()

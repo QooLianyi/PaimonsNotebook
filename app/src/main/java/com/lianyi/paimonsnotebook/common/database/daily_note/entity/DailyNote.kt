@@ -30,4 +30,6 @@ data class DailyNote(
     @ColumnInfo("daily_note")
     val dailyNote: DailyNoteData,
     val sort: Int,
+    @ColumnInfo("update_time", defaultValue = "0")
+    val updateTime:Long,
 )

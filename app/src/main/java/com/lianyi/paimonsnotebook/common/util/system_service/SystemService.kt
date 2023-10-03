@@ -7,6 +7,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.view.WindowManager
 import androidx.core.app.ActivityCompat
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 
@@ -21,6 +22,10 @@ object SystemService {
 
     private val clipboardManager by lazy {
         context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    }
+
+    private val windowManager by lazy {
+        context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     }
 
     fun setClipBoardText(text: String, label: String? = null) {
