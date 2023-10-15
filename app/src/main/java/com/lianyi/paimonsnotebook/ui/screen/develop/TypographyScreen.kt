@@ -1,84 +1,55 @@
 package com.lianyi.paimonsnotebook.ui.screen.develop
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
-import androidx.compose.ui.Alignment
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.github.skydoves.colorpicker.compose.AlphaSlider
-import com.github.skydoves.colorpicker.compose.AlphaTile
-import com.github.skydoves.colorpicker.compose.BrightnessSlider
-import com.github.skydoves.colorpicker.compose.HsvColorPicker
-import com.github.skydoves.colorpicker.compose.rememberColorPickerController
-import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
-import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
-import com.lianyi.paimonsnotebook.ui.theme.GachaStar3Color
-import com.lianyi.paimonsnotebook.ui.theme.GachaStar4Color
-import com.lianyi.paimonsnotebook.ui.theme.GachaStar5Color
+import com.lianyi.paimonsnotebook.common.extension.value.pxToDp
+import com.lianyi.paimonsnotebook.common.extension.value.toPx
+import com.lianyi.paimonsnotebook.common.view.QRCodeScanActivity
 import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
 import com.lianyi.paimonsnotebook.ui.theme.Primary_2
 import com.lianyi.paimonsnotebook.ui.theme.Success
 
 class TypographyScreen : BaseActivity() {
+
+    private lateinit var start: ActivityResultLauncher<Intent>
+
+    override fun onStartActivityForResult(result: ActivityResult) {
+        super.onStartActivityForResult(result)
+        println("res = ${result.resultCode}")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val list = listOf(
-            R.drawable.emotion_icon_ambor_failure to GachaStar4Color,
-            R.drawable.emotion_icon_nahida_thinking to GachaStar5Color,
-            R.drawable.emotion_icon_nahida_drink to Primary_2,
-            R.drawable.emotion_icon_keqing_sleeping to Success,
-            R.drawable.emotion_icon_paimon_error to GachaStar3Color,
-            R.drawable.emotion_icon_ambor_failure to GachaStar4Color,
-            R.drawable.emotion_icon_nahida_thinking to GachaStar5Color
-        )
+        start = registerStartActivityForResult()
 
         setContent {
-
             PaimonsNotebookTheme(this) {
 
-                val controller = rememberColorPickerController().apply {
-                    setDebounceDuration(100)
-                }
-
                 Column {
-                     HsvColorPicker(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(240.dp),
-                        controller = controller,
-                        onColorChanged = {
-                            it.color
-                        }
-                    )
-
-                    AlphaSlider(
-                        controller = controller,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(60.dp)
-                    )
-
-                    BrightnessSlider(
-                        controller = controller,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(60.dp)
-                    )
-
-                    AlphaTile(modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .radius(8.dp)
-                        .size(60.dp),
-                        controller
-                    )
-
+                    Row {
+                        Box(modifier = Modifier.size(60.dp).background(Primary_2))
+                        Box(modifier = Modifier.size(60.dp).background(Success))
+                    }
+                    Row {
+                        Box(modifier = Modifier.size(60.dp.toPx().pxToDp()).background(Success))
+                        Box(modifier = Modifier.size(60.dp.toPx().pxToDp()).background(Primary_2))
+                    }
                 }
+
             }
 
 //            PaimonsNotebookTheme(this) {

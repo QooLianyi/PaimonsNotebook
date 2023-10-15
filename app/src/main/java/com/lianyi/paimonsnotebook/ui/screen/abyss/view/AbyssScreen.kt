@@ -29,7 +29,6 @@ import com.lianyi.paimonsnotebook.ui.screen.abyss.components.page.AbyssRecordPag
 import com.lianyi.paimonsnotebook.ui.screen.abyss.viewmodel.AbyssScreenViewModel
 import com.lianyi.paimonsnotebook.ui.screen.account.components.dialog.UserGameRolesDialog
 import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
-import com.lianyi.paimonsnotebook.ui.theme.Transparent
 
 class AbyssScreen : BaseActivity() {
     private val viewModel by lazy {
@@ -75,10 +74,7 @@ class AbyssScreen : BaseActivity() {
                             Spacer(modifier = Modifier.width(8.dp))
                         }
                     },
-                    tabBarHeight = 30.dp,
-                    indicatorColor = Transparent,
-                    tabBarPadding = PaddingValues(horizontal = 12.dp),
-                    contentPadding = PaddingValues(0.dp)
+                    tabBarPaddingHorizontal = 12.dp
                 ) {
                     Crossfade(targetState = viewModel.currentPageIndex, label = "") {
                         when (it) {

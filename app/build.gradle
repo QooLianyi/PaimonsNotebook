@@ -11,8 +11,8 @@ android {
         applicationId "com.lianyi.paimonsnotebook"
         minSdk 26
         targetSdk 34
-        versionCode 3
-        versionName '1.4.2-beta'
+        versionCode 4
+        versionName '1.4.3'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -36,6 +36,13 @@ android {
         debug {
             //debug app共存 直接在包名后添加了FunctionTestPackage
             applicationIdSuffix ".FunctionTestPackage"
+        }
+        def localProperties = new Properties()
+        localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+        def key = localProperties.getProperty("appcenter.secret")
+
+        configureEach {
+            it.buildConfigField("String","APPCENTER_SECRET",key)
         }
     }
     compileOptions {
@@ -108,25 +115,19 @@ dependencies {
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:$room_version"
 
-    //Pager
-    // https://mvnrepository.com/artifact/com.google.accompanist/accompanist-pager
-    //implementation("com.google.accompanist:accompanist-pager:0.28.0")
-
-    //System UI Controller
-//    implementation 'com.google.accompanist:accompanist-systemuicontroller:0.31.1-alpha'
+    def appCenterSdkVersion = '5.0.2'
+    implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
+    implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
 
     //Jsoup
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
-    implementation("org.jsoup:jsoup:1.15.3")
+    implementation("org.jsoup:jsoup:1.16.1")
 
     //Gson
-    implementation "com.google.code.gson:gson:2.9.0"
+    implementation "com.google.code.gson:gson:2.10.1"
 
     //Datastore
     implementation 'androidx.datastore:datastore-preferences:1.0.0'
-
-    //SplashScreen
-//    implementation 'androidx.core:core-splashscreen:1.0.0'
 
     //GeeTest
     implementation 'com.geetest.sensebot:sensebot:4.3.10'
@@ -137,7 +138,12 @@ dependencies {
     // debugImplementation because LeakCanary should only run in debug builds.
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
 
+    //zxing-lite AndroidX
+    implementation 'com.github.jenly1314:zxing-lite:3.0.1'
+
+    //CustomActivityOnCrash
+    implementation 'cat.ereza:customactivityoncrash:2.4.0'
 
     //为测试导入json包
-    testImplementation 'org.json:json:20140107'
+    testImplementation 'org.json:json:20180813'
 }

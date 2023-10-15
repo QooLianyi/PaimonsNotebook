@@ -22,23 +22,24 @@ import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
-import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.post.StructuredLinkCard
+import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.post.PostFullData
+import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.post.PostLinkCardType
 import com.lianyi.paimonsnotebook.ui.theme.CardBackGroundColor_Gray
 import com.lianyi.paimonsnotebook.ui.theme.LinkColor
 import com.lianyi.paimonsnotebook.ui.theme.PriceColor
 
 @Composable
 internal fun PostLinkCard(
-    item: StructuredLinkCard,
-    onClick: (StructuredLinkCard) -> Unit,
+    item: PostFullData.Post.LinkCard,
+    onClick: (PostFullData.Post.LinkCard) -> Unit,
 ) {
     val (size, textContentAlign) = remember(item.link_type) {
         when (item.link_type) {
-            StructuredLinkCard.LINK_TYPE_UNIVERSAL -> {
+            PostLinkCardType.LINK_TYPE_UNIVERSAL -> {
                 48.dp to Arrangement.Center
             }
 
-            StructuredLinkCard.LINK_TYPE_MIHOYO_SHOP -> {
+            PostLinkCardType.LINK_TYPE_MIHOYO_SHOP -> {
                 72.dp to Arrangement.SpaceBetween
             }
 
@@ -85,7 +86,7 @@ internal fun PostLinkCard(
         ) {
             Text(text = item.title, fontSize = 10.sp, fontWeight = FontWeight.SemiBold)
 
-            if (item.link_type == StructuredLinkCard.LINK_TYPE_MIHOYO_SHOP) {
+            if (item.link_type == PostLinkCardType.LINK_TYPE_MIHOYO_SHOP) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -101,6 +102,4 @@ internal fun PostLinkCard(
             }
         }
     }
-
-
 }

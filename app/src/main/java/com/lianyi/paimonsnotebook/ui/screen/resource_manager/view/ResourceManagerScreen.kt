@@ -1,244 +1,114 @@
 package com.lianyi.paimonsnotebook.ui.screen.resource_manager.view
 
 import android.os.Bundle
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
-import androidx.compose.animation.*
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.Icon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.common.components.dialog.PropertiesDialog
-import com.lianyi.paimonsnotebook.common.components.widget.TabBar
+import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
+import com.lianyi.paimonsnotebook.common.components.layout.TabBarContent
+import com.lianyi.paimonsnotebook.common.components.placeholder.EmptyPlaceholder
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
-import com.lianyi.paimonsnotebook.common.extension.modifier.padding.paddingEnd
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
-import com.lianyi.paimonsnotebook.ui.screen.resource_manager.components.page.ResourceManagerHomePage
-import com.lianyi.paimonsnotebook.ui.screen.resource_manager.components.page.ResourceManagerPlanDeletePage
-import com.lianyi.paimonsnotebook.ui.screen.resource_manager.components.popup.PopupDiskCacheDetail
+import com.lianyi.paimonsnotebook.ui.screen.resource_manager.components.widget.ImageContentList
 import com.lianyi.paimonsnotebook.ui.screen.resource_manager.viewmodel.ResourceManagerViewModel
-import com.lianyi.paimonsnotebook.ui.theme.*
+import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
 
-//todo 图片管理界面 等待重构
 class ResourceManagerScreen : BaseActivity() {
     private val viewModel by lazy {
         ViewModelProvider(this)[ResourceManagerViewModel::class.java]
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                viewModel.onBackPressed {
-                    finish()
-                }
-            }
-        })
-
         setContent {
             PaimonsNotebookTheme(this) {
-                BoxWithConstraints {
-                    val imageSize = maxWidth / 4
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(BackGroundColor)
-                    ) {
-
-                        Crossfade(
-                            targetState = viewModel.isMultipleSelect, label = ""
+                TabBarContent(tabs = viewModel.tabs,
+                    onTabBarSelect = viewModel::onChangePage,
+                    topSlot = {
+                        Row(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            if (it) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(10.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_chevron_left),
+                            Crossfade(targetState = viewModel.isSelectionMode.value, label = "") {
+                                if (it) {
+                                    Icon(painter = painterResource(id = R.drawable.ic_delete),
                                         contentDescription = null,
-                                        tint = Black,
                                         modifier = Modifier
-                                            .size(32.dp)
-                                            .clip(RoundedCornerShape(1.dp))
+                                            .radius(4.dp)
+                                            .size(28.dp)
                                             .clickable {
-                                                viewModel.onBackPressed {
-
-                                                }
+                                                viewModel.deleteSelectedImage()
                                             }
-                                    )
-
-                                    Spacer(modifier = Modifier.width(10.dp))
-
-                                    Text(
-                                        text = if (viewModel.selectCount > 0) "已选择${viewModel.selectCount}项" else "请选择图片",
-                                        fontSize = 20.sp,
-                                        color = Black,
-                                        modifier = Modifier.weight(1f)
-                                    )
-
-                                    Crossfade(
-                                        targetState = viewModel.selectCount > 0,
-                                        modifier = Modifier.paddingEnd(16.dp), label = ""
-                                    ) { showDeleteSelect ->
-                                        if (showDeleteSelect) {
-                                            Icon(
-                                                painter = painterResource(id = R.drawable.ic_delete),
-                                                contentDescription = null,
-                                                tint = Black,
-                                                modifier = Modifier
-                                                    .size(32.dp)
-                                                    .clip(RoundedCornerShape(1.dp))
-                                                    .clickable {
-                                                        viewModel.deleteSelectedImage()
-                                                    }
-                                            )
-                                        }
-                                    }
-
-                                    val iconTintColor by animateColorAsState(
-                                        targetValue = if (viewModel.selectAll) colorAccent else Black,
-                                        label = ""
-                                    )
-
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_select_all),
-                                        contentDescription = null,
-                                        tint = iconTintColor,
-                                        modifier = Modifier
-                                            .size(32.dp)
-                                            .clip(RoundedCornerShape(1.dp))
-                                            .clickable {
-                                                viewModel.selectAllAction()
-                                            }
-                                    )
-
+                                            .padding(2.dp))
                                 }
-                            } else {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(10.dp),
-                                    verticalAlignment = Alignment.CenterVertically
+                            }
+                            Spacer(modifier = Modifier.width(10.dp))
+                        }
+                    }) {
+                    Crossfade(targetState = viewModel.currentTabIndex, label = "") { page ->
+                        when (page) {
+                            1 -> {
+                                Crossfade(
+                                    targetState = viewModel.planDeleteListIsEmpty,
+                                    label = ""
                                 ) {
-
-                                    TabBar(
-                                        tabs = viewModel.tabs,
-                                        onSelect = viewModel::changeTab,
-                                        modifier = Modifier.weight(1f),
-                                        indicatorColor = Transparent
-                                    )
-
-                                    Box {
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.ic_more_vertical),
-                                            contentDescription = null,
-                                            tint = Black,
-                                            modifier = Modifier
-                                                .radius(2.dp)
-                                                .size(32.dp)
-                                                .clickable {
-                                                    viewModel.showResourceDropMenu()
-                                                }
+                                    if (it) {
+                                        EmptyPlaceholder("当前没有计划删除的图片")
+                                    } else {
+                                        ImageContentList(
+                                            diskCacheDataList = viewModel.diskCachePlanDeleteDataList,
+                                            selectedUrls = viewModel.selectedUrls,
+                                            isSelectionMode = viewModel.isSelectionMode,
+                                            addSelectedUrl = viewModel::addSelectedUrl,
+                                            selectionAll = viewModel::selectionAll,
+                                            getCacheImage = viewModel::getCacheImage,
+                                            onClickImage = viewModel::onClickImage,
+                                            onCurrentUserPointerPositionChange = viewModel::changeCurrentUserPointerPosition
                                         )
-
-                                        DropdownMenu(
-                                            expanded = viewModel.showResourceDropMenu,
-                                            onDismissRequest = { viewModel.disableResourceDropMenu() },
-                                            modifier = Modifier.wrapContentWidth()
-                                        ) {
-                                            viewModel.resourceDropMenuOptions.forEachIndexed { index, s ->
-                                                DropdownMenuItem(
-                                                    onClick = {
-                                                        viewModel.resourceManagerDropMenuAction(
-                                                            index
-                                                        )
-                                                    }
-                                                ) {
-                                                    Box(contentAlignment = Alignment.CenterStart) {
-                                                        Text(text = s, fontSize = 16.sp)
-                                                    }
-                                                }
-                                            }
-                                        }
-
                                     }
                                 }
+
                             }
-                        }
 
-                        val pageState = rememberPagerState {
-                            viewModel.tabs.size
-                        }
-
-                        LaunchedEffect(viewModel.currentTabIndex) {
-                            pageState.animateScrollToPage(viewModel.currentTabIndex)
-                        }
-
-                        HorizontalPager(state = pageState) {
-                            when (it) {
-                                0 -> ResourceManagerHomePage(
+                            else -> {
+                                ImageContentList(
                                     diskCacheDataList = viewModel.diskCacheDataList,
-                                    isMultipleSelect = viewModel.isMultipleSelect,
-                                    imageSize = imageSize,
-                                    onClickImageGroupActionButton = viewModel::clickImageGroupActionButton,
-                                    onClickImage = viewModel::clickImage,
-                                    onEnableMultipleSelect = viewModel::enableMultipleSelect
+                                    selectedUrls = viewModel.selectedUrls,
+                                    isSelectionMode = viewModel.isSelectionMode,
+                                    addSelectedUrl = viewModel::addSelectedUrl,
+                                    selectionAll = viewModel::selectionAll,
+                                    getCacheImage = viewModel::getCacheImage,
+                                    onClickImage = viewModel::onClickImage,
+                                    onCurrentUserPointerPositionChange = viewModel::changeCurrentUserPointerPosition
                                 )
-
-                                1 -> ResourceManagerPlanDeletePage(
-                                    planDeleteDiskCacheList = viewModel.planDeleteDiskCacheList,
-                                    imageSize = imageSize,
-                                    onRemoveDeletePlanFromDatabase = viewModel::removeDeletePlanFromDatabase
-                                )
-
                             }
                         }
-
                     }
+                }
 
-                    //todo 等待compose实装共享元素,将图片展示拆分到其他Screen
-                    PopupDiskCacheDetail(
-                        showImage = viewModel.showImage,
-                        showImageData = viewModel.showImageData,
-                        showImageDetailDropMenu = viewModel.showImageDetailDropMenu,
-                        imageDetailDropMenuOptions = viewModel.imageDetailDropMenuOptions,
-                        onDisableImage = viewModel::disableShowImage,
-                        onShowImageDetailDropMenu = viewModel::showImageDetailDropMenu,
-                        onDisableImageDetailDropMenu = viewModel::disableImageDetailDropMenu,
-                        imageDetailDropMenuAction = viewModel::imageDetailDropMenuAction,
+
+                if (viewModel.showConfirm) {
+                    ConfirmDialog(
+                        content = if (viewModel.currentTabIndex == 0) "确定将所选图片移入计划删除队列吗?(共${viewModel.selectedUrls.value.size}张)" else "确定要将选中的图片从计划删除队列中移出吗?(共${viewModel.selectedUrls.value.size}张)",
+                        onConfirm = viewModel::confirmDeleteSelectedImage,
+                        onCancel = viewModel::dismissConfirm
                     )
-
-                    //图片详细信息
-                    if (viewModel.showImageDetailInfo) {
-
-                        PropertiesDialog(
-                            title = "图片详情",
-                            properties = viewModel.getPropertiesDialogData(),
-                            onDismissRequest = {
-                                viewModel.disableImageDetailInfo()
-                            }, onButtonClick = viewModel::propertiesDialogAction,
-                            onCopyPropertiesValue = viewModel::copyPropertiesValue
-                        )
-                    }
                 }
             }
         }

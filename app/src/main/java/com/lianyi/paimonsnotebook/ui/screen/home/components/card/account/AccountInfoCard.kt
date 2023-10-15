@@ -4,7 +4,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -26,12 +36,18 @@ import com.lianyi.paimonsnotebook.common.data.hoyolab.user.User
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.database.disk_cache.util.DiskCacheDataType
 import com.lianyi.paimonsnotebook.common.extension.modifier.padding.paddingStart
-import com.lianyi.paimonsnotebook.ui.theme.*
+import com.lianyi.paimonsnotebook.ui.theme.Black_10
+import com.lianyi.paimonsnotebook.ui.theme.Black_30
+import com.lianyi.paimonsnotebook.ui.theme.Info_1
+import com.lianyi.paimonsnotebook.ui.theme.White
+import com.lianyi.paimonsnotebook.ui.theme.White_10
+import com.lianyi.paimonsnotebook.ui.theme.White_20
+import com.lianyi.paimonsnotebook.ui.theme.White_80
 
 @Composable
 internal fun AccountInfoCard(
     user: User?,
-    onAddCount: () -> Unit,
+    onAddAccount: () -> Unit,
 ) {
     Box(
         Modifier
@@ -56,7 +72,7 @@ internal fun AccountInfoCard(
                 Box(modifier = Modifier
                     .drawBehind {
                         drawCircle(White_20, 86f, style = Stroke(50f))
-                        drawCircle(White_10, 125f, style = Stroke(2f))
+                        drawCircle(White_10, 128f, style = Stroke(4f))
                     }
                 ) {
 
@@ -122,25 +138,31 @@ internal fun AccountInfoCard(
             }
         }
 
-        Row(modifier = Modifier
-            .align(Alignment.BottomEnd)
-            .padding(16.dp)
-            .background(Black_30, CircleShape)
-            .border(1.dp, White_80, CircleShape)
-            .clip(CircleShape)
-            .clickable {
-                onAddCount()
-            }
-            .padding(6.dp, 2.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.function_icon_hutao_database),
-                contentDescription = null,
-                modifier = Modifier.size(20.dp), tint = White
-            )
-            Spacer(modifier = Modifier.width(2.dp))
-            Text(text = "账号管理", fontSize = 12.sp, color = White)
+            Row(modifier = Modifier
+                .background(Black_30, CircleShape)
+                .border(1.dp, White_80, CircleShape)
+                .clip(CircleShape)
+                .clickable {
+                    onAddAccount.invoke()
+                }
+                .padding(6.dp, 2.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.function_icon_hutao_database),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp), tint = White
+                )
+                Spacer(modifier = Modifier.width(2.dp))
+                Text(text = "账号管理", fontSize = 12.sp, color = White)
+            }
         }
     }
 }

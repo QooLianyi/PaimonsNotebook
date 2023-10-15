@@ -15,7 +15,7 @@ import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.LocaleNames
 * */
 object MetadataHelper {
     //启动时检查的元数据列表
-    private val checkList by lazy {
+    private val metadataCheckList by lazy {
         listOf(
             FileNameAvatar,
             FileNameAvatarCurve,
@@ -26,6 +26,19 @@ object MetadataHelper {
             FileNameMaterial,
             FileNameMonster,
             FileNameTowerSchedule
+        )
+    }
+
+    //图包检查列表
+    private val zipCheckList by lazy {
+        listOf(
+            ZipFileNameAvatarIcon,
+            ZipFileNameEquipIcon,
+            ZipFileNameMonsterIcon,
+            ZipFileNameGachaAvatarImg,
+            ZipFileNameSkill,
+            ZipFileNameTalent,
+            ZipFileNameLoadingPic
         )
     }
 
@@ -40,7 +53,7 @@ object MetadataHelper {
         val updateFileList = mutableListOf<String>()
 
         val xxHash = XXHash()
-        checkList.forEach { name ->
+        metadataCheckList.forEach { name ->
             val file = FileHelper.getMetadata(name)
             val arr = (file?.readText() ?: "").replace("\n", "\r\n").toByteArray()
 
@@ -61,10 +74,10 @@ object MetadataHelper {
     * true为全部存在
     * */
     fun allMetadataExists() =
-        checkList.map { name ->
+        metadataCheckList.map { name ->
             FileHelper.getMetadata(name)
         }.count { it != null }.let { count ->
-            count == checkList.size
+            count == metadataCheckList.size
         }
 
     suspend fun metadataNeedUpdate(): Boolean {
@@ -148,4 +161,28 @@ object MetadataHelper {
     val FileNameWeapon by lazy { "Weapon" }
     val FileNameWeaponCurve by lazy { "WeaponCurve" }
     val FileNameWeaponPromote by lazy { "WeaponPromote" }
+
+    val ZipFileNameAchievementIcon by lazy { "AchievementIcon" }
+    val ZipFileNameAvatarCard by lazy { "AvatarCard" }
+    val ZipFileNameAvatarIcon by lazy { "AvatarIcon" }
+    val ZipFileNameBg by lazy { "Bg" }
+    val ZipFileNameChapterIcon by lazy { "ChapterIcon" }
+    val ZipFileNameCostume by lazy { "Costume" }
+    val ZipFileNameEmotionIcon by lazy { "EmotionIcon" }
+    val ZipFileNameEquipIcon by lazy { "EquipIcon" }
+    val ZipFileNameGachaAvatarIcon by lazy { "GachaAvatarIcon" }
+    val ZipFileNameGachaAvatarImg by lazy { "GachaAvatarImg" }
+    val ZipFileNameGachaEquipIcon by lazy { "GachaEquipIcon" }
+    val ZipFileNameIconElement by lazy { "IconElement" }
+    val ZipFileNameItemIcon by lazy { "ItemIcon" }
+    val ZipFileNameLoadingPic by lazy { "LoadingPic" }
+    val ZipFileNameMonsterIcon by lazy { "MonsterIcon" }
+    val ZipFileNameMonsterSmallIcon by lazy { "MonsterSmallIcon" }
+    val ZipFileNameNameCardIcon by lazy { "NameCardIcon" }
+    val ZipFileNameNameCardPic by lazy { "NameCardPic" }
+    val ZipFileNameProperty by lazy { "Property" }
+    val ZipFileNameRelicIcon by lazy { "RelicIcon" }
+    val ZipFileNameSkill by lazy { "Skill" }
+    val ZipFileNameTalent by lazy { "Talent" }
+
 }

@@ -24,11 +24,11 @@ object SettingsHelper {
                                 preferences[PreferenceKeys.HomeScreenDisplayState]
                                     ?: HomeScreenDisplayState.Community.name
                             )
-                        enableHomeModalSelectClose =
-                            preferences[PreferenceKeys.EnableHomeModalSelectClose] ?: false
                         enableOverlay = preferences[PreferenceKeys.EnableOverlay] ?: false
-                        appwidgetAlwaysUseSelectedUser =
-                            preferences[PreferenceKeys.AppwidgetAlwaysUseSelectedUser] ?: false
+                        alwaysUseDefaultUser =
+                            preferences[PreferenceKeys.AlwaysUseDefaultUser] ?: true
+                        enableAutoCleanExpiredImages =
+                            preferences[PreferenceKeys.EnableAutoCleanExpiredImages] ?: true
                     }
             }
         }

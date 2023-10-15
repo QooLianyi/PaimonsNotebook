@@ -35,7 +35,7 @@ class PublicDataApiClient {
     }.getAsJson<GetFpData>()
 
     //获取参数列表
-    suspend fun getExtList(platform:Int = 2) = buildRequest {
+    suspend fun getExtList(platform: Int = 2) = buildRequest {
         url(ApiEndpoints.getExtList(platform))
     }.getAsJson<GetExtListData>()
 

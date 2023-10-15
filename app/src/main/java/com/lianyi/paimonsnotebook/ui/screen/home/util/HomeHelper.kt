@@ -3,11 +3,13 @@ package com.lianyi.paimonsnotebook.ui.screen.home.util
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.ActivityResultLauncher
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.ui.screen.abyss.view.AbyssScreen
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.view.AppWidgetScreen
 import com.lianyi.paimonsnotebook.ui.screen.daily_note.view.DailyNoteScreen
+import com.lianyi.paimonsnotebook.ui.screen.develop.TypographyScreen
 import com.lianyi.paimonsnotebook.ui.screen.gacha.view.GachaRecordScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.data.ModalItemData
 import com.lianyi.paimonsnotebook.ui.screen.items.view.AvatarScreen
@@ -56,6 +58,7 @@ object HomeHelper {
             R.drawable.ic_appwidget,
             AppWidgetScreen::class.java
         )
+
     )
 
     fun <T : Activity> goActivity(
@@ -80,4 +83,11 @@ object HomeHelper {
         context.startActivity(intent)
     }
 
+    fun goActivityForResultByIntent(
+        launcher: ActivityResultLauncher<Intent>,
+        block: Intent.() -> Unit
+    ) {
+        val intent = Intent().apply(block)
+        launcher.launch(intent)
+    }
 }

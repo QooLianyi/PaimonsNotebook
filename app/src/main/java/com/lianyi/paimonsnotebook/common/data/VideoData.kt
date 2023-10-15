@@ -18,5 +18,4 @@ data class VideoData(
     val label: String = "",
     val url:String,
     val isWeb:Boolean = false
-) {
-}
+)

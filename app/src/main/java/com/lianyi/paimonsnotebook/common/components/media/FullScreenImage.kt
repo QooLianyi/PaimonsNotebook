@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,7 +31,7 @@ fun FullScreenImage(
     onClick: () -> Unit = {},
 ) {
     var scale by remember {
-        mutableStateOf(1f)
+        mutableFloatStateOf(1f)
     }
     var offset by remember {
         mutableStateOf(Offset.Zero)
@@ -40,36 +41,36 @@ fun FullScreenImage(
         Animatable(0f)
     }
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         alphaAnim.animateTo(1f, tween(300))
     }
 
-    Box(modifier = Modifier
-        .alpha(alphaAnim.value)
-        .fillMaxSize()
-        .background(backgroundColor)
-        .pointerInputDetectTransformGestures(
-            isTransformInProgressChanged = {
-
-            }) { _, pan, zoom, _ ->
-            offset += pan
-            scale = (zoom * scale).coerceAtLeast(1f)
-        }
-        .doubleClick({
-            onClick()
-        }, {
-            scale = 1f
-            offset = Offset.Zero
-        }),
+    Box(
+        modifier = Modifier
+            .alpha(alphaAnim.value)
+            .fillMaxSize()
+            .background(backgroundColor)
+            .pointerInputDetectTransformGestures({ _, pan, zoom, _ ->
+                offset += pan
+                scale = (zoom * scale).coerceAtLeast(1f)
+            }, onGestureEnd = {})
+            .doubleClick({
+                onClick()
+            }, {
+                scale = 1f
+                offset = Offset.Zero
+            }),
         contentAlignment = Alignment.Center
     ) {
-        NetworkImage(url = url, modifier = Modifier
-            .fillMaxWidth()
-            .graphicsLayer(
-                scaleX = scale,
-                scaleY = scale,
-                translationX = offset.x,
-                translationY = offset.y
-            ), contentScale = ContentScale.Inside)
+        NetworkImage(
+            url = url, modifier = Modifier
+                .fillMaxWidth()
+                .graphicsLayer(
+                    scaleX = scale,
+                    scaleY = scale,
+                    translationX = offset.x,
+                    translationY = offset.y
+                ), contentScale = ContentScale.Inside
+        )
     }
 }

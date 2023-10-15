@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,26 +40,29 @@ class SplashScreen : BaseActivity(false) {
 //            }
 //        }
 
+
         viewModel.init {
             goHomeScreen()
         }
+
 //        goDebugPage()
 
         setContent {
             PaimonsNotebookTheme {
-                if (viewModel.showLoading) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(BackGroundColor),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        ContentLoadingPlaceholder(text = "正在下载所需的元数据...")
+                Crossfade(targetState = viewModel.showLoading, label = "") {
+                    if (it) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(BackGroundColor),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            ContentLoadingPlaceholder(text = "正在下载所需的元数据...")
+                        }
                     }
                 }
             }
         }
-
     }
 
     private fun goHomeScreen() {
@@ -68,7 +72,7 @@ class SplashScreen : BaseActivity(false) {
         finish()
     }
 
-    private fun goDebugPage(){
+    private fun goDebugPage() {
         startActivity(Intent(this@SplashScreen, TypographyScreen::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         })

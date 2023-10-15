@@ -25,6 +25,7 @@ import com.lianyi.paimonsnotebook.common.components.loading.LoadingAnimationPlac
 import com.lianyi.paimonsnotebook.common.components.widget.ProgressBar
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
+import com.lianyi.paimonsnotebook.ui.screen.account.components.dialog.UserGameRolesDialog
 import com.lianyi.paimonsnotebook.ui.screen.gacha.viewmodel.GachaRecordOptionScreenViewModel
 import com.lianyi.paimonsnotebook.ui.screen.setting.components.SettingOptionGroup
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
@@ -100,6 +101,14 @@ class GachaRecordOptionScreen : BaseActivity() {
                     }
                 }
             }
+        }
+
+        if(viewModel.showGameRoleDialog){
+            UserGameRolesDialog(
+                onButtonClick = viewModel::dismissGameRoleDialog,
+                onDismissRequest = viewModel::dismissGameRoleDialog,
+                onSelectRole = viewModel::onSelectGameRole
+            )
         }
 
         if (viewModel.showRequestPermissionDialog) {

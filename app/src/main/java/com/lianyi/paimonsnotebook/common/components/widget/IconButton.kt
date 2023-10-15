@@ -2,7 +2,13 @@ package com.lianyi.paimonsnotebook.common.components.widget
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -13,7 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,19 +34,20 @@ import com.lianyi.paimonsnotebook.ui.theme.White
 
 @Composable
 fun IconButton(
+    icon: Painter,
+    text: String,
     modifier: Modifier = Modifier,
-    text:String = "按钮",
-    icon: ImageVector? = null,
-    backgroundColor:Color = White,
-    color:Color = Black,
-    fontSize:TextUnit = 15.sp,
+    backgroundColor: Color = White,
+    color: Color = Black,
+    fontSize: TextUnit = 15.sp,
     shape: Shape = CircleShape,
-    block:()->Unit
+    block: () -> Unit
 ) {
     Box(modifier = modifier) {
-        Column(modifier = Modifier
-            .shadow(3.dp, shape)
-            .clip(shape)
+        Column(
+            modifier = Modifier
+                .shadow(3.dp, shape)
+                .clip(shape)
         ) {
             Row(
                 modifier = Modifier
@@ -51,11 +58,13 @@ fun IconButton(
                     .padding(12.dp, 5.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if(icon!=null){
-                    Icon(imageVector = icon,
+                if (icon != null) {
+                    Icon(
+                        painter = icon,
                         contentDescription = text,
                         modifier = Modifier.size(24.dp),
-                        tint = color)
+                        tint = color
+                    )
                     Spacer(modifier = Modifier.width(4.dp))
                 }
                 Text(text = text, color = color, fontSize = fontSize)

@@ -35,7 +35,6 @@ import androidx.core.text.toSpannable
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.media.FullScreenImage
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
-import com.lianyi.paimonsnotebook.common.components.placeholder.ImageLoadingPlaceholder
 import com.lianyi.paimonsnotebook.common.components.placeholder.TextPlaceholder
 import com.lianyi.paimonsnotebook.common.components.placeholder.VideoPlayerPlaceholder
 import com.lianyi.paimonsnotebook.common.components.text.FoldTextContent
@@ -112,12 +111,7 @@ fun HtmlTextLazyColumn(
                         )
                 ) {
                     VideoPlayerPlaceholder(
-                        cover = videoCover,
-                        diskCache = diskCacheTemplate.copy(
-                            url = videoCover,
-                            name = "文章详情视频封面",
-                            description = "文章详情内视频的封面"
-                        )
+                        cover = videoCover
                     ) {
                         onVideoClick()
                     }
@@ -137,6 +131,7 @@ fun HtmlTextLazyColumn(
             ) {
                 when (item.type) {
                     HtmlSpanType.Img -> {
+
                         NetworkImage(
                             url = item.data,
                             modifier = Modifier
@@ -151,10 +146,7 @@ fun HtmlTextLazyColumn(
                                 url = item.data,
                                 name = "文章详情图片",
                                 description = "阅读文章时加载的配图"
-                            ),
-                            placeholder = {
-                                ImageLoadingPlaceholder()
-                            }
+                            )
                         )
                     }
 
@@ -174,12 +166,7 @@ fun HtmlTextLazyColumn(
 
                     HtmlSpanType.Video -> {
                         VideoPlayerPlaceholder(
-                            cover = videoCover,
-                            diskCache = diskCacheTemplate.copy(
-                                url = videoCover,
-                                name = "文章详情视频封面",
-                                description = "文章详情内视频的封面"
-                            )
+                            cover = videoCover
                         ) {
                             onVideoClick()
                         }
@@ -199,7 +186,7 @@ fun HtmlTextLazyColumn(
 
                     }
 
-                    HtmlSpanType.LinkCard->{
+                    HtmlSpanType.LinkCard -> {
 
                     }
 
@@ -217,7 +204,7 @@ fun HtmlTextLazyColumn(
             properties = DialogProperties(usePlatformDefaultWidth = false)
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
-                FullScreenImage(url = imageUrl,onClick = {
+                FullScreenImage(url = imageUrl, onClick = {
                     imageFullScreen = false
                 })
             }
@@ -298,123 +285,8 @@ private fun getHtmlSpanDataList(htmlText: String): List<HtmlSpanData> {
                         HtmlCompat.fromHtml(parentHtmlText, HtmlCompat.FROM_HTML_MODE_LEGACY)
                     textList += HtmlTextData(spannableString = text)
                     spanType = HtmlSpanType.SP
-
-//region
-//                    val pattern = Regex("rgb\\([0-9]+,[\\s0-9]+,[\\s0-9]+\\)").toPattern()
-//
-//                    val matcherColor = pattern.matcher(parentHtmlText)
-//                    while (matcherColor.find()) {
-//                        val group = matcherColor.group(0)
-//                        if (group != null) {
-//                            val hexColor = getColorHexFromRgbColorText(group)
-//                            parentHtmlText = parentHtmlText.replace(group, "#${hexColor}")
-//                            println("end = ${parentHtmlText.replace(group,"#${hexColor}")}")
-//                        }
-//                    }
-//
-//                    val tagPattern = Regex("<span\\s>*.*<\\/span>").toPattern()
-//                    val colorPattern = Regex("rgb\\([0-9]+,[\\s0-9]+,[\\s0-9]+\\)").toPattern()
-
-//                    parent.getElementsByTag("span").forEach { element ->
-//                        textList += HtmlTextData(
-//                            text = element.text(),
-//                            color = getTextColorInStyle(element)
-//                        )
-//                        val tagMatcher = tagPattern.matcher(element.toString())
-//                        while(tagMatcher.find()){
-//                            val tag = matcherColor.group(0)
-//                            if (tag != null) {
-//
-//                                colorPattern.matcher(tag)
-//
-////                                val hexColor = getColorHexFromRgbColorText(group)
-//                                val (r,g,b) = getRGBFromRgbColorText(tag)
-//
-//                                textList += HtmlTextData(
-//                                    text = element.text(),
-//
-//                                )
-//
-//                            }
-//                        }
-//                    }
-
-                    //早期p标签转换机制,会丢失部分文字,弃用
-//                    if (parent.childrenSize() > 0) {
-//                        var currentTextLength = 0
-//                        parent.children().forEach { element ->
-//                            //判断是否是a标签
-//                            if (element.tagName() == "a") {
-//                                val elementText = element.text()
-//
-//                                spanType = HtmlSpanType.A
-//                                clickable = true
-//                                data = element.attr("href")
-//
-//                                textList += HtmlTextData(
-//                                    elementText,
-//                                    LinkColor,
-//                                    currentTextLength,
-//                                    currentTextLength + elementText.length,
-//                                    data
-//                                )
-//
-//                                currentTextLength += elementText.length
-//
-//                            } else {
-//
-//                                val spans = element.getElementsByTag("span")
-//                                if (spans.size > 0) {
-//                                    spans.forEach { span ->
-//                                        textList += HtmlTextData(
-//                                            text = span.text(),
-//                                            color = getTextColorInStyle(span)
-//                                        )
-//
-//                                        currentTextLength += span.text().length
-//                                    }
-//                                } else {
-//                                    val text = element.text()
-//
-//                                    //当整个p标签中只有一个strong元素时
-//                                    val onlyStrong =
-//                                        parent.getElementsByTag("strong").size == 1 && parent.childrenSize() == 1
-//
-//                                    println("onlyStrong = ${onlyStrong}")
-//
-//                                    textList += if (onlyStrong) {
-//                                        HtmlTextData(
-//                                            parent.text(),
-//                                            getTextColorInStyle(parent),
-//                                            0,
-//                                            text.length
-//                                        )
-//                                    } else {
-//                                        HtmlTextData(
-//                                            text,
-//                                            getTextColorInStyle(element),
-//                                            0,
-//                                            text.length
-//                                        )
-//                                    }
-//
-//                                }
-//                            }
-//                        }
-//                    } else {
-//                        val text = parent.text()
-//
-//                        textList += HtmlTextData(
-//                            parent.text(),
-//                            getTextColorInStyle(parent),
-//                            0,
-//                            text.length
-//                        )
-//                    }
-//                    println("text = ${textList.last().text}")
-
-//endregion
                 }
+
                 //块类型 一般用于装填媒体内容,可折叠文本
                 "div" -> {
 
@@ -470,9 +342,9 @@ private fun getHtmlSpanDataList(htmlText: String): List<HtmlSpanData> {
                                 }
                             }
 
-                            titleList += HtmlTextData(text = parent.getElementsByClass("card-title").text())
-
-//                            titleList += HtmlTextData(text = parent.getElementsByClass("card-content").text())
+                            titleList += HtmlTextData(
+                                text = parent.getElementsByClass("card-title").text()
+                            )
 
                             HtmlSpanType.LinkCard
                         } else {

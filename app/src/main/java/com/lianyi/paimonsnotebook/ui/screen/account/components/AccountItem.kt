@@ -48,8 +48,14 @@ fun AccountItem(
     Column(modifier = modifier) {
 
         //默认账号指示器动画
-        val defaultAccountIndicatorHeightAnim by animateDpAsState(targetValue = if (user.isSelected) 30.dp else 0.dp)
-        val defaultAccountIndicatorAlphaAnim by animateFloatAsState(targetValue = if (user.isSelected) 1f else 0f)
+        val defaultAccountIndicatorHeightAnim by animateDpAsState(
+            targetValue = if (user.isSelected) 30.dp else 0.dp,
+            label = ""
+        )
+        val defaultAccountIndicatorAlphaAnim by animateFloatAsState(
+            targetValue = if (user.isSelected) 1f else 0f,
+            label = ""
+        )
 
         //展开账号角色
         var showGameRoles by remember {

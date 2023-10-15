@@ -30,14 +30,21 @@ internal class ResinProgressBarRecoverTime3X2RemoteViews(
             dailyNoteWidgetData.current_resin,
             false
         )
+
         setTextViewText(
             R.id.resin,
             "${dailyNoteWidgetData.current_resin}/${dailyNoteWidgetData.max_resin}"
         )
 
+        val text = if(dailyNoteWidgetData.current_resin == dailyNoteWidgetData.max_resin){
+            "原粹树脂恢复完毕"
+        }else{
+            TimeHelper.getRecoverTime(dailyNoteWidgetData.resin_recovery_time.toLongOrNull() ?: 0L)
+        }
+
         setTextViewText(
             R.id.recover_time,
-            TimeHelper.getRecoverTime(dailyNoteWidgetData.resin_recovery_time.toLongOrNull() ?: 0L)
+            text
         )
     }
 

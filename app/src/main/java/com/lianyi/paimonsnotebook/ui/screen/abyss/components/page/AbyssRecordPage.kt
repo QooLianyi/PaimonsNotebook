@@ -35,9 +35,9 @@ import com.lianyi.paimonsnotebook.ui.screen.abyss.components.list_item.ItemCard
 fun AbyssRecordPage(
     abyssData: SpiralAbyssData?,
     loadingState: LoadingState,
-    getAvatarFromMetadata:(Int)->AvatarData?,
-    getMonsterFromMetadata:(String)->MonsterData?
-){
+    getAvatarFromMetadata: (Int) -> AvatarData?,
+    getMonsterFromMetadata: (String) -> MonsterData?
+) {
     Crossfade(
         targetState = loadingState,
         label = ""
@@ -56,7 +56,7 @@ fun AbyssRecordPage(
             }
 
             LoadingState.Success -> {
-                if(abyssData == null) return@Crossfade
+                if (abyssData == null) return@Crossfade
                 Content(
                     currentAbyssRecord = abyssData,
                     getAvatarFromMetadata = getAvatarFromMetadata,
@@ -69,9 +69,9 @@ fun AbyssRecordPage(
 
 @Composable
 private fun Content(
-    currentAbyssRecord:SpiralAbyssData,
-    getAvatarFromMetadata:(Int)->AvatarData?,
-    getMonsterFromMetadata:(String)->MonsterData?
+    currentAbyssRecord: SpiralAbyssData,
+    getAvatarFromMetadata: (Int) -> AvatarData?,
+    getMonsterFromMetadata: (String) -> MonsterData?
 ) {
     ContentSpacerLazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -97,7 +97,7 @@ private fun Content(
                         AbyssOverviewInformationItem(
                             "最多击破",
                             "${defeat.value}",
-                            defeatAvatar?.iconUrl ?: ""
+                            defeatAvatar?.iconUrl ?: defeat.avatar_icon
                         )
 
                         val damage = currentAbyssRecord.damage_rank.first()
@@ -108,7 +108,7 @@ private fun Content(
                         AbyssOverviewInformationItem(
                             "最强一击",
                             "${damage.value}",
-                            damageAvatar?.iconUrl ?: ""
+                            damageAvatar?.iconUrl ?: damage.avatar_icon
                         )
 
                         val takeDamage = currentAbyssRecord.take_damage_rank.first()
@@ -119,7 +119,7 @@ private fun Content(
                         AbyssOverviewInformationItem(
                             "最多承伤",
                             "${takeDamage.value}",
-                            takeDamageAvatar?.iconUrl ?: ""
+                            takeDamageAvatar?.iconUrl ?: takeDamage.avatar_icon
                         )
 
                         val normalSkill =
@@ -131,7 +131,7 @@ private fun Content(
                         AbyssOverviewInformationItem(
                             "元素战技次数",
                             "${normalSkill.value}",
-                            normalSkillAvatar?.iconUrl ?: ""
+                            normalSkillAvatar?.iconUrl ?: normalSkill.avatar_icon
                         )
 
                         val energySkill =
@@ -143,7 +143,7 @@ private fun Content(
                         AbyssOverviewInformationItem(
                             "元素爆发次数",
                             "${energySkill.value}",
-                            energySkillAvatar?.iconUrl ?: ""
+                            energySkillAvatar?.iconUrl ?: energySkill.avatar_icon
                         )
                     }
 
@@ -172,25 +172,25 @@ private fun Content(
 
                         val avatars = remember {
                             currentAbyssRecord.reveal_rank.map {
-                                getAvatarFromMetadata(it.avatar_id) to it.value
+                                Triple(
+                                    getAvatarFromMetadata(it.avatar_id)?.iconUrl ?: it.avatar_icon,
+                                    it.rarity,
+                                    it.value
+                                )
                             }
                         }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            avatars.forEach { pair ->
-                                if (pair.first == null) {
-                                    Box(modifier = Modifier.size(35.dp))
-                                } else {
-                                    ItemCard(
-                                        url = pair.first?.iconUrl ?: "",
-                                        text = "${pair.second}",
-                                        star = pair.first?.starCount ?: 0,
-                                        width = 35.dp,
-                                        height = 50.dp
-                                    )
-                                }
+                            avatars.forEach { triple ->
+                                ItemCard(
+                                    url = triple.first,
+                                    text = "${triple.third}",
+                                    star = triple.second,
+                                    width = 35.dp,
+                                    height = 50.dp
+                                )
                             }
                         }
                     }

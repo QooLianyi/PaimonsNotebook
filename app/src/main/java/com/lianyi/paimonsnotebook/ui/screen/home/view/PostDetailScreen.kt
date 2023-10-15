@@ -1,6 +1,5 @@
 package com.lianyi.paimonsnotebook.ui.screen.home.view
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
@@ -18,7 +17,6 @@ import com.lianyi.paimonsnotebook.common.components.placeholder.EmptyPlaceholder
 import com.lianyi.paimonsnotebook.common.components.placeholder.ErrorPlaceholder
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.util.enums.LoadingState
-import com.lianyi.paimonsnotebook.common.view.WebViewScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.components.post.PostStructureContentList
 import com.lianyi.paimonsnotebook.ui.screen.home.util.PostHelper
 import com.lianyi.paimonsnotebook.ui.screen.home.viewmodel.PostDetailViewModel
@@ -28,12 +26,6 @@ import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
 class PostDetailScreen : BaseActivity() {
     private val viewModel by lazy { ViewModelProvider(this)[PostDetailViewModel::class.java] }
 
-    private val webStaticUrl by lazy {
-        intent.getStringExtra(PostHelper.PARAM_WEB_STATIC_URL)
-    }
-
-    private val webStatic get() = !webStaticUrl.isNullOrBlank()
-
     private val articleId by lazy {
         intent.getLongExtra(PostHelper.PARAM_POST_ID, 0L)
     }
@@ -41,15 +33,7 @@ class PostDetailScreen : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (webStatic) {
-            //todo 更改为使用js bridge的webview并设置为默认用户的cookie
-            startActivity(Intent(this, WebViewScreen::class.java).apply {
-                putExtra("url", webStaticUrl)
-            })
-            finish()
-        } else {
-            viewModel.loadArticleContent(articleId)
-        }
+        viewModel.loadArticleContent(articleId)
 
         setContent {
             PaimonsNotebookTheme(this) {
@@ -94,7 +78,8 @@ class PostDetailScreen : BaseActivity() {
                 fontSize = 14.sp,
                 onClickImage = viewModel::showFullScreenImage,
                 onClickLink = viewModel::hyperlinkNavigate,
-                onClickLinkCard = viewModel::hyperlinkNavigate
+                onClickLinkCard = viewModel::hyperlinkNavigate,
+                onClickVideo = viewModel::onClickVideo
             )
         }
 

@@ -6,8 +6,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import com.lianyi.paimonsnotebook.ui.theme.Black
 
 @Composable
 fun TitleText(
@@ -15,14 +17,18 @@ fun TitleText(
     text: String,
     fontSize: TextUnit = 15.sp,
     bold: Boolean = true,
-    color: Color = Color(0xff333333),
+    maxLines: Int = 1,
+    color: Color = Black,
     textAlign: TextAlign = TextAlign.Start
 ) {
-    Text(text = text,
+    Text(
+        text = text,
         fontSize = fontSize,
         modifier = modifier,
         fontWeight = if (bold) FontWeight.Bold else FontWeight.Normal,
         color = color,
-        textAlign = textAlign
+        textAlign = textAlign,
+        maxLines = maxLines,
+        overflow = TextOverflow.Ellipsis
     )
 }

@@ -26,6 +26,7 @@ import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.database.user.util.AccountHelper
 import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.extension.list.takeFirstIf
+import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.common.extension.string.notify
 import com.lianyi.paimonsnotebook.common.extension.string.showLong
@@ -36,6 +37,7 @@ import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.binding.UserGameRole
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.AppWidgetConfigurationData
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.util.ColorPickerType
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
+import com.lianyi.paimonsnotebook.ui.screen.setting.util.SettingsHelper
 import com.lianyi.paimonsnotebook.ui.theme.Black
 import com.lianyi.paimonsnotebook.ui.theme.White
 import com.lianyi.paimonsnotebook.ui.widgets.common.data.RemoteViewsInfo
@@ -60,7 +62,7 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
     }
 
     val firstEntryDialogButtons by lazy {
-        arrayOf("不再显示","前往设置","关闭")
+        arrayOf("不再显示", "前往设置", "关闭")
     }
 
     val defaultColorList = mutableStateListOf(
@@ -99,7 +101,7 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
     var firstEntry by mutableStateOf(false)
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launchIO {
             firstEntry =
                 context.datastorePf.data.first()[PreferenceKeys.FirstEntryAppWidgetConfigurationScreen]
                     ?: true
@@ -138,6 +140,24 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
                 registerAddWidgetSuccessBroadcast()
             } else {
                 updateInit(configuration.appWidgetId)
+            }
+
+            //设置用户
+            launchIO {
+                AccountHelper.selectedUserFlow.collect {
+                    val user = it ?: return@collect
+                    val alwaysUseDefaultUser =
+                        SettingsHelper.configurationFlow.value.alwaysUseDefaultUser
+
+                    if (alwaysUseDefaultUser) {
+                        changeUser(user)
+
+                        if (configuration.showGameRole) {
+                            val role = user.getSelectedGameRole() ?: return@collect
+                            changeGameRole(user, role)
+                        }
+                    }
+                }
             }
         }
     }
@@ -192,20 +212,22 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
     }
 
     fun onFirstEntryDialogButtonSelect(index: Int) {
-        when(index){
-            0->{
+        when (index) {
+            0 -> {
                 viewModelScope.launch {
                     PreferenceKeys.FirstEntryAppWidgetConfigurationScreen.editValue(false)
                 }
             }
-            1->{
+
+            1 -> {
                 HomeHelper.goActivityByIntent {
                     action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                    data = Uri.fromParts("package",context.packageName,null)
+                    data = Uri.fromParts("package", context.packageName, null)
                 }
                 "请手动给予[桌面快捷方式]权限".showLong()
             }
-            else->{}
+
+            else -> {}
         }
 
         firstEntry = false
@@ -249,7 +271,7 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
         configuration.setValueForRemoteViewsInfo(remoteViewsInfo)
     }
 
-    fun changeBackgroundColor(color: Color,index: Int, scope: CoroutineScope) {
+    fun changeBackgroundColor(color: Color, index: Int, scope: CoroutineScope) {
         if (index == 0) {
             showColorPickerPopup()
             colorPickerType = ColorPickerType.Background
@@ -287,13 +309,13 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
         }
     }
 
-    fun changeBackgroundRadius(float: Float,scope: CoroutineScope){
+    fun changeBackgroundRadius(float: Float, scope: CoroutineScope) {
         scope.launch {
             configuration.setBackgroundRadius(float)
         }
     }
 
-    fun onColorPickerSelectedColor(color: Color,pointF: PointF, scope: CoroutineScope) {
+    fun onColorPickerSelectedColor(color: Color, pointF: PointF, scope: CoroutineScope) {
         when (colorPickerType) {
             ColorPickerType.Image -> {
                 changeImageTintColor(color, 0, scope)
@@ -305,8 +327,8 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
                 configuration.customTextColor = color
             }
 
-            ColorPickerType.Background->{
-                changeBackgroundColor(color,0,scope)
+            ColorPickerType.Background -> {
+                changeBackgroundColor(color, 0, scope)
                 configuration.customBackgroundColor = color
             }
 
@@ -325,7 +347,7 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
                 configuration.customTextColor
             }
 
-            ColorPickerType.Background->{
+            ColorPickerType.Background -> {
                 configuration.customBackgroundColor
             }
 
@@ -441,7 +463,7 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
                     AppWidgetHelper.updateAppWidgetContentById(appwidgetId)
                     "桌面组件添加并配置成功".notify()
 
-                    if(this@AppWidgetConfigurationScreenViewModel::finishActivity.isInitialized){
+                    if (this@AppWidgetConfigurationScreenViewModel::finishActivity.isInitialized) {
                         finishActivity.invoke()
                     }
                 }

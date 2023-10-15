@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.lianyi.paimonsnotebook.common.database.disk_cache.util.DiskCacheDataType
-import com.lianyi.paimonsnotebook.common.util.time.TimeStampType
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
+import com.lianyi.paimonsnotebook.common.util.time.TimeStampType
 
 /*
 * 本地缓存的图片
@@ -40,12 +40,15 @@ data class DiskCache(
     val planDelete: Int = 0,
 ) {
 
-    val isPlanDelete: Boolean
-        get() = planDelete == 1
+    val createTimeFormat
+        get() = TimeHelper.getTime(createTime, TimeStampType.YYYY_MM_DD_HH_MM_SS)
+    val lastUseTimeFormat
+        get() = TimeHelper.getTime(lastUseTime, TimeStampType.YYYY_MM_DD_HH_MM_SS)
 
-    fun getCreateTimeWithDateFormat() =
-        TimeHelper.getTime(createTime, TimeStampType.YYYY_MM_DD_HH_MM_SS)
-
-    fun getLastUseTimeWithDateFormat() =
-        TimeHelper.getTime(lastUseTime, TimeStampType.YYYY_MM_DD_HH_MM_SS)
+    val typeName
+        get() = when (type) {
+            DiskCacheDataType.Temp -> "临时"
+            DiskCacheDataType.Stable -> "长期"
+            else -> "默认"
+        }
 }

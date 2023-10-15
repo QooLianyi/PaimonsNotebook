@@ -20,6 +20,7 @@ import androidx.lifecycle.viewModelScope
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
+import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.common.extension.string.notify
 import com.lianyi.paimonsnotebook.common.extension.string.show
@@ -48,15 +49,6 @@ class SettingScreenViewModel : ViewModel() {
             SettingsHelper.configurationFlow.collect {
                 configurationData = it
             }
-//            dataStoreValues {
-//                configurationData = ConfigurationData().apply {
-//                    homeScreenDisplayState  = HomeScreenDisplayState.valueOf(it[PreferenceKeys.HomeScreenDisplayState]?:"Loading")
-//                }
-//                "datastoreValues is working".notify()
-//            }
-//            SettingsUtil.getConfigurationData().collect {
-//                configurationData = it
-//            }
         }
     }
 
@@ -91,22 +83,46 @@ class SettingScreenViewModel : ViewModel() {
             }
         ),
         OptionListData(
-            name = "自动删除过期的图片缓存",
-            description = "该功能将在未来的版本实现",
+            name = "自动清除过期的图片缓存",
+            description = "默认开启,开启后,程序在启动时会将最后一次使用时间为7天以上,并且图片类型为临时的图片删除,以节省存储空间",
             onClick = {
-//                HomeHelper.goActivity(ResourceManagerScreen::class.java)
+                viewModelScope.launchIO {
+                    configurationData.enableAutoCleanExpiredImages =
+                        !configurationData.enableAutoCleanExpiredImages
+
+                    PreferenceKeys.EnableAutoCleanExpiredImages.editValue(configurationData.enableAutoCleanExpiredImages)
+                }
             },
             slot = {
-                SettingsOptionSwitch(checked = false)
+                SettingsOptionSwitch(checked = configurationData.enableAutoCleanExpiredImages)
+            }
+        )
+    )
+
+    val userSettings = listOf(
+        OptionListData(
+            name = "始终使用默认用户",
+            description = "默认开启,开启后,当进行一些操作需要指定使用的用户时,直接使用默认用户。(如签到、扫码、桌面组件默认绑定的用户、角色)",
+            onClick = {
+                viewModelScope.launch(Dispatchers.IO) {
+                    configurationData.alwaysUseDefaultUser = !configurationData.alwaysUseDefaultUser
+                    PreferenceKeys.AlwaysUseDefaultUser.editValue(configurationData.alwaysUseDefaultUser)
+                }
+            },
+            slot = {
+                SettingsOptionSwitch(
+                    checked = configurationData.alwaysUseDefaultUser
+                )
             }
         )
     )
 
     val dataSettings = listOf(
         OptionListData(
-            name = "同步数据",
+            name = "同步元数据",
             description = "连接互联网并同步本地存储的角色、武器等数据",
             onClick = {
+                "正在检查更新...".notify()
                 viewModelScope.launch(Dispatchers.IO) {
                     MetadataHelper.updateMetadata(
                         onSuccess = {
@@ -120,25 +136,6 @@ class SettingScreenViewModel : ViewModel() {
             },
             slot = {
 
-            }
-        )
-    )
-
-    val appwidgetSettings = listOf(
-        OptionListData(
-            name = "桌面组件总是使用默认用户",
-            description = "默认开启,开启时,添加桌面组件,总是会与默认用户的默认角色绑定,关闭后添加桌面组件后需要手动指定需要绑定的账号",
-            onClick = {
-                configurationData.appwidgetAlwaysUseSelectedUser =
-                    !configurationData.appwidgetAlwaysUseSelectedUser
-                viewModelScope.launch {
-                    PreferenceKeys.AppwidgetAlwaysUseSelectedUser.editValue(configurationData.appwidgetAlwaysUseSelectedUser)
-                }
-            },
-            slot = {
-                SettingsOptionSwitch(
-                    checked = configurationData.appwidgetAlwaysUseSelectedUser
-                )
             }
         )
     )
@@ -199,7 +196,7 @@ class SettingScreenViewModel : ViewModel() {
         ),
         OptionListData(
             name = "Github上的派蒙笔记本",
-            description = "在此你能够找到派蒙笔记本的源代码",
+            description = "在此你能够找到派蒙笔记本的源代码,遇到问题也欢迎issue",
             onClick = {
                 val intent = Intent(
                     Intent.ACTION_VIEW,
@@ -217,7 +214,7 @@ class SettingScreenViewModel : ViewModel() {
         ),
         OptionListData(
             name = "派蒙笔记本QQ群",
-            description = "通过QQ群与开发者进行问题反馈、新功能建议等",
+            description = "通过QQ群与开发者进行问题反馈、新功能建议等(遇到BUG不反馈的话开发者是没办法修复的)",
             onClick = {
                 "正在尝试唤起手机QQ".show()
                 val intent = Intent().apply {

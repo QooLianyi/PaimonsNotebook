@@ -2,6 +2,7 @@ package com.lianyi.paimonsnotebook.ui.screen.items.viewmodel.screen
 
 import android.os.Bundle
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -13,7 +14,7 @@ import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.MaterialSer
 import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.WeaponService
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.QualityType
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.item.Material
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.item.Materials
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.weapon.WeaponData
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
@@ -51,9 +52,9 @@ class CultivationMaterialScreenViewModel : ViewModel() {
         loadingState = LoadingState.Error
     }
 
-    var avatarList by mutableStateOf(listOf<AvatarData>())
+    var avatarList by mutableStateOf<List<Pair<List<Material>, List<AvatarData>>>>(listOf())
         private set
-    var weaponList by mutableStateOf(listOf<WeaponData>())
+    var weaponList by mutableStateOf<List<Pair<List<Material>, List<WeaponData>>>>(listOf())
         private set
 
     var weekName by mutableStateOf("")
@@ -69,26 +70,48 @@ class CultivationMaterialScreenViewModel : ViewModel() {
         }
     }
 
+    var currentPageIndex by mutableIntStateOf(0)
+
+    val tabs by lazy {
+        arrayOf(
+            "天赋培养", "武器突破"
+        )
+    }
+
+    fun onChangePage(value: Int) {
+        currentPageIndex = value
+    }
+
     private fun setWeekData(week: Int, ignoreHour: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
 
             Materials.getMaterialsIdByWeek(week, ignoreHour).also { result ->
-                val pair = if (result.second != 7) {
-                    val itemMap = materialService.getMaterialListByIds(result.first)
-                        .filter { it.RankLevel == QualityType.QUALITY_PURPLE || it.RankLevel == QualityType.QUALITY_ORANGE }
-                        .associateBy { it.Id }
+                val materialMap = materialService.getMaterialListByIds(result.first)
+                    .associateBy { it.Id }
 
-                    weaponService.weaponList.filter { weaponData ->
-                        weaponData.cultivationItems.takeFirstIf { id -> itemMap[id] != null } != null
-                    } to avatarService.avatarList.filter { avatarData ->
-                        avatarData.cultivationItems.takeFirstIf { id -> itemMap[id] != null } != null
-                    }
-                } else {
-                    weaponService.weaponList to avatarService.avatarList
-                }
+                weaponList = formatDataList(
+                    materialMap = materialMap,
+                    list = weaponService.weaponList,
+                    groupByCondition = {
+                        val id = it.cultivationItems
+                            .takeFirstIf { id -> materialMap[id] != null }?.let { value ->
+                                value + if (it.rankLevel < 3) 1 else 0
+                            }
+                        materialMap[id]
+                    }, listSortCondition = {
+                        it.rankLevel
+                    }, typeMaterialCount = 4
+                )
 
-                weaponList = pair.first.sortedByDescending { it.rankLevel }
-                avatarList = pair.second.sortedByDescending { it.starCount }
+                avatarList = formatDataList(
+                    materialMap = materialMap,
+                    list = avatarService.avatarList,
+                    groupByCondition = {
+                        materialMap[it.cultivationItems.takeFirstIf { id -> materialMap[id] != null }]
+                    }, listSortCondition = {
+                        it.starCount
+                    }, typeMaterialCount = 3
+                )
 
                 if (loadingState == LoadingState.Loading) {
                     viewModelScope.launch(Dispatchers.Main) {
@@ -99,6 +122,41 @@ class CultivationMaterialScreenViewModel : ViewModel() {
             }
         }
     }
+
+    /*
+    * 格式化数据列表
+    *
+    * materialMap:材料map
+    * list:数据列表
+    * groupByCondition:分组条件
+    * listSortCondition:列表排序条件
+    * typeMaterialCount:类型材料个数
+    * */
+    private fun <T> formatDataList(
+        materialMap: Map<Int, Material>,
+        list: List<T>,
+        groupByCondition: (T) -> Material?,
+        listSortCondition: (T) -> Int,
+        typeMaterialCount: Int
+    ) =
+        list.asSequence().filter {
+            groupByCondition.invoke(it) != null
+        }.groupBy(groupByCondition).toList()
+            .sortedByDescending { it.first?.RankLevel ?: 0 }
+            .map { pair ->
+                val material = pair.first
+                val typeList = mutableListOf<Material>()
+
+                if (material != null) {
+                    repeat(typeMaterialCount) {
+                        val item = materialMap[material.Id - it]
+                        if (item != null) {
+                            typeList += item
+                        }
+                    }
+                }
+                typeList to pair.second.sortedByDescending(listSortCondition)
+            }
 
     var showDropMenu by mutableStateOf(false)
 

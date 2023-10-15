@@ -11,5 +11,8 @@ enum class DiskCacheDataType {
     Stable,
 
     //UI,用于显示正常的界面,此类一般不能删除。
-    UI
+    UI,
+
+    //默认
+    Default
 }

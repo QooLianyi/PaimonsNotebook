@@ -30,7 +30,7 @@ import com.lianyi.paimonsnotebook.ui.theme.*
 * 描述对话框
 *
 * */
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun LazyColumnDialog(
     title: String,
@@ -114,9 +114,10 @@ fun LazyColumnDialog(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Row(
+                    FlowRow(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = buttonGroupAlign
+                        horizontalArrangement = buttonGroupAlign,
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         buttons.forEachIndexed { index, s ->
                             TextButton(onClick = { onClickButton(index) }) {
@@ -127,7 +128,6 @@ fun LazyColumnDialog(
                             }
                         }
                     }
-
                 }
 
             }

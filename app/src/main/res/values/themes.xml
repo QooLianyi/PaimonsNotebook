@@ -9,6 +9,12 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+    <style name="Theme.PaimonsNotebookFullScreen" parent="Theme.PaimonsNotebook">
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_layer</item>
         <item name="android:windowAnimationStyle">@style/ClearAnimation</item>

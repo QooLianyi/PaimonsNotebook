@@ -57,8 +57,6 @@ fun ColorPickerPopup(
 ) {
     val controller = rememberColorPickerController().apply {
         setDebounceDuration(100)
-        println("初始化")
-        println("initialPointer = ${initialPointer?.x} ${initialPointer?.y}")
     }
 
     BasePopup(visible = visible, onRequestDismiss = onRequestDismiss) {

@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,7 +18,6 @@ import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -31,7 +29,7 @@ import com.lianyi.paimonsnotebook.common.components.spacer.NavigationBarPaddingS
 import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
-import com.lianyi.paimonsnotebook.common.service.overlay.util.OverlayHelper
+import com.lianyi.paimonsnotebook.ui.screen.account.components.dialog.UserDialog
 import com.lianyi.paimonsnotebook.ui.screen.account.view.AccountManagerScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.components.card.account.AccountInfoCard
 import com.lianyi.paimonsnotebook.ui.screen.home.components.home.HomeContent
@@ -40,7 +38,7 @@ import com.lianyi.paimonsnotebook.ui.screen.home.viewmodel.HomeScreenViewModel
 import com.lianyi.paimonsnotebook.ui.screen.setting.util.configuration_enum.HomeScreenDisplayState
 import com.lianyi.paimonsnotebook.ui.screen.setting.view.SettingsScreen
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
-import com.lianyi.paimonsnotebook.ui.theme.Black_90
+import com.lianyi.paimonsnotebook.ui.theme.Black
 import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
 import com.lianyi.paimonsnotebook.ui.theme.White
 
@@ -53,9 +51,9 @@ class HomeScreen : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        viewModel.startActivity = registerStartActivityForResult()
         registerPressedCallback()
         registerRequestPermissionsResult()
-        viewModel.startActivity = registerStartActivityForResult()
 
         viewModel.init()
 
@@ -70,9 +68,9 @@ class HomeScreen : BaseActivity() {
                     drawerContent = {
                         Column(Modifier.fillMaxSize()) {
 
-                            AccountInfoCard(viewModel.selectedUser) {
+                            AccountInfoCard(viewModel.selectedUser, onAddAccount = {
                                 viewModel.functionNavigate(AccountManagerScreen::class.java)
-                            }
+                            })
 
                             SideBarMenuList(list = viewModel.modalItems) {
                                 viewModel.navigateScreen(it)
@@ -80,20 +78,47 @@ class HomeScreen : BaseActivity() {
 
                             Spacer(modifier = Modifier.weight(1f))
 
-                            Image(painter = painterResource(id = R.drawable.ic_settings),
-                                contentDescription = null,
-                                colorFilter = ColorFilter.tint(Black_90),
+                            Row(
                                 modifier = Modifier
                                     .padding(8.dp)
-                                    .radius(2.dp)
-                                    .size(36.dp)
-                                    .align(Alignment.Start)
-                                    .clickable {
-                                        viewModel.functionNavigate(SettingsScreen::class.java)
-                                    }
-                                    .padding(4.dp)
-                            )
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(2.dp)
+                            ) {
+                                Icon(painter = painterResource(id = R.drawable.ic_settings),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .radius(2.dp)
+                                        .size(36.dp)
+                                        .clickable {
+                                            viewModel.functionNavigate(SettingsScreen::class.java)
+                                        }
+                                        .padding(4.dp), tint = Black
+                                )
 
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_scan),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .radius(2.dp)
+                                        .size(36.dp)
+                                        .clickable {
+                                            viewModel.onScanQRCode()
+                                        }
+                                        .padding(6.dp), tint = Black
+                                )
+
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_gift),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .radius(2.dp)
+                                        .size(36.dp)
+                                        .clickable {
+                                            viewModel.goSignWeb()
+                                        }
+                                        .padding(4.dp), tint = Black
+                                )
+                            }
                             NavigationBarPaddingSpacer()
                         }
                     },
@@ -180,6 +205,16 @@ class HomeScreen : BaseActivity() {
                     }
                 }
 
+                if (viewModel.showUserDialog) {
+                    UserDialog(
+                        onButtonClick = {
+                            viewModel.dismissUserDialog()
+                        },
+                        onDismissRequest = viewModel::dismissUserDialog,
+                        onClickUser = viewModel::onSelectUser
+                    )
+                }
+
                 if (viewModel.showConfirm) {
                     ConfirmDialog(
                         title = getString(R.string.no_permission),
@@ -189,6 +224,13 @@ class HomeScreen : BaseActivity() {
                     )
                 }
             }
+        }
+    }
+
+    override fun onBackPressedCallback() {
+        viewModel.onBackPressed {
+            //返回桌面
+            moveTaskToBack(false)
         }
     }
 

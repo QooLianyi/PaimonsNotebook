@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.widget.RemoteViews
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
+import com.lianyi.paimonsnotebook.common.extension.scope.launchMain
+import com.lianyi.paimonsnotebook.common.extension.string.show
 import com.lianyi.paimonsnotebook.common.view.HoyolabWebActivity
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.view.AppWidgetConfigurationScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
@@ -65,6 +67,8 @@ open class BaseAppWidget : AppWidgetProvider() {
             //由用户调用的刷新
             AppWidgetHelper.ACTION_UPDATE_WIDGET -> {
                 if (appWidgetId != -1) {
+                    "内容更新中".show()
+
                     updateAppWidget(appWidgetId, intent)
                 }
             }
@@ -93,7 +97,8 @@ open class BaseAppWidget : AppWidgetProvider() {
     * */
     private fun updateAppWidget(
         appWidgetId: Int,
-        intent: Intent?
+        intent: Intent?,
+        notify:Boolean = false,
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val appWidgetBinding = dao.getAppWidgetBindingByAppWidgetId(appWidgetId)
@@ -115,6 +120,11 @@ open class BaseAppWidget : AppWidgetProvider() {
             }
 
             updateAppWidget(appWidgetId, views)
+            if(notify){
+                launchMain {
+                    "更新完成".show()
+                }
+            }
         }
     }
 

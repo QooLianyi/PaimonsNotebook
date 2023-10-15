@@ -34,7 +34,9 @@ import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.util.data_store.dataStoreValues
 import com.lianyi.paimonsnotebook.common.util.file.FileHelper
+import com.lianyi.paimonsnotebook.common.util.system_service.SystemService
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
+import com.lianyi.paimonsnotebook.common.web.ApiEndpoints
 import com.lianyi.paimonsnotebook.common.web.hoyolab.hk4e.event.gacha_info.GachaInfoClient
 import com.lianyi.paimonsnotebook.common.web.hoyolab.hk4e.event.gacha_info.GachaQueryConfigData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.binding.BindingClient
@@ -104,7 +106,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
     var showRequestPermissionDialog by mutableStateOf(false)
 
     var loadingDialogProgressBarValue by mutableFloatStateOf(0f)
-    var loadingDialogDescription by mutableStateOf("祈愿记录获取即将开始")
+    var loadingDialogDescription by mutableStateOf("即将开始")
 
     var loadingDialogTitle by mutableStateOf("获取祈愿记录")
 
@@ -132,6 +134,9 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
     private val importService by lazy {
         GachaItemsImportService()
     }
+
+    //是否显示游戏角色对话框
+    var showGameRoleDialog by mutableStateOf(false)
 
     val gachaSettings = listOf(
         OptionListData(
@@ -237,7 +242,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
                             showInputUrlDialog = false
                         },
                         titleTextSize = 16.sp,
-                        buttons = arrayOf("确定", "取消"),
+                        buttons = arrayOf("取消", "确定"),
                         onDismissRequest = { showInputUrlDialog = false }) {
                         item {
                             InputTextFiled(
@@ -289,6 +294,13 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
             onClick = {
                 exportUIGFJson()
             }
+        ),
+        OptionListData(
+            name = "获取祈愿记录URL",
+            description = "选择一个角色,将对应角色的祈愿记录URL复制到剪切板",
+            onClick = {
+                showGameRoleDialog()
+            }
         )
     )
 
@@ -301,13 +313,26 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
         )
     )
 
+    private fun showGameRoleDialog() {
+        showGameRoleDialog = true
+    }
+
+    fun dismissGameRoleDialog(index: Int = 0) {
+        showGameRoleDialog = false
+    }
+
+    fun onSelectGameRole(user: User, role: UserGameRoleData.Role) {
+        generateAuthKeyByAccount(user, role, true)
+    }
+
     //使用账号生成祈愿密钥
     private fun generateAuthKeyByAccount(
         user: User,
         roleData: UserGameRoleData.Role,
+        onlyGetUrl: Boolean = false
     ) {
         showLoadingDialog = true
-        loadingDialogTitle = "获取祈愿记录"
+        loadingDialogTitle = if (onlyGetUrl) "获取祈愿记录URL" else "获取祈愿记录"
 
         viewModelScope.launch {
             val playerUid = PlayerUid(
@@ -317,7 +342,26 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
             val result =
                 bindingClient.generateAuthenticationKey(UserAndUid(user.userEntity, playerUid))
             if (result.success) {
-                getGachaLog(gameAuthKeyData = result.data.asEncodeAuthKeyData(), playerUid)
+                val authKey = result.data.asEncodeAuthKeyData()
+
+                if (onlyGetUrl) {
+                    SystemService.setClipBoardText(
+                        ApiEndpoints.GachaInfoGetGachaLog(
+                            GachaQueryConfigData(
+                                gachaType = loadingDialogCurrentGacheLogType,
+                                gameAuthKeyData = authKey,
+                                genAuthKeyData = GenAuthKeyData.createForWebViewGacha(playerUid = playerUid),
+                            ).asQueryParameter
+                        )
+                    )
+                    "已将祈愿记录URL复制到剪切板,如果没有复制到剪切板,请检查是否禁用了程序的剪切板权限".notify(
+                        autoDismissTime = 6000
+                    )
+                    dismissGameRoleDialog()
+                    showLoadingDialog = false
+                } else {
+                    getGachaLog(gameAuthKeyData = authKey, playerUid)
+                }
             } else {
                 "获取失败:${result.retcode},${result.message}".errorNotify()
                 showLoadingDialog = false

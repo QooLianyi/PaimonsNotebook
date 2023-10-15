@@ -30,7 +30,6 @@ import com.lianyi.paimonsnotebook.ui.theme.White
 fun VideoPlayerPlaceholder(
     cover: String,
     duration: Int = 0,
-    diskCache: DiskCache,
     onClick: () -> Unit,
 ) {
     Box(modifier = Modifier
@@ -44,8 +43,7 @@ fun VideoPlayerPlaceholder(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(4.dp)),
-            contentScale = ContentScale.FillWidth,
-            diskCache = diskCache
+            contentScale = ContentScale.FillWidth
         )
 
         Spacer(modifier = Modifier
@@ -59,7 +57,7 @@ fun VideoPlayerPlaceholder(
                 .size(65.dp))
 
         if (duration > 0) {
-            Text(text = TimeHelper.timeParse(duration * 1000), modifier = Modifier
+            Text(text = TimeHelper.timeParseUnix(duration * 1000), modifier = Modifier
                 .padding(0.dp, 6.dp)
                 .clip(RoundedCornerShape(3.dp))
                 .align(Alignment.BottomEnd)

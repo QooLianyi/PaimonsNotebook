@@ -1,6 +1,7 @@
 package com.lianyi.paimonsnotebook.common.core.base
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Build
@@ -9,14 +10,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import com.lianyi.paimonsnotebook.common.core.listener.ScreenOrientationEventListener
+import com.lianyi.paimonsnotebook.common.extension.activity.setSystemBarAppearance
 
 /*
 * Activity基类
 *
 * enableGesture:是否启用手势退出,默认开启
+* enableSensor:是否启用传感器修改屏幕方向,默认开启
 * */
-open class BaseActivity(private val enableGesture: Boolean = true) : ComponentActivity() {
-
+open class BaseActivity(
+    private val enableGesture: Boolean = true,
+) : ComponentActivity() {
     private val storagePermissions by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arrayOf(
@@ -41,11 +46,21 @@ open class BaseActivity(private val enableGesture: Boolean = true) : ComponentAc
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    //设置通过传感器控制屏幕旋转方向
+    @SuppressLint("SourceLockedOrientationActivity")
+    private fun setRequestedOrientation() {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
+        ScreenOrientationEventListener(this) {
+            requestedOrientation = it
+        }.enable()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setRequestedOrientation()
         trySetTranslucent()
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+
+        super.onCreate(savedInstanceState)
     }
 
     //注册申请权限生命周期

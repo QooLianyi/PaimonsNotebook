@@ -1,6 +1,7 @@
 package com.lianyi.paimonsnotebook.ui.theme
 
 import android.app.Activity
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
@@ -13,8 +14,11 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Density
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.lianyi.paimonsnotebook.common.components.components.PaimonsNotebookNotificationComponents
 import com.lianyi.paimonsnotebook.common.components.components.SlideExitBox
+import com.lianyi.paimonsnotebook.common.extension.context.findActivity
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
@@ -40,6 +44,9 @@ private val LightColorPalette = lightColors(
 @Composable
 fun PaimonsNotebookTheme(
     activity: Activity? = null,
+    hideStatusBar:Boolean = false,
+    hideNavigationBar:Boolean = false,
+    lightStatusBar:Boolean = false,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
@@ -56,20 +63,31 @@ fun PaimonsNotebookTheme(
             WindowCompat.setDecorFitsSystemWindows(window, false)
             WindowCompat.getInsetsController(window, view).apply {
                 //设置状态栏与底部导航栏的显示模式(Light/Night) true为黑色
-                isAppearanceLightStatusBars = false
+                isAppearanceLightStatusBars = !lightStatusBar
                 isAppearanceLightNavigationBars = true
 
                 //隐藏状态栏
-//                    hide(WindowInsetsCompat.Type.statusBars())
-//                systemBarsBehavior =
-//                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                if(hideStatusBar){
+                    hide(WindowInsetsCompat.Type.statusBars())
+                }
+
+                //隐藏导航栏
+                if(hideNavigationBar){
+                    hide(WindowInsetsCompat.Type.navigationBars())
+                }
+
+                if(hideStatusBar || hideNavigationBar){
+                    systemBarsBehavior =
+                        WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                }
             }
         }
     }
 
     //动态设置Density
+    val context = LocalContext.current
     val fontScale = LocalDensity.current.fontScale
-    val displayMetrics = LocalContext.current.resources.displayMetrics
+    val displayMetrics = context.resources.displayMetrics
     val widthPixels = displayMetrics.widthPixels
 
     MaterialTheme(

@@ -15,26 +15,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun DebugTempContent() {
     Button(onClick = {
-        CoroutineScope(Dispatchers.IO).launch {
-            val user = AccountHelper.selectedUserFlow.value
-            if (user == null) {
-                launch(Dispatchers.Main) {
-                    "当前没有选中用户".show()
-                }
-                return@launch
-            }
-
-            val role = user.getSelectedGameRole()
-
-            if (role == null) {
-                launch(Dispatchers.Main) {
-                    "当前用户没有默认角色".show()
-                }
-                return@launch
-            }
-
-        }
     }) {
         Text(text = "测试按钮", fontSize = 18.sp)
+    }
+    Button(onClick = {
+        error("crash-test")
+    }) {
+        Text(text = "崩溃测试", fontSize = 18.sp)
     }
 }

@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lianyi.paimonsnotebook.common.extension.value.nonScaledSp
 import com.lianyi.paimonsnotebook.ui.theme.Black
 import com.lianyi.paimonsnotebook.ui.theme.Black_10
 import com.lianyi.paimonsnotebook.ui.theme.Black_40
@@ -75,12 +76,12 @@ fun TextSlider(
             modifier = Modifier
                 .clip(CircleShape)
                 .background(textContentBackgroundColor)
-                .requiredWidthIn(textMinWidth, 240.dp)
+                .requiredWidthIn(textMinWidth,240.dp)
                 .padding(textContentPadding),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = text(value), fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+            Text(text = text(value), fontSize = 16.nonScaledSp(), fontWeight = FontWeight.SemiBold)
         }
     }
 }

@@ -2,10 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
@@ -32,6 +38,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PaimonsNotebook"
         tools:targetApi="33">
+        <activity
+            android:name=".ui.screen.resource_manager.view.ImageDetailScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".common.view.QRCodeScanActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.PaimonsNotebookFullScreen" />
+        <activity
+            android:name=".common.view.CrashScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
         <activity
             android:name=".ui.screen.abyss.view.AbyssScreen"
             android:theme="@style/Theme.PaimonsNotebook" />
@@ -61,10 +77,7 @@
             android:theme="@style/Theme.PaimonsNotebook" />
         <activity
             android:name=".ui.screen.login.view.MihoyoLoginActivity"
-            android:theme="@style/Theme.PaimonsNotebook" />
-        <activity
-            android:name=".ui.screen.develop.WebViewTestScreen"
-            android:theme="@style/Theme.PaimonsNotebook" />
+            android:theme="@style/Theme.PaimonsNotebookFullScreen" />
         <activity
             android:name=".ui.screen.develop.NormalEmptyActivity"
             android:theme="@style/Theme.PaimonsNotebook" />
@@ -107,14 +120,7 @@
             android:name=".ui.screen.develop.TypographyScreen"
             android:theme="@style/Theme.PaimonsNotebook" />
         <activity
-            android:name=".ui.screen.develop.ComponentsTesting"
-            android:theme="@style/Theme.PaimonsNotebook" />
-        <activity
-            android:name=".ui.screen.develop.DatabaseTestingScreen"
-            android:theme="@style/Theme.PaimonsNotebook" />
-        <activity
             android:name=".ui.screen.home.view.HomeScreen"
-            android:screenOrientation="fullSensor"
             android:theme="@style/Theme.PaimonsNotebook" />
 
         <service android:name=".common.service.overlay.debug.DebugOverlayService" />

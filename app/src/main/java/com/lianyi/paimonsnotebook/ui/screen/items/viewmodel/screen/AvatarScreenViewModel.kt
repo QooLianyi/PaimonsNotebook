@@ -6,6 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
+import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
+import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.util.enums.LoadingState
 import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.AvatarService
 import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.MaterialService
@@ -214,6 +217,10 @@ class AvatarScreenViewModel : ViewModel() {
         }
 
         itemFilterViewModel.dismissFilterContent()
+
+        viewModelScope.launchIO {
+            PreferenceKeys.LastViewAvatarId.editValue(avatarData.id)
+        }
     }
 
     //当点击比对角色时

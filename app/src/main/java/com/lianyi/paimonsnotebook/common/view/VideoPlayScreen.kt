@@ -2,16 +2,14 @@ package com.lianyi.paimonsnotebook.common.view
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.common.components.media.VideoPlayer
-import com.lianyi.paimonsnotebook.common.extension.string.show
-import com.lianyi.paimonsnotebook.common.util.json.JSON
+import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.viewmodel.VideoPlayViewModel
 import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
 
-class VideoPlayScreen : ComponentActivity() {
+class VideoPlayScreen : BaseActivity(enableGesture = false) {
 
     private val viewModel by lazy {
         ViewModelProvider(this)[VideoPlayViewModel::class.java]
@@ -19,31 +17,33 @@ class VideoPlayScreen : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initData()
-        setContent {
-            PaimonsNotebookTheme {
-//                val uiController = rememberSystemUiController()
-//                uiController.isNavigationBarVisible = false
 
-                VideoPlayer(videoList = viewModel.videoList){
-                    requestedOrientation = if(it){
-                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                    }else{
-                        ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        viewModel.init(intent)
+
+        setContent {
+            PaimonsNotebookTheme(hideStatusBar = true, hideNavigationBar = true) {
+                VideoPlayer(
+                    videoList = viewModel.videoList,
+                    videoFullScreen = viewModel.fullScreen,
+                    onVideoExit = {
+                        viewModel.onVideoExit {
+                            finish()
+                        }
+                        setOrientation()
                     }
+                ) {
+                    viewModel.fullScreen = it
+                    setOrientation()
                 }
             }
         }
     }
 
-    private fun initData(){
-        val json = intent.getStringExtra("video_list")
-        if(json.isNullOrBlank()){
-            "播放列表为空".show()
-            finish()
+    private fun setOrientation() {
+        requestedOrientation = if (viewModel.fullScreen) {
+            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        } else {
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
-        viewModel.videoList.addAll(JSON.parseList(json!!))
-        println(viewModel.videoList)
     }
-
 }

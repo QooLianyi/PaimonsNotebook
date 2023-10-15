@@ -8,13 +8,16 @@ import com.lianyi.paimonsnotebook.ui.screen.setting.util.configuration_enum.Home
 /*
 * 配置信息
 * */
-class ConfigurationData{
+class ConfigurationData {
     //首页显示状态
     var homeScreenDisplayState by mutableStateOf(HomeScreenDisplayState.Loading)
-    //是否启用主页模态点击后自动关闭
-    var enableHomeModalSelectClose by mutableStateOf(false)
+
     //启用悬浮窗
     var enableOverlay by mutableStateOf(false)
-    //小组件总是选择默认用户的角色
-    var appwidgetAlwaysUseSelectedUser by mutableStateOf(false)
+
+    //总是使用默认用户
+    var alwaysUseDefaultUser by mutableStateOf(false)
+
+    //启用自动删除过期图片
+    var enableAutoCleanExpiredImages by mutableStateOf(false)
 }

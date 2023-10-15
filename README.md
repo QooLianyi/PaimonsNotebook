@@ -8,6 +8,10 @@
 
 - 派蒙笔记本仅适用于Android 8(API 26)至更高版本的Android设备
 
+#### 从蓝奏云网盘获取
+
+- [密码:paimon](https://qoolianyi.lanzoul.com/b052j7wri)
+
 #### 从Github获取
 
 - [点击此处查看最新的版本](https://github.com/QooLianyi/PaimonsNotebook/releases/latest)

@@ -3,17 +3,31 @@ package com.lianyi.paimonsnotebook.common.web.bridge
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import com.lianyi.paimonsnotebook.common.core.enviroment.CoreEnvironment
-import com.lianyi.paimonsnotebook.common.database.user.util.AccountHelper
+import com.lianyi.paimonsnotebook.common.data.hoyolab.user.User
+import com.lianyi.paimonsnotebook.common.extension.intent.setComponentName
 import com.lianyi.paimonsnotebook.common.util.hoyolab.DynamicSecret
 import com.lianyi.paimonsnotebook.common.util.json.JSON
-import com.lianyi.paimonsnotebook.common.web.bridge.model.*
+import com.lianyi.paimonsnotebook.common.util.system_service.SystemService
+import com.lianyi.paimonsnotebook.common.view.HoyolabWebActivity
+import com.lianyi.paimonsnotebook.common.web.bridge.model.ActionTypePayload
+import com.lianyi.paimonsnotebook.common.web.bridge.model.CookieTokenPayload
+import com.lianyi.paimonsnotebook.common.web.bridge.model.DynamicSecrect2Payload
+import com.lianyi.paimonsnotebook.common.web.bridge.model.IJsResult
+import com.lianyi.paimonsnotebook.common.web.bridge.model.JsParams
+import com.lianyi.paimonsnotebook.common.web.bridge.model.JsResult
+import com.lianyi.paimonsnotebook.common.web.bridge.model.PushPagePayload
 import com.lianyi.paimonsnotebook.common.web.hoyolab.cookie.CookieHelper
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.auth.AuthClient
+import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MiHoYoJSInterface(private val webView: WebView, private val closePage: () -> Unit = {}) {
+class MiHoYoJSInterface(
+    private val user: User,
+    private val webView: WebView,
+    private val closePage: () -> Unit = {}
+) {
 
     private val authClient by lazy {
         AuthClient()
@@ -32,8 +46,6 @@ class MiHoYoJSInterface(private val webView: WebView, private val closePage: () 
     private fun configureShare(params: JsParams<Any?>) = null
 
     private suspend fun getActionTicket(params: JsParams<ActionTypePayload>): IJsResult {
-        val user = AccountHelper.selectedUserFlow.value!!
-
         val actionTicketData =
             authClient.getActionTicketBySToken(user.userEntity, params.payload.actionType)
         return JsResult(
@@ -44,21 +56,17 @@ class MiHoYoJSInterface(private val webView: WebView, private val closePage: () 
     }
 
     private fun getCookieInfo(params: JsParams<Any?>): IJsResult {
-        val user = AccountHelper.selectedUserFlow.value!!.userEntity
-
         return JsResult(
             data = mapOf(
-                CookieHelper.Keys.LTuid to user.ltoken[CookieHelper.Keys.LTuid],
-                CookieHelper.Keys.LToken to user.ltoken[CookieHelper.Keys.LToken],
+                CookieHelper.Keys.LTuid to user.userEntity.ltoken[CookieHelper.Keys.LTuid],
+                CookieHelper.Keys.LToken to user.userEntity.ltoken[CookieHelper.Keys.LToken],
                 CookieHelper.Keys.LoginTicket to ""
             )
         )
     }
 
     private fun getCookieToken(params: JsParams<CookieTokenPayload>): IJsResult {
-        val user = AccountHelper.selectedUserFlow.value!!.userEntity
-
-        val cookieToken = user.cookieToken
+        val cookieToken = user.userEntity.cookieToken
 
         return JsResult(
             data = mapOf(
@@ -79,7 +87,10 @@ class MiHoYoJSInterface(private val webView: WebView, private val closePage: () 
     private fun getDS(params: JsParams<Any?>): IJsResult {
         return JsResult(
             data = mapOf(
-                "DS" to DynamicSecret.getDynamicSecret(DynamicSecret.Version.Gen1,DynamicSecret.SaltType.LK2),
+                "DS" to DynamicSecret.getDynamicSecret(
+                    DynamicSecret.Version.Gen1,
+                    DynamicSecret.SaltType.LK2
+                ),
             )
         )
     }
@@ -99,7 +110,12 @@ class MiHoYoJSInterface(private val webView: WebView, private val closePage: () 
         val q = params.payload.getQueryParam()
         return JsResult(
             data = mapOf(
-                "DS" to DynamicSecret.getDynamicSecret(DynamicSecret.Version.Gen2,DynamicSecret.SaltType.X4, query = q, body = b)
+                "DS" to DynamicSecret.getDynamicSecret(
+                    DynamicSecret.Version.Gen2,
+                    DynamicSecret.SaltType.X4,
+                    query = q,
+                    body = b
+                )
             )
         )
     }
@@ -107,7 +123,7 @@ class MiHoYoJSInterface(private val webView: WebView, private val closePage: () 
     private fun getHTTPRequestHeaders(params: JsParams<Any?>): IJsResult {
         return JsResult(
             data = mapOf(
-                "x-rpc-client_type" to "",
+                "x-rpc-client_type" to CoreEnvironment.ClientType,
                 "x-rpc-device_id" to CoreEnvironment.DeviceId,
                 "x-rpc-app_version" to CoreEnvironment.XrpcVersion
             )
@@ -117,13 +133,12 @@ class MiHoYoJSInterface(private val webView: WebView, private val closePage: () 
     private fun getStatusBarHeight(params: JsParams<Any?>): IJsResult {
         return JsResult(
             data = mapOf(
-                "statusBarHeight" to 0,
+                "statusBarHeight" to SystemService.statusBarHeight,
             )
         )
     }
 
     private fun getUserInfo(params: JsParams<Any?>): IJsResult {
-        val user = AccountHelper.selectedUserFlow.value!!
         val info = user.userInfo
         return JsResult(
             data = mapOf(
@@ -136,8 +151,13 @@ class MiHoYoJSInterface(private val webView: WebView, private val closePage: () 
         )
     }
 
-    private fun pushPage(params: JsParams<PushPagePayload>): JsResult<Map<String, Any>>? {
-        webView.loadUrl(params.payload.page)
+    private fun pushPage(payload: PushPagePayload): JsResult<Map<String, Any>>? {
+        HomeHelper.goActivityByIntent {
+            setComponentName(HoyolabWebActivity::class.java)
+            putExtra(HoyolabWebActivity.EXTRA_URL, payload.page)
+            putExtra(HoyolabWebActivity.EXTRA_MID, user.userEntity.mid)
+            putExtra(HoyolabWebActivity.EXTRA_CLEAN_COOKIE, false)
+        }
         return null
     }
 
@@ -148,7 +168,6 @@ class MiHoYoJSInterface(private val webView: WebView, private val closePage: () 
     private suspend fun tryGetJsResultFromJsParam(
         param: JsParams<Any?>,
     ): IJsResult? {
-
         return when (param.method) {
             "closePage" -> closePage(param)
             "configure_share" -> configureShare(param)
@@ -156,10 +175,12 @@ class MiHoYoJSInterface(private val webView: WebView, private val closePage: () 
             "getActionTicket" -> getActionTicket(
                 JsParams(param.method, JSON.parse(JSON.stringify(param.payload)), param.callback)
             )
+
             "getCookieInfo" -> getCookieInfo(param)
             "getCookieToken" -> getCookieToken(
                 JsParams(param.method, JSON.parse(JSON.stringify(param.payload)), param.callback)
             )
+
             "getCurrentLocale" -> getCurrentLocale(param)
             "getDS" -> getDS(param)
             "getDS2" ->
@@ -170,14 +191,17 @@ class MiHoYoJSInterface(private val webView: WebView, private val closePage: () 
                         param.callback
                     )
                 )
+
             "getHTTPRequestHeaders" -> getHTTPRequestHeaders(param)
             "getStatusBarHeight" -> getStatusBarHeight(param)
             "getUserInfo" -> getUserInfo(param)
             "hideLoading" -> null
             "login" -> null
-            "pushPage" -> pushPage(
-                JsParams(param.method, JSON.parse(JSON.stringify(param.payload)), param.callback)
-            )
+            "pushPage" -> {
+                val payload = JSON.parse<PushPagePayload>(JSON.stringify(param.payload))
+                pushPage(payload)
+            }
+
             "showLoading" -> null
             else -> {
                 null

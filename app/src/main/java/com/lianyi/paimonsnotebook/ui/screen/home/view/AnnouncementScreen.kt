@@ -33,9 +33,7 @@ class AnnouncementScreen : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-
             PaimonsNotebookTheme {
-
                 Crossfade(targetState = viewModel.postLoadingState, label = "") {
                     when (it) {
                         LoadingState.Loading -> {
@@ -67,31 +65,31 @@ class AnnouncementScreen : ComponentActivity() {
 
     @Composable
     fun LoadingSuccessScreen() {
-        viewModel.postFullData?.post?.post?.apply {
-            HtmlTextLazyColumn(
-                htmlText = content,
-                videoCover = viewModel.videoCover,
-                onVideoClick = {
-                    viewModel.playVideo(this@AnnouncementScreen)
-                },
-                onHyperlinkClick = {
-                    viewModel.hyperlinkNavigate( it)
-                },
-                diskCacheTemplate = viewModel.getHtmlImageDiskCacheData(this)
-            ) {
-                TitleText(text = subject, fontSize = 18.sp)
-
-                DividerText(
-                    text = "文章发表:${
-                        TimeHelper.getTime(
-                            created_at.toLong() * 1000L,
-                            TimeStampType.MM_DD
-                        ).replace(" ", "-")
-                    }", modifier = Modifier
-                        .padding(0.dp, 8.dp)
-                        .fillMaxWidth()
-                )
-            }
-        }
+//        viewModel.postFullData?.post?.post?.apply {
+//            HtmlTextLazyColumn(
+//                htmlText = content,
+//                videoCover = viewModel.videoCover,
+//                onVideoClick = {
+//
+//                },
+//                onHyperlinkClick = {
+//                    viewModel.hyperlinkNavigate( it)
+//                },
+//                diskCacheTemplate = viewModel.getHtmlImageDiskCacheData(this)
+//            ) {
+//                TitleText(text = subject, fontSize = 18.sp)
+//
+//                DividerText(
+//                    text = "文章发表:${
+//                        TimeHelper.getTime(
+//                            created_at.toLong() * 1000L,
+//                            TimeStampType.MM_DD
+//                        ).replace(" ", "-")
+//                    }", modifier = Modifier
+//                        .padding(0.dp, 8.dp)
+//                        .fillMaxWidth()
+//                )
+//            }
+//        }
     }
 }

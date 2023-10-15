@@ -12,6 +12,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.widget.RemoteViews
 import androidx.compose.ui.graphics.toArgb
+import coil.imageLoader
 import coil.request.ImageRequest
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
@@ -125,7 +126,7 @@ open class BaseRemoteViews(
                 PaimonsNotebookImageLoader.getCacheImageFileByUrl(it) == null
             }.map {
                 launch {
-                    PaimonsNotebookImageLoader.current.execute(
+                    PaimonsNotebookApplication.context.applicationContext.imageLoader.execute(
                         ImageRequest.Builder(PaimonsNotebookApplication.context)
                             .data(it)
                             .build()

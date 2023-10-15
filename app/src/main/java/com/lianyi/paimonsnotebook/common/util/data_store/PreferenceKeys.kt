@@ -39,6 +39,11 @@ object PreferenceKeys {
         booleanPreferencesKey("appwidgetAlwaysUseSelectedUser")
     }
 
+    //当选择用户的时候,默认使用选中用户
+    val AlwaysUseDefaultUser by lazy {
+        booleanPreferencesKey("alwaysUseDefaultUser")
+    }
+
     //当前显示的祈愿记录uid
     val GachaRecordCurrentGameUid by lazy {
         stringPreferencesKey("gachaRecordCurrentGameUid")
@@ -59,6 +64,10 @@ object PreferenceKeys {
         intPreferencesKey("lastViewAvatarId")
     }
 
+    val LastViewWeaponId by lazy {
+        intPreferencesKey("lastViewWeaponId")
+    }
+
     //第一次进入配置界面
     val FirstEntryAppWidgetConfigurationScreen by lazy {
         booleanPreferencesKey("firstEntryAppWidgetConfigurationScreen")
@@ -67,6 +76,11 @@ object PreferenceKeys {
     //是否同意用户协议
     val AgreeUserAgreement by lazy {
         booleanPreferencesKey("agreeUserAgreement")
+    }
+
+    //是否启用自动清除过期图像
+    val EnableAutoCleanExpiredImages by lazy {
+        booleanPreferencesKey("enableAutoCleanExpiredImages")
     }
 
     //全屏模式(隐藏状态栏)

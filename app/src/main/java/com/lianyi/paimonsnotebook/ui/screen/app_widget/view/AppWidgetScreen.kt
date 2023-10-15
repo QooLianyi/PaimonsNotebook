@@ -13,7 +13,6 @@ import com.lianyi.paimonsnotebook.ui.screen.app_widget.components.page.AlreadyBi
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.components.page.AppWidgetOverview
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.viewmodel.AppWidgetScreenViewModel
 import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
-import com.lianyi.paimonsnotebook.ui.theme.Transparent
 
 class AppWidgetScreen : BaseActivity() {
 
@@ -30,11 +29,7 @@ class AppWidgetScreen : BaseActivity() {
             PaimonsNotebookTheme(this) {
                 TabBarContent(
                     tabs = viewModel.tabs,
-                    tabBarPadding = PaddingValues(12.dp,4.dp),
-                    contentPadding = PaddingValues(0.dp),
                     onTabBarSelect = viewModel::changeTab,
-                    indicatorColor = Transparent,
-                    tabBarHeight = 35.dp
                 ){
                     Crossfade(targetState = viewModel.currentTabIndex, label = "") {
                         when (it) {

@@ -22,15 +22,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.layout.card.MaterialCard
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
+import com.lianyi.paimonsnotebook.common.components.text.AutoSizeText
 import com.lianyi.paimonsnotebook.common.components.text.TitleText
 import com.lianyi.paimonsnotebook.common.components.widget.ExpansionIndicator
 import com.lianyi.paimonsnotebook.common.database.gacha.data.GachaRecordOverview
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
+import com.lianyi.paimonsnotebook.common.extension.value.nonScaledSp
 import com.lianyi.paimonsnotebook.ui.screen.gacha.components.chart.CircleRingChart
 import com.lianyi.paimonsnotebook.ui.screen.gacha.components.chart.legend.ChartLegend
 import com.lianyi.paimonsnotebook.ui.screen.gacha.components.chart.legend.ChartProgressBarLegend
@@ -63,7 +66,6 @@ fun GachaRecordCard(
         }
 
         MaterialCard {
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -90,7 +92,7 @@ fun GachaRecordCard(
 
                     Spacer(modifier = Modifier.width(12.dp))
 
-                    ExpansionIndicator(expand = item.hideCardInfo){
+                    ExpansionIndicator(expand = item.hideCardInfo) {
                         item.hideCardInfo = !item.hideCardInfo
                     }
                 }
@@ -178,10 +180,11 @@ private fun PieChartContent(item: GachaRecordOverview.Item) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
+        AutoSizeText(
             text = "${item.minTime} - ${item.maxTime}",
-            fontSize = 14.sp,
-            color = Black_30
+            targetTextSize = 14.nonScaledSp(),
+            color = Black_30,
+            textAlign = TextAlign.Center
         )
 
         Spacer(modifier = Modifier.height(16.dp))

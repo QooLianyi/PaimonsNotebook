@@ -120,7 +120,7 @@ object TimeHelper {
     * timeStamp:时间戳
     *
     * */
-    fun timeParse(timeStamp: Int, timeParseType: TimeParseType = TimeParseType.MM_SS): String {
+    fun timeParseUnix(timeStamp: Int, timeParseType: TimeParseType = TimeParseType.MM_SS): String {
         val hour = numberFormatter(timeStamp / 1000 / 3600)
         val minute = numberFormatter(timeStamp / 1000 / 60)
         val second = numberFormatter(timeStamp / 1000 % 60)

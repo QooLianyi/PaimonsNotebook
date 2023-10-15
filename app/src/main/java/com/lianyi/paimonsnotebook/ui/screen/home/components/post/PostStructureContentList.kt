@@ -26,7 +26,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -49,9 +48,8 @@ import androidx.core.graphics.toColorInt
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
-import com.lianyi.paimonsnotebook.common.components.placeholder.ImageLoadingPlaceholder
 import com.lianyi.paimonsnotebook.common.components.placeholder.TextPlaceholder
-import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
+import com.lianyi.paimonsnotebook.common.components.placeholder.VideoPlayerPlaceholder
 import com.lianyi.paimonsnotebook.common.components.text.DividerText
 import com.lianyi.paimonsnotebook.common.components.text.FoldTextContent
 import com.lianyi.paimonsnotebook.common.components.text.TitleText
@@ -74,18 +72,19 @@ import com.lianyi.paimonsnotebook.ui.theme.LinkColor
 * 文章结构内容列表
 * 结构解析还是有一些小问题,不修了,凑合用
 * */
-@OptIn(ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun PostStructureContentList(
     postFull: PostFullData,
     fontSize: TextUnit = 12.sp,
     onClickLink: (String) -> Unit,
     onClickLinkCard: (String) -> Unit,
-    onClickImage: (String) -> Unit
+    onClickImage: (String) -> Unit,
+    onClickVideo: (PostFullData.Post.Vod) -> Unit
 ) {
     //处理结构内容,将文字与链接整合到一起
     val structuredContent = remember(postFull.post.post.post_id) {
-        RichTextParser.parseGroup(postFull.post.post.structured_content)
+        RichTextParser.parseGroup(postFull.post)
     }
 
     ContentSpacerLazyColumn(
@@ -123,11 +122,25 @@ internal fun PostStructureContentList(
                 }
 
                 StructuredContentType.Text -> {
-                    TextBuildAnnotatedSpannableString(data = item.second, fontSize = fontSize, block = onClickLink)
+                    TextBuildAnnotatedSpannableString(
+                        data = item.second,
+                        fontSize = fontSize,
+                        block = onClickLink
+                    )
                 }
 
                 StructuredContentType.Vod -> {
-                    TextPlaceholder("Vod")
+                    val data = item.second.first()
+
+                    if (data.insert.vod != null) {
+                        VideoPlayerPlaceholder(
+                            cover = data.insert.url ?: postFull.post.post.cover,
+                        ) {
+                            onClickVideo.invoke(data.insert.vod)
+                        }
+                    } else {
+                        TextPlaceholder("帖子:${postFull.post.post.post_id}视频内容资源错误")
+                    }
                 }
 
                 StructuredContentType.Image -> {
@@ -157,10 +170,7 @@ internal fun PostStructureContentList(
                             url = item.second.first().insert.url ?: "",
                             name = "文章详情图片",
                             description = "阅读文章时加载的配图"
-                        ),
-                        placeholder = {
-                            ImageLoadingPlaceholder()
-                        }
+                        )
                     )
                 }
 

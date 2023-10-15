@@ -1,5 +1,7 @@
 package com.lianyi.paimonsnotebook.common.core.enviroment
 
+import android.os.Build
+import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.util.data_store.dataStoreValues
@@ -55,12 +57,14 @@ object CoreEnvironment {
     const val HoyolabUA = "Mozilla/5.0 (Windows NT 10.0 Win64 x64) miHoYoBBS/$XrpcVersion"
 
     // 米游社移动端请求UA
-    const val HoyolabMobileUA =
-        "Mozilla/5.0 (Linux Android 12) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/106.0.5249.126 Mobile Safari/537.36 miHoYoBBS/$XrpcVersion"
+    val HoyolabMobileUA =
+        "Mozilla/5.0 (Linux Android ${Build.VERSION.RELEASE}) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/106.0.5249.126 Mobile Safari/537.36 miHoYoBBS/$XrpcVersion"
 
     //米游社移动端网页UA
     const val HoyolabMobileWebUA =
         "Mozilla/5.0 (Linux; Android 12) Mobile miHoYoBBS/$XrpcVersion"
+
+    const val PaimonsNotebookUA = "PaimonsNotebook/${PaimonsNotebookApplication.version}"
 
     var DeviceFp = ""
         private set

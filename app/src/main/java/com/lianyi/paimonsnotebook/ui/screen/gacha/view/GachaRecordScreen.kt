@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
@@ -74,26 +75,24 @@ class GachaRecordScreen : ComponentActivity() {
                     TabBarContent(
                         onTabBarSelect = viewModel::setSelectedPageIndex,
                         tabs = viewModel.tabs,
-                        indicatorColor = Transparent,
-                        tabBarPadding = PaddingValues(horizontal = 12.dp),
-                        contentPadding = PaddingValues(0.dp),
                         topSlot = {
                             Spacer(modifier = Modifier.weight(1f))
 
-                            Icon(painter = painterResource(id = R.drawable.ic_navigation),
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_navigation),
                                 contentDescription = null,
-                                tint = Black,
                                 modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .radius(2.dp)
-                                    .size(24.dp)
+                                    .padding(2.dp)
+                                    .radius(3.dp)
+                                    .size(32.dp)
                                     .clickable {
                                         viewModel.goOptionScreen()
-                                    })
+                                    }
+                                    .padding(4.dp)
+                            )
 
                             Spacer(modifier = Modifier.width(12.dp))
-                        },
-                        tabBarHeight = 35.dp
+                        }
                     ) {
                         Crossfade(targetState = viewModel.currentPageIndex, label = "") {
                             when (it) {

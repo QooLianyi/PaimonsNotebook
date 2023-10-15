@@ -10,13 +10,14 @@ import android.os.Environment
 import android.os.FileUtils
 import android.webkit.MimeTypeMap
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
-import com.lianyi.paimonsnotebook.common.extension.string.notify
-import com.lianyi.paimonsnotebook.common.extension.string.show
 import com.lianyi.paimonsnotebook.common.util.image.PaimonsNotebookImageLoader
 import com.lianyi.paimonsnotebook.common.util.system_service.SystemService
+import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.io.InputStream
 import java.net.URI
+import java.util.zip.ZipFile
 
 object FileHelper {
 
@@ -44,6 +45,11 @@ object FileHelper {
         privateStoragePath?.resolve("metadata")!!
     }
 
+    //存储元数据图片的路径
+    val metadataImagesPath by lazy {
+        saveFileMetadataPath.resolve("images")
+    }
+
     val saveFileUIGFPath by lazy {
         privateStoragePath?.resolve("uigf")!!
     }
@@ -53,21 +59,23 @@ object FileHelper {
         rootPath?.resolve("gacha")!!
     }
 
-    private const val PERMISSION_REQUEST_CODE = 40000
-
     /*
     * 从coil本地磁盘缓存中保存图片
     * url:图片url
     * */
     fun saveImage(
         url: String,
-        toastText: String = "图片已保存",
-        toast: Boolean = true,
-        notify: Boolean = true,
         enabledMediaScanner: Boolean = true,
+        onSuccess: (String) -> Unit,
+        onFail: () -> Unit
     ) {
         val cacheImage =
             PaimonsNotebookImageLoader.getCacheImageFileByUrl(url)
+
+        if (cacheImage == null) {
+            onFail.invoke()
+            return
+        }
 
         if (!saveImagePath.exists()) {
             saveImagePath.mkdirs()
@@ -79,18 +87,11 @@ object FileHelper {
 
         if (file.exists()) {
             file.delete()
+            file.mkdirs()
         }
 
         FileOutputStream(file).use {
-            it.write(cacheImage?.readBytes())
-        }
-
-        if (notify) {
-            "图片保存到以下路径:${file.path}".notify()
-        }
-
-        if (toast) {
-            toastText.show()
+            it.write(cacheImage.readBytes())
         }
 
         if (enabledMediaScanner) {
@@ -102,6 +103,8 @@ object FileHelper {
 
             }
         }
+
+        onSuccess.invoke(file.absolutePath)
     }
 
     private fun uriToFileInAndroidQ(uri: Uri): File? =
@@ -165,6 +168,47 @@ object FileHelper {
         return File(rootPath, fileName)
     }
 
+    /*
+    * 以流的方式保存文件
+    *
+    * callback:返回已读字节数
+    * */
+    fun saveFile(file: File, inputStream: InputStream, callback: (Long) -> Unit) {
+        val outputStream = FileOutputStream(file)
+        val bufferSize = 1024 * 8
+        val byteArray = ByteArray(bufferSize)
+        val buffer = BufferedInputStream(inputStream, bufferSize)
+
+        var readLength: Int
+        var totalReadLength = 0L
+        while (buffer.read(byteArray, 0, bufferSize).also {
+                readLength = it
+            } != -1) {
+
+            outputStream.write(byteArray, 0, readLength)
+            totalReadLength += readLength
+            callback.invoke(totalReadLength)
+        }
+    }
+
+    //解压压缩文件
+    fun extractZipFile(file: File, target: String) {
+        val zipFile = ZipFile(file.absoluteFile)
+
+        for (entry in zipFile.entries()) {
+            val item = File(target, entry.name)
+            if (entry.isDirectory) {
+                item.mkdirs()
+            } else {
+                val arr = zipFile.getInputStream(entry).use {
+                    it.readBytes()
+                }
+
+                item.writeBytes(arr)
+            }
+        }
+    }
+
 
     //获取元数据存储文件
     fun getMetadataSaveFile(fileName: String): File {
@@ -191,21 +235,6 @@ object FileHelper {
         return file
     }
 
-    fun saveImage(
-        url: String,
-        activity: Activity,
-        toastText: String = "图片已保存",
-        toast: Boolean = true,
-        notify: Boolean = true,
-        enabledMediaScanner: Boolean = true,
-    ) {
-        if (checkPermission()) {
-            saveImage(url, toastText, toast, notify, enabledMediaScanner)
-        } else {
-            requestPermission(activity)
-        }
-    }
-
     //检查所需的权限
     private fun checkPermission(): Boolean {
         return SystemService.checkPermission(
@@ -214,25 +243,17 @@ object FileHelper {
         )
     }
 
-    fun checkPermissionAndTryRequest(activity: Activity): Boolean {
-        val ok = checkPermission()
-        if (!ok) {
-            requestPermission(activity)
-        }
-        return ok
-    }
-
     private fun requestPermission(activity: Activity) = SystemService.requestPermission(
         activity,
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
 
-    private val df by lazy {
-        context.getExternalFilesDir(null)?.resolve("debug")
-    }
+    private val df
+        get() =
+            context.getExternalFilesDir(null)?.resolve("debug")
 
-    val debug:Boolean
+    val debug: Boolean
         get() =
             df?.exists() == true
 }

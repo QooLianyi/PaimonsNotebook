@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -22,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.components.media.NetworkImageView
+import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
 import com.lianyi.paimonsnotebook.common.components.text.AutoSizeText
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.items.data.ItemListCardData
@@ -60,7 +59,7 @@ fun <T> ItemGridListCard(
 
             Column(modifier = Modifier.fillMaxSize()) {
                 //此处使用Compose Image会稍微降低列表滚动时的性能损耗(原因暂时未知)
-                NetworkImageView(url = itemListCardData.iconUrl, modifier = Modifier.size(60.dp))
+                NetworkImage(url = itemListCardData.iconUrl, modifier = Modifier.size(60.dp))
 
                 Box(
                     modifier = Modifier

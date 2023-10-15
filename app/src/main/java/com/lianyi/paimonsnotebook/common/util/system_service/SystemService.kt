@@ -1,5 +1,6 @@
 package com.lianyi.paimonsnotebook.common.util.system_service
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.Service
@@ -11,13 +12,32 @@ import android.view.WindowManager
 import androidx.core.app.ActivityCompat
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 
+@SuppressLint("InternalInsetResource", "DiscouragedApi")
 object SystemService {
 
     private val context by lazy {
         PaimonsNotebookApplication.context
     }
+
     private val PERMISSION_REQUEST_CODE by lazy {
         1200
+    }
+
+    val statusBarHeight by lazy {
+        val resourceId: Int =
+            context.resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            context.resources.getDimensionPixelSize(resourceId)
+        } else {
+            0
+        }
+    }
+
+    val screenWidthPx by lazy {
+        context.resources.displayMetrics.widthPixels
+    }
+    val screenHeightPx by lazy {
+        context.resources.displayMetrics.heightPixels
     }
 
     private val clipboardManager by lazy {
@@ -45,7 +65,7 @@ object SystemService {
         return pass
     }
 
-    fun requestPermission(activity: Activity,vararg list:String) {
+    fun requestPermission(activity: Activity, vararg list: String) {
         ActivityCompat.requestPermissions(activity, list, PERMISSION_REQUEST_CODE)
     }
 

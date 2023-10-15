@@ -16,12 +16,19 @@ class AuthClient {
             url(ApiEndpoints.AuthMultiToken(login_ticket, stuid))
         }.getAsJson<MultiTokenByLoginTicketData>()
 
-    suspend fun getActionTicketBySToken(user: User,action:String = "game_role") =
+    suspend fun getActionTicketBySToken(user: User, action: String = "game_role") =
         buildRequest {
-            url(ApiEndpoints.AuthActionTicket(action, "",user.aid))
+            url(ApiEndpoints.AuthActionTicket(action, "", user.aid))
 
             setUser(user, CookieHelper.Type.Stoken)
-            setDynamicSecret(DynamicSecret.SaltType.K2,DynamicSecret.Version.Gen1,true)
+            setDynamicSecret(DynamicSecret.SaltType.K2, DynamicSecret.Version.Gen1, true)
         }.getAsJson<ActionTicketData>()
+
+    suspend fun getGameToken(user: User) =
+        buildRequest {
+            url(ApiEndpoints.getGameToken(user.aid))
+
+            setUser(user,CookieHelper.Type.Stoken)
+        }.getAsJson<GameTokenData>()
 
 }

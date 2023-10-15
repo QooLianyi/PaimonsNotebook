@@ -6,12 +6,21 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 suspend fun dataStoreValuesFirst(
-    block:suspend (Preferences)->Unit
-){
+    block: suspend (Preferences) -> Unit
+) {
     PaimonsNotebookApplication.context.datastorePf.data.map {
         it
-    }.first{
+    }.first {
         block(it)
         true
     }
 }
+
+suspend fun <T> dataStoreValuesFirstLambda(
+    block: Preferences.() -> T
+) =
+    PaimonsNotebookApplication.context.datastorePf.data.map {
+        it
+    }.first {
+        true
+    }.let(block)

@@ -8,10 +8,15 @@ import com.lianyi.paimonsnotebook.common.util.parameter.getParameterizedType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import okhttp3.*
+import okhttp3.Call
+import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
 import java.io.IOException
+import java.io.InputStream
 import java.lang.reflect.ParameterizedType
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -36,6 +41,7 @@ val defaultOkHttpClient by lazy {
             request.addHeader("x-rpc-device_id", CoreEnvironment.DeviceId)
             request.addHeader("x-rpc-device_model", Build.MODEL)
             request.addHeader("x-rpc-channel", "miyousheluodi")
+            request.addHeader("x-rpc-app_id", "bll8iq97cem8")
             request.addHeader("User-Agent", CoreEnvironment.HoyolabMobileUA)
 
             it.proceed(request.build())
@@ -47,6 +53,20 @@ val emptyOkHttpClient by lazy {
     OkHttpClient.Builder().build()
 }
 
+val applicationOkHttpClient by lazy {
+    OkHttpClient.Builder().apply {
+        retryOnConnectionFailure(true)
+
+        addInterceptor {
+            val request = it.request().newBuilder()
+            request.addHeader("User-Agent", CoreEnvironment.PaimonsNotebookUA)
+
+            it.proceed(request.build())
+        }
+    }.build()
+}
+
+
 fun buildRequest(block: Request.Builder.() -> Unit) = Request.Builder().apply(block).build()
 
 fun <K, V> Map<K, V>.toJson(): String = gson.toJson(this)
@@ -54,7 +74,21 @@ fun <K, V> Map<K, V>.toJson(): String = gson.toJson(this)
 fun <K, V> Map<K, V>.post(builder: Request.Builder) =
     builder.post(toJson().toRequestBody("application/json".toMediaType()))
 
-//获取文字响应体
+//获取字节流
+suspend fun Request.getAsByte(client: OkHttpClient = emptyOkHttpClient) =
+    withContext(Dispatchers.IO) {
+        try {
+            client.newCall(this@getAsByte).await().body?.byteStream()
+        } catch (e: Exception) {
+            val (code, msg) = if (e is SocketTimeoutException || e is UnknownHostException) {
+                ResultData.NETWORK_ERROR to "网络异常"
+            } else {
+                ResultData.UNKNOWN_EXCEPTION to "未知错误"
+            }
+            null
+        }
+    }
+
 suspend fun Request.getAsText(client: OkHttpClient = emptyOkHttpClient) =
     withContext(Dispatchers.IO) {
         try {
@@ -75,6 +109,17 @@ suspend fun Request.getAsTextResult(client: OkHttpClient = emptyOkHttpClient) =
         var resultText = ""
         try {
             resultText = getAsText(client)
+            true
+        } catch (e: Exception) {
+            false
+        } to resultText
+    }
+
+suspend fun Request.getAsByteResult(client: OkHttpClient = emptyOkHttpClient) =
+    withContext(Dispatchers.IO) {
+        var resultText: InputStream? = null
+        try {
+            resultText = getAsByte(client)
             true
         } catch (e: Exception) {
             false

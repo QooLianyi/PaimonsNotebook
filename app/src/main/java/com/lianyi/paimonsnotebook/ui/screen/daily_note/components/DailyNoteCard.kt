@@ -6,14 +6,29 @@ import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,14 +44,20 @@ import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.extension.modifier.action.pressureMonitor
 import com.lianyi.paimonsnotebook.common.extension.modifier.animation.drawArcBorder
 import com.lianyi.paimonsnotebook.common.extension.modifier.animation.shake
+import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
+import com.lianyi.paimonsnotebook.common.extension.value.nonScaledSpPX
+import com.lianyi.paimonsnotebook.common.extension.value.toDp
+import com.lianyi.paimonsnotebook.common.extension.value.toPx
 import com.lianyi.paimonsnotebook.common.util.compose.shape.CirclePath
 import com.lianyi.paimonsnotebook.common.util.compose.shape.CirclePathStartPoint
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.binding.UserGameRoleData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.daily_note.DailyNoteData
 import com.lianyi.paimonsnotebook.ui.screen.daily_note.data.DailyNoteCardItemData
-import com.lianyi.paimonsnotebook.ui.theme.*
-import kotlin.text.StringBuilder
+import com.lianyi.paimonsnotebook.ui.theme.CardBackGroundColor_Light_1
+import com.lianyi.paimonsnotebook.ui.theme.Error
+import com.lianyi.paimonsnotebook.ui.theme.Success
+import com.lianyi.paimonsnotebook.ui.theme.Success_1
 
 @Composable
 fun DailyNoteCard(
@@ -158,7 +179,7 @@ fun DailyNoteCard(
                 R.drawable.icon_quality_convert,
                 "参量质变仪",
                 transformerDescription,
-                if(dailyNoteData.transformer.recovery_time.reached) "可使用" else "准备中",
+                if (dailyNoteData.transformer.recovery_time.reached) "可使用" else "准备中",
                 getCircleArcAngle(
                     0,
                     0,
@@ -185,8 +206,8 @@ fun DailyNoteCard(
     }
 
     Box(modifier = modifier
+        .radius(6.dp)
         .fillMaxWidth()
-        .clip(RoundedCornerShape(6.dp))
         .background(CardBackGroundColor_Light_1)
         .clickable {
             showMoreInfo = !showMoreInfo
@@ -245,7 +266,12 @@ fun DailyNoteCard(
 
                 val resinDescriptionText = when (dailyNoteData.current_resin) {
                     dailyNoteData.max_resin -> "原粹树脂已到达上限"
-                    else -> "将在${TimeHelper.getRecoverTime(resinRecoveryTime, currentTime)}到达上限"
+                    else -> "将在${
+                        TimeHelper.getRecoverTime(
+                            resinRecoveryTime,
+                            currentTime
+                        )
+                    }到达上限"
                 }
 
                 DailyNoteCardItemData(
@@ -261,28 +287,21 @@ fun DailyNoteCard(
 
             AnimatedVisibility(visible = showMoreInfo) {
 
-                Column {
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    list.forEachIndexed { index, dailyNoteCardItemData ->
+                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    list.forEach { dailyNoteCardItemData ->
                         DailyNoteCardInfoItem(dailyNoteCardItemData)
-
-                        if (index != list.lastIndex) {
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
                     }
 
                     //探索
                     if (dailyNoteData.expeditions.isNotEmpty()) {
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                        val extraHeight = (12.sp.toPx() - 12.nonScaledSpPX()).sp.toDp()
 
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(5),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(56.dp)
+                                .height(56.dp + extraHeight)
                         ) {
                             items(dailyNoteData.expeditions) { item ->
                                 Column(
@@ -315,7 +334,6 @@ fun DailyNoteCard(
                                         textAlign = TextAlign.Center,
                                         fontSize = 12.sp
                                     )
-
                                 }
                             }
                         }

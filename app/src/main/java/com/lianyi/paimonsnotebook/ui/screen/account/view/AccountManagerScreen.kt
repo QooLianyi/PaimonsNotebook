@@ -20,10 +20,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.ViewModelProvider
+import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.LoadingDialog
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
@@ -151,7 +153,7 @@ class AccountManagerScreen : BaseActivity() {
                                     .padding(0.dp, 10.dp, 20.dp, 20.dp)
                                     .scale(anim.value),
                                 text = "添加账号",
-                                icon = Icons.Default.Add
+                                icon = painterResource(id = R.drawable.ic_add)
                             ) {
                                 viewModel.showMenu()
                             }

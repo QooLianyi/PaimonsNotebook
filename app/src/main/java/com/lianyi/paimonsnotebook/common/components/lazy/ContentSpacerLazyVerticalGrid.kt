@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -54,7 +55,9 @@ fun ContentSpacerLazyVerticalGrid(
         content.invoke(this)
 
         if(navigationBarPaddingEnabled){
-            item {
+            item(span = {
+                GridItemSpan(this.maxLineSpan)
+            }) {
                 NavigationBarPaddingSpacer()
             }
         }

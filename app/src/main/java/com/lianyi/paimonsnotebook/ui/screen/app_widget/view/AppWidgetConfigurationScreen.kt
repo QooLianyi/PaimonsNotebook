@@ -244,20 +244,6 @@ class AppWidgetConfigurationScreen : BaseActivity() {
             item {
                 ShowIf(show = viewModel.configuration.showImageTintColor) {
                     AppWidgetColorConfiguration(
-                        title = "背景颜色",
-                        colors = viewModel.defaultColorList,
-                        customColor = viewModel.configuration.customImageTintColor,
-                        selectedIndex = viewModel.imageTintColorSelectedIndex,
-                    ) { color: Color, i: Int ->
-                        viewModel.changeImageTintColor(color, i, scope)
-                    }
-                }
-            }
-
-
-            item {
-                ShowIf(show = viewModel.configuration.showImageTintColor) {
-                    AppWidgetColorConfiguration(
                         title = "图片颜色",
                         colors = viewModel.defaultColorList,
                         customColor = viewModel.configuration.customImageTintColor,

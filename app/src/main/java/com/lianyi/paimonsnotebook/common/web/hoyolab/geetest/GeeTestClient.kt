@@ -99,7 +99,7 @@ class GeeTestClient {
             val base64 = getW(byteArray, byteArray2, byteArray3)
             val w = URLEncoder.encode(base64, "utf-8")
 
-            url(ApiEndpoints.GeetestGet(gt, challenge, w = w))
+            url(ApiEndpoints.geetestGet(gt, challenge, w = w))
         }.getAsText()
 
     suspend fun createVerification(user: UerEntity): ResultData<VerificationData> =
@@ -124,7 +124,7 @@ class GeeTestClient {
 
     private suspend fun getType(gt: String): GeeTestResultData<TypeData> =
         buildRequest {
-            url(ApiEndpoints.GeetestGetType(gt))
+            url(ApiEndpoints.geetestGetType(gt))
         }.getAsText().removePrefix("(").removeSuffix(")")
             .toJSON(
                 getParameterizedType(

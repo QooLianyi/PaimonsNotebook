@@ -93,6 +93,9 @@ object Materials {
         )
     }
 
+    /*
+    * 获取材料id列表
+    * */
     fun getMaterialsIdByWeek(
         week: Int,
         ignoreHour: Boolean = false,

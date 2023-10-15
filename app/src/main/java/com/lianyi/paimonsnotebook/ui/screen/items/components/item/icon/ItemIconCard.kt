@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
+import com.lianyi.paimonsnotebook.common.util.disk_cache.DiskCacheHelper
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.QualityType
 
 /*
@@ -44,7 +45,8 @@ internal fun ItemIconCard(
         NetworkImage(
             url = url,
             modifier = Modifier
-                .size(size)
+                .size(size),
+            diskCache = DiskCacheHelper.getMetadataDiskCache(url)
         )
     }
 }

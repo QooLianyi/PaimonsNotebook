@@ -40,4 +40,6 @@
 
     <string name="content_first_entry_appwidget_configuration_screen">重要!部分系统(如MIUI)需要给予程序创建桌面快捷方式权限才能够自动创建桌面组件,缺少相应权限会导致自动添加组件的功能失效;通过手动添加桌面组件并进行配置的行为不受影响</string>
 
+    <string name="content_missing_metadata_zip">当前缺少元数据,下载后即可在无网络的情况下也能不受影响的浏览相关界面,元数据大小在200MB上下,下载时请确保连接了无线网络</string>
+
 </resources>

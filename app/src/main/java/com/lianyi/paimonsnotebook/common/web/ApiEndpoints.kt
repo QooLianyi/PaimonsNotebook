@@ -1,6 +1,7 @@
 package com.lianyi.paimonsnotebook.common.web
 
 import com.lianyi.paimonsnotebook.common.data.hoyolab.PlayerUid
+import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.binding.UserGameRoleData
 
 /*
 * API端点
@@ -15,6 +16,8 @@ object ApiEndpoints {
     private const val ApiGeetest = "https://api.geetest.com"
     private const val ApiV6Geetest = "https://apiv6.geetest.com"
 
+    private const val ApiSDK = "https://api-sdk.mihoyo.com"
+
     private const val ApiTakumi = "https://api-takumi.mihoyo.com"
     private const val ApiTakumiCommon = "${ApiTakumi}/common"
     private const val ApiTakumiAuthApi = "${ApiTakumi}/auth/api"
@@ -22,6 +25,8 @@ object ApiEndpoints {
 
     private const val ApiTakumiMiyoushe = "https://api-takumi.miyoushe.com"
     private const val ApiTakumiMiyousheBindingApi = "${ApiTakumiMiyoushe}/binding/api"
+
+    private const val ApiTakumiMiyousheAuthApi = "${ApiTakumiMiyoushe}/auth/api"
 
     private const val ApiTakumiRecord = "https://api-takumi-record.mihoyo.com"
     private const val ApiTakumiRecordApi = "${ApiTakumiRecord}/game_record/app/genshin/api"
@@ -39,6 +44,7 @@ object ApiEndpoints {
     private const val BbsApiUserApi = "${BbsApi}/user/wapi"
 
     private const val BbsApiMiYouShe = "https://bbs-api.miyoushe.com"
+    private const val BbsApiMiYouSheApiHub = "https://bbs-api.miyoushe.com/apihub"
 
     private const val Hk4eApi = "https://hk4e-api.mihoyo.com"
     private const val Hk4eApiAnnouncementApi = "${Hk4eApi}/common/hk4e_cn/announcement/api"
@@ -60,16 +66,17 @@ object ApiEndpoints {
 
     private const val PublicDataApi = "https://public-data-api.mihoyo.com"
 
+    private const val WebStaticMiHoYo = "https://webstatic.mihoyo.com"
+    private const val WebStaticMiHoYoBBSEvent = "https://webstatic.mihoyo.com/bbs/event"
+
     const val getFp = "${PublicDataApi}/device-fp/api/getFp"
-
-
 
     /*
     * - WEB：4 MWEB：5 米游社：2
     * */
     fun getExtList(platform: Int) = "${PublicDataApi}/device-fp/api/getExtList?platform=${platform}"
 
-    fun GeetestGet(gt: String, challenge: String, w: String = "") =
+    fun geetestGet(gt: String, challenge: String, w: String = "") =
         "${ApiV6Geetest}/get.php?gt=${gt}&challenge=${challenge}&client_type=android&client_type=android&lang=zh-cn&pt=20&w=${w}"
 
     /// <summary>
@@ -77,7 +84,7 @@ object ApiEndpoints {
     /// </summary>
     /// <param name="gt">gt</param>
     /// <returns>GT码Url</returns>
-    fun GeetestGetType(gt: String) =
+    fun geetestGetType(gt: String) =
         "${ApiGeetest}/gettype.php?gt=${gt}"
 
     fun GeetestGetTypeV6(gt: String, t: Long) =
@@ -161,6 +168,15 @@ object ApiEndpoints {
     //发起米游社验证码
     const val CreateMiYouSheVerifyVerification =
         "${BbsApiMiYouShe}/misc/api/createVerification?is_high=false"
+
+
+    //二维码扫码
+    fun getQRCodeScan(gameBiz: String) =
+        "${ApiSDK}/${gameBiz}/combo/panda/qrcode/scan"
+
+    //二维码确认
+    fun getQRCodeConfirm(gameBiz: String) =
+        "${ApiSDK}/${gameBiz}/combo/panda/qrcode/confirm"
 
 
     /// <summary>
@@ -278,6 +294,9 @@ object ApiEndpoints {
 
     const val WebStaticMihoyoReferer = "https://webstatic.mihoyo.com"
 
+    //HOST
+    const val ApiSdkHost = "api-sdk.mihoyo.com"
+
 
     /// <summary>
     /// 用户详细信息
@@ -326,6 +345,11 @@ object ApiEndpoints {
     const val AccountGetSTokenByOldToken =
         "${PassportApi}/account/ma-cn-session/app/getTokenBySToken"
 
+    //获取GameToken
+    fun getGameToken(aid: String) =
+        "${ApiTakumiMiyousheAuthApi}/getGameToken?uid=${aid}"
+
+
     /// <summary>
     /// 登录
     /// </summary>
@@ -357,7 +381,8 @@ object ApiEndpoints {
     const val OfficialRecommendedPosts = "${BbsApi}/post/wapi/getOfficialRecommendedPosts?gids=2"
 
     //获得帖子详情
-    fun getPostFull(post_id: Long) = "${BbsApi}/post/wapi/getPostFull?post_id=${post_id}&gids=2"
+    fun getPostFull(post_id: Long) =
+        "${BbsApiMiYouShe}/post/wapi/getPostFull?gids=2&post_id=${post_id}"
 
     //活动日历
     const val ActivityCalendar =
@@ -375,4 +400,26 @@ object ApiEndpoints {
     fun getGameRecordDailyNote(uid: String, region: String) =
         "https://webstatic.mihoyo.com/app/community-game-records/index.html?bbs_presentation_style=fullscreen#/ys/daily/?role_id=${uid}&server=${region}"
 
+    //内部网页Url
+
+    //获取原神游戏记录url
+    fun getGenshinGameRecordUrl(role: UserGameRoleData.Role) =
+        "${WebStaticMiHoYo}/app/community-game-records/index.html?bbs_presentation_style=fullscreen#/ys/daily/?role_id=${role.game_uid}&server=${role.region}"
+
+    //原神签到
+    const val GenshinSign =
+        "${WebStaticMiHoYoBBSEvent}/signin-ys/index.html?bbs_auth_required=true&act_id=e202009291139501&utm_source=bbs&utm_medium=mys&utm_campaign=icon"
+
+    //星穹铁道签到
+    const val SRSign =
+        "${WebStaticMiHoYoBBSEvent}/signin/hkrpg/e202304121516551.html?bbs_auth_required=true&act_id=e202304121516551&bbs_auth_required=true&bbs_presentation_style=fullscreen&utm_source=bbs&utm_medium=mys&utm_campaign=icon"
+
+
+    //获取投票内容
+    fun getVotes(owner_uid: String, vote_ids: String, gids: String = "2") =
+        "${BbsApiMiYouSheApiHub}/api/getVotes?gids=${gids}&owner_uid=${owner_uid}&vote_ids=${vote_ids}"
+
+    //获取投票结果
+    fun getVotesResult(owner_uid: String, vote_ids: String, gids: String = "2") =
+        "${BbsApiMiYouSheApiHub}/api/getVotesResult?gids=${gids}&owner_uid=${owner_uid}&vote_ids=${vote_ids}"
 }

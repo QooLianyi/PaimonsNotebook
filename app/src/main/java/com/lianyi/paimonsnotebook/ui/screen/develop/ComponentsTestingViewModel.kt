@@ -8,10 +8,12 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.annotation.ExperimentalCoilApi
+import coil.imageLoader
 import com.geetest.sdk.GT3ConfigBean
 import com.geetest.sdk.GT3ErrorBean
 import com.geetest.sdk.GT3GeetestUtils
 import com.geetest.sdk.GT3Listener
+import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.data.sort.FilterSortData
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
@@ -45,7 +47,7 @@ class ComponentsTestingViewModel : ViewModel() {
 
     var currentImage by mutableStateOf<File?>(null)
 
-    private val imageLoader = PaimonsNotebookImageLoader.current
+    private val imageLoader = PaimonsNotebookApplication.context.imageLoader
 
     var blurProgressSuccess = false
 

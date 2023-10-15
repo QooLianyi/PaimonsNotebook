@@ -2,13 +2,18 @@ package com.lianyi.paimonsnotebook.ui.screen.home.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -29,33 +34,29 @@ internal fun WebHomeNearActivity(
     diskCache: DiskCache,
     block: (NearActivityData.Hots.Group2.Children.NearActivity) -> Unit,
 ) {
-    val timeText =
-        "还剩${TimeHelper.timeStampParseToTextDayAndHour((item.end_time.toLongOrNull() ?: 0L) - System.currentTimeMillis())}"
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .background(White)
+            .padding(8.dp, 3.dp)
+            .clickable {
+                block(item)
+            }
+            .background(Gray_F5)) {
+        Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
 
-    Box(Modifier
-        .fillMaxWidth()
-        .background(White)
-        .padding(8.dp, 3.dp)
-        .clickable {
-            block(item)
-        }
-        .clip(RoundedCornerShape(4.dp))
-        .background(Gray_F5)
-    ) {
-        Row(modifier = Modifier.padding(8.dp)) {
             NetworkImage(
                 url = item.icon,
                 modifier = Modifier
-                    .size(40.dp)
-                    .radius(4.dp),
+                    .radius(4.dp)
+                    .size(40.dp),
                 contentScale = ContentScale.Crop,
                 diskCache = diskCache
             )
 
             Column(
                 Modifier
-                    .fillMaxWidth()
-                    .height(40.dp)
+                    .weight(1f)
                     .padding(10.dp, 0.dp, 0.dp, 0.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
@@ -76,7 +77,10 @@ internal fun WebHomeNearActivity(
 
         }
 
-        if(item.end_time != "0"){
+        if (item.end_time != "0") {
+            val timeText =
+                "还剩${TimeHelper.timeStampParseToTextDayAndHour((item.end_time.toLongOrNull() ?: 0L) - System.currentTimeMillis())}"
+
             Text(
                 text = timeText,
                 fontSize = 10.sp,

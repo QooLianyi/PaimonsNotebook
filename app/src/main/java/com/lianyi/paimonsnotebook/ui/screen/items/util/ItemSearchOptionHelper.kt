@@ -55,23 +55,16 @@ object ItemSearchOptionHelper {
     }
 
     //星级
-    fun setStar() {
-        list += "星级" to listOf(
-            SearchOptionData(sortBy = ItemFilterType.Star, value = 5, contentSlot = {
+    fun setStar(starRange: IntProgression = 5 downTo 4) {
+        list += "星级" to starRange.map {
+            SearchOptionData(sortBy = ItemFilterType.Star, value = it, contentSlot = {
                 StarGroup(
-                    starCount = 5,
-                    starTint = GachaStar5Color,
-                    starSize = 18.dp
-                )
-            }),
-            SearchOptionData(sortBy = ItemFilterType.Star, value = 4, contentSlot = {
-                StarGroup(
-                    starCount = 4,
+                    starCount = it,
                     starTint = GachaStar5Color,
                     starSize = 18.dp
                 )
             })
-        )
+        }
     }
 
     //武器类型

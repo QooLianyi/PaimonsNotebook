@@ -6,6 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
+import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
+import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.util.enums.LoadingState
 import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.MaterialService
 import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.WeaponService
@@ -77,7 +80,7 @@ class WeaponScreenViewModel : ViewModel() {
                             ItemFilterType.BaseATK,
                         )
                     )
-                    setStar()
+                    setStar(starRange = 5 downTo 1)
                     setWeapon()
                 }.get(),
             getFilteredItemList = this::filterItemList,
@@ -183,6 +186,10 @@ class WeaponScreenViewModel : ViewModel() {
         }
 
         itemFilterViewModel.dismissFilterContent()
+
+        viewModelScope.launchIO {
+            PreferenceKeys.LastViewWeaponId.editValue(weaponData.id)
+        }
     }
 
     fun onClickCompareItem() {

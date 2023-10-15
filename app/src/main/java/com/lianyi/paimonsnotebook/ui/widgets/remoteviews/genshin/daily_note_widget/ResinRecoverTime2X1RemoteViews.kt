@@ -30,11 +30,17 @@ internal class ResinRecoverTime2X1RemoteViews(
             "${dailyNoteWidgetData.current_resin}/${dailyNoteWidgetData.max_resin}"
         )
 
-        val time = TimeHelper.timeStampParseToTextDayAndHour(
-            (dailyNoteWidgetData.resin_recovery_time.toLongOrNull() ?: 0L) * 1000L
-        )
+        val second = (dailyNoteWidgetData.resin_recovery_time.toLongOrNull() ?: 0L)
+        val text = if (second != 0L) {
+            val time = TimeHelper.timeStampParseToTextDayAndHour(
+                second * 1000L
+            )
+            "恢复时间:${time}"
+        } else {
+            "原粹树脂恢复完毕"
+        }
 
-        setTextViewText(R.id.recover_time, "恢复时间:${time}")
+        setTextViewText(R.id.recover_time, text)
     }
 
     override suspend fun onUpdateContent(intent: Intent?): RemoteViews? {

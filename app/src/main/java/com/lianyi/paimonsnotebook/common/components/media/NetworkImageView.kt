@@ -32,7 +32,7 @@ fun NetworkImageView(
         ImageView(context).apply {
             val imageFile = PaimonsNotebookImageLoader.getCacheImageFileByUrl(url)
 
-            load(imageFile?:url, imageLoader = PaimonsNotebookImageLoader.current){
+            load(imageFile?:url){
                 crossfade(true)
                 diskCacheKey(url)
                 memoryCacheKey(url)

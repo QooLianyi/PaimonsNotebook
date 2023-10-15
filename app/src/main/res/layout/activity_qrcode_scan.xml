@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.king.view.viewfinderview.ViewfinderView
+        android:id="@+id/viewfinderView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:vvLabelText="支持米哈游PC端游戏\n扫码快捷登录"
+        app:vvLabelTextLocation="bottom"
+        app:vvLaserStyle="line"
+        />
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/ivFlashlight"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:layout_marginTop="@dimen/camera_scan_flashlight_margin_top"-->
+    <!--        android:contentDescription="@null"-->
+    <!--        android:src="@drawable/camera_scan_flashlight_selector" />-->
+</FrameLayout>

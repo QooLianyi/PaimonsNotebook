@@ -3,6 +3,7 @@ package com.lianyi.paimonsnotebook.ui.screen.setting.view
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,11 +39,14 @@ class SettingsScreen : BaseActivity() {
             modifier = Modifier
                 .fillMaxSize()
                 .background(BackGroundColor),
-            contentPadding = PaddingValues(12.dp, 8.dp)
+            contentPadding = PaddingValues(12.dp, 8.dp),
         ) {
             item {
-                Column {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
                     SettingOptionGroup(groupName = "界面", list = viewModel.settings)
+                    SettingOptionGroup(groupName = "用户", list = viewModel.userSettings)
                     SettingOptionGroup(groupName = "存储", list = viewModel.storageSettings)
                     SettingOptionGroup(groupName = "数据", list = viewModel.dataSettings)
 //                    SettingOptionGroup(groupName = "桌面组件", list = viewModel.appwidgetSettings)

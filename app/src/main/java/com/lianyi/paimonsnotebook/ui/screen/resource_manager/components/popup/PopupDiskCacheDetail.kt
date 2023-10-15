@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import coil.compose.rememberAsyncImagePainter
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.extension.modifier.action.doubleClick
 import com.lianyi.paimonsnotebook.common.extension.modifier.action.pointerInputDetectTransformGestures
 import com.lianyi.paimonsnotebook.ui.screen.resource_manager.data.DiskCacheGroupData
@@ -97,6 +98,7 @@ fun PopupDiskCacheDetail(
             }
 
             Column {
+                StatusBarPaddingSpacer()
 
                 Row(
                     modifier = Modifier
@@ -194,31 +196,31 @@ fun PopupDiskCacheDetail(
                     })
                 ) {
 
-                    Image(
-                        painter = rememberAsyncImagePainter(model = showImageData?.file),
-                        contentDescription = showImageData?.data?.name,
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .pointerInputDetectTransformGestures(
-                                isTransformInProgressChanged = {
-                                    isTouching = it
-                                }) { _, pan, zoom, _ ->
-                                offset += pan
-                                scope.launch {
-                                    scale.snapTo(
-                                        (zoom * scale.value).coerceAtLeast(
-                                            .5f
-                                        )
-                                    )
-                                }
-                            }
-                            .scale(scale = scale.value)
-                            .graphicsLayer(
-                                translationX = offset.x,
-                                translationY = offset.y
-                            )
-                    )
+//                    Image(
+//                        painter = rememberAsyncImagePainter(model = showImageData?.file),
+//                        contentDescription = showImageData?.data?.name,
+//                        contentScale = ContentScale.Fit,
+//                        modifier = Modifier
+//                            .fillMaxSize()
+//                            .pointerInputDetectTransformGestures(
+//                                isTransformInProgressChanged = {
+//                                    isTouching = it
+//                                }) { _, pan, zoom, _ ->
+//                                offset += pan
+//                                scope.launch {
+//                                    scale.snapTo(
+//                                        (zoom * scale.value).coerceAtLeast(
+//                                            .5f
+//                                        )
+//                                    )
+//                                }
+//                            }
+//                            .scale(scale = scale.value)
+//                            .graphicsLayer(
+//                                translationX = offset.x,
+//                                translationY = offset.y
+//                            )
+//                    )
 
                 }
 

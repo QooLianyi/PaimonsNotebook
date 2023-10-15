@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
@@ -37,8 +38,9 @@ internal fun DailyNote2X1RemoteViewsPreview(
     Column(
         modifier = Modifier
             .radius(previewAnimData.backgroundRadius.value.roundToInt().dp)
-            .size(120.dp, 60.dp)
-            .background(previewAnimData.backgroundColor.value),
+            .width(120.dp)
+            .background(previewAnimData.backgroundColor.value)
+            .padding(vertical = 4.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

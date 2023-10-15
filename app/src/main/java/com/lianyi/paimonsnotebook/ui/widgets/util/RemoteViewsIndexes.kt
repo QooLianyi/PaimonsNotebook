@@ -132,7 +132,7 @@ object RemoteViewsIndexes {
                 remoteViewsName = "快捷启动3*2",
                 remoteViewsType = RemoteViewsType.Util,
                 configurationOptions = setOf(
-                    AppWidgetConfigurationOption.BackgroundPatten,
+                    AppWidgetConfigurationOption.BackgroundColor,
                     AppWidgetConfigurationOption.TextColor,
                     AppWidgetConfigurationOption.ImageTintColor
                 )

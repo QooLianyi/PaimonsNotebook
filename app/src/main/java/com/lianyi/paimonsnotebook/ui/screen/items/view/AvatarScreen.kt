@@ -35,7 +35,7 @@ class AvatarScreen : ComponentActivity() {
         viewModel.init(intent)
 
         setContent {
-            PaimonsNotebookTheme(this) {
+            PaimonsNotebookTheme(this, lightStatusBar = false) {
                 ItemScreenLoadingState(loadingState = viewModel.loadingState) {
 
                     ItemScreenContent(
