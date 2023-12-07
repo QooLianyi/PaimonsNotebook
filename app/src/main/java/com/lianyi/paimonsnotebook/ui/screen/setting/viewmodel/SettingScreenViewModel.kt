@@ -1,10 +1,12 @@
 package com.lianyi.paimonsnotebook.ui.screen.setting.viewmodel
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.getValue
@@ -19,22 +21,31 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
+import com.lianyi.paimonsnotebook.common.components.dialog.LazyColumnDialog
+import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.common.extension.string.notify
 import com.lianyi.paimonsnotebook.common.extension.string.show
+import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.MetadataHelper
+import com.lianyi.paimonsnotebook.common.util.image.PaimonsNotebookImageLoader
+import com.lianyi.paimonsnotebook.common.web.HutaoEndpoints
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util.MetadataHelper
+import com.lianyi.paimonsnotebook.common.web.static_resources.StaticResourcesApiEndpoint
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
 import com.lianyi.paimonsnotebook.ui.screen.resource_manager.view.ResourceManagerScreen
+import com.lianyi.paimonsnotebook.ui.screen.setting.components.static_resources.StaticResourcesChannelDialogItem
 import com.lianyi.paimonsnotebook.ui.screen.setting.components.widgets.SettingsOptionSwitch
 import com.lianyi.paimonsnotebook.ui.screen.setting.data.ConfigurationData
 import com.lianyi.paimonsnotebook.ui.screen.setting.data.OptionListData
+import com.lianyi.paimonsnotebook.ui.screen.setting.data.StaticResourcesChannelData
 import com.lianyi.paimonsnotebook.ui.screen.setting.util.SettingsHelper
 import com.lianyi.paimonsnotebook.ui.screen.setting.util.configuration_enum.HomeScreenDisplayState
 import com.lianyi.paimonsnotebook.ui.theme.Info
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class SettingScreenViewModel : ViewModel() {
@@ -70,7 +81,7 @@ class SettingScreenViewModel : ViewModel() {
     val storageSettings = listOf(
         OptionListData(
             name = "图片缓存管理",
-            description = "管理程序在使用过程中加载的各种网络图片,未来的版本将会添加自动删除过期图片的功能",
+            description = "管理程序在使用过程中加载的各种网络图片",
             onClick = {
                 HomeHelper.goActivity(ResourceManagerScreen::class.java)
             },
@@ -83,7 +94,7 @@ class SettingScreenViewModel : ViewModel() {
             }
         ),
         OptionListData(
-            name = "自动清除过期的图片缓存",
+            name = "自动清除过期图片缓存",
             description = "默认开启,开启后,程序在启动时会将最后一次使用时间为7天以上,并且图片类型为临时的图片删除,以节省存储空间",
             onClick = {
                 viewModelScope.launchIO {
@@ -95,6 +106,31 @@ class SettingScreenViewModel : ViewModel() {
             },
             slot = {
                 SettingsOptionSwitch(checked = configurationData.enableAutoCleanExpiredImages)
+            }
+        ),
+        OptionListData(
+            name = "清除失效图片",
+            description = "此操作会立即清除所有无法显示的图片;当图片加载异常时,进行此操作后重新载入图片可能会得到改善",
+            onClick = {
+                viewModelScope.launchIO {
+                    val dao = PaimonsNotebookDatabase.database.diskCacheDao
+                    var c = 0
+                    dao.getAllData().first().forEach {
+                        val file = PaimonsNotebookImageLoader.getCacheImageFileByUrl(it.url)
+                        val bitmap = BitmapFactory.decodeFile(file?.absolutePath ?: "")
+                        if (bitmap == null) {
+                            PaimonsNotebookImageLoader.getCacheImageFileByUrl(it.url)?.delete()
+                            PaimonsNotebookImageLoader.getCacheImageMetadataFileByUrl(it.url)
+                                ?.delete()
+                            dao.deleteByUrl(it.url)
+                            c++
+                        }
+                    }
+
+                    "清理了${c}张失效图片".warnNotify(false)
+                }
+            },
+            slot = {
             }
         )
     )

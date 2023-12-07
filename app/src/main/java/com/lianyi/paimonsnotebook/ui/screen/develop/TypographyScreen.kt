@@ -5,22 +5,12 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.mutableStateListOf
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
-import com.lianyi.paimonsnotebook.common.extension.value.pxToDp
-import com.lianyi.paimonsnotebook.common.extension.value.toPx
-import com.lianyi.paimonsnotebook.common.view.QRCodeScanActivity
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.achievement.AchievementData
+import com.lianyi.paimonsnotebook.ui.screen.setting.data.StaticResourcesChannelData
 import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
-import com.lianyi.paimonsnotebook.ui.theme.Primary_2
-import com.lianyi.paimonsnotebook.ui.theme.Success
+
 
 class TypographyScreen : BaseActivity() {
 
@@ -28,7 +18,6 @@ class TypographyScreen : BaseActivity() {
 
     override fun onStartActivityForResult(result: ActivityResult) {
         super.onStartActivityForResult(result)
-        println("res = ${result.resultCode}")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,20 +26,123 @@ class TypographyScreen : BaseActivity() {
         start = registerStartActivityForResult()
 
         setContent {
-            PaimonsNotebookTheme(this) {
-
-                Column {
-                    Row {
-                        Box(modifier = Modifier.size(60.dp).background(Primary_2))
-                        Box(modifier = Modifier.size(60.dp).background(Success))
-                    }
-                    Row {
-                        Box(modifier = Modifier.size(60.dp.toPx().pxToDp()).background(Success))
-                        Box(modifier = Modifier.size(60.dp.toPx().pxToDp()).background(Primary_2))
-                    }
-                }
-
-            }
+//            PaimonsNotebookTheme(this) {
+//
+//                ContentSpacerLazyColumn(
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .background(BackGroundColor)
+//                ) {
+//                    item {
+//                        Button(onClick = {
+//                            val achi = FileHelper.getMetadata(MetadataHelper.FileNameAchievement)
+//                            val goalFile = FileHelper.getMetadata(MetadataHelper.FileNameAchievementGoal)
+//
+//                            if (achi == null || goalFile == null) {
+//                                "缺少文件".errorNotify()
+//                                return@Button
+//                            }
+//
+//                            JsonReader(InputStreamReader(achi.inputStream())).use {
+//                                it.beginArray()
+//
+//                                while (it.hasNext()) {
+//
+//                                    var id = -1
+//                                    var goal = -1
+//                                    var order = -1
+//                                    var process = -1
+//                                    var previousId = 0
+//                                    var isDeleteWatcher = false
+//                                    var title = ""
+//                                    var description = ""
+//                                    var version = ""
+//                                    var reward = AchievementData.FinishReward(0, 0)
+//                                    var icon = ""
+//
+//                                    it.apply {
+//                                        beginObject()
+//
+//                                        while (hasNext()) {
+//                                            when (nextName()) {
+//                                                UIAFHelper.Field.Data.Id -> id = nextInt()
+//                                                UIAFHelper.Field.Data.Goal -> goal = nextInt()
+//                                                UIAFHelper.Field.Data.Order -> order = nextInt()
+//                                                UIAFHelper.Field.Data.Title -> title = nextString()
+//                                                UIAFHelper.Field.Data.Description -> description =
+//                                                    nextString()
+//
+//                                                UIAFHelper.Field.Data.FinishReward -> {
+//                                                    beginObject()
+//
+//                                                    var rewardId = -1
+//                                                    var count = -1
+//                                                    while (hasNext()) {
+//                                                        when (nextName()) {
+//                                                            UIAFHelper.Field.Data.Reward.Id -> rewardId =
+//                                                                nextInt()
+//
+//                                                            UIAFHelper.Field.Data.Reward.Count -> count =
+//                                                                nextInt()
+//                                                        }
+//                                                    }
+//                                                    endObject()
+//
+//                                                    reward = AchievementData.FinishReward(count, rewardId)
+//
+//                                                    continue
+//                                                }
+//
+//                                                UIAFHelper.Field.Data.IsDeleteWatcherAfterFinish -> isDeleteWatcher =
+//                                                    nextBoolean()
+//
+//                                                UIAFHelper.Field.Data.Progress -> process = nextInt()
+//                                                UIAFHelper.Field.Data.Version -> version = nextString()
+//                                                UIAFHelper.Field.Data.Icon -> icon = nextString()
+//                                                UIAFHelper.Field.Data.PreviousId -> previousId = nextInt()
+//                                            }
+//                                        }
+//
+//                                        endObject()
+//                                    }
+//
+//                                    list += AchievementData(
+//                                        description,
+//                                        reward,
+//                                        goal,
+//                                        id,
+//                                        isDeleteWatcher,
+//                                        order,
+//                                        process,
+//                                        title,
+//                                        version,
+//                                        icon,
+//                                        previousId
+//                                    )
+//                                }
+//
+//                                it.endArray()
+//                            }
+//                        }) {
+//                            Text(text = "JSON流测试")
+//                        }
+//                    }
+//                    items(list) { item ->
+//                        Row(
+//                            modifier = Modifier
+//                                .padding(10.dp)
+//                                .fillMaxWidth()
+//                        ) {
+//                            Column {
+//                                TitleText(text = item.title)
+//                                Spacer(modifier = Modifier.height(2.dp))
+//                                Text(text = item.description, fontSize = 12.sp, color = Font_Second)
+//                            }
+//                        }
+//                    }
+//                }
+//
+//            }
 
 //            PaimonsNotebookTheme(this) {
 //                val state = rememberLazyListState()

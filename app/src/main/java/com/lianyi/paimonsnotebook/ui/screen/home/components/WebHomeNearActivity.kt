@@ -32,7 +32,7 @@ import com.lianyi.paimonsnotebook.ui.theme.White
 internal fun WebHomeNearActivity(
     item: NearActivityData.Hots.Group2.Children.NearActivity,
     diskCache: DiskCache,
-    block: (NearActivityData.Hots.Group2.Children.NearActivity) -> Unit,
+    block: (url:String) -> Unit,
 ) {
     Box(
         Modifier
@@ -40,7 +40,9 @@ internal fun WebHomeNearActivity(
             .background(White)
             .padding(8.dp, 3.dp)
             .clickable {
-                block(item)
+                println("before ${item.url}")
+                block(item.url)
+                println("after ${item.url}")
             }
             .background(Gray_F5)) {
         Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {

@@ -53,6 +53,11 @@ class PaimonsNotebookApplication : Application(), ImageLoaderFactory {
             "https://github.com/QooLianyi/PaimonsNotebook"
         }
 
+        //从git上获取最新release
+        val latestReleaseUrl by lazy {
+            "https://api.github.com/repos/QooLianyi/PaimonsNotebook/releases/latest"
+        }
+
         val isDebug by lazy {
             context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
         }
@@ -73,12 +78,15 @@ class PaimonsNotebookApplication : Application(), ImageLoaderFactory {
             .errorActivity(CrashScreen::class.java)
             .apply()
 
-        AppCenter.start(
-            this,
-            BuildConfig.APPCENTER_SECRET,
-            Analytics::class.java,
-            Crashes::class.java
-        )
+        //debug禁用AppCenter
+        if(!BuildConfig.DEBUG){
+            AppCenter.start(
+                this,
+                BuildConfig.APPCENTER_SECRET,
+                Analytics::class.java,
+                Crashes::class.java
+            )
+        }
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(ApplicationLifecycleObserver())
 

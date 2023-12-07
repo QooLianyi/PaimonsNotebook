@@ -1,9 +1,9 @@
 package com.lianyi.paimonsnotebook.common.web.hutao.genshin.conveter
 
-import com.lianyi.paimonsnotebook.common.web.HutaoEndpoints
+import com.lianyi.paimonsnotebook.common.web.static_resources.StaticResourcesApiEndpoint
 
 object EquipIconConverter {
-    fun iconNameToUrl(name: String) = HutaoEndpoints.staticFile(
+    fun iconNameToUrl(name: String) = StaticResourcesApiEndpoint.staticRaw(
         "EquipIcon",
         "${name}.png"
     )

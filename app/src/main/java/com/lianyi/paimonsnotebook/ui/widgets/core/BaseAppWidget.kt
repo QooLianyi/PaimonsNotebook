@@ -69,7 +69,7 @@ open class BaseAppWidget : AppWidgetProvider() {
                 if (appWidgetId != -1) {
                     "内容更新中".show()
 
-                    updateAppWidget(appWidgetId, intent)
+                    updateAppWidget(appWidgetId, intent,true)
                 }
             }
 

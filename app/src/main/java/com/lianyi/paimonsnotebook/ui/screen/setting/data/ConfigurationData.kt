@@ -20,4 +20,7 @@ class ConfigurationData {
 
     //启用自动删除过期图片
     var enableAutoCleanExpiredImages by mutableStateOf(false)
+
+    //当前静态资源
+    var currentStaticResourcesUrl by mutableStateOf("")
 }

@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.common.components.text.TitleText
 import com.lianyi.paimonsnotebook.common.database.gacha.data.GachaRecordOverview
-import com.lianyi.paimonsnotebook.ui.screen.gacha.util.UIGFHelper
+import com.lianyi.paimonsnotebook.common.util.metadata.genshin.uigf.UIGFHelper
 
 @Composable
 internal fun GachaRecordCard(

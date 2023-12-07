@@ -32,11 +32,11 @@ interface DiskCacheDao {
     @Query("update disk_cache set plan_delete = :targetValue where url = :url")
     fun setPlanDeleteFlag(url: String,targetValue:Int)
 
-//    @Query("delete from disk_cache where url = :url")
-//    fun deleteByUrl(url: String)
-//
-//    @Query("delete from disk_cache where url in (:urls)")
-//    fun deleteByUrls(urls: List<String>)
+    @Query("delete from disk_cache where url = :url")
+    fun deleteByUrl(url: String)
+
+    @Query("delete from disk_cache where url in (:urls)")
+    fun deleteByUrls(urls: List<String>)
 
     @Query("select count(*) from disk_cache where url = :url")
     fun queryDataCountByUrl(url: String): Int

@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import com.lianyi.paimonsnotebook.ui.screen.gacha.util.GachaRecordCardDisplayState
-import com.lianyi.paimonsnotebook.ui.screen.gacha.util.UIGFHelper
+import com.lianyi.paimonsnotebook.common.util.metadata.genshin.uigf.UIGFHelper
 import com.lianyi.paimonsnotebook.ui.theme.GachaStar3Color
 import com.lianyi.paimonsnotebook.ui.theme.GachaStar4Color2
 import com.lianyi.paimonsnotebook.ui.theme.GachaStar5Color

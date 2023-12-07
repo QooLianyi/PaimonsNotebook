@@ -1,7 +1,7 @@
 package com.lianyi.paimonsnotebook.common.web.hutao.genshin.conveter
 
-import com.lianyi.paimonsnotebook.common.web.HutaoEndpoints
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.WeaponType
+import com.lianyi.paimonsnotebook.common.web.static_resources.StaticResourcesApiEndpoint
 
 object WeaponTypeIconConverter {
 
@@ -14,6 +14,6 @@ object WeaponTypeIconConverter {
             WeaponType.WEAPON_CATALYST -> "Catalyst_MD"
             else -> ""
         }
-        return HutaoEndpoints.staticFile("Skill", "Skill_A_${weapon}.png")
+        return StaticResourcesApiEndpoint.staticRaw("Skill", "Skill_A_${weapon}.png")
     }
 }

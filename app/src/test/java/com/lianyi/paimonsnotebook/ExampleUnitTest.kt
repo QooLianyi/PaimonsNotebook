@@ -1,5 +1,6 @@
 package com.lianyi.paimonsnotebook
 
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 
@@ -11,6 +12,12 @@ import org.junit.Test
 class ExampleUnitTest {
     @Test
     fun test() {
-    }
 
+        println("开始请求${System.currentTimeMillis()}")
+
+        runBlocking {
+        }
+
+//
+    }
 }

@@ -28,7 +28,7 @@ import com.lianyi.paimonsnotebook.common.service.overlay.util.OverlayHelper
 import com.lianyi.paimonsnotebook.common.util.activity_code.ActivityCode
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.util.enums.LoadingState
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.MetadataHelper
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util.MetadataHelper
 import com.lianyi.paimonsnotebook.common.view.HoyolabWebActivity
 import com.lianyi.paimonsnotebook.common.view.QRCodeScanActivity
 import com.lianyi.paimonsnotebook.common.web.ApiEndpoints

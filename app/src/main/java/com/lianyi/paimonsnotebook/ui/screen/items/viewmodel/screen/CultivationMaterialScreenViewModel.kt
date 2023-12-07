@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lianyi.paimonsnotebook.common.extension.list.takeFirstIf
 import com.lianyi.paimonsnotebook.common.util.enums.LoadingState
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.AvatarService
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.MaterialService
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.WeaponService
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.AvatarService
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.MaterialService
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.WeaponService
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.item.Material

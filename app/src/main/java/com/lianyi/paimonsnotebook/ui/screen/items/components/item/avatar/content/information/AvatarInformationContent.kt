@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.common.components.layout.FoldContent
-import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
+import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.common.components.text.RichText
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
@@ -136,7 +136,7 @@ internal fun AvatarInformationContent(
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 avatar.costumes.forEach {
                     Row(modifier = Modifier.fillMaxWidth()) {
-                        NetworkImage(
+                        NetworkImageForMetadata(
                             url = if (it.IsDefault) {
                                 AvatarCardConverter.iconNameToUrl("UI_AvatarIcon_Costume_Card")
                             } else {

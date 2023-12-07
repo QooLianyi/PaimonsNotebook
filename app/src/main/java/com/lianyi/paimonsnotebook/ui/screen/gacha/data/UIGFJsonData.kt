@@ -2,7 +2,7 @@ package com.lianyi.paimonsnotebook.ui.screen.gacha.data
 
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.database.gacha.entity.GachaItems
-import com.lianyi.paimonsnotebook.ui.screen.gacha.util.UIGFHelper
+import com.lianyi.paimonsnotebook.common.util.metadata.genshin.uigf.UIGFHelper
 
 data class UIGFJsonData(
     val info: Info,

@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
+import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.common.components.text.AutoSizeText
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.items.data.ItemListCardData
@@ -33,7 +33,7 @@ import com.lianyi.paimonsnotebook.ui.theme.White
 fun <T> ItemGridListCard(
     data: T,
     itemListCardData: ItemListCardData,
-    dataContent:String,
+    dataContent: String,
     onClick: (T) -> Unit
 ) {
 
@@ -59,7 +59,10 @@ fun <T> ItemGridListCard(
 
             Column(modifier = Modifier.fillMaxSize()) {
                 //此处使用Compose Image会稍微降低列表滚动时的性能损耗(原因暂时未知)
-                NetworkImage(url = itemListCardData.iconUrl, modifier = Modifier.size(60.dp))
+                NetworkImageForMetadata(
+                    url = itemListCardData.iconUrl,
+                    modifier = Modifier.size(60.dp)
+                )
 
                 Box(
                     modifier = Modifier

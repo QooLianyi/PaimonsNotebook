@@ -4,14 +4,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.common.extension.string.notify
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
-import com.lianyi.paimonsnotebook.common.util.data_store.dataStoreValues
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.MetadataHelper
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util.MetadataHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

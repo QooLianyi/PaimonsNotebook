@@ -14,17 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
+import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.common.components.text.TitleText
 import com.lianyi.paimonsnotebook.ui.screen.items.components.widget.StarGroup
 import com.lianyi.paimonsnotebook.ui.theme.White_40
 
 @Composable
 internal fun ItemBaseInfo(
-    name:String,
-    starCount:Int,
-    iconUrl:String = ""
-){
+    name: String,
+    starCount: Int,
+    iconUrl: String = ""
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
@@ -49,8 +49,8 @@ internal fun ItemBaseInfo(
             )
         }
 
-        if(iconUrl.isNotEmpty()){
-            NetworkImage(
+        if (iconUrl.isNotEmpty()) {
+            NetworkImageForMetadata(
                 iconUrl,
                 modifier = Modifier.size(70.dp)
             )

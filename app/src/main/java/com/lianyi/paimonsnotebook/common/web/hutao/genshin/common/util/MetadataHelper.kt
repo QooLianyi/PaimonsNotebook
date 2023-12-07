@@ -1,9 +1,10 @@
-package com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao
+package com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util
 
 import com.lianyi.paimonsnotebook.common.util.file.FileHelper
 import com.lianyi.paimonsnotebook.common.util.hash.XXHash
 import com.lianyi.paimonsnotebook.common.util.json.JSON
 import com.lianyi.paimonsnotebook.common.util.parameter.getParameterizedType
+import com.lianyi.paimonsnotebook.common.util.request.applicationOkHttpClient
 import com.lianyi.paimonsnotebook.common.util.request.buildRequest
 import com.lianyi.paimonsnotebook.common.util.request.getAsText
 import com.lianyi.paimonsnotebook.common.util.request.getAsTextResult
@@ -25,7 +26,9 @@ object MetadataHelper {
             FileNameWeaponPromote,
             FileNameMaterial,
             FileNameMonster,
-            FileNameTowerSchedule
+            FileNameTowerSchedule,
+//            FileNameAchievement,
+//            FileNameAchievementGoal
         )
     }
 
@@ -96,6 +99,13 @@ object MetadataHelper {
     ) {
         updateMetadataHashMap()
 
+        //当元数据哈希表比所需列表小时,直接返回失败
+        if (hashMap.keys.size < metadataCheckList.size) {
+            onFailed.invoke()
+            finally.invoke()
+            return
+        }
+
         checkMetadata().forEach { name ->
             loadAndSaveFile(name)
         }
@@ -112,8 +122,8 @@ object MetadataHelper {
     //更新元数据map
     private suspend fun updateMetadataHashMap() {
         val metaJson = buildRequest {
-            url(HutaoEndpoints.hutaoMetadata2File(LocaleNames.CHS, "$MetaFileName.json"))
-        }.getAsText()
+            url(HutaoEndpoints.metadata(LocaleNames.CHS, "$MetaFileName.json"))
+        }.getAsText(applicationOkHttpClient)
 
         hashMap.clear()
         hashMap.putAll(
@@ -127,8 +137,8 @@ object MetadataHelper {
     //重新载入单个文件
     private suspend fun loadAndSaveFile(name: String) {
         val pair = buildRequest {
-            url(HutaoEndpoints.hutaoMetadata2File(LocaleNames.CHS, "${name}.json"))
-        }.getAsTextResult()
+            url(HutaoEndpoints.metadata(LocaleNames.CHS, "${name}.json"))
+        }.getAsTextResult(applicationOkHttpClient)
 
         if (pair.first) {
             FileHelper.getMetadataSaveFile(name).apply {

@@ -49,7 +49,7 @@ object CoreEnvironment {
     const val GameBizGenshin = "hk4e_cn"
 
     // 米游社 Rpc 版本
-    const val XrpcVersion = "2.59.1"
+    const val XrpcVersion = "2.64.1"
 
     val ClientType = EnvironmentClientType.BBS
 
@@ -64,6 +64,7 @@ object CoreEnvironment {
     const val HoyolabMobileWebUA =
         "Mozilla/5.0 (Linux; Android 12) Mobile miHoYoBBS/$XrpcVersion"
 
+    //TODO 添加版本限制(maybe)
     const val PaimonsNotebookUA = "PaimonsNotebook/${PaimonsNotebookApplication.version}"
 
     var DeviceFp = ""

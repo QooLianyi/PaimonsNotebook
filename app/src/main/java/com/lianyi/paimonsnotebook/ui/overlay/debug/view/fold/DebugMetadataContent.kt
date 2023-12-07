@@ -4,7 +4,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.MetadataHelper
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util.MetadataHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

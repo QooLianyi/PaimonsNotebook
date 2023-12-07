@@ -1,4 +1,4 @@
-package com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao
+package com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util
 
 /*
 * Genshin图标url

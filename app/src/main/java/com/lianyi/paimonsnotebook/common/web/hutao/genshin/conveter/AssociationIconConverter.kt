@@ -1,7 +1,7 @@
 package com.lianyi.paimonsnotebook.common.web.hutao.genshin.conveter
 
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.AssociationType
-import com.lianyi.paimonsnotebook.common.web.HutaoEndpoints
+import com.lianyi.paimonsnotebook.common.web.static_resources.StaticResourcesApiEndpoint
 
 object AssociationIconConverter {
 
@@ -16,6 +16,6 @@ object AssociationIconConverter {
             else-> "GoldenAppleIsles"
         }
 
-        return HutaoEndpoints.staticFile("LoadingPic","UI_LoadingPic_${icon}.png")
+        return StaticResourcesApiEndpoint.staticRaw("LoadingPic","UI_LoadingPic_${icon}.png")
     }
 }

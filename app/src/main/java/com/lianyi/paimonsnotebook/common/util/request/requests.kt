@@ -4,6 +4,7 @@ import android.os.Build
 import com.google.gson.Gson
 import com.lianyi.paimonsnotebook.common.core.enviroment.CoreEnvironment
 import com.lianyi.paimonsnotebook.common.data.ResultData
+import com.lianyi.paimonsnotebook.common.extension.request.setUserAgent
 import com.lianyi.paimonsnotebook.common.util.parameter.getParameterizedType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -59,8 +60,7 @@ val applicationOkHttpClient by lazy {
 
         addInterceptor {
             val request = it.request().newBuilder()
-            request.addHeader("User-Agent", CoreEnvironment.PaimonsNotebookUA)
-
+            request.setUserAgent(CoreEnvironment.PaimonsNotebookUA)
             it.proceed(request.build())
         }
     }.build()
@@ -129,15 +129,13 @@ suspend fun Request.getAsByteResult(client: OkHttpClient = emptyOkHttpClient) =
 
 //获取原生json
 suspend fun <T> Request.getAsJsonNative(
-    type: ParameterizedType,
-    client: OkHttpClient = defaultOkHttpClient
-): T? =
-    try {
-        Gson().fromJson(getAsText(client), type)
-    } catch (e: Exception) {
-        println(e.message)
-        null
-    }
+    type: ParameterizedType, client: OkHttpClient = defaultOkHttpClient
+): T? = try {
+    Gson().fromJson(getAsText(client), type)
+} catch (e: Exception) {
+    println(e.message)
+    null
+}
 
 suspend inline fun <reified T> Request.getAsJson(client: OkHttpClient = defaultOkHttpClient): ResultData<T> =
     getAsJson(getParameterizedType(ResultData::class.java, T::class.java), client)

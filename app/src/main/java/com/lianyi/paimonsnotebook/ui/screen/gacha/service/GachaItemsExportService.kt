@@ -5,7 +5,7 @@ import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.database.gacha.entity.GachaItems
 import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
-import com.lianyi.paimonsnotebook.ui.screen.gacha.util.UIGFHelper
+import com.lianyi.paimonsnotebook.common.util.metadata.genshin.uigf.UIGFHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File

@@ -1,4 +1,4 @@
-package com.lianyi.paimonsnotebook.ui.screen.gacha.util
+package com.lianyi.paimonsnotebook.common.util.metadata.genshin.uigf
 
 object UIGFHelper {
 

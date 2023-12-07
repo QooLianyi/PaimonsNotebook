@@ -1,10 +1,9 @@
 package com.lianyi.paimonsnotebook.ui.screen.items.util
 
 import com.lianyi.paimonsnotebook.common.extension.list.takeFirstIf
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.FightPropertyValueCalculateService
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.FightPropertyValueCalculateService
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.AssociationType
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.ElementType
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.FightProperty
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.WeaponType
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.weapon.WeaponData

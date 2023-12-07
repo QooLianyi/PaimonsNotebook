@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,7 +21,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
+import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.ui.theme.Black
 import com.lianyi.paimonsnotebook.ui.theme.White_40
 
@@ -52,7 +51,7 @@ internal fun InformationItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (iconUrl.isNotEmpty()) {
-            NetworkImage(
+            NetworkImageForMetadata(
                 url = iconUrl, tint = tint,
                 modifier = Modifier
                     .clip(CircleShape)

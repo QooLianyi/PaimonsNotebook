@@ -43,9 +43,9 @@ class SplashScreen : BaseActivity(false) {
 
         viewModel.init {
             goHomeScreen()
+//            goDebugPage()
         }
 
-//        goDebugPage()
 
         setContent {
             PaimonsNotebookTheme {

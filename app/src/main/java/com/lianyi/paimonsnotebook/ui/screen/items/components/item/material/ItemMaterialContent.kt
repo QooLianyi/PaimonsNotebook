@@ -24,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
+import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.common.components.text.AutoSizeText
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.item.Material
@@ -35,13 +35,14 @@ import com.lianyi.paimonsnotebook.ui.theme.White_40
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun ItemMaterialContent(
-    list:List<Material>
-){
-    FlowRow(modifier = Modifier
-        .fillMaxWidth()
-        .radius(4.dp)
-        .background(White_40)
-        .padding(8.dp, 0.dp, 8.dp, 8.dp),
+    list: List<Material>
+) {
+    FlowRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .radius(4.dp)
+            .background(White_40)
+            .padding(8.dp, 0.dp, 8.dp, 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         list.forEach { material ->
@@ -67,7 +68,7 @@ internal fun ItemMaterialContent(
                 )
 
                 Column(modifier = Modifier.fillMaxSize()) {
-                    NetworkImage(
+                    NetworkImageForMetadata(
                         url = material.iconUrl,
                         modifier = Modifier
                             .size(60.dp)

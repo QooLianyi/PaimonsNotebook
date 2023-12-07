@@ -98,6 +98,11 @@ object PreferenceKeys {
         longPreferencesKey("metadataUpdateTime")
     }
 
+    //staticResources渠道
+    val StaticResourcesChannel by lazy {
+        stringPreferencesKey("staticResourcesChannel")
+    }
+
     val widgetsCount by lazy {
         intPreferencesKey("widgetsCount")
     }

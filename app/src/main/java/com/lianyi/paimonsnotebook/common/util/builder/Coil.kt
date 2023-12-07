@@ -6,11 +6,15 @@ import androidx.compose.ui.platform.LocalContext
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.request.ImageRequest
+import okhttp3.Headers
 
 inline fun Context.imageLoader(builder: ImageLoader.Builder.() -> Unit) =
     ImageLoader.Builder(this).apply(builder).build()
 
-inline fun Context.imageRequest(url: String, builder: ImageRequest.Builder.() -> Unit = {}) =
+inline fun Context.imageRequest(
+    url: String,
+    builder: ImageRequest.Builder.() -> Unit = {}
+) =
     ImageRequest.Builder(this).apply {
         data(url)
         memoryCacheKey(url)
@@ -23,4 +27,13 @@ inline fun Context.imageRequest(url: String, builder: ImageRequest.Builder.() ->
 @Composable
 fun requestOf(url: String): ImageRequest {
     return LocalContext.current.imageRequest(url)
+}
+
+@Composable
+fun requestOf(url: String, headers: Headers?): ImageRequest {
+    return LocalContext.current.imageRequest(url) {
+        if (headers != null){
+            headers(headers)
+        }
+    }
 }

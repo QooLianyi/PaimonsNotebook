@@ -9,12 +9,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lianyi.paimonsnotebook.common.database.gacha.data.GachaRecordOverview
 import com.lianyi.paimonsnotebook.common.util.enums.LoadingState
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.AvatarService
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.WeaponService
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.AvatarService
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.WeaponService
 import com.lianyi.paimonsnotebook.common.util.system_service.gotoScreen
 import com.lianyi.paimonsnotebook.ui.screen.gacha.data.GachaOverviewListItem
 import com.lianyi.paimonsnotebook.ui.screen.gacha.service.GachaRecordService
-import com.lianyi.paimonsnotebook.ui.screen.gacha.util.UIGFHelper
+import com.lianyi.paimonsnotebook.common.util.metadata.genshin.uigf.UIGFHelper
 import com.lianyi.paimonsnotebook.ui.screen.gacha.view.GachaRecordOptionScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -3,7 +3,12 @@ package com.lianyi.paimonsnotebook.ui.screen.home.components.home
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -79,7 +84,7 @@ internal fun HomeContent(
 
 
             //近期活动
-            if(nearActivity.isNotEmpty()){
+            if (nearActivity.isNotEmpty()) {
                 item {
                     TitleText(
                         text = "近期活动",
@@ -101,8 +106,9 @@ internal fun HomeContent(
                             type = DiskCacheDataType.Temp,
                             lastUseFrom = "首页"
                         )
-                    ) { nearActivity ->
-                        goPostDetail(nearActivity.url, PostType.Notice)
+                    ) { url ->
+                        println("before goPostDetail")
+                        goPostDetail(url, PostType.Notice)
                     }
                 }
             }
@@ -132,8 +138,8 @@ internal fun HomeContent(
                         type = DiskCacheDataType.Temp,
                         lastUseFrom = "首页"
                     )
-                ) { data ->
-                    goPostDetail(data.post_id, PostType.Notice)
+                ) { postId ->
+                    goPostDetail(postId, PostType.Notice)
                 }
             }
         }

@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
+import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.theme.Black
 
@@ -46,7 +46,7 @@ internal fun AbyssOverviewInformationItem(
             if (url.isNotBlank()) {
                 Spacer(modifier = Modifier.width(6.dp))
 
-                NetworkImage(url = url, modifier = Modifier
+                NetworkImageForMetadata(url = url, modifier = Modifier
                     .clip(CircleShape)
                     .size(24.dp))
             }

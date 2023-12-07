@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.layout.card.MaterialCard
-import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
+import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.common.components.text.AutoSizeText
 import com.lianyi.paimonsnotebook.common.components.text.TitleText
 import com.lianyi.paimonsnotebook.common.components.widget.ExpansionIndicator
@@ -123,7 +123,7 @@ fun GachaRecordCard(
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                NetworkImage(
+                                NetworkImageForMetadata(
                                     url = item.iconUrl,
                                     modifier = Modifier
                                         .radius(4.dp)

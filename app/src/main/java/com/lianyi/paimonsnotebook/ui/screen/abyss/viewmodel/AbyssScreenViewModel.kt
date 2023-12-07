@@ -13,8 +13,8 @@ import com.lianyi.paimonsnotebook.common.database.user.util.AccountHelper
 import com.lianyi.paimonsnotebook.common.extension.intent.setComponentName
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.common.util.enums.LoadingState
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.AvatarService
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.MonsterService
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.AvatarService
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.MonsterService
 import com.lianyi.paimonsnotebook.common.view.HoyolabWebActivity
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.binding.UserGameRoleData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.GameRecordClient

@@ -13,7 +13,7 @@ import com.lianyi.paimonsnotebook.common.extension.list.split
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.util.data_store.dataStoreValuesFirst
 import com.lianyi.paimonsnotebook.common.util.image.PaimonsNotebookImageLoader
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.MaterialService
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.MaterialService
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.QualityType
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.item.Material

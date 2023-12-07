@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
+import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.common.util.compose.remember.rememberStatusBarHeightDp
 import com.lianyi.paimonsnotebook.ui.theme.Black_60
 
@@ -25,7 +25,7 @@ import com.lianyi.paimonsnotebook.ui.theme.Black_60
 @Composable
 internal fun ItemInformationContentLayout(
     imgUrl: String,
-    enabledItemShadow:Boolean = false,
+    enabledItemShadow: Boolean = false,
     itemBackgroundResId: Int = -1,
     itemImageContentScale: ContentScale = ContentScale.Crop,
     content: @Composable BoxWithConstraintsScope.() -> Unit
@@ -48,7 +48,7 @@ internal fun ItemInformationContentLayout(
             contentScale = ContentScale.FillHeight
         )
 
-        if(itemBackgroundResId != -1){
+        if (itemBackgroundResId != -1) {
             Image(
                 painter = painterResource(id = itemBackgroundResId), contentDescription = null,
                 modifier = Modifier
@@ -58,8 +58,8 @@ internal fun ItemInformationContentLayout(
             )
         }
 
-        if(enabledItemShadow){
-            NetworkImage(
+        if (enabledItemShadow) {
+            NetworkImageForMetadata(
                 url = imgUrl,
                 modifier = Modifier
                     .offset(y = 6.dp)
@@ -71,7 +71,7 @@ internal fun ItemInformationContentLayout(
             )
         }
 
-        NetworkImage(
+        NetworkImageForMetadata(
             url = imgUrl,
             modifier = Modifier
                 .fillMaxWidth()

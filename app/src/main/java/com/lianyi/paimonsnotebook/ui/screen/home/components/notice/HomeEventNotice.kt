@@ -2,7 +2,12 @@ package com.lianyi.paimonsnotebook.ui.screen.home.components.notice
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -25,10 +30,10 @@ internal fun HomeEventNotice(
     item: OfficialRecommendedPostsData.OfficialRecommendedPost,
     modifier: Modifier = Modifier,
     diskCache: DiskCache,
-    block: (OfficialRecommendedPostsData.OfficialRecommendedPost) -> Unit,
+    block: (String) -> Unit,
 ) {
     Box(modifier = modifier.clickable {
-        block(item)
+        block(item.post_id)
     }) {
 
         NetworkImage(

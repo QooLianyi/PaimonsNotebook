@@ -10,8 +10,8 @@ import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.util.enums.LoadingState
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.AvatarService
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.MaterialService
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.AvatarService
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.MaterialService
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.ElementType
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.format.AvatarSkillFormat

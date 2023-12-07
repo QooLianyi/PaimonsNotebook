@@ -210,6 +210,9 @@ class MiHoYoJSInterface(
     }
 
     private fun callbackScript(callback: String, payload: String? = null) {
+
+        println("callback = ${callback}")
+
         if (callback.isBlank()) {
             return
         }
@@ -225,6 +228,8 @@ class MiHoYoJSInterface(
     @JavascriptInterface
     fun postMessage(str: String) {
         val param = JSON.parse<JsParams<Any?>>(str)
+
+        println("param = ${str}")
 
         CoroutineScope(Dispatchers.IO).launch {
             val result = tryGetJsResultFromJsParam(param)

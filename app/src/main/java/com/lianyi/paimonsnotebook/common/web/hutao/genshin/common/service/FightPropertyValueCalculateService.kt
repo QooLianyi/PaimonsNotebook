@@ -1,4 +1,4 @@
-package com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao
+package com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service
 
 import com.lianyi.paimonsnotebook.common.extension.list.takeFirstIf
 import com.lianyi.paimonsnotebook.common.util.json.JSON

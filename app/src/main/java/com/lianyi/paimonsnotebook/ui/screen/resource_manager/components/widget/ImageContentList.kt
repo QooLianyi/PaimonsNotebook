@@ -76,7 +76,6 @@ fun ImageContentList(
             autoScrollSpeed,
             60.dp.toPx(),
             currentUserPointerPosition = {
-                println(it)
                 currentUserPointerPosition = it
                 onCurrentUserPointerPositionChange.invoke(it)
             }

@@ -14,6 +14,7 @@ import com.lianyi.paimonsnotebook.common.database.util.PaimonsNoteBookDatabaseHe
 import com.lianyi.paimonsnotebook.common.util.builder.requestOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.Headers
 
 /*
 * 网络图片
@@ -31,6 +32,7 @@ fun NetworkImage(
     contentScale: ContentScale = ContentScale.Fit,
     diskCache: DiskCache = DiskCache(url = url),
     tint: Color? = null,
+    headers: Headers? = null
 ) {
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
@@ -39,7 +41,7 @@ fun NetworkImage(
     }
     Box(modifier = modifier) {
         AsyncImage(
-            model = requestOf(url = url),
+            model = requestOf(url = url, headers = headers),
             modifier = Modifier.fillMaxWidth(),
             contentDescription = null,
             contentScale = contentScale,

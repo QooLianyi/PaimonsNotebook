@@ -47,7 +47,7 @@ import com.lianyi.paimonsnotebook.ui.screen.account.components.dialog.UserGameRo
 import com.lianyi.paimonsnotebook.ui.screen.gacha.service.GachaItemsExportService
 import com.lianyi.paimonsnotebook.ui.screen.gacha.service.GachaItemsImportService
 import com.lianyi.paimonsnotebook.ui.screen.gacha.service.GachaLogService
-import com.lianyi.paimonsnotebook.ui.screen.gacha.util.UIGFHelper
+import com.lianyi.paimonsnotebook.common.util.metadata.genshin.uigf.UIGFHelper
 import com.lianyi.paimonsnotebook.ui.screen.setting.data.OptionListData
 import com.lianyi.paimonsnotebook.ui.theme.Black_60
 import com.lianyi.paimonsnotebook.ui.theme.Gray_F5
@@ -544,7 +544,6 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
     }
 
     private fun nextGachaLogItemType() {
-        println("当前卡池before:${loadingDialogCurrentGacheLogType}")
         loadingDialogCurrentGacheLogType =
             if (++loadingDialogCurrentGacheLogIndex < UIGFHelper.uigfGachaTypeCount) {
                 UIGFHelper.gachaList[loadingDialogCurrentGacheLogIndex]
@@ -553,7 +552,6 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
             }
         loadingDialogProgressBarValue =
             loadingDialogCurrentGacheLogIndex.toFloat() / UIGFHelper.uigfGachaTypeCount
-        println("当前卡池after:${loadingDialogCurrentGacheLogType}")
     }
 
     private fun launchSelectJsonActivity() {

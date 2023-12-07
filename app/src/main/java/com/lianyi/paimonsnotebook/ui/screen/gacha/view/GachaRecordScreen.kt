@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -28,12 +26,10 @@ import com.lianyi.paimonsnotebook.common.util.enums.LoadingState
 import com.lianyi.paimonsnotebook.ui.screen.gacha.components.page.GachaItemsPage
 import com.lianyi.paimonsnotebook.ui.screen.gacha.components.page.GachaRecordEmptyPage
 import com.lianyi.paimonsnotebook.ui.screen.gacha.components.page.GachaRecordOverviewPage
-import com.lianyi.paimonsnotebook.ui.screen.gacha.util.UIGFHelper
+import com.lianyi.paimonsnotebook.common.util.metadata.genshin.uigf.UIGFHelper
 import com.lianyi.paimonsnotebook.ui.screen.gacha.viewmodel.GachaRecordScreenViewModel
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
-import com.lianyi.paimonsnotebook.ui.theme.Black
 import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
-import com.lianyi.paimonsnotebook.ui.theme.Transparent
 
 class GachaRecordScreen : ComponentActivity() {
 

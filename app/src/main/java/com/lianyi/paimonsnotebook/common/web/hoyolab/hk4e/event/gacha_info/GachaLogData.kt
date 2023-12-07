@@ -1,7 +1,7 @@
 package com.lianyi.paimonsnotebook.common.web.hoyolab.hk4e.event.gacha_info
 
 import com.lianyi.paimonsnotebook.common.database.gacha.entity.GachaItems
-import com.lianyi.paimonsnotebook.ui.screen.gacha.util.UIGFHelper
+import com.lianyi.paimonsnotebook.common.util.metadata.genshin.uigf.UIGFHelper
 
 data class GachaLogData(
     val list: List<Item>,

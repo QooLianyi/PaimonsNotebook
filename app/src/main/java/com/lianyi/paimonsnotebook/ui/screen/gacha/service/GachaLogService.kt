@@ -2,7 +2,7 @@ package com.lianyi.paimonsnotebook.ui.screen.gacha.service
 
 import com.lianyi.paimonsnotebook.common.util.file.FileHelper
 import com.lianyi.paimonsnotebook.common.util.json.JSON
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.hutao.MetadataHelper
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util.MetadataHelper
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
 import org.json.JSONArray
 

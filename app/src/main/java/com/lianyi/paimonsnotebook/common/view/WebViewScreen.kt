@@ -11,18 +11,18 @@ import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
 
 class WebViewScreen : BaseActivity() {
 
-    private val webUrl:String by lazy {
-        intent.getStringExtra("url")?:"https://user.mihoyo.com"
+    private val webUrl: String by lazy {
+        intent.getStringExtra("url") ?: "www.baidu.com"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WebView.setWebContentsDebuggingEnabled(true)
-
+        
         setContent {
             PaimonsNotebookTheme(hideNavigationBar = true, hideStatusBar = true) {
                 AndroidView(factory = {
-                    WebView(it).apply{
+                    WebView(it).apply {
                         settings.javaScriptEnabled = true
                         settings.domStorageEnabled = true
                         loadUrl(webUrl)

@@ -10,9 +10,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
+import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
-import com.lianyi.paimonsnotebook.common.util.disk_cache.DiskCacheHelper
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.QualityType
 
 /*
@@ -24,7 +23,7 @@ import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.QualityType
 internal fun ItemIconCard(
     url: String,
     star: Int = 0,
-    borderRadius:Dp = 0.dp,
+    borderRadius: Dp = 0.dp,
     size: Dp = 70.dp
 ) {
     Box(
@@ -42,11 +41,11 @@ internal fun ItemIconCard(
                 .align(Alignment.Center)
         )
 
-        NetworkImage(
+        NetworkImageForMetadata(
             url = url,
             modifier = Modifier
                 .size(size),
-            diskCache = DiskCacheHelper.getMetadataDiskCache(url)
+//            diskCache = DiskCacheHelper.getMetadataDiskCache(url)
         )
     }
 }

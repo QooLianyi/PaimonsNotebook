@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.layout.blur_card.widget.ItemSlider
-import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
+import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.format.FightPropertyFormat
 import com.lianyi.paimonsnotebook.ui.screen.items.components.information.InformationItem
 import com.lianyi.paimonsnotebook.ui.theme.Black
@@ -45,7 +45,7 @@ internal fun ItemPropertyContent(
     compareIconUrl: String,
     propertyList: List<FightPropertyFormat>,
     compareItemPropertyList: List<FightPropertyFormat>,
-    showPromotedButton:Boolean = true,
+    showPromotedButton: Boolean = true,
     onClickCompareAvatar: () -> Unit,
     onLevelChange: (Int) -> Unit,
     onPromotedChange: (Boolean) -> Unit,
@@ -80,7 +80,7 @@ internal fun ItemPropertyContent(
                     .padding(6.dp, 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                NetworkImage(
+                NetworkImageForMetadata(
                     url = iconUrl,
                     modifier = Modifier
                         .size(22.dp)
@@ -127,7 +127,7 @@ internal fun ItemPropertyContent(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if(showPromotedButton){
+            if (showPromotedButton) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_chevron_left_2),
                     contentDescription = null,
