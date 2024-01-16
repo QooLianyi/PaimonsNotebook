@@ -33,7 +33,9 @@ import com.lianyi.paimonsnotebook.ui.screen.account.components.dialog.UserDialog
 import com.lianyi.paimonsnotebook.ui.screen.account.view.AccountManagerScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.components.card.account.AccountInfoCard
 import com.lianyi.paimonsnotebook.ui.screen.home.components.home.HomeContent
+import com.lianyi.paimonsnotebook.ui.screen.home.components.home.HomeContentSimple
 import com.lianyi.paimonsnotebook.ui.screen.home.components.menu.SideBarMenuList
+import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
 import com.lianyi.paimonsnotebook.ui.screen.home.viewmodel.HomeScreenViewModel
 import com.lianyi.paimonsnotebook.ui.screen.setting.util.configuration_enum.HomeScreenDisplayState
 import com.lianyi.paimonsnotebook.ui.screen.setting.view.SettingsScreen
@@ -167,14 +169,17 @@ class HomeScreen : BaseActivity() {
                         ) {
                             when (it) {
                                 HomeScreenDisplayState.Simple -> {
-//                                    HomeContentSimple(
+                                    HomeContentSimple(
 //                                        dailyNoteOverviewList = viewModel.dailyNoteList,
 //                                        gachaRecordOverviewList = viewModel.gachaRecordOverviewList,
 //                                        gachaEventList = viewModel.gachaEventList,
 //                                        eventList = viewModel.eventList,
-//                                        onNavigationClick = {
-//
-//                                        })
+//                                        onNavigationClick = {},
+                                        list = HomeHelper.modalItems
+                                    ) {
+                                        viewModel.navigateScreen(it)
+                                    }
+
                                 }
 
                                 HomeScreenDisplayState.Community -> {
