@@ -12,9 +12,9 @@
 
 - [点击此处查看最新的版本](https://github.com/QooLianyi/PaimonsNotebook/releases/latest)
 
-#### 从JsDelivr获取
+#### 从JsDelivr获取(可能会有延迟,推荐更新后的24小时后访问)
 
-- [点击此处下载最新版本]("https://cdn.jsdelivr.net/gh/QooLianyi/PaimonsNotebook/app/release/app-release.apk")
+- [点击此处下载最新版本](https://cdn.jsdelivr.net/gh/QooLianyi/PaimonsNotebook/app/release/app-release.apk)
 
 ## 特别感谢
 
