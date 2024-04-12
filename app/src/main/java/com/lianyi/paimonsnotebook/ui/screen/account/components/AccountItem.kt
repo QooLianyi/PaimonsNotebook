@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -20,13 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
-import com.lianyi.paimonsnotebook.common.components.text.TitleText
+import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.data.hoyolab.user.User
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.extension.modifier.action.pressureMonitor
 import com.lianyi.paimonsnotebook.common.extension.modifier.animation.shake
 import com.lianyi.paimonsnotebook.common.extension.modifier.padding.paddingEnd
-import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.util.compose.shape.CirclePath
 import com.lianyi.paimonsnotebook.common.util.compose.shape.CirclePathStartPoint
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.binding.UserGameRoleData
@@ -154,11 +152,11 @@ fun AccountItem(
                             .weight(1f),
                         verticalArrangement = Arrangement.Center
                     ) {
-                        TitleText(text = user.userInfo.nickname)
+                        PrimaryText(text = user.userInfo.nickname)
 
                         Spacer(modifier = Modifier.height(3.dp))
 
-                        TitleText(
+                        PrimaryText(
                             text = user.userInfo.uid,
                             fontSize = 14.sp,
                             bold = false

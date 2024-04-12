@@ -113,11 +113,31 @@ object RichTextParser {
         return list
     }
 
+
+    /*
+    * 转换方法,将富文本的json转换为内部的帖子结构内容类
+    * 根据不同的类型分配不同的json
+    * */
     fun parse(
         post: PostFullData.Post
     ): List<PostStructuredContent> {
         val structuredContent = post.post.structured_content
 
+        return parse(
+            structuredContent = structuredContent,
+            vodList = post.vod_list,
+            postContent = post.post.content,
+            viewType = post.post.view_type
+        )
+    }
+
+    //转换方法,将富文本转换为不同的内容
+    fun parse(
+        structuredContent: String,
+        vodList: List<PostFullData.Post.Vod> = listOf(),
+        postContent: String = "",
+        viewType: Int = PostViewType.TYPE_MIXED
+    ): List<PostStructuredContent> {
         val arrays = try {
             JSONArray(structuredContent)
         } catch (_: Exception) {
@@ -126,10 +146,10 @@ object RichTextParser {
 
         val list = mutableListOf<PostStructuredContent>()
 
-        when (post.post.view_type) {
+        when (viewType) {
             PostViewType.TYPE_IMAGE -> {
                 try {
-                    val content = JSON.parse<ViewTypeImageContent>(post.post.content)
+                    val content = JSON.parse<ViewTypeImageContent>(postContent)
                     list += PostStructuredContent.getTextItem(content.describe)
                     list += content.imgs.map {
                         PostStructuredContent.getImageItem(it)
@@ -140,8 +160,8 @@ object RichTextParser {
             }
 
             PostViewType.TYPE_VIDEO -> {
-                list += PostStructuredContent.getTextItem(post.post.content)
-                list += post.vod_list.map {
+                list += PostStructuredContent.getTextItem(postContent)
+                list += vodList.map {
                     PostStructuredContent.getVodItem(structuredVod = it)
                 }
             }
@@ -265,11 +285,13 @@ object RichTextParser {
         return list
     }
 
-    //转换分组
-    fun parseGroup(post: PostFullData.Post): List<Pair<StructuredContentType, List<PostStructuredContent>>> {
-        val list = parse(post)
+    /*
+    * 转换分组,将文本内容合并,如text与link类型
+    * 将其他类型如image,video单独放置
+    * */
 
-        return mutableListOf<Pair<StructuredContentType, List<PostStructuredContent>>>().apply {
+    fun parseGroup(list: List<PostStructuredContent>): List<Pair<StructuredContentType, List<PostStructuredContent>>> =
+        mutableListOf<Pair<StructuredContentType, List<PostStructuredContent>>>().apply {
             var tempList = mutableListOf<PostStructuredContent>()
             list.forEach { postStructuredContent ->
                 when (postStructuredContent.type) {
@@ -300,6 +322,11 @@ object RichTextParser {
                 this += StructuredContentType.Text to tempList
             }
         }
+
+    //转换分组
+    fun parseGroup(post: PostFullData.Post): List<Pair<StructuredContentType, List<PostStructuredContent>>> {
+        val list = parse(post)
+        return parseGroup(list)
     }
 
     private inline fun <reified T> getObject(obj: Any, key: String = ""): T? = when (obj) {

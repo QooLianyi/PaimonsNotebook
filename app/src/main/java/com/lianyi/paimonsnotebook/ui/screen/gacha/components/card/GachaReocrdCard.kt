@@ -29,7 +29,7 @@ import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.layout.card.MaterialCard
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.common.components.text.AutoSizeText
-import com.lianyi.paimonsnotebook.common.components.text.TitleText
+import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.ExpansionIndicator
 import com.lianyi.paimonsnotebook.common.database.gacha.data.GachaRecordOverview
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
@@ -52,7 +52,7 @@ import com.lianyi.paimonsnotebook.ui.theme.Primary
 @Composable
 fun GachaRecordCard(
     item: GachaRecordOverview.Item,
-    gachaOverviewListItems: List<GachaOverviewListItem>
+    gachaOverviewListItems: List<GachaOverviewListItem>,
 ) {
     Column {
         val iconId by remember {
@@ -70,7 +70,7 @@ fun GachaRecordCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                TitleText(text = item.uigfGachaTypeName, fontSize = 16.sp)
+                PrimaryText(text = item.uigfGachaTypeName, fontSize = 16.sp)
 
                 Row {
 

@@ -26,6 +26,10 @@ class SettingsScreen : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel.requestInstallPermission = this::requestInstallPermission
+        viewModel.checkInstallPermission = this::checkInstallPermission
+
         setContent {
             PaimonsNotebookTheme(this) {
                 Content()
@@ -49,7 +53,7 @@ class SettingsScreen : BaseActivity() {
                     SettingOptionGroup(groupName = "用户", list = viewModel.userSettings)
                     SettingOptionGroup(groupName = "存储", list = viewModel.storageSettings)
                     SettingOptionGroup(groupName = "数据", list = viewModel.dataSettings)
-//                    SettingOptionGroup(groupName = "桌面组件", list = viewModel.appwidgetSettings)
+                    SettingOptionGroup(groupName = "其他", list = viewModel.othersSettings)
                     SettingOptionGroup(groupName = "关于", list = viewModel.about)
                 }
             }

@@ -1,5 +1,6 @@
 package com.lianyi.paimonsnotebook.common.web.bridge
 
+import android.os.Build
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import com.lianyi.paimonsnotebook.common.core.enviroment.CoreEnvironment
@@ -7,7 +8,6 @@ import com.lianyi.paimonsnotebook.common.data.hoyolab.user.User
 import com.lianyi.paimonsnotebook.common.extension.intent.setComponentName
 import com.lianyi.paimonsnotebook.common.util.hoyolab.DynamicSecret
 import com.lianyi.paimonsnotebook.common.util.json.JSON
-import com.lianyi.paimonsnotebook.common.util.system_service.SystemService
 import com.lianyi.paimonsnotebook.common.view.HoyolabWebActivity
 import com.lianyi.paimonsnotebook.common.web.bridge.model.ActionTypePayload
 import com.lianyi.paimonsnotebook.common.web.bridge.model.CookieTokenPayload
@@ -125,15 +125,25 @@ class MiHoYoJSInterface(
             data = mapOf(
                 "x-rpc-client_type" to CoreEnvironment.ClientType,
                 "x-rpc-device_id" to CoreEnvironment.DeviceId,
-                "x-rpc-app_version" to CoreEnvironment.XrpcVersion
+                "x-rpc-app_version" to CoreEnvironment.XrpcVersion,
+                "x-rpc-app_id" to "bll8iq97cem8",
+                "x-rpc-sdk_version" to "2.20.2",
+                "x-rpc-device_fp" to CoreEnvironment.DeviceFp,
+                "Content-Type" to "application/json",
+
+                "x-rpc-device_name" to Build.DEVICE,
+                "x-rpc-device_model" to Build.MODEL,
+                "x-rpc-sys_version" to Build.VERSION.RELEASE,
             )
         )
     }
 
     private fun getStatusBarHeight(params: JsParams<Any?>): IJsResult {
         return JsResult(
+            //始终将状态栏的高度设置为24
             data = mapOf(
-                "statusBarHeight" to SystemService.statusBarHeight,
+//                "statusBarHeight" to SystemService.statusBarHeight,
+                "statusBarHeight" to 24,
             )
         )
     }

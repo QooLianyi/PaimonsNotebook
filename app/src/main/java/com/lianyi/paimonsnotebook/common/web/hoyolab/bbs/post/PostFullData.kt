@@ -124,6 +124,7 @@ data class PostFullData(
             val structured_content: String,
             val structured_content_rows: List<Any>,
             val subject: String,
+            val summary: String,
             val topic_ids: List<Int>,
             val uid: String,
             val updated_at: Int,

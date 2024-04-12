@@ -6,6 +6,7 @@ import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.database.app_widget_binding.entity.AppWidgetBinding
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.daily_note.DailyNoteWidgetData
 import com.lianyi.paimonsnotebook.ui.widgets.core.BaseRemoteViews
+import com.lianyi.paimonsnotebook.ui.widgets.util.RemoteViewsContentHelper
 import com.lianyi.paimonsnotebook.ui.widgets.widget.AppWidgetCommon2X1
 
 class DailyNoteWidget2X1RemoteViews(
@@ -27,7 +28,7 @@ class DailyNoteWidget2X1RemoteViews(
         )
         setTextViewText(
             R.id.daily_task_text,
-            "${dailyNoteWidgetData.finished_task_num}/${dailyNoteWidgetData.total_task_num}"
+            RemoteViewsContentHelper.getDailyTaskContentByState(dailyNoteWidgetData)
         )
         setTextViewText(
             R.id.home_coin_text,

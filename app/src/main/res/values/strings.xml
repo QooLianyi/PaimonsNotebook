@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">派蒙笔记本-preview</string>
+    <string name="app_name">派蒙笔记本</string>
 
     <string name="title_activity_typography_screen">TypographyScreen</string>
     <string name="title_activity_character_list_screen">CharacterListScreen</string>

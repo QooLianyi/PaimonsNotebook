@@ -2,16 +2,19 @@ package com.lianyi.paimonsnotebook.common.core.base
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import com.lianyi.paimonsnotebook.common.core.listener.ScreenOrientationEventListener
-import com.lianyi.paimonsnotebook.common.extension.activity.setSystemBarAppearance
+
 
 /*
 * Activity基类
@@ -87,6 +90,17 @@ open class BaseActivity(
 
     //申请存储权限
     protected fun requestStoragePermission() = requestPermissions(storagePermissions)
+
+    //检查安装权限
+    //true为可以安装
+    protected fun checkInstallPermission() = packageManager.canRequestPackageInstalls()
+
+    //申请安装权限
+    protected fun requestInstallPermission(){
+        val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
+        intent.setData(Uri.fromParts("package", packageName,null))
+        startActivity(intent)
+    }
 
     //检查权限 true为全部获取
     protected fun checkPermissions(

@@ -5,6 +5,8 @@ import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.database.gacha.entity.GachaItems
 import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
+import com.lianyi.paimonsnotebook.common.util.data_store.DataStoreHelper
+import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.util.metadata.genshin.uigf.UIGFHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -24,14 +26,14 @@ class GachaItemsExportService(
     /*
     * 祈愿记录一页条数
     * */
-    private val GachaRecordPageSize = 2000
+    private val queryPageSize = 2000
 
     private val dao by lazy {
         database.gachaItemsDao
     }
 
     //导出当前用户的祈愿记录
-    suspend fun exportGachaRecordToUIGFJson(gameUid: String,saveFile: File) {
+    suspend fun exportGachaRecordToUIGFJson(gameUid: String, saveFile: File) {
         if (gameUid.isBlank()) {
             "导出失败:当前还未选择当前记录的账号".warnNotify()
             return
@@ -47,7 +49,7 @@ class GachaItemsExportService(
         val item = gachaLogItemList.first()
 
         withContext(Dispatchers.IO) {
-            exportUIGFJsonFile(saveFile,item)
+            exportUIGFJsonFile(saveFile, item)
         }
     }
 
@@ -58,6 +60,11 @@ class GachaItemsExportService(
             val writer = JsonWriter(FileWriter(saveFile)).apply {
                 setIndent("  ")
             }
+
+            val region =
+                DataStoreHelper.getLocalDataMap<String, Long>(PreferenceKeys.GachaRecordGameUidRegionMap)[item.uid]
+                    ?: UIGFHelper.getRegionTimeZoneByUid(item.uid)
+
             writer.apply {
                 beginObject()
                 name("info")
@@ -68,6 +75,7 @@ class GachaItemsExportService(
                 name(UIGFHelper.Field.Info.ExportApp).value(PaimonsNotebookApplication.name)
                 name(UIGFHelper.Field.Info.ExportAppVersion).value(PaimonsNotebookApplication.version)
                 name(UIGFHelper.Field.Info.UIGFVersion).value(UIGFHelper.UIGF_VERSION)
+                name(UIGFHelper.Field.Info.RegionTimeZone).value(region)
                 endObject()
 
                 name("list")
@@ -77,7 +85,7 @@ class GachaItemsExportService(
                 var page = 0
 
                 do {
-                    list = dao.getGachaLogItemByUidPage(item.uid, page, GachaRecordPageSize)
+                    list = dao.getGachaLogItemByUidPage(item.uid, page, queryPageSize)
                     list.forEach { uigfGachaItem ->
                         beginObject()
                         name(UIGFHelper.Field.Item.UigfGachaType).value(uigfGachaItem.uigf_gacha_type)
@@ -92,7 +100,7 @@ class GachaItemsExportService(
                         endObject()
                     }
                     page++
-                } while (list.size >= GachaRecordPageSize)
+                } while (list.size >= queryPageSize)
 
                 endArray()
                 endObject()

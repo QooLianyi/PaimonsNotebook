@@ -19,13 +19,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
@@ -37,7 +35,6 @@ import com.lianyi.paimonsnotebook.ui.screen.items.components.widget.BlurButton
 import com.lianyi.paimonsnotebook.ui.screen.items.util.ItemFilterType
 import com.lianyi.paimonsnotebook.ui.screen.items.viewmodel.filter.ItemFilterViewModel
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
-import com.lianyi.paimonsnotebook.ui.theme.Black_60
 import com.lianyi.paimonsnotebook.ui.theme.BlurCardBackgroundColor
 
 @Composable
@@ -61,7 +58,7 @@ internal fun <T> ItemFilterContent(
                 .background(BackGroundColor)
         ) {
             StatusBarPaddingSpacer()
-            
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -83,9 +80,7 @@ internal fun <T> ItemFilterContent(
                         .height(36.dp)
                         .weight(1f),
                     contentAlignment = Alignment.CenterStart,
-                    placeholder = {
-                        Text(text = "按名称筛选", fontSize = 14.sp, color = Black_60)
-                    }
+                    placeholder = "按名称筛选"
                 )
 
                 if (itemFilterViewModel.showClearFilter) {

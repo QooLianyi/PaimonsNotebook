@@ -16,7 +16,7 @@ import com.lianyi.paimonsnotebook.ui.screen.gacha.data.GachaOverviewListItem
 @Composable
 fun GachaRecordOverviewPage(
     gachaRecordOverview: GachaRecordOverview,
-    overviewListItemMap: Map<String,List<GachaOverviewListItem>>
+    overviewListItemMap: Map<String, List<GachaOverviewListItem>>
 ) {
 
     ContentSpacerLazyColumn(
@@ -30,7 +30,7 @@ fun GachaRecordOverviewPage(
                     overviewListItemMap[it.uigfGachaType] ?: listOf()
                 }
             }
-            GachaRecordCard(it,items)
+            GachaRecordCard(it, items)
         }
     }
 

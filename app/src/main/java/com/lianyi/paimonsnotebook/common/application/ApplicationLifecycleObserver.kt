@@ -24,8 +24,7 @@ open class ApplicationLifecycleObserver : DefaultLifecycleObserver {
     }
 
     private fun sendCommandForDebugPanel(command: String) {
-        val permission = OverlayHelper.checkPermission()
-        if (FileHelper.debug && permission) {
+        if (FileHelper.debug && OverlayHelper.checkPermission()) {
             PaimonsNotebookApplication.context.startService(
                 Intent(
                     PaimonsNotebookApplication.context,

@@ -80,11 +80,6 @@ suspend fun Request.getAsByte(client: OkHttpClient = emptyOkHttpClient) =
         try {
             client.newCall(this@getAsByte).await().body?.byteStream()
         } catch (e: Exception) {
-            val (code, msg) = if (e is SocketTimeoutException || e is UnknownHostException) {
-                ResultData.NETWORK_ERROR to "网络异常"
-            } else {
-                ResultData.UNKNOWN_EXCEPTION to "未知错误"
-            }
             null
         }
     }
@@ -129,7 +124,7 @@ suspend fun Request.getAsByteResult(client: OkHttpClient = emptyOkHttpClient) =
 
 //获取原生json
 suspend fun <T> Request.getAsJsonNative(
-    type: ParameterizedType, client: OkHttpClient = defaultOkHttpClient
+    type: ParameterizedType, client: OkHttpClient = emptyOkHttpClient
 ): T? = try {
     Gson().fromJson(getAsText(client), type)
 } catch (e: Exception) {

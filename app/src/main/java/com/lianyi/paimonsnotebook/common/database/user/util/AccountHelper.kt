@@ -46,9 +46,9 @@ object AccountHelper {
     //用户数据库实体列表
     private val userEntityList = mutableListOf<UserEntity>()
 
-    private val HasUserFlow = MutableStateFlow(false)
-
-    val hasUserFlow = HasUserFlow.asStateFlow()
+//    private val HasUserFlow = MutableStateFlow(false)
+//
+//    val hasUserFlow = HasUserFlow.asStateFlow()
 
     private val dao = PaimonsNotebookDatabase.database.userDao
 
@@ -82,7 +82,7 @@ object AccountHelper {
                 dao.getUserListFlow().collect {
                     userEntityList.clear()
                     userEntityList.addAll(it)
-                    HasUserFlow.emit(userEntityList.isNotEmpty())
+//                    HasUserFlow.emit(userEntityList.isNotEmpty())
                     setUserListData()
                 }
             }

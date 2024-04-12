@@ -40,12 +40,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
 import com.lianyi.paimonsnotebook.common.components.text.DividerText
 import com.lianyi.paimonsnotebook.common.components.text.FoldTextContent
-import com.lianyi.paimonsnotebook.common.components.text.TitleText
+import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.util.html.RichTextParser
@@ -83,7 +82,7 @@ internal fun PostStructureContentListTest(
     ) {
         item {
             Column(modifier = Modifier.fillMaxWidth()) {
-                TitleText(text = postFull.post.post.subject, fontSize = 18.sp)
+                PrimaryText(text = postFull.post.post.subject, fontSize = 18.sp)
 
                 DividerText(
                     text = "文章发表:${

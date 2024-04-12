@@ -24,11 +24,15 @@ object CoreEnvironment {
             launch {
                 dataStoreValues {
                     DeviceId = it[PreferenceKeys.DeviceId] ?: ""
+                    BBSDeviceId = it[PreferenceKeys.BBSDeviceId] ?: ""
+
 
                     if (DeviceId.isBlank()) {
-                        launch {
-                            generateDeviceId()
-                        }
+                        generateDeviceId()
+                    }
+
+                    if (BBSDeviceId.isBlank()) {
+                        generateBBSDeviceId()
                     }
                 }
             }
@@ -49,7 +53,7 @@ object CoreEnvironment {
     const val GameBizGenshin = "hk4e_cn"
 
     // 米游社 Rpc 版本
-    const val XrpcVersion = "2.64.1"
+    const val XrpcVersion = "2.70.1"
 
     val ClientType = EnvironmentClientType.BBS
 
@@ -73,9 +77,25 @@ object CoreEnvironment {
     var DeviceId = ""
         private set
 
+    var BBSDeviceId = ""
+        private set
+
     //生成设备id
     private suspend fun generateDeviceId() {
         PreferenceKeys.DeviceId.editValue(UUID.randomUUID().toString())
+    }
+
+    private suspend fun generateBBSDeviceId() {
+        val id = getRandomChars(16)
+        PreferenceKeys.BBSDeviceId.editValue(id)
+    }
+
+    private fun getRandomChars(times: Int) = with(StringBuilder()) {
+        val range = "abcdefghijklmnopqrstuvwxyz1234567890"
+        repeat(times) {
+            this.append(range.random())
+        }
+        this.toString()
     }
 
 }

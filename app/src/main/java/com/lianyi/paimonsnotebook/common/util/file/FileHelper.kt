@@ -1,7 +1,5 @@
 package com.lianyi.paimonsnotebook.common.util.file
 
-import android.Manifest
-import android.app.Activity
 import android.content.ContentResolver
 import android.media.MediaScannerConnection
 import android.net.Uri
@@ -11,7 +9,6 @@ import android.os.FileUtils
 import android.webkit.MimeTypeMap
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.util.image.PaimonsNotebookImageLoader
-import com.lianyi.paimonsnotebook.common.util.system_service.SystemService
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -25,39 +22,39 @@ object FileHelper {
         PaimonsNotebookApplication.context
     }
 
-    val privateStoragePath by lazy {
+    private val privateStoragePath by lazy {
         context.getExternalFilesDir(null)
     }
 
-    //如果有外部存储权限就存储到外部的downloads文件夹
-    private val rootPath by lazy {
-        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+    //如果有外部存储权限就存储到外部的documents文件夹
+    private val rootPath: File?
+        get() = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
             ?.resolve("PaimonsNotebook") ?: privateStoragePath
-    }
 
     //存储图片的路径
-    val saveImagePath by lazy {
-        rootPath?.resolve("image")!!
-    }
+    private val saveImagePath
+        get() =
+            rootPath?.resolve("image")!!
 
     //存储元数据的路径
-    val saveFileMetadataPath by lazy {
-        privateStoragePath?.resolve("metadata")!!
-    }
+    private val saveFileMetadataPath
+        get() =
+            privateStoragePath?.resolve("metadata")!!
 
-    //存储元数据图片的路径
-    val metadataImagesPath by lazy {
-        saveFileMetadataPath.resolve("images")
-    }
-
-    val saveFileUIGFPath by lazy {
-        privateStoragePath?.resolve("uigf")!!
-    }
+    //存储安装包的路径
+    val saveFilePackagePath
+        get() =
+            privateStoragePath?.resolve("package")!!
 
     //存储祈愿记录的路径
-    val saveFileGachaItemsPath by lazy {
-        rootPath?.resolve("gacha")!!
-    }
+    private val saveFileGachaItemsPath
+        get() =
+            rootPath?.resolve("gacha")!!
+
+    //存储成就记录的路径
+    private val saveFileAchievementsPath
+        get() =
+            rootPath?.resolve("achievements")!!
 
     /*
     * 从coil本地磁盘缓存中保存图片
@@ -151,22 +148,14 @@ object FileHelper {
         }
     }
 
-    fun getFile(rootPath: File, fileName: String): File? {
-        val file = File(rootPath, fileName)
-        return if (file.exists()) {
-            file
-        } else {
-            null
-        }
-    }
-
-    fun getSaveFile(rootPath: File, fileName: String): File {
+    fun getFile(rootPath: File, fileName: String): File {
         if (!rootPath.exists()) {
             rootPath.mkdirs()
         }
 
         return File(rootPath, fileName)
     }
+
 
     /*
     * 以流的方式保存文件
@@ -209,45 +198,45 @@ object FileHelper {
         }
     }
 
-
-    //获取元数据存储文件
-    fun getMetadataSaveFile(fileName: String): File {
-        if (!saveFileMetadataPath.exists()) {
-            saveFileMetadataPath.mkdirs()
+    //获取存储的文件
+    private fun getSaveFile(
+        rootPath: File,
+        fileName: String,
+        onExistsDelete: Boolean = true
+    ): File {
+        if (!rootPath.exists()) {
+            rootPath.mkdirs()
         }
 
-        return File(saveFileMetadataPath, "${fileName}.json")
-    }
+        val file = File(rootPath, fileName)
 
-
-    //获取uigf存储文件
-    fun getUIGFJsonSaveFile(name: String): File {
-        if (!saveFileGachaItemsPath.exists()) {
-            saveFileGachaItemsPath.mkdirs()
-        }
-
-        val file = File(saveFileGachaItemsPath, "${name}.json")
-
-        if (file.exists()) {
+        if (file.exists() && onExistsDelete) {
             file.delete()
         }
 
         return file
     }
 
-    //检查所需的权限
-    private fun checkPermission(): Boolean {
-        return SystemService.checkPermission(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-    }
+    /*
+    * 获取元数据存储文件
+    * 验证元数据时也会用到该方法,onExistsDelete必须为false,否则会导致重复下载导致无法进入程序
+    * */
+    fun getMetadataSaveFile(fileName: String) =
+        getSaveFile(saveFileMetadataPath, "${fileName}.json", false)
 
-    private fun requestPermission(activity: Activity) = SystemService.requestPermission(
-        activity,
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-    )
+
+    //获取uigf存储文件
+    fun getUIGFJsonSaveFile(name: String) =
+        getSaveFile(saveFileGachaItemsPath, "${name}.json")
+
+    //获取uiaf存储文件
+    fun getUIAFJsonSaveFile(name: String) =
+        getSaveFile(saveFileAchievementsPath, "${name}.json")
+
+    //获取安装包存储文件
+    fun getPackageSaveFile(name: String) =
+        getSaveFile(saveFilePackagePath, "${name}.apk")
+
 
     private val df
         get() =

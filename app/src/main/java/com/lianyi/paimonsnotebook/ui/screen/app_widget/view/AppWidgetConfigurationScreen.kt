@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
@@ -35,7 +34,7 @@ import com.lianyi.paimonsnotebook.common.components.dialog.InformationDialog
 import com.lianyi.paimonsnotebook.common.components.layout.ShowIf
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.popup.ColorPickerPopup
-import com.lianyi.paimonsnotebook.common.components.text.TitleText
+import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.TextButton
 import com.lianyi.paimonsnotebook.common.components.widget.TextSlider
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
@@ -73,7 +72,6 @@ class AppWidgetConfigurationScreen : BaseActivity() {
         }
     }
 
-    @Preview
     @Composable
     private fun Content() {
         val scope = rememberCoroutineScope()
@@ -108,7 +106,7 @@ class AppWidgetConfigurationScreen : BaseActivity() {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        TitleText(text = viewModel.configuration.remoteViewsName, fontSize = 16.sp)
+                        PrimaryText(text = viewModel.configuration.remoteViewsName, fontSize = 16.sp)
 
                         ShowIf(show = viewModel.configuration.showChangeWidget) {
                             Row(

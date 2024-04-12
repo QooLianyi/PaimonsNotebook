@@ -3,11 +3,15 @@ package com.lianyi.paimonsnotebook.common.components.widget
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateOffsetAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,7 +21,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.lianyi.paimonsnotebook.ui.theme.*
+import com.lianyi.paimonsnotebook.ui.theme.Black_10
 
 @Composable
 fun Switch(
@@ -26,7 +30,7 @@ fun Switch(
     checkedTrackColor: Color,
     uncheckedThumbColor: Color,
     uncheckedTrackColor: Color,
-    borderColor:Color = Black_10,
+    borderColor: Color = Black_10,
     onValueChange: (Boolean) -> Unit,
 ) {
     val trackColor by animateColorAsState(targetValue = if (checked) checkedTrackColor else uncheckedTrackColor)
@@ -40,7 +44,7 @@ fun Switch(
         modifier = Modifier
             .clip(CircleShape)
             .background(trackColor)
-            .border(borderDp,borderColor, CircleShape)
+            .border(borderDp, borderColor, CircleShape)
             .clickable {
                 onValueChange(!checked)
             }
@@ -69,22 +73,31 @@ fun Switch(
     checkedTrackColor: Color,
     uncheckedThumbColor: Color,
     uncheckedTrackColor: Color,
-    borderColor:Color = Black_10,
+    borderColor: Color = Black_10,
     barWidth: Dp = 45.dp,
-    barHeight:Dp = 20.dp
+    barHeight: Dp = 20.dp
 ) {
-    val trackColor by animateColorAsState(targetValue = if (checked) checkedTrackColor else uncheckedTrackColor)
-    val thumbColor by animateColorAsState(targetValue = if (checked) checkedThumbColor else uncheckedThumbColor)
-    val thumbScale by animateFloatAsState(targetValue = if (checked) 1f else .8f)
+    val trackColor by animateColorAsState(
+        targetValue = if (checked) checkedTrackColor else uncheckedTrackColor,
+        label = ""
+    )
+    val thumbColor by animateColorAsState(
+        targetValue = if (checked) checkedThumbColor else uncheckedThumbColor,
+        label = ""
+    )
+    val thumbScale by animateFloatAsState(targetValue = if (checked) 1f else .8f, label = "")
 
-    val borderDp by animateDpAsState(targetValue = if (checked) 0.dp else 1.dp)
-    val offset by animateDpAsState(targetValue = if (checked) barWidth - barHeight - 4.dp else 0.dp)
+    val borderDp by animateDpAsState(targetValue = if (checked) 0.dp else 1.dp, label = "")
+    val offset by animateDpAsState(
+        targetValue = if (checked) barWidth - barHeight - 4.dp else 0.dp,
+        label = ""
+    )
 
     Box(
         modifier = Modifier
             .clip(CircleShape)
             .background(trackColor)
-            .border(borderDp,borderColor, CircleShape)
+            .border(borderDp, borderColor, CircleShape)
             .width(barWidth)
             .padding(2.dp)
     ) {

@@ -2,10 +2,12 @@ package com.lianyi.paimonsnotebook.ui.screen.gacha.viewmodel
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.Text
@@ -20,8 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.components.dialog.LazyColumnDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.PropertiesDialog
+import com.lianyi.paimonsnotebook.common.components.text.InfoText
 import com.lianyi.paimonsnotebook.common.components.widget.InputTextFiled
 import com.lianyi.paimonsnotebook.common.data.hoyolab.PlayerUid
 import com.lianyi.paimonsnotebook.common.data.hoyolab.user.User
@@ -31,9 +35,11 @@ import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.common.extension.string.notify
 import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
+import com.lianyi.paimonsnotebook.common.util.data_store.DataStoreHelper
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.util.data_store.dataStoreValues
 import com.lianyi.paimonsnotebook.common.util.file.FileHelper
+import com.lianyi.paimonsnotebook.common.util.metadata.genshin.uigf.UIGFHelper
 import com.lianyi.paimonsnotebook.common.util.system_service.SystemService
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
 import com.lianyi.paimonsnotebook.common.web.ApiEndpoints
@@ -47,7 +53,7 @@ import com.lianyi.paimonsnotebook.ui.screen.account.components.dialog.UserGameRo
 import com.lianyi.paimonsnotebook.ui.screen.gacha.service.GachaItemsExportService
 import com.lianyi.paimonsnotebook.ui.screen.gacha.service.GachaItemsImportService
 import com.lianyi.paimonsnotebook.ui.screen.gacha.service.GachaLogService
-import com.lianyi.paimonsnotebook.common.util.metadata.genshin.uigf.UIGFHelper
+import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
 import com.lianyi.paimonsnotebook.ui.screen.setting.data.OptionListData
 import com.lianyi.paimonsnotebook.ui.theme.Black_60
 import com.lianyi.paimonsnotebook.ui.theme.Gray_F5
@@ -56,7 +62,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
-
 
 class GachaRecordOptionScreenViewModel : ViewModel() {
 
@@ -235,7 +240,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
                         title = "请输入祈愿记录Url",
                         titleSpacer = 20.dp,
                         onClickButton = {
-                            if (it == 0) {
+                            if (it == 1) {
                                 showLoadingDialog = true
                                 getGaLogFromUrl()
                             }
@@ -250,7 +255,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
                                 onValueChange = this@GachaRecordOptionScreenViewModel::inputDialogValue::set,
                                 inputFieldHeight = 200.dp,
                                 backgroundColor = Gray_F5,
-                                padding = 8.dp,
+                                padding = PaddingValues(8.dp),
                                 placeholder = {
                                     Text(
                                         text = "请输入祈愿记录Url,并确保各个参数的有效性",
@@ -276,9 +281,9 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
                         title = "UIGF Json信息",
                         properties = importUIGFJsonPropertyList,
                         onDismissRequest = { showImportUIGFJsonResultDialog = false },
-                        buttons = arrayOf("确认导入", "取消"),
+                        buttons = arrayOf("取消", "确认导入"),
                         onButtonClick = {
-                            if (it == 0) saveGachaLogToDB()
+                            if (it == 1) saveGachaLogToDB()
                             showImportUIGFJsonResultDialog = false
                         }
                     )
@@ -306,9 +311,23 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
 
     val aboutSettings = listOf(
         OptionListData(
+            name = "当前UIGF版本",
+            description = "派蒙笔记本当前的UIGF版本",
+            onClick = {
+                "${PaimonsNotebookApplication.name}当前的UIGF版本是${UIGFHelper.UIGF_VERSION}".notify()
+            },
+            slot = {
+                InfoText(text = UIGFHelper.UIGF_VERSION)
+            }
+        ),
+        OptionListData(
             name = "关于UIGF",
             description = "点击以查看UIGF的介绍文档以及支持UIGF的相关软件",
             onClick = {
+                HomeHelper.goActivityByIntent {
+                    action = Intent.ACTION_VIEW
+                    data = Uri.parse(UIGFHelper.UIGF_HOME_PAGE)
+                }
             }
         )
     )
@@ -601,7 +620,8 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
                         "记录来源" to export_app,
                         "导出时间" to TimeHelper.getTime(export_timestamp),
                         "导出程序版本" to export_app_version,
-                        "UIGF版本" to uigf_version
+                        "UIGF版本" to uigf_version,
+                        "时区" to "$region_time_zone",
                     )
 
                 showImportUIGFJsonResultDialog = true
@@ -619,13 +639,20 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
         loadingDialogDescription = "正在将数据保存至本地数据库"
 
         viewModelScope.launch(Dispatchers.IO) {
-
             importService.importGachaRecordFromUIGFJson(activityResultFile!!, gachaLogService)
+
+            val uigfJsonInfo = importService.tryGetUIGFJsonInfo(activityResultFile!!)
+
+            val gameUid = uigfJsonInfo?.uid ?: ""
+
+            //将时区存储本地
+            DataStoreHelper.applyLocalDataMap(PreferenceKeys.GachaRecordGameUidRegionMap) {
+                this[gameUid] = uigfJsonInfo?.region_time_zone ?: 0
+            }
 
             showLoadingDialog = false
             "祈愿记录导入结束".notify(closeable = true)
 
-            val gameUid = importService.tryGetUIGFJsonInfo(activityResultFile!!)?.uid ?: ""
             resetLocalValues(gameUid)
         }
     }
@@ -651,7 +678,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
 
             showLoadingDialog = false
 
-            "祈愿记录导出到:${file.path}".notify(closeable = true)
+            "祈愿记录导出到以下路径:${file.path}".notify(closeable = true)
         }
     }
 }

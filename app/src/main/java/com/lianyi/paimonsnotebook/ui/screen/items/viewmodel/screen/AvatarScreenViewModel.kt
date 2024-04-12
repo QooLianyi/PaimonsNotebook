@@ -112,9 +112,12 @@ class AvatarScreenViewModel : ViewModel() {
 
     fun init(intent: Intent) {
         viewModelScope.launch(Dispatchers.IO) {
-            val avatar = ItemHelper.getItemFromIntent(intent, avatarService.avatarList) { it.id }
+            val list = avatarService.avatarList
 
-            onClickItem(avatar)
+            if(list.isNotEmpty()){
+                val avatar = ItemHelper.getItemFromIntent(intent, list) { it.id }
+                onClickItem(avatar)
+            }
 
             if (loadingState == LoadingState.Loading) {
                 loadingState = LoadingState.Success

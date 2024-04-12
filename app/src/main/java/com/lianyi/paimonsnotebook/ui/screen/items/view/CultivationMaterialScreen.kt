@@ -24,7 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
-import com.lianyi.paimonsnotebook.common.components.layout.TabBarContent
+import com.lianyi.paimonsnotebook.common.components.layout.column.TabBarColumnLayout
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyVerticalGrid
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
@@ -49,7 +49,7 @@ class CultivationMaterialScreen : BaseActivity() {
 
                 ItemScreenLoadingState(loadingState = viewModel.loadingState) {
 
-                    TabBarContent(
+                    TabBarColumnLayout(
                         tabs = viewModel.tabs,
                         onTabBarSelect = viewModel::onChangePage,
                         topSlot = {

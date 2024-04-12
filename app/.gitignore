@@ -4,6 +4,9 @@
 *.ap_
 *.aab
 
+# 将realse/app-release.apk,排除,更新用
+!release/app-release.apk
+
 # Files for the ART/Dalvik VM
 *.dex
 

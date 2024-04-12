@@ -9,8 +9,6 @@ import android.os.Bundle
 import android.widget.RemoteViews
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
-import com.lianyi.paimonsnotebook.common.extension.scope.launchMain
-import com.lianyi.paimonsnotebook.common.extension.string.show
 import com.lianyi.paimonsnotebook.common.view.HoyolabWebActivity
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.view.AppWidgetConfigurationScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
@@ -67,9 +65,7 @@ open class BaseAppWidget : AppWidgetProvider() {
             //由用户调用的刷新
             AppWidgetHelper.ACTION_UPDATE_WIDGET -> {
                 if (appWidgetId != -1) {
-                    "内容更新中".show()
-
-                    updateAppWidget(appWidgetId, intent,true)
+                    updateAppWidget(appWidgetId, intent, true)
                 }
             }
 
@@ -79,9 +75,9 @@ open class BaseAppWidget : AppWidgetProvider() {
             }
 
             //前往验证界面
-            AppWidgetHelper.ACTION_GO_VALIDATE->{
+            AppWidgetHelper.ACTION_GO_VALIDATE -> {
                 val mid = intent.getStringExtra("mid") ?: ""
-                goValidateScreen(context,mid)
+                goValidateScreen(context, mid)
             }
         }
 
@@ -98,11 +94,12 @@ open class BaseAppWidget : AppWidgetProvider() {
     private fun updateAppWidget(
         appWidgetId: Int,
         intent: Intent?,
-        notify:Boolean = false,
+        notify: Boolean = false,
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val appWidgetBinding = dao.getAppWidgetBindingByAppWidgetId(appWidgetId)
 
+            //如果获取的userMid不为空则获取组件绑定的用户
             val user = if (appWidgetBinding?.userEntityMid?.isEmpty() == false) {
                 appWidgetBinding.getUserEntity()
             } else {
@@ -120,11 +117,6 @@ open class BaseAppWidget : AppWidgetProvider() {
             }
 
             updateAppWidget(appWidgetId, views)
-            if(notify){
-                launchMain {
-                    "更新完成".show()
-                }
-            }
         }
     }
 
@@ -141,10 +133,10 @@ open class BaseAppWidget : AppWidgetProvider() {
         context.startActivity(intent)
     }
 
-    private fun goValidateScreen(context: Context,mid:String){
+    private fun goValidateScreen(context: Context, mid: String) {
         HomeHelper.goActivityByIntent {
-            component = ComponentName(context,HoyolabWebActivity::class.java)
-            putExtra("mid",mid)
+            component = ComponentName(context, HoyolabWebActivity::class.java)
+            putExtra("mid", mid)
         }
     }
 

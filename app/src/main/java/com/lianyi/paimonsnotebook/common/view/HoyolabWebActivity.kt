@@ -45,6 +45,8 @@ class HoyolabWebActivity : BaseActivity() {
         return intent?.getStringExtra(EXTRA_URL) ?: ApiEndpoints.getGenshinGameRecordUrl(role)
     }
 
+    private lateinit var webView: WebView
+
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +54,7 @@ class HoyolabWebActivity : BaseActivity() {
 
         setImmersionMode()
 
-        val webview = findViewById<WebView>(R.id.hoyolab_webview)
+        webView = findViewById(R.id.hoyolab_webview)
 
         val userList = AccountHelper.userListFlow.value
 
@@ -76,7 +78,7 @@ class HoyolabWebActivity : BaseActivity() {
             return
         }
 
-        webview.apply {
+        webView.apply {
             settings.apply {
                 javaScriptEnabled = true
                 domStorageEnabled = true
@@ -96,21 +98,23 @@ class HoyolabWebActivity : BaseActivity() {
                 }
             }
 
-
-            addJavascriptInterface(MiHoYoJSInterface(user, webview) {
+            addJavascriptInterface(MiHoYoJSInterface(user, webView) {
                 finish()
             }, "MiHoYoJSInterface")
         }
 
         val url = getExtraUrl(role)
 
-        webview.setCookie(
+        webView.setCookie(
             cookieToken = user.userEntity.cookieToken, lToken = user.userEntity.ltoken
         )
-        webview.loadUrl(url)
+        webView.loadUrl(url)
     }
 
     override fun onDestroy() {
+        //移除JSInterface,防止内存泄漏
+        webView.removeJavascriptInterface("MiHoYoJSInterface")
+
         if (cleanCookie) {
             CookieManager.getInstance().apply {
                 removeAllCookies { }

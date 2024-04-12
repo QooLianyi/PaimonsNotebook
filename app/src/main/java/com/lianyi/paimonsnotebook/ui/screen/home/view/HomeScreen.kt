@@ -6,7 +6,15 @@ import androidx.activity.result.ActivityResult
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -35,7 +43,7 @@ import com.lianyi.paimonsnotebook.ui.screen.home.components.card.account.Account
 import com.lianyi.paimonsnotebook.ui.screen.home.components.home.HomeContent
 import com.lianyi.paimonsnotebook.ui.screen.home.components.menu.SideBarMenuList
 import com.lianyi.paimonsnotebook.ui.screen.home.viewmodel.HomeScreenViewModel
-import com.lianyi.paimonsnotebook.ui.screen.setting.util.configuration_enum.HomeScreenDisplayState
+import com.lianyi.paimonsnotebook.ui.screen.setting.util.enums.HomeScreenDisplayState
 import com.lianyi.paimonsnotebook.ui.screen.setting.view.SettingsScreen
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
 import com.lianyi.paimonsnotebook.ui.theme.Black

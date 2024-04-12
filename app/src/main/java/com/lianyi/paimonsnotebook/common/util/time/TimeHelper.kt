@@ -1,10 +1,14 @@
 package com.lianyi.paimonsnotebook.common.util.time
 
 import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
 import java.util.Locale
+import java.util.TimeZone
 
 object TimeHelper {
-    val locale: Locale by lazy {
+    //当前区域
+    private val locale: Locale by lazy {
         Locale.CHINA
     }
 
@@ -58,6 +62,23 @@ object TimeHelper {
         SimpleDateFormat("DD HH", locale)
     }
 
+    fun getFullTimeLocalDateFormatter() =
+        DateTimeFormatterBuilder()
+            .parseCaseInsensitive()
+            .append(DateTimeFormatter.ISO_LOCAL_DATE)
+            .appendLiteral(' ')
+            .append(DateTimeFormatter.ISO_LOCAL_TIME)
+            .toFormatter()
+
+    //获取当前时区的偏移时间(毫秒)
+    fun getOffsetTime() = TimeZone.getDefault().rawOffset
+
+    //获取当前时区的偏移时间(小时)
+    fun getOffsetTimeHour() = TimeZone.getDefault().rawOffset / 3600000
+
+    /*
+    * 获取时间,会自动判断传入的秒还是毫秒
+    * */
     fun getTime(
         timeStamp: Long,
         timeStampType: TimeStampType = TimeStampType.YYYY_MM_DD_HH_MM_SS,
@@ -82,9 +103,9 @@ object TimeHelper {
         }
 
         return sdf.format(
-            if(timeStamp < 9999999999L){
+            if (timeStamp < 9999999999L) {
                 timeStamp * 1000
-            }else{
+            } else {
                 timeStamp
             }
         )
@@ -186,6 +207,49 @@ object TimeHelper {
         return "$dayString $formatString"
     }
 
-
     private fun numberFormatter(number: Int): String = if (number < 10) "0${number}" else "$number"
+
+
+    /*
+    * 获取相差的时间文本
+    *
+    * 如xx分钟前,xx小时前,昨天,前天之类的,只会返回一个粗略的时间文本
+    *
+    * 传入的时间是秒
+    * */
+    fun getDifferenceTimeText(
+        targetTime: Int,
+        currentTime: Long = System.currentTimeMillis() / 1000
+    ): String {
+        //相差的时间
+        val timeDifference = currentTime - targetTime
+
+        //秒
+        if (timeDifference < 60) {
+            return "${timeDifference}秒前"
+        }
+
+        //分钟
+        if (timeDifference < 3600) {
+            return "${timeDifference / 60}分钟前"
+        }
+
+        //小时
+        if (timeDifference < 86400) {
+            return "${timeDifference / 3600}小时前"
+        }
+
+        //昨天
+        if (timeDifference < 172800) {
+            return "昨天"
+        }
+
+        //前天
+        if (timeDifference < 259200) {
+            return "前天"
+        }
+
+        return getTime(targetTime.toLong())
+    }
+
 }

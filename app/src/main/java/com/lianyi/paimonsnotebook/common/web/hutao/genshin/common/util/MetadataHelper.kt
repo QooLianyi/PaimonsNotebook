@@ -27,8 +27,8 @@ object MetadataHelper {
             FileNameMaterial,
             FileNameMonster,
             FileNameTowerSchedule,
-//            FileNameAchievement,
-//            FileNameAchievementGoal
+            FileNameAchievement,
+            FileNameAchievementGoal
         )
     }
 
@@ -52,6 +52,7 @@ object MetadataHelper {
     *
     * 返回需要更新的文件列表
     * */
+    @OptIn(ExperimentalStdlibApi::class)
     private fun checkMetadata(): List<String> {
         val updateFileList = mutableListOf<String>()
 
@@ -60,7 +61,8 @@ object MetadataHelper {
             val file = FileHelper.getMetadata(name)
             val arr = (file?.readText() ?: "").replace("\n", "\r\n").toByteArray()
 
-            val xxh64 = xxHash.hash64(arr).toULong().toString(16).uppercase()
+            //此处使用.toString(16)会导致第一位如果为15会变F,导致无法与Map的0F对应
+            val xxh64 = xxHash.hash64(arr).toULong().toHexString().uppercase()
             val metaXxH64 = hashMap[name]
 
             if (metaXxH64 != xxh64 && !metaXxH64.isNullOrEmpty()) {
@@ -138,7 +140,9 @@ object MetadataHelper {
     private suspend fun loadAndSaveFile(name: String) {
         val pair = buildRequest {
             url(HutaoEndpoints.metadata(LocaleNames.CHS, "${name}.json"))
-        }.getAsTextResult(applicationOkHttpClient)
+        }.getAsTextResult(applicationOkHttpClient).apply {
+            println("${this.first}")
+        }
 
         if (pair.first) {
             FileHelper.getMetadataSaveFile(name).apply {

@@ -4,9 +4,11 @@ import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
+import com.lianyi.paimonsnotebook.common.database.achievement.dao.AchievementsDao
+import com.lianyi.paimonsnotebook.common.database.achievement.dao.AchievementUserDao
+import com.lianyi.paimonsnotebook.common.database.achievement.entity.Achievements
+import com.lianyi.paimonsnotebook.common.database.achievement.entity.AchievementUser
 import com.lianyi.paimonsnotebook.common.database.app_widget_binding.dao.AppWidgetBindingDao
 import com.lianyi.paimonsnotebook.common.database.app_widget_binding.entity.AppWidgetBinding
 import com.lianyi.paimonsnotebook.common.database.daily_note.dao.DailyNoteDao
@@ -27,12 +29,15 @@ import com.lianyi.paimonsnotebook.common.database.user.entity.User
         AppWidgetBinding::class,
         User::class,
         DailyNote::class,
-        DailyNoteWidget::class
+        DailyNoteWidget::class,
+        AchievementUser::class,
+        Achievements::class
     ],
     autoMigrations = [
-        AutoMigration(1, 2)
+        AutoMigration(1, 2),
+        AutoMigration(2, 3)
     ],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 abstract class PaimonsNotebookDatabase : RoomDatabase() {
@@ -55,14 +60,20 @@ abstract class PaimonsNotebookDatabase : RoomDatabase() {
     //实时便笺桌面组件
     abstract val dailyNoteWidgetDao: DailyNoteWidgetDao
 
+    //成就管理用户
+    abstract val achievementUserDao: AchievementUserDao
+
+    //成就管理数据表
+    abstract val achievementsDao: AchievementsDao
+
     companion object {
         private const val DB_NAME = "paimonsnotebook_database.db"
 
-        private val migration_1_2 = object : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
+//        private val migration_1_2 = object : Migration(1, 2) {
+//            override fun migrate(db: SupportSQLiteDatabase) {
 //                database.execSQL()
-            }
-        }
+//            }
+//        }
 
         val database by lazy {
             synchronized(this) {

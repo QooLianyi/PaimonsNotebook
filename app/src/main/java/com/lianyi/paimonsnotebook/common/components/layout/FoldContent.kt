@@ -30,7 +30,7 @@ fun FoldContent(
     content: @Composable () -> Unit
 ) {
 
-    val indicatorAnim by animateFloatAsState(targetValue = if (open) 180f else 0f)
+    val indicatorAnim by animateFloatAsState(targetValue = if (open) 180f else 0f, label = "")
 
     Column(
         modifier = modifier,

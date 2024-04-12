@@ -3,10 +3,8 @@ package com.lianyi.paimonsnotebook.ui.screen.app_widget.view
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import com.lianyi.paimonsnotebook.common.components.layout.TabBarContent
+import com.lianyi.paimonsnotebook.common.components.layout.column.TabBarColumnLayout
 import com.lianyi.paimonsnotebook.common.components.placeholder.EmptyPlaceholder
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.components.page.AlreadyBindingAppWidgetPage
@@ -27,7 +25,7 @@ class AppWidgetScreen : BaseActivity() {
 
         setContent {
             PaimonsNotebookTheme(this) {
-                TabBarContent(
+                TabBarColumnLayout(
                     tabs = viewModel.tabs,
                     onTabBarSelect = viewModel::changeTab,
                 ){

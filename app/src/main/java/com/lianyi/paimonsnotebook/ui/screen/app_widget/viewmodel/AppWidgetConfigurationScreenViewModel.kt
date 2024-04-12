@@ -410,11 +410,19 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
 
         if (appWidgetManager.isRequestPinAppWidgetSupported) {
             val componentName = ComponentName(context, configuration.appWidgetClassName)
+
+            /*
+            * 此处的getBroadcast,在Android 13(API 33)及以上需要为intent设置包名
+            * 或者在flag中将FLAG_MUTABLE改为FLAG_IMMUTABLE,设置后无法获取返回的组件id
+            * 再或者在flag中添加PendingIntent.FLAG_NO_CREATE,但一直返回null
+            * */
             val broadcast =
                 PendingIntent.getBroadcast(
                     context,
                     0,
-                    Intent(AppWidgetHelper.ACTION_UPDATE_CONFIGURATION),
+                    Intent(AppWidgetHelper.ACTION_UPDATE_CONFIGURATION).apply {
+                        setPackage(context.packageName)
+                    },
                     PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 )
 
@@ -437,10 +445,7 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
                 val appwidgetId = intent?.extras?.getInt(
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
                     appWidgetManager.getAppWidgetIds(
-                        ComponentName(
-                            context,
-                            configuration.appWidgetClassName
-                        )
+                        ComponentName(context, configuration.appWidgetClassName)
                     ).maxOrNull() ?: -1
                 ) ?: -1
 
@@ -471,6 +476,7 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
         }
     }
 
+    //注册桌面组件添加完毕回调
     private fun registerAddWidgetSuccessBroadcast() {
         val filter = IntentFilter()
         filter.addAction(AppWidgetHelper.ACTION_UPDATE_CONFIGURATION)
@@ -486,6 +492,7 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
         }
     }
 
+    //取消回调注册
     fun unregisterAddWidgetSuccessBroadcast() {
         try {
             if (configuration.add) {

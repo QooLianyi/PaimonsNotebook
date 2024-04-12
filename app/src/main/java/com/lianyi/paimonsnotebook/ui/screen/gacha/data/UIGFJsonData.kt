@@ -11,10 +11,10 @@ data class UIGFJsonData(
     data class Info(
         val uid: String,
         val lang: String,
+        val region_time_zone: Long,
         val export_timestamp: Long = System.currentTimeMillis(),
-        val export_app: String = "派蒙笔记本",
+        val export_app: String = PaimonsNotebookApplication.name,
         val export_app_version: String = PaimonsNotebookApplication.version,
         val uigf_version: String = UIGFHelper.UIGF_VERSION,
     )
-
 }

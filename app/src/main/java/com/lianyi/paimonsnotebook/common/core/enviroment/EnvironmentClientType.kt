@@ -2,12 +2,8 @@ package com.lianyi.paimonsnotebook.common.core.enviroment
 
 object EnvironmentClientType {
 
-    val WEB by lazy {
-        "5"
-    }
+    const val WEB = "5"
 
-    val BBS by lazy {
-        "2"
-    }
+    const val BBS = "2"
 
 }

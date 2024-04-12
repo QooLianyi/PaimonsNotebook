@@ -6,22 +6,21 @@ import android.net.Uri
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
-import com.lianyi.paimonsnotebook.common.components.dialog.LazyColumnDialog
+import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
+import com.lianyi.paimonsnotebook.common.components.text.InfoText
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
@@ -30,20 +29,20 @@ import com.lianyi.paimonsnotebook.common.extension.string.notify
 import com.lianyi.paimonsnotebook.common.extension.string.show
 import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
+import com.lianyi.paimonsnotebook.common.util.enums.DownloadState
 import com.lianyi.paimonsnotebook.common.util.image.PaimonsNotebookImageLoader
-import com.lianyi.paimonsnotebook.common.web.HutaoEndpoints
+import com.lianyi.paimonsnotebook.common.util.system_service.SystemService
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util.MetadataHelper
-import com.lianyi.paimonsnotebook.common.web.static_resources.StaticResourcesApiEndpoint
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
 import com.lianyi.paimonsnotebook.ui.screen.resource_manager.view.ResourceManagerScreen
-import com.lianyi.paimonsnotebook.ui.screen.setting.components.static_resources.StaticResourcesChannelDialogItem
+import com.lianyi.paimonsnotebook.ui.screen.setting.components.dialog.ApplicationUpdateDialog
 import com.lianyi.paimonsnotebook.ui.screen.setting.components.widgets.SettingsOptionSwitch
 import com.lianyi.paimonsnotebook.ui.screen.setting.data.ConfigurationData
 import com.lianyi.paimonsnotebook.ui.screen.setting.data.OptionListData
-import com.lianyi.paimonsnotebook.ui.screen.setting.data.StaticResourcesChannelData
 import com.lianyi.paimonsnotebook.ui.screen.setting.util.SettingsHelper
-import com.lianyi.paimonsnotebook.ui.screen.setting.util.configuration_enum.HomeScreenDisplayState
-import com.lianyi.paimonsnotebook.ui.theme.Info
+import com.lianyi.paimonsnotebook.ui.screen.setting.util.UpdateService
+import com.lianyi.paimonsnotebook.ui.screen.setting.util.enums.HomeScreenDisplayState
+import com.lianyi.paimonsnotebook.ui.screen.shortcuts_manager.view.ShortcutsManagerScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -55,12 +54,19 @@ class SettingScreenViewModel : ViewModel() {
         PaimonsNotebookApplication.context
     }
 
+    lateinit var requestInstallPermission: () -> Unit
+    lateinit var checkInstallPermission: () -> Boolean
+
     init {
         viewModelScope.launch {
             SettingsHelper.configurationFlow.collect {
                 configurationData = it
             }
         }
+    }
+
+    private val updateService by lazy {
+        UpdateService()
     }
 
     val settings = listOf(
@@ -75,7 +81,32 @@ class SettingScreenViewModel : ViewModel() {
                     checked = configurationData.homeScreenDisplayState == HomeScreenDisplayState.Community
                 )
             }
-        )
+        ),
+        OptionListData(
+            name = "快捷方式管理",
+            description = "将常用的功能配置于快捷方式列表(shortcuts)中,在桌面长按派蒙笔记本图标唤起快捷方式列表",
+            onClick = {
+                HomeHelper.goActivity(ShortcutsManagerScreen::class.java)
+            },
+            slot = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_chevron_right),
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+        ),
+//        OptionListData(
+//            name = "启用网页顶部边距",
+//            description = "默认开启,开启后当打开网页时,会在网页的顶部添加一个边距,防止内容显示在状态栏下,当网页顶部边距太大时,关闭此选项重新进入网页使边距失效",
+//            onClick = {
+//            },
+//            slot = {
+//                SettingsOptionSwitch(
+//                    checked = configurationData.homeScreenDisplayState == HomeScreenDisplayState.Community
+//                )
+//            }
+//        ),
     )
 
     val storageSettings = listOf(
@@ -98,10 +129,7 @@ class SettingScreenViewModel : ViewModel() {
             description = "默认开启,开启后,程序在启动时会将最后一次使用时间为7天以上,并且图片类型为临时的图片删除,以节省存储空间",
             onClick = {
                 viewModelScope.launchIO {
-                    configurationData.enableAutoCleanExpiredImages =
-                        !configurationData.enableAutoCleanExpiredImages
-
-                    PreferenceKeys.EnableAutoCleanExpiredImages.editValue(configurationData.enableAutoCleanExpiredImages)
+                    PreferenceKeys.EnableAutoCleanExpiredImages.editValue(!configurationData.enableAutoCleanExpiredImages)
                 }
             },
             slot = {
@@ -114,7 +142,7 @@ class SettingScreenViewModel : ViewModel() {
             onClick = {
                 viewModelScope.launchIO {
                     val dao = PaimonsNotebookDatabase.database.diskCacheDao
-                    var c = 0
+                    var count = 0
                     dao.getAllData().first().forEach {
                         val file = PaimonsNotebookImageLoader.getCacheImageFileByUrl(it.url)
                         val bitmap = BitmapFactory.decodeFile(file?.absolutePath ?: "")
@@ -123,11 +151,11 @@ class SettingScreenViewModel : ViewModel() {
                             PaimonsNotebookImageLoader.getCacheImageMetadataFileByUrl(it.url)
                                 ?.delete()
                             dao.deleteByUrl(it.url)
-                            c++
+                            count++
                         }
                     }
 
-                    "清理了${c}张失效图片".warnNotify(false)
+                    "清理了${count}张失效图片".warnNotify(false)
                 }
             },
             slot = {
@@ -141,8 +169,7 @@ class SettingScreenViewModel : ViewModel() {
             description = "默认开启,开启后,当进行一些操作需要指定使用的用户时,直接使用默认用户。(如签到、扫码、桌面组件默认绑定的用户、角色)",
             onClick = {
                 viewModelScope.launch(Dispatchers.IO) {
-                    configurationData.alwaysUseDefaultUser = !configurationData.alwaysUseDefaultUser
-                    PreferenceKeys.AlwaysUseDefaultUser.editValue(configurationData.alwaysUseDefaultUser)
+                    PreferenceKeys.AlwaysUseDefaultUser.editValue(!configurationData.alwaysUseDefaultUser)
                 }
             },
             slot = {
@@ -169,65 +196,143 @@ class SettingScreenViewModel : ViewModel() {
                         }
                     ) {}
                 }
-            },
-            slot = {
-
             }
-        )
+        ),
+//        OptionListData(
+//            name = "数据迁移(占位)",
+//            description = "将派蒙笔记本当前的设置与数据导出,以便迁移到其它设备",
+//            onClick = {
+//                "将在不久后的更新中实现".notify()
+//            }
+//        )
     )
+
+    private var confirmResetConfigDialog by mutableStateOf(false)
 
     val othersSettings = listOf(
         OptionListData(
-            name = "刷新全部账号信息",
-            description = "刷新当前本地所有账号的信息",
+            name = "启动时检查更新",
+            description = "默认开启,开启后每次启动时都会进行一次新版本检查",
             onClick = {
-                HomeHelper.goActivity(ResourceManagerScreen::class.java)
+                viewModelScope.launchIO {
+                    PreferenceKeys.EnableCheckNewVersion.editValue(!configurationData.enableCheckNewVersion)
+                }
             },
             slot = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_chevron_right),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp)
+                SettingsOptionSwitch(
+                    checked = configurationData.enableCheckNewVersion
                 )
+            }
+        ),
+        OptionListData(
+            name = "恢复默认设置",
+            description = "恢复默认设置后,所有的设置都会被设置成最初的样子(仅当前页面)",
+            onClick = {
+                confirmResetConfigDialog = true
+            },
+            slot = {
+                if (confirmResetConfigDialog) {
+                    ConfirmDialog(
+                        title = "重置设置",
+                        content = "确认要重置设置中所有的选项吗?(程序整体的设置,如主页状态、自动清除过期图片、自动检查新版本等)",
+                        onConfirm = {
+                            viewModelScope.launchIO {
+                                ConfigurationData.resetConfig()
+                                "设置中的选项已重置".warnNotify(false)
+                                confirmResetConfigDialog = false
+                            }
+                        }) {
+                        confirmResetConfigDialog = false
+                    }
+                }
             }
         )
     )
+
+    //是否显示下载对话框
+    private var showDownloadDialog by mutableStateOf(false)
+
+    //下载进度
+    private var downloadProgress by mutableFloatStateOf(0f)
+
+    //下载状态
+    private var downloadState by mutableStateOf(DownloadState.Empty)
 
     val about = listOf(
         OptionListData(
             name = "派蒙笔记本",
-            description = "一款开源、免费、无广告的游戏工具",
+            description = "一款开源、免费、无广告的原神游戏工具",
             onClick = {
-                "检查更新中...很可惜当前版本还没有这个功能:P".notify()
+                viewModelScope.launchIO {
+                    "正在检查更新".notify()
+                    updateService.checkNewVersion(onFoundNewVersion = {
+                        "发现新版本".notify()
+                        //将下载状态设置为未开始
+                        downloadState = DownloadState.UnStart
+                        showDownloadDialog = true
+                    }, onFail = {
+                        "检查新版本时发生错误,但依然可以通过项目仓库找到最新的发布版本".errorNotify()
+                    }, onNotFoundNewVersion = {
+                        "当前版本已是最新".notify()
+                    })
+                }
             },
             slot = {
-                Text(
-                    text = PaimonsNotebookApplication.version,
-                    color = Info,
-                    fontSize = 12.sp,
-                    modifier = Modifier
-                        .pointerInput(Unit) {
-                            detectDragGestures { _, dragAmount ->
-                                if (c == 8 && dragAmount.y > 10) {
-                                    "下次启动时会开启调试面板".show()
+                InfoText(text = PaimonsNotebookApplication.version, modifier = Modifier
+                    .pointerInput(Unit) {
+                        detectDragGestures { _, dragAmount ->
+                            if (c == 8 && dragAmount.y > 10) {
+                                "下次启动时会开启调试面板".show()
 
-                                    PaimonsNotebookApplication.context
-                                        .getExternalFilesDir(null)
-                                        ?.resolve("debug")
-                                        ?.mkdirs()
+                                PaimonsNotebookApplication.context
+                                    .getExternalFilesDir(null)
+                                    ?.resolve("debug")
+                                    ?.mkdirs()
 
-                                    viewModelScope.launch {
-                                        PreferenceKeys.EnableOverlay.editValue(true)
-                                    }
-                                    c++
+                                viewModelScope.launch {
+                                    PreferenceKeys.EnableOverlay.editValue(true)
                                 }
+                                c++
                             }
                         }
-                        .pointerInput(Unit) {
-                            detectTapGestures(onTap = {
-                                c++
-                            })
+                    }
+                    .pointerInput(Unit) {
+                        detectTapGestures(onTap = {
+                            c++
                         })
+                    })
+
+                if (showDownloadDialog) {
+                    ApplicationUpdateDialog(
+                        downloadState = downloadState,
+                        downloadProgress = downloadProgress,
+                        requestInstallPermission = requestInstallPermission,
+                        checkInstallPermission = checkInstallPermission,
+                        onStartDownload = {
+                            //清空下载进度
+                            downloadProgress = 0f
+                            downloadState = DownloadState.Downloading
+
+                            viewModelScope.launchIO {
+                                updateService.downloadNewVersionPackage(
+                                    onSuccess = {
+                                        downloadState = DownloadState.Success
+                                    },
+                                    onFail = {
+                                        downloadState = DownloadState.Error
+                                    },
+                                    onProgress = {
+                                        downloadProgress = it
+                                    }
+                                )
+                            }
+                        },
+                        onInstall = {
+                            SystemService.installAndroidApplication(updateService.newVersionPackage)
+                        }) {
+                        showDownloadDialog = false
+                    }
+                }
             }
         ),
         OptionListData(
@@ -264,7 +369,14 @@ class SettingScreenViewModel : ViewModel() {
                     "唤起手机QQ失败:可能是未安装手Q或安装的版本不支持,但你可以通过以下qq群号进行添加:584804229".errorNotify()
                 }
             }
-        )
+        ),
+//        OptionListData(
+//            name = "使用到的第三方库",
+//            description = "程序在开发过程中使用到的第三方库(),非常感谢这些组织/个人!",
+//            onClick = {
+//
+//            }
+//        ),
     )
 
     //切换展示方式

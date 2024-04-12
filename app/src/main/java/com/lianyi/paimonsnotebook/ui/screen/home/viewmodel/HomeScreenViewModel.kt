@@ -27,8 +27,8 @@ import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
 import com.lianyi.paimonsnotebook.common.service.overlay.util.OverlayHelper
 import com.lianyi.paimonsnotebook.common.util.activity_code.ActivityCode
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
+import com.lianyi.paimonsnotebook.common.util.data_store.dataStoreValuesFirst
 import com.lianyi.paimonsnotebook.common.util.enums.LoadingState
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util.MetadataHelper
 import com.lianyi.paimonsnotebook.common.view.HoyolabWebActivity
 import com.lianyi.paimonsnotebook.common.view.QRCodeScanActivity
 import com.lianyi.paimonsnotebook.common.web.ApiEndpoints
@@ -42,6 +42,7 @@ import com.lianyi.paimonsnotebook.common.web.hoyolab.hk4e.announcement.Announcem
 import com.lianyi.paimonsnotebook.common.web.hoyolab.hk4e.announcement.AnnouncementData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.common.GachaPoolData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.common.TakumiCommonClient
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util.MetadataHelper
 import com.lianyi.paimonsnotebook.ui.screen.home.data.ModalItemData
 import com.lianyi.paimonsnotebook.ui.screen.home.service.HoyolabQRCodeService
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
@@ -50,6 +51,7 @@ import com.lianyi.paimonsnotebook.ui.screen.home.util.PostType
 import com.lianyi.paimonsnotebook.ui.screen.home.view.PostDetailScreen
 import com.lianyi.paimonsnotebook.ui.screen.setting.data.ConfigurationData
 import com.lianyi.paimonsnotebook.ui.screen.setting.util.SettingsHelper
+import com.lianyi.paimonsnotebook.ui.screen.setting.util.UpdateService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -72,6 +74,8 @@ class HomeScreenViewModel : ViewModel() {
 
     var showConfirm by mutableStateOf(false)
 
+    private val updateService = UpdateService()
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             launch {
@@ -91,12 +95,26 @@ class HomeScreenViewModel : ViewModel() {
                     dailyNoteList.addAll(it)
                 }
             }
-            launch {
+//            launch {
 //                GachaRecordService.gachaRecordOverviewListFlow.collect {
 //                    gachaRecordOverviewList.clear()
 //                    gachaRecordOverviewList.addAll(it)
 //                }
+//            }
+
+            launch {
+                dataStoreValuesFirst {
+                    val check = it[PreferenceKeys.EnableCheckNewVersion] ?: true
+                    if (check) {
+                        updateService.checkNewVersion(onFoundNewVersion = {
+                            "发现新版本,可前往设置进行更新[关于->派蒙笔记本]".notify()
+                        }, onFail = {
+                        }, onNotFoundNewVersion = {
+                        })
+                    }
+                }
             }
+
             launch {
                 if (MetadataHelper.metadataNeedUpdate()) {
                     "发现新的元数据,正在更新...".notify()

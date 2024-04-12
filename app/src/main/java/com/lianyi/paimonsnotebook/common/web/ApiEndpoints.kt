@@ -45,6 +45,10 @@ object ApiEndpoints {
 
     private const val BbsApiMiYouShe = "https://bbs-api.miyoushe.com"
     private const val BbsApiMiYouSheApiHub = "https://bbs-api.miyoushe.com/apihub"
+    private const val BbsApiMiYouSheTopicApi = "https://bbs-api.miyoushe.com/topic/api"
+    private const val BbsApiMiYouShePainterApiTopic =
+        "https://bbs-api.miyoushe.com/painter/api/topic"
+
 
     private const val Hk4eApi = "https://hk4e-api.mihoyo.com"
     private const val Hk4eApiAnnouncementApi = "${Hk4eApi}/common/hk4e_cn/announcement/api"
@@ -416,10 +420,25 @@ object ApiEndpoints {
 
 
     //获取投票内容
-    fun getVotes(owner_uid: String, vote_ids: String, gids: String = "2") =
-        "${BbsApiMiYouSheApiHub}/api/getVotes?gids=${gids}&owner_uid=${owner_uid}&vote_ids=${vote_ids}"
+    fun getVotes(ownerUid: String, voteIds: String, gids: String = "2") =
+        "${BbsApiMiYouSheApiHub}/api/getVotes?gids=${gids}&owner_uid=${ownerUid}&vote_ids=${voteIds}"
 
     //获取投票结果
-    fun getVotesResult(owner_uid: String, vote_ids: String, gids: String = "2") =
-        "${BbsApiMiYouSheApiHub}/api/getVotesResult?gids=${gids}&owner_uid=${owner_uid}&vote_ids=${vote_ids}"
+    fun getVotesResult(ownerUid: String, voteIds: String, gids: String = "2") =
+        "${BbsApiMiYouSheApiHub}/api/getVotesResult?gids=${gids}&owner_uid=${ownerUid}&vote_ids=${voteIds}"
+
+    /*
+    * 根据topic_id获取分类信息
+    * */
+    fun getTopicInfo(id: Long) = "${BbsApiMiYouSheTopicApi}/getTopicFullInfo?id=${id}"
+
+    fun getPainterTopicList(
+        topicId: Long,
+        listType: String = "UNKNOWN",
+        offset: String = "",
+        size: Int = 20,
+        gameId: Int = 0
+    ) =
+        "${BbsApiMiYouShePainterApiTopic}/list?topic_id=${topicId}&list_type=${listType}&offset=${offset}&size=${size}&game_id=${gameId}"
+
 }

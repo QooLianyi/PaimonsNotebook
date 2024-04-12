@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
-import com.lianyi.paimonsnotebook.common.components.layout.TabBarContent
+import com.lianyi.paimonsnotebook.common.components.layout.column.TabBarColumnLayout
 import com.lianyi.paimonsnotebook.common.components.placeholder.EmptyPlaceholder
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
@@ -37,7 +37,7 @@ class ResourceManagerScreen : BaseActivity() {
 
         setContent {
             PaimonsNotebookTheme(this) {
-                TabBarContent(tabs = viewModel.tabs,
+                TabBarColumnLayout(tabs = viewModel.tabs,
                     onTabBarSelect = viewModel::onChangePage,
                     topSlot = {
                         Row(

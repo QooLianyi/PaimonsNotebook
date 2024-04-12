@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
 import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
-import com.lianyi.paimonsnotebook.common.components.text.TitleText
+import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.data.hoyolab.user.User
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.database.disk_cache.util.DiskCacheDataType
@@ -112,7 +112,7 @@ internal fun AccountInfoCard(
                 Spacer(modifier = Modifier.width(16.dp))
 
                 Column {
-                    TitleText(
+                    PrimaryText(
                         text = user?.userInfo?.nickname
                             ?: "旅行者",
                         fontSize = 16.sp,
@@ -125,7 +125,7 @@ internal fun AccountInfoCard(
 
                     Spacer(modifier = Modifier.height(6.dp))
 
-                    TitleText(
+                    PrimaryText(
                         text = user?.getSelectedGameRole()?.game_uid ?: "当前未选择角色",
                         fontSize = 13.sp,
                         color = Info_1,

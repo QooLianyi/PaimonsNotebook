@@ -28,6 +28,7 @@ import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.placeholder.EmptyPlaceholder
 import com.lianyi.paimonsnotebook.common.components.popup.BasePopup
+import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.RemoteViewsPreviewAnimData
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
@@ -52,8 +53,8 @@ internal fun RemoteViewsPickerPopup(
             .groupBy { remoteViewsInfo ->
                 RemoteViewsTypeHelper.getTypeNameByType(remoteViewsInfo.remoteViewsType)
             }.map {
-            it.key to it.value
-        }
+                it.key to it.value
+            }
     }
 
     BasePopup(visible = visible, onRequestDismiss = onRequestDismiss) {
@@ -108,18 +109,26 @@ internal fun RemoteViewsPickerPopup(
                         }
                     }
 
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_dismiss),
-                        contentDescription = null,
+                    Column(
                         modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(6.dp)
-                            .radius(2.dp)
-                            .size(32.dp)
-                            .clickable {
-                                onRequestDismiss.invoke()
-                            }
-                    )
+                            .align(Alignment.TopEnd),
+                        horizontalAlignment = Alignment.End
+                    ) {
+
+                        StatusBarPaddingSpacer()
+
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_dismiss),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .radius(2.dp)
+                                .size(32.dp)
+                                .clickable {
+                                    onRequestDismiss.invoke()
+                                }
+                        )
+
+                    }
                 }
             }
         }

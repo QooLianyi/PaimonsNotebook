@@ -12,9 +12,12 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
 
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -38,6 +41,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PaimonsNotebook"
         tools:targetApi="33">
+        <activity
+            android:name=".ui.screen.shortcuts_manager.view.ShortcutsManagerScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.achievement.view.AchievementOptionScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.achievement.view.AchievementGoalScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.achievement.view.AchievementScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
         <activity
             android:name=".ui.screen.resource_manager.view.ImageDetailScreen"
             android:theme="@style/Theme.PaimonsNotebook" />
@@ -79,9 +94,6 @@
             android:name=".ui.screen.login.view.MihoyoLoginActivity"
             android:theme="@style/Theme.PaimonsNotebookFullScreen" />
         <activity
-            android:name=".ui.screen.develop.NormalEmptyActivity"
-            android:theme="@style/Theme.PaimonsNotebook" />
-        <activity
             android:name=".ui.screen.account.view.AccountManagerScreen"
             android:theme="@style/Theme.PaimonsNotebook" />
         <activity
@@ -105,6 +117,9 @@
             android:name=".common.view.WebViewScreen"
             android:theme="@style/Theme.PaimonsNotebook" />
         <activity
+            android:name=".ui.screen.home.view.TopicScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
             android:name=".ui.screen.home.view.PostDetailScreen"
             android:theme="@style/Theme.PaimonsNotebook" />
         <activity
@@ -123,7 +138,8 @@
             android:name=".ui.screen.home.view.HomeScreen"
             android:theme="@style/Theme.PaimonsNotebook" />
 
-        <service android:name=".common.service.overlay.debug.DebugOverlayService" />
+        <service android:name=".common.service.overlay.debug.DebugOverlayService"
+            android:foregroundServiceType="specialUse"/>
 
         <receiver
             android:name=".ui.widgets.widget.AppWidgetCommon1X1"
@@ -220,6 +236,26 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_common_4x3" />
         </receiver>
+
+        <!--        <provider-->
+        <!--            android:name="androidx.core.content.FileProvider"-->
+        <!--            android:authorities="com.lianyi.paimonsnotebook.fileprovider"-->
+        <!--            android:exported="false"-->
+        <!--            android:grantUriPermissions="true">-->
+        <!--            <meta-data-->
+        <!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
+        <!--                android:resource="@xml/filepaths" />-->
+        <!--        </provider>-->
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
 
     </application>
 

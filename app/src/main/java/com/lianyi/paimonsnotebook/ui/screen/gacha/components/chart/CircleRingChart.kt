@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.components.text.TitleText
+import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.extension.color.alpha
 import com.lianyi.paimonsnotebook.common.extension.modifier.animation.drawArcBorder
 import com.lianyi.paimonsnotebook.ui.theme.*
@@ -66,7 +66,7 @@ fun CircleRingChart(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            TitleText(text = title, fontSize = 20.sp)
+            PrimaryText(text = title, fontSize = 20.sp)
             Spacer(modifier = Modifier.height(2.dp))
             Text(text = description, fontSize = 14.sp, color = Black_30)
         }

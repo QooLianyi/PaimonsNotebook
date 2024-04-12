@@ -1,5 +1,6 @@
 package com.lianyi.paimonsnotebook.ui.screen.home.util
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -7,9 +8,9 @@ import androidx.activity.result.ActivityResultLauncher
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.ui.screen.abyss.view.AbyssScreen
+import com.lianyi.paimonsnotebook.ui.screen.achievement.view.AchievementScreen
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.view.AppWidgetScreen
 import com.lianyi.paimonsnotebook.ui.screen.daily_note.view.DailyNoteScreen
-import com.lianyi.paimonsnotebook.ui.screen.develop.TypographyScreen
 import com.lianyi.paimonsnotebook.ui.screen.gacha.view.GachaRecordScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.data.ModalItemData
 import com.lianyi.paimonsnotebook.ui.screen.items.view.AvatarScreen
@@ -54,11 +55,15 @@ object HomeHelper {
             AbyssScreen::class.java
         ),
         ModalItemData(
+            "成就管理",
+            R.drawable.ic_genshin_game_sign_cup,
+            AchievementScreen::class.java
+        ),
+        ModalItemData(
             "桌面组件",
             R.drawable.ic_appwidget,
             AppWidgetScreen::class.java
         )
-
     )
 
     fun <T : Activity> goActivity(
@@ -77,6 +82,7 @@ object HomeHelper {
         }
     }
 
+    @SuppressLint("IntentWithNullActionLaunch")
     fun goActivityByIntent(block: Intent.() -> Unit) {
         val intent = Intent().apply(block)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

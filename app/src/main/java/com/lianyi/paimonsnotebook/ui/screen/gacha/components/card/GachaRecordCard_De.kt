@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.common.components.text.TitleText
+import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.extension.modifier.animation.drawArcBorder
 import com.lianyi.paimonsnotebook.common.extension.modifier.padding.paddingEnd
 import com.lianyi.paimonsnotebook.ui.theme.*
@@ -60,7 +60,7 @@ fun GachaRecordCard_De() {
 
             Row(verticalAlignment = Alignment.CenterVertically) {
 
-                TitleText(text = "角色活动", modifier = Modifier.weight(1f), fontSize = 22.sp)
+                PrimaryText(text = "角色活动", modifier = Modifier.weight(1f), fontSize = 22.sp)
 
                 Icon(
                     painter = painterResource(id = R.drawable.ic_list),

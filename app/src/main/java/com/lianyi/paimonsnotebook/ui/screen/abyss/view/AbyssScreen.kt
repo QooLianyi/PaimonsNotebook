@@ -5,7 +5,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
-import com.lianyi.paimonsnotebook.common.components.layout.TabBarContent
+import com.lianyi.paimonsnotebook.common.components.layout.column.TabBarColumnLayout
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.abyss.components.page.AbyssRecordPage
@@ -39,7 +38,7 @@ class AbyssScreen : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PaimonsNotebookTheme(this) {
-                TabBarContent(
+                TabBarColumnLayout(
                     tabs = viewModel.tabs,
                     onTabBarSelect = viewModel::onPageIndexChange,
                     topSlot = {

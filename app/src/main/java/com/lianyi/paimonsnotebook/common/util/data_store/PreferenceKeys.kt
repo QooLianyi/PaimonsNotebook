@@ -15,6 +15,11 @@ object PreferenceKeys {
         stringPreferencesKey("device_id")
     }
 
+    //bbs_device_id
+    val BBSDeviceId by lazy {
+        stringPreferencesKey("bbs_device_id")
+    }
+
     //外部存储权限申请标识
     val PermissionRequestFlag by lazy {
         booleanPreferencesKey("permissionRequestFlag")
@@ -48,6 +53,12 @@ object PreferenceKeys {
     val GachaRecordCurrentGameUid by lazy {
         stringPreferencesKey("gachaRecordCurrentGameUid")
     }
+
+    //祈愿记录时区map,存储时区
+    val GachaRecordGameUidRegionMap by lazy {
+        stringPreferencesKey("gachaRecordGameUidRegionMap")
+    }
+
 
     //当前祈愿记录最后的uid,用于生成无ID的记录
     val GenerateGachaRecordId by lazy {
@@ -83,6 +94,10 @@ object PreferenceKeys {
         booleanPreferencesKey("enableAutoCleanExpiredImages")
     }
 
+    val EnableCheckNewVersion by lazy {
+        booleanPreferencesKey("enableCheckNewVersion")
+    }
+
     //全屏模式(隐藏状态栏)
     val FullScreenMode by lazy {
         booleanPreferencesKey("fullScreenMode")
@@ -101,6 +116,26 @@ object PreferenceKeys {
     //staticResources渠道
     val StaticResourcesChannel by lazy {
         stringPreferencesKey("staticResourcesChannel")
+    }
+
+    //启用成就更新时刷新列表
+    val EnableAchievementChangeUpdateList by lazy {
+        booleanPreferencesKey("enableAchievementChangeUpdateList")
+    }
+
+    //禁用成就记录交互
+    val DisableAchievementInteraction by lazy {
+        booleanPreferencesKey("disableAchievementInteraction")
+    }
+
+    //配置的快捷方式列表
+    val ShortcutsList by lazy {
+        stringPreferencesKey("shortcutsList")
+    }
+
+    //启用快捷方式列表
+    val EnableShortcutsList by lazy {
+        booleanPreferencesKey("enableShortcutsList")
     }
 
     val widgetsCount by lazy {

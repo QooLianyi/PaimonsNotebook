@@ -96,9 +96,13 @@ class WeaponScreenViewModel : ViewModel() {
 
     fun init(intent: Intent) {
         viewModelScope.launch(Dispatchers.IO) {
-            val weapon = ItemHelper.getItemFromIntent(intent, weaponService.weaponList) { it.id }
+            val list = weaponService.weaponList
 
-            onClickItem(weapon)
+            if(list.isNotEmpty()){
+                val weapon = ItemHelper.getItemFromIntent(intent, weaponService.weaponList) { it.id }
+
+                onClickItem(weapon)
+            }
 
             if (loadingState == LoadingState.Loading) {
                 loadingState = LoadingState.Success

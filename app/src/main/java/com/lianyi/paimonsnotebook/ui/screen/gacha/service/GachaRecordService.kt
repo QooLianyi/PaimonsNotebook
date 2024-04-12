@@ -35,8 +35,6 @@ class GachaRecordService {
                 dataStoreValues {
                     val gameUid = it[PreferenceKeys.GachaRecordCurrentGameUid] ?: ""
 
-                    println("gameUid = ${gameUid}")
-
                     CurrentGachaRecordGameUidFlow.value = gameUid
                     updateData()
                 }
@@ -48,25 +46,29 @@ class GachaRecordService {
         setGachaRecordOverviewForCurrentUidFlow()
     }
 
+    //根据当前uid设置总览数据
     private suspend fun setGachaRecordOverviewForCurrentUidFlow() {
         val list = dao.getOverviewsByUid(CurrentGachaRecordGameUidFlow.value)
 
-        if (list.isEmpty()){
+        if (list.isEmpty()) {
             GachaRecordOverviewForCurrentUidFlow.emit(null)
             return
         }
 
         val overviewItemList = mutableListOf<GachaRecordOverview.Item>()
 
+        //设置星级权重
         val starWeight = listOf(
             3 to 1f,
             4 to 10f,
             5 to 90f
         )
 
+        //使记录根据祈愿类型分类
         list.groupBy { it.uigfGachaType }.forEach { (type, gachaRecordOverviewItems) ->
 
-            val types = gachaRecordOverviewItems.groupBy { it.rankType }
+            //使总览类型根据星级分组,key = 星级,value = 对应祈愿类型的星级总览数据
+            val types = gachaRecordOverviewItems.associateBy { it.rankType }
 
             val gachaTimesMap = mutableMapOf<Int, Int>()
             val gachaProgressMap = mutableMapOf<Int, Float>()
@@ -75,18 +77,22 @@ class GachaRecordService {
             var minTime = ""
             var maxTime = ""
 
+            //遍历星级,根据星级设置对应的数据
             starWeight.map { pair ->
-                types["${pair.first}"]?.forEach {
-                    val count = it.count
-                    val star = pair.first
+                val overviewData = types["${pair.first}"] ?: return@forEach
 
-                    gachaProgressMap += star to (it.gachaTimes / pair.second)
-                    gachaTimesMap += star to it.gachaTimes
-                    countMap += star to count
+                val count = overviewData.count
+                val star = pair.first
 
-                    maxTime = it.maxTime
-                    minTime = it.minTime
-                }
+                gachaProgressMap += star to (overviewData.gachaTimes / pair.second)
+                gachaTimesMap += star to overviewData.gachaTimes
+                countMap += star to count
+
+                //获取最大时间与最小时间
+                maxTime =
+                    overviewData.maxTime.takeIf { it > maxTime || minTime.isEmpty() } ?: maxTime
+                minTime =
+                    overviewData.minTime.takeIf { it < minTime || minTime.isEmpty() } ?: minTime
             }
 
             overviewItemList += GachaRecordOverview.Item(

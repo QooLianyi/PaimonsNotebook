@@ -1,6 +1,7 @@
 package com.lianyi.paimonsnotebook.common.web.hutao.genshin.achievement
 
 import com.google.gson.annotations.SerializedName
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.conveter.AchievementIconConverter
 
 data class AchievementGoalData(
     @SerializedName("")
@@ -13,9 +14,13 @@ data class AchievementGoalData(
     val name: String,
     @SerializedName("Order")
     val order: Int
-){
+) {
     data class FinishReward(
         val Count: Int,
         val Id: Int
     )
+
+    val iconUrl: String
+        get() = AchievementIconConverter.iconNameToUrl(icon)
+
 }

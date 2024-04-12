@@ -2,29 +2,29 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
 }
 
 android {
-    compileSdk 34
+    namespace 'com.lianyi.paimonsnotebook'
+
+    compileSdk project.compile_sdk
 
     defaultConfig {
         applicationId "com.lianyi.paimonsnotebook"
-        minSdk 26
-        targetSdk 34
-        versionCode 5
-        versionName '1.4.4'
+        minSdk project.min_sdk
+        targetSdk project.target_sdk
+        versionCode project.paimons_notebook_version
+        versionName project.paimons_notebook_version_name
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
         }
 
-        kapt {
-            arguments {
-                arg("room.schemaLocation", "$projectDir/schemas")
-            }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
-
     }
 
     buildTypes {
@@ -34,15 +34,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            //debug app共存 直接在包名后添加了FunctionTestPackage
-            applicationIdSuffix ".FunctionTestPackage"
+            //debug app共存
+            applicationIdSuffix ".dev"
         }
         def localProperties = new Properties()
         localProperties.load(new FileInputStream(rootProject.file("local.properties")))
         def key = localProperties.getProperty("appcenter.secret")
 
+        //配置app center key
         configureEach {
-            it.buildConfigField("String","APPCENTER_SECRET",key)
+            it.buildConfigField("String", "APPCENTER_SECRET", key)
         }
     }
     compileOptions {
@@ -64,33 +65,32 @@ android {
             excludes += 'META-INF/*'
         }
     }
-    namespace 'com.lianyi.paimonsnotebook'
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.activity:activity-compose:1.8.0-rc01'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-
-    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:${compose_version}"
+
+
+    api 'androidx.core:core-ktx:1.12.0'
+    //Compose Activity
+    api 'androidx.activity:activity-compose:1.8.0-rc01'
+    api 'androidx.appcompat:appcompat:1.6.1'
+    api 'com.google.android.material:material:1.9.0'
+    api 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     //Compose
-    implementation "androidx.compose.material:material:$compose_version"
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
-    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+    api "androidx.compose.material:material:$compose_version"
+    api "androidx.compose.ui:ui:$compose_version"
+    api "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    debugApi "androidx.compose.ui:ui-tooling:$compose_version"
+    debugApi "androidx.compose.ui:ui-test-manifest:$compose_version"
 
     //Lifecycle
-    def lifecycle_version = "2.6.1"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
-    implementation("androidx.lifecycle:lifecycle-process:$lifecycle_version")
+    def lifecycle_version = "2.6.2"
+    api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+    api("androidx.lifecycle:lifecycle-process:$lifecycle_version")
 
     // For AppWidgets support
     // 暂时无相关需求
@@ -99,51 +99,52 @@ dependencies {
 //    implementation("androidx.glance:glance-appwidget:$glance_version")
 
     //Coil
-    def coil_version = "2.4.0"
-    implementation("io.coil-kt:coil-compose:$coil_version")
-    implementation("io.coil-kt:coil-gif:$coil_version")
+    def coil_version = "2.5.0"
+    api("io.coil-kt:coil-compose:$coil_version")
+    api("io.coil-kt:coil-gif:$coil_version")
 
     //Retrofit2
     def retrofit2_version = "2.9.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofit2_version")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofit2_version")
+    api("com.squareup.retrofit2:retrofit:$retrofit2_version")
+    api("com.squareup.retrofit2:converter-gson:$retrofit2_version")
 
     //Room
-    def room_version = "2.5.2"
-    implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    def room_version = "2.6.1"
     // optional - Kotlin Extensions and Coroutines support for Room
-    implementation "androidx.room:room-ktx:$room_version"
+    api "androidx.room:room-ktx:$room_version"
+    api "androidx.room:room-runtime:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
 
-    def appCenterSdkVersion = '5.0.2'
-    implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
-    implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
+    def appCenterSdkVersion = '5.0.3'
+    api "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
+    api "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
 
     //Jsoup
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
-    implementation("org.jsoup:jsoup:1.16.1")
+    api("org.jsoup:jsoup:1.17.1")
 
     //Gson
-    implementation "com.google.code.gson:gson:2.10.1"
+    api "com.google.code.gson:gson:2.10.1"
 
     //Datastore
-    implementation 'androidx.datastore:datastore-preferences:1.0.0'
+    api 'androidx.datastore:datastore-preferences:1.0.0'
 
     //GeeTest
-    implementation 'com.geetest.sensebot:sensebot:4.3.10'
+//    api 'com.geetest.sensebot:sensebot:4.4.2.1'
 
     //ColorPicker
-    implementation("com.github.skydoves:colorpicker-compose:1.0.4")
+    api("com.github.skydoves:colorpicker-compose:1.0.7")
 
     // debugImplementation because LeakCanary should only run in debug builds.
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
+    debugApi 'com.squareup.leakcanary:leakcanary-android:2.12'
 
     //zxing-lite AndroidX
-    implementation 'com.github.jenly1314:zxing-lite:3.0.1'
+    api 'com.github.jenly1314:zxing-lite:3.0.1'
 
     //CustomActivityOnCrash
-    implementation 'cat.ereza:customactivityoncrash:2.4.0'
+    api 'cat.ereza:customactivityoncrash:2.4.0'
 
     //为测试导入json包
-    testImplementation 'org.json:json:20180813'
+    testImplementation 'org.json:json:20231013'
+    testImplementation 'junit:junit:4.13.2'
 }

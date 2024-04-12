@@ -21,6 +21,12 @@ import java.lang.reflect.Type
 *   val type = getType(Set::class.java,String::class.java,String::class.java)
 *
 *   From:https://blog.csdn.net/jingzz1/article/details/107861870
+*
+* ※koltin在使用基本数据类型时，会根据需要自动封箱（如Int在jvm里会自动转成int或Integer），而泛型要求使用的必需是Object类型，
+* 因此在使用ParameterizedType传入基本类型时，需要使用它的包装类，比如获取MutableList<Int>的type需要这样写：
+* //MutableList<Int>的type
+* val type =  getType(MutableList::class.java,Int::class.javaObjectType)
+*
 * */
 
 fun getParameterizedType(raw:Class<*>, vararg args: Type) = object :ParameterizedType{

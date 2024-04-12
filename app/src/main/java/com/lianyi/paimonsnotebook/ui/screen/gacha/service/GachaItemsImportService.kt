@@ -9,8 +9,8 @@ import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.util.data_store.datastorePf
-import com.lianyi.paimonsnotebook.ui.screen.gacha.data.UIGFJsonData
 import com.lianyi.paimonsnotebook.common.util.metadata.genshin.uigf.UIGFHelper
+import com.lianyi.paimonsnotebook.ui.screen.gacha.data.UIGFJsonData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -148,7 +148,11 @@ class GachaItemsImportService(
                         }
                     }
 
-                    gachaItemListFlush(list)
+                    //最后不为空时才执行插入
+                    if(list.isNotEmpty()){
+                        gachaItemListFlush(list)
+                    }
+
                     list.clear()
 
                     endArray()
@@ -210,12 +214,16 @@ class GachaItemsImportService(
                             UIGFHelper.Field.Info.ExportApp -> UIGFHelper.Field.Info.ExportApp
                             UIGFHelper.Field.Info.ExportAppVersion -> UIGFHelper.Field.Info.ExportAppVersion
                             UIGFHelper.Field.Info.UIGFVersion -> UIGFHelper.Field.Info.UIGFVersion
+                            UIGFHelper.Field.Info.RegionTimeZone -> UIGFHelper.Field.Info.RegionTimeZone
                             else -> ""
                         }
-                        if (key == UIGFHelper.Field.Info.ExportTimestamp) {
-                            infoMap[key] = nextLong().toString()
-                        } else {
-                            infoMap[key] = nextString()
+
+                        when (key) {
+                            UIGFHelper.Field.Info.ExportTimestamp, UIGFHelper.Field.Info.RegionTimeZone -> infoMap[key] =
+                                nextLong().toString()
+
+                            else ->
+                                infoMap[key] = nextString()
                         }
                     }
                     endObject()
@@ -223,18 +231,26 @@ class GachaItemsImportService(
                     //检查info是否包含所需的字段
                     UIGFHelper.Field.Info.fields.forEach { infoField ->
                         if (infoMap[infoField].isNullOrBlank()) {
-                            error("导入的数据结构错误:data.info $infoField field not found")
+                            error("导入的数据结构错误:data.info中的[$infoField]字段未找到")
                         }
                     }
 
+                    val uid = infoMap[UIGFHelper.Field.Info.Uid]!!
+
+                    //此处转换时区,当时区不存在时,根据UID生成
+                    val regionTimeZone =
+                        infoMap[UIGFHelper.Field.Info.RegionTimeZone]?.toLongOrNull()
+                            ?: UIGFHelper.getRegionTimeZoneByUid(uid)
+
                     uigfJsonInfo = UIGFJsonData.Info(
-                        uid = infoMap[UIGFHelper.Field.Info.Uid]!!,
+                        uid = uid,
                         lang = infoMap[UIGFHelper.Field.Info.Lang]!!,
                         export_timestamp = infoMap[UIGFHelper.Field.Info.ExportTimestamp]
                             ?.toLongOrNull() ?: 0L,
                         export_app = infoMap[UIGFHelper.Field.Info.ExportApp]!!,
                         export_app_version = infoMap[UIGFHelper.Field.Info.ExportAppVersion]!!,
-                        uigf_version = infoMap[UIGFHelper.Field.Info.UIGFVersion]!!
+                        uigf_version = infoMap[UIGFHelper.Field.Info.UIGFVersion]!!,
+                        region_time_zone = regionTimeZone
                     )
 
                 }
@@ -283,22 +299,28 @@ class GachaItemsImportService(
             }
         }
 
+        //字段数量
+        val tableColumnCount = 11
         list.forEachIndexed { index, uigfGachaItem ->
             val gachaItemId =
-                uigfGachaItem.id.takeIf { it.isNotBlank() } ?: "${generateGachaLogItemId(uigfGachaItem.uid)}"
+                uigfGachaItem.id.takeIf { it.isNotBlank() } ?: "${
+                    generateGachaLogItemId(
+                        uigfGachaItem.uid
+                    )
+                }"
 
             uigfGachaItem.apply {
-                stmt.bindString(11 * index + 1, count)
-                stmt.bindString(11 * index + 2, gacha_type)
-                stmt.bindString(11 * index + 3, gachaItemId)
-                stmt.bindString(11 * index + 4, item_id)
-                stmt.bindString(11 * index + 5, item_type)
-                stmt.bindString(11 * index + 6, lang)
-                stmt.bindString(11 * index + 7, name)
-                stmt.bindString(11 * index + 8, rank_type)
-                stmt.bindString(11 * index + 9, time)
-                stmt.bindString(11 * index + 10, uid)
-                stmt.bindString(11 * index + 11, uigf_gacha_type)
+                stmt.bindString(tableColumnCount * index + 1, count)
+                stmt.bindString(tableColumnCount * index + 2, gacha_type)
+                stmt.bindString(tableColumnCount * index + 3, gachaItemId)
+                stmt.bindString(tableColumnCount * index + 4, item_id)
+                stmt.bindString(tableColumnCount * index + 5, item_type)
+                stmt.bindString(tableColumnCount * index + 6, lang)
+                stmt.bindString(tableColumnCount * index + 7, name)
+                stmt.bindString(tableColumnCount * index + 8, rank_type)
+                stmt.bindString(tableColumnCount * index + 9, time)
+                stmt.bindString(tableColumnCount * index + 10, uid)
+                stmt.bindString(tableColumnCount * index + 11, uigf_gacha_type)
             }
         }
         stmt.executeInsert()
@@ -306,7 +328,7 @@ class GachaItemsImportService(
     }
 
     //生成ID
-    private suspend fun generateGachaLogItemId(uid:String): Long {
+    private suspend fun generateGachaLogItemId(uid: String): Long {
         //获取从本地存储生成的祈愿记录id并+1
         var id = PaimonsNotebookApplication.context.datastorePf.data.map {
             (it[PreferenceKeys.GenerateGachaRecordId] ?: 1000000000000000000L) + 1L
@@ -314,7 +336,7 @@ class GachaItemsImportService(
 
         //1300000000000000000往后的值已经被占用了
         while (id < 1300000000000000000L) {
-            if (!dao.isExist("$id",uid)) {
+            if (!dao.isExist("$id", uid)) {
                 break
             }
             id++

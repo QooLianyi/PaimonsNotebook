@@ -36,7 +36,7 @@ fun CookieInputDialog(
             InputTextFiled(value = inputValue,
                 onValueChange = inputValueChange,
                 inputFieldHeight = 120.dp,
-                padding = 8.dp,
+                padding = PaddingValues(5.dp),
                 borderColor = Black_10,
                 borderWidth = 2.dp,
                 placeholder = {

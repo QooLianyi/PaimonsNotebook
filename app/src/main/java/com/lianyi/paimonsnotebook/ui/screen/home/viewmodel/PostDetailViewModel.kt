@@ -17,6 +17,7 @@ import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.post.PostFullData
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
 import com.lianyi.paimonsnotebook.ui.screen.home.util.PostHelper
 import com.lianyi.paimonsnotebook.ui.screen.home.view.PostDetailScreen
+import com.lianyi.paimonsnotebook.ui.screen.home.view.TopicScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -70,6 +71,9 @@ class PostDetailViewModel : ViewModel() {
             }, isUrl = {
                 setComponentName(HoyolabWebActivity::class.java)
                 putExtra(HoyolabWebActivity.EXTRA_URL, it)
+            }, isTopic = {
+                setComponentName(TopicScreen::class.java)
+                putExtra(PostHelper.PARAM_TOPIC_ID,it)
             })
         }
     }
@@ -88,4 +92,10 @@ class PostDetailViewModel : ViewModel() {
         }
     }
 
+    fun onClickTag(topic: PostFullData.Post.Topic) {
+        HomeHelper.goActivityByIntent {
+            setComponentName(TopicScreen::class.java)
+            putExtra(PostHelper.PARAM_TOPIC_ID, topic.id.toLong())
+        }
+    }
 }

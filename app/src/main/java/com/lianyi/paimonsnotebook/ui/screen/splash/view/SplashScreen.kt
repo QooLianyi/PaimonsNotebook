@@ -1,7 +1,6 @@
 package com.lianyi.paimonsnotebook.ui.screen.splash.view
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
@@ -13,7 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.common.components.loading.ContentLoadingPlaceholder
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
+import com.lianyi.paimonsnotebook.common.extension.intent.setComponentName
 import com.lianyi.paimonsnotebook.ui.screen.develop.TypographyScreen
+import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
 import com.lianyi.paimonsnotebook.ui.screen.home.view.HomeScreen
 import com.lianyi.paimonsnotebook.ui.screen.splash.viewmodel.SplashScreenViewModel
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
@@ -29,7 +30,7 @@ class SplashScreen : BaseActivity(false) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //todo 用户协议
+        //TODO 用户协议
 //        lifecycleScope.launch {
 //            val userAgree = datastorePf.data.first()[PreferenceKeys.AgreeUserAgreement] ?: false
 //            if (!userAgree) {
@@ -40,12 +41,10 @@ class SplashScreen : BaseActivity(false) {
 //            }
 //        }
 
-
         viewModel.init {
             goHomeScreen()
 //            goDebugPage()
         }
-
 
         setContent {
             PaimonsNotebookTheme {
@@ -66,16 +65,16 @@ class SplashScreen : BaseActivity(false) {
     }
 
     private fun goHomeScreen() {
-        startActivity(Intent(this@SplashScreen, HomeScreen::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        })
+        HomeHelper.goActivityByIntent {
+            setComponentName(HomeScreen::class.java)
+        }
         finish()
     }
 
     private fun goDebugPage() {
-        startActivity(Intent(this@SplashScreen, TypographyScreen::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        })
+        HomeHelper.goActivityByIntent {
+            setComponentName(TypographyScreen::class.java)
+        }
         finish()
     }
 

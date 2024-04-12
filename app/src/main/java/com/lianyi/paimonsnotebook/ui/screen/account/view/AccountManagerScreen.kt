@@ -14,8 +14,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +28,7 @@ import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.LoadingDialog
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.spacer.NavigationBarPaddingSpacer
-import com.lianyi.paimonsnotebook.common.components.text.TitleText
+import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.IconButton
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.database.user.util.AccountHelper
@@ -76,7 +74,7 @@ class AccountManagerScreen : BaseActivity() {
 
                     ContentSpacerLazyColumn(state = state, modifier = Modifier.fillMaxSize()) {
                         item {
-                            TitleText(text = "账号列表", fontSize = 20.sp, modifier = Modifier
+                            PrimaryText(text = "账号列表", fontSize = 20.sp, modifier = Modifier
                                 .paddingStart(8.dp)
                                 .padding(8.dp))
                         }
@@ -138,13 +136,13 @@ class AccountManagerScreen : BaseActivity() {
                                     viewModel.dismissMenu()
                                     viewModel.showCookieInputDialog()
                                 }) {
-                                    TitleText(text = "通过Cookie", fontSize = 16.sp)
+                                    PrimaryText(text = "通过Cookie", fontSize = 16.sp)
                                 }
                                 DropdownMenuItem(onClick = {
                                     viewModel.dismissMenu()
                                     viewModel.loadWebView(this@AccountManagerScreen)
                                 }) {
-                                    TitleText(text = "自动获取", fontSize = 16.sp)
+                                    PrimaryText(text = "自动获取", fontSize = 16.sp)
                                 }
                             }
 

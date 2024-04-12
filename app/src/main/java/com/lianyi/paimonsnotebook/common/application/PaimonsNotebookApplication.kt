@@ -5,12 +5,13 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.pm.ApplicationInfo
-import android.content.pm.ShortcutManager
+import android.os.Build
 import android.os.Bundle
 import androidx.lifecycle.ProcessLifecycleOwner
 import cat.ereza.customactivityoncrash.config.CaocConfig
 import coil.ImageLoader
 import coil.ImageLoaderFactory
+import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.disk.DiskCache
 import com.lianyi.paimonsnotebook.BuildConfig
@@ -40,6 +41,8 @@ class PaimonsNotebookApplication : Application(), ImageLoaderFactory {
         }
 
         const val version = BuildConfig.VERSION_NAME
+
+        const val versionCode = BuildConfig.VERSION_CODE
 
         val name by lazy {
             context.getString(R.string.app_name)
@@ -78,37 +81,39 @@ class PaimonsNotebookApplication : Application(), ImageLoaderFactory {
             .errorActivity(CrashScreen::class.java)
             .apply()
 
-        //debug禁用AppCenter
-        if(!BuildConfig.DEBUG){
+        //release环境
+        if (!BuildConfig.DEBUG) {
+            //启用AppCenter
             AppCenter.start(
                 this,
                 BuildConfig.APPCENTER_SECRET,
                 Analytics::class.java,
                 Crashes::class.java
             )
+            //执行计划删除
+            executeDiskCachePlanDelete()
         }
 
+        //debug环境
+        if (BuildConfig.DEBUG) {
+            //debug包启用activity生命周期回调
+            initActivityLifecycleCallbacks()
+
+//            StrictMode.enableDefaults()
+
+            //启用LeakedClosableViolation跟踪
+//            try {
+//                Class.forName("dalvik.system.CloseGuard")
+//                    .getMethod("setEnabled", Boolean::class.javaPrimitiveType)
+//                    .invoke(null, true)
+//                println("dalvik.system.CloseGuard : 启用成功")
+//            } catch (e: ReflectiveOperationException) {
+//                println("dalvik.system.CloseGuard : 启用失败")
+//            }
+        }
+
+
         ProcessLifecycleOwner.get().lifecycle.addObserver(ApplicationLifecycleObserver())
-
-//        initActivityLifecycleCallbacks()
-//        initShortcutManager()
-
-        executeDiskCachePlanDelete()
-    }
-
-    private fun initShortcutManager() {
-        val manager = getSystemService(ShortcutManager::class.java)
-
-//        val shortcutInfo = ShortcutInfo.Builder(context,"daily_note")
-//            .setIcon(Icon.createWithResource(context, R.drawable.ic_settings))
-//            .setShortLabel("实时便笺")
-//            .setLongLabel("实时便笺")
-//            .setIntent(Intent(context,DailyNoteScreen::class.java).apply {
-//                action = "start"
-//            })
-//            .build()
-
-        manager.dynamicShortcuts = listOf()
     }
 
     //监听全部activity的状态
@@ -187,7 +192,13 @@ class PaimonsNotebookApplication : Application(), ImageLoaderFactory {
         imageLoader {
             components {
                 callFactory(emptyOkHttpClient)
-                add { result, options, _ -> ImageDecoderDecoder(result.source, options, false) }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    add { result, options, _ -> ImageDecoderDecoder(result.source, options, false) }
+                } else {
+                    add { result, options, _ -> GifDecoder(result.source, options, false) }
+                }
+
                 add(MergeInterceptor)
             }
             diskCache(imageCache)

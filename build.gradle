@@ -1,13 +1,25 @@
 buildscript {
-    ext {
-        compose_version = '1.5.1'
-        compose_compiler_version = '1.5.3'
-    }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id 'com.android.application' version '8.1.1' apply false
-    id 'com.android.library' version '8.1.1' apply false
-    id 'org.jetbrains.kotlin.android' version '1.9.10' apply false
+    id 'com.android.application' version '8.2.0' apply false
+    id 'com.android.library' version '8.2.0' apply false
+    id 'org.jetbrains.kotlin.android' version '1.9.21' apply false
+    id 'com.google.devtools.ksp' version '1.9.21-1.0.15' apply false
+}
+
+ext{
+    //compose 版本
+    compose_version = '1.5.4'
+    compose_compiler_version = '1.5.6'
+
+    //sdk版本
+    compile_sdk = 34
+    min_sdk = 26
+    target_sdk = 34
+
+    //派蒙笔记本主程序版本信息
+    paimons_notebook_version = 6
+    paimons_notebook_version_name = '1.5.0'
 }
 
 tasks.register('clean', Delete) {

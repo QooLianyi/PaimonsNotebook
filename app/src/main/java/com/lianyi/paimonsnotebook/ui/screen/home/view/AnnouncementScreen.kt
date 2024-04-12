@@ -6,23 +6,14 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
-import com.lianyi.paimonsnotebook.common.components.layout.HtmlTextLazyColumn
 import com.lianyi.paimonsnotebook.common.components.loading.LoadingAnimationPlaceholder
 import com.lianyi.paimonsnotebook.common.components.placeholder.EmptyPlaceholder
 import com.lianyi.paimonsnotebook.common.components.placeholder.ErrorPlaceholder
-import com.lianyi.paimonsnotebook.common.components.text.DividerText
-import com.lianyi.paimonsnotebook.common.components.text.TitleText
 import com.lianyi.paimonsnotebook.common.util.enums.LoadingState
-import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
-import com.lianyi.paimonsnotebook.common.util.time.TimeStampType
 import com.lianyi.paimonsnotebook.ui.screen.home.viewmodel.PostDetailViewModel
 import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
 

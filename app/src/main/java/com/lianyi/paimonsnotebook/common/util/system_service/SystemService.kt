@@ -7,10 +7,13 @@ import android.app.Service
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.view.WindowManager
 import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
+import java.io.File
 
 @SuppressLint("InternalInsetResource", "DiscouragedApi")
 object SystemService {
@@ -48,9 +51,24 @@ object SystemService {
         context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     }
 
+    //设置剪切板内容
     fun setClipBoardText(text: String, label: String? = null) {
         clipboardManager.setPrimaryClip(ClipData.newPlainText(label, text))
     }
+
+    //安装程序
+    fun installAndroidApplication(file: File) {
+        println(file.absolutePath)
+        context.startActivity(
+            Intent(Intent.ACTION_VIEW).apply {
+                val uri =
+                    FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+                setDataAndType(uri, "application/vnd.android.package-archive")
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+            }
+        )
+    }
+
 
     fun serviceIsRunning(cls: Service) {
         val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager

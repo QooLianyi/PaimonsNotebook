@@ -22,7 +22,9 @@ import com.lianyi.paimonsnotebook.common.components.text.FoldTextContent
 import com.lianyi.paimonsnotebook.common.service.overlay.core.OverlayState
 import com.lianyi.paimonsnotebook.common.service.overlay.debug.DebugOverlayService
 import com.lianyi.paimonsnotebook.common.service.util.ServiceHelper
+import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugAchievementContent
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugAppWidgetContent
+import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugDeviceFpContent
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugDeviceInfoContent
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugDynamicSecretContent
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugGachaContent
@@ -96,6 +98,14 @@ fun DebugOverlayContent(overlayState: OverlayState) {
 
         item {
             FoldTextContent(titleSlot = {
+                Text(text = "device_fp", fontSize = 20.sp)
+            }) {
+                DebugDeviceFpContent()
+            }
+        }
+
+        item {
+            FoldTextContent(titleSlot = {
                 Text(text = "Post", fontSize = 20.sp)
             }) {
                 DebugPostContent()
@@ -128,10 +138,19 @@ fun DebugOverlayContent(overlayState: OverlayState) {
 
         item {
             FoldTextContent(titleSlot = {
+                Text(text = "成就", fontSize = 20.sp)
+            }) {
+                DebugAchievementContent()
+            }
+        }
+
+        item {
+            FoldTextContent(titleSlot = {
                 Text(text = "临时测试功能", fontSize = 20.sp)
             }) {
                 DebugTempContent()
             }
         }
+
     }
 }

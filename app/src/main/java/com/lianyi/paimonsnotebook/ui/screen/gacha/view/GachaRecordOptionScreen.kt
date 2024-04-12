@@ -61,13 +61,16 @@ class GachaRecordOptionScreen : BaseActivity() {
                 .background(BackGroundColor)
                 .padding(12.dp, 8.dp)
         ) {
-           item {
-               Column {
-                   SettingOptionGroup(groupName = "祈愿记录", list = viewModel.gachaSettings)
-                   SettingOptionGroup(groupName = "记录获取", list = viewModel.importSettings)
-                   SettingOptionGroup(groupName = "记录导出", list = viewModel.exportSettings)
-               }
-           }
+            item {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    SettingOptionGroup(groupName = "祈愿记录", list = viewModel.gachaSettings)
+                    SettingOptionGroup(groupName = "记录获取", list = viewModel.importSettings)
+                    SettingOptionGroup(groupName = "记录导出", list = viewModel.exportSettings)
+                    SettingOptionGroup(groupName = "关于", list = viewModel.aboutSettings)
+                }
+            }
         }
 
         if (viewModel.showLoadingDialog) {
@@ -103,7 +106,7 @@ class GachaRecordOptionScreen : BaseActivity() {
             }
         }
 
-        if(viewModel.showGameRoleDialog){
+        if (viewModel.showGameRoleDialog) {
             UserGameRolesDialog(
                 onButtonClick = viewModel::dismissGameRoleDialog,
                 onDismissRequest = viewModel::dismissGameRoleDialog,

@@ -198,11 +198,11 @@ class ItemFilterViewModel<T>(
                 reverseList = data.orderBy == SortOrderBy.Descend
 
                 //从枚举类中找到值为data.value的枚举类型并赋值
-                orderByType = ItemFilterType.values().first { it.ordinal == data.value }
+                orderByType = ItemFilterType.entries.first { it.ordinal == data.value }
             }
 
             ItemFilterType.ListLayout -> {
-                itemListLayoutStyle = ListLayoutStyle.values()[data.value]
+                itemListLayoutStyle = ListLayoutStyle.entries.toTypedArray()[data.value]
 
                 selectedOptionMap[data.sortBy] = setOf(itemListLayoutStyle.ordinal)
             }

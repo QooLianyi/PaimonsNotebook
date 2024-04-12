@@ -89,7 +89,7 @@ open class OverlayService(
         contentViewHolder.view.setContent {
             val contentAlphaAnim by animateFloatAsState(
                 targetValue = if (state.showContent) 1f else 0f,
-                tween(300)
+                tween(300), label = ""
             )
 
             //监测内容显示状态

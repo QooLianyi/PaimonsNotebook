@@ -14,7 +14,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.components.text.TitleText
+import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.binding.UserGameRoleData
 import com.lianyi.paimonsnotebook.ui.theme.*
 
@@ -57,9 +57,9 @@ fun AccountItemGameRole(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            TitleText(text = role.nickname, fontSize = 14.sp, color = Black)
+            PrimaryText(text = role.nickname, fontSize = 14.sp, color = Black)
             Spacer(modifier = Modifier.height(2.dp))
-            TitleText(
+            PrimaryText(
                 text = "${role.game_uid} | ${role.region_name}",
                 fontSize = 12.sp,
                 color = Info

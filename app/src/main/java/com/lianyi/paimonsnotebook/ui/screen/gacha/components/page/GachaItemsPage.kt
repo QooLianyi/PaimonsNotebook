@@ -32,9 +32,10 @@ fun GachaItemsPage(
         columns = GridCells.Adaptive(60.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(8.dp),
+        contentPadding = PaddingValues(12.dp),
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize(),
+        statusBarPaddingEnabled = false
     ) {
         items.forEach { pair ->
             val showItem = mutableListOf<Pair<GachaOverviewListItem, Int>>().apply {
@@ -50,7 +51,7 @@ fun GachaItemsPage(
             item(span = {
                 GridItemSpan(this.maxLineSpan)
             }) {
-                Text(text = "${pair.first}星", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                Text(text = "${pair.first}星", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
             }
 
             items(

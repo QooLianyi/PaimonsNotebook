@@ -19,7 +19,7 @@ import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.media.LazyBanner
 import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
-import com.lianyi.paimonsnotebook.common.components.text.TitleText
+import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.database.disk_cache.util.DiskCacheDataType
 import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.NearActivityData
@@ -86,7 +86,7 @@ internal fun HomeContent(
             //近期活动
             if (nearActivity.isNotEmpty()) {
                 item {
-                    TitleText(
+                    PrimaryText(
                         text = "近期活动",
                         modifier = Modifier
                             .fillMaxWidth()
@@ -115,7 +115,7 @@ internal fun HomeContent(
 
             //公告列表
             item {
-                TitleText(
+                PrimaryText(
                     text = "公告",
                     modifier = Modifier
                         .fillMaxWidth()

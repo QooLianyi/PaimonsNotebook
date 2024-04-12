@@ -1,8 +1,6 @@
 package com.lianyi.paimonsnotebook.ui.screen.abyss.components.page
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -20,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.lianyi.paimonsnotebook.common.components.layout.card.MaterialCard
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
+import com.lianyi.paimonsnotebook.common.components.loading.ContentLoadingLayout
 import com.lianyi.paimonsnotebook.common.components.loading.ContentLoadingPlaceholder
 import com.lianyi.paimonsnotebook.common.components.placeholder.EmptyPlaceholder
 import com.lianyi.paimonsnotebook.common.components.placeholder.ErrorPlaceholder
@@ -38,32 +36,27 @@ fun AbyssRecordPage(
     getAvatarFromMetadata: (Int) -> AvatarData?,
     getMonsterFromMetadata: (String) -> MonsterData?
 ) {
-    Crossfade(
-        targetState = loadingState,
-        label = ""
-    ) { state ->
-        when (state) {
-            LoadingState.Error -> {
-                ErrorPlaceholder("未登录或角色不存在")
-            }
 
-            LoadingState.Loading -> {
-                ContentLoadingPlaceholder(text = "正在获取数据...")
-            }
-
-            LoadingState.Empty -> {
-                EmptyPlaceholder("好像还没有战斗数据哦?")
-            }
-
-            LoadingState.Success -> {
-                if (abyssData == null) return@Crossfade
-                Content(
-                    currentAbyssRecord = abyssData,
-                    getAvatarFromMetadata = getAvatarFromMetadata,
-                    getMonsterFromMetadata = getMonsterFromMetadata
-                )
-            }
+    ContentLoadingLayout(
+        loadingState = loadingState,
+        loadingContent = {
+            ContentLoadingPlaceholder(text = "正在获取数据...")
+        },
+        emptyContent = {
+            EmptyPlaceholder("好像还没有战斗数据哦?")
+        },
+        errorContent = {
+            ErrorPlaceholder("未登录或角色不存在")
+        }, defaultContent = {
+            ErrorPlaceholder("未登录或角色不存在")
         }
+    ) {
+        if (abyssData == null) return@ContentLoadingLayout
+        Content(
+            currentAbyssRecord = abyssData,
+            getAvatarFromMetadata = getAvatarFromMetadata,
+            getMonsterFromMetadata = getMonsterFromMetadata
+        )
     }
 }
 
@@ -89,62 +82,75 @@ private fun Content(
                         modifier = Modifier.weight(1f),
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        val defeat = currentAbyssRecord.defeat_rank.first()
-                        val defeatAvatar = remember {
-                            getAvatarFromMetadata(defeat.avatar_id)
+
+                        if (currentAbyssRecord.defeat_rank.isNotEmpty()) {
+                            val defeat = currentAbyssRecord.defeat_rank.first()
+                            val defeatAvatar = remember {
+                                getAvatarFromMetadata(defeat.avatar_id)
+                            }
+
+                            AbyssOverviewInformationItem(
+                                "最多击破",
+                                "${defeat.value}",
+                                defeatAvatar?.iconUrl ?: defeat.avatar_icon
+                            )
                         }
 
-                        AbyssOverviewInformationItem(
-                            "最多击破",
-                            "${defeat.value}",
-                            defeatAvatar?.iconUrl ?: defeat.avatar_icon
-                        )
+                        if (currentAbyssRecord.damage_rank.isNotEmpty()) {
+                            val damage = currentAbyssRecord.damage_rank.first()
+                            val damageAvatar = remember {
+                                getAvatarFromMetadata(damage.avatar_id)
+                            }
 
-                        val damage = currentAbyssRecord.damage_rank.first()
-                        val damageAvatar = remember {
-                            getAvatarFromMetadata(damage.avatar_id)
+                            AbyssOverviewInformationItem(
+                                "最强一击",
+                                "${damage.value}",
+                                damageAvatar?.iconUrl ?: damage.avatar_icon
+                            )
                         }
 
-                        AbyssOverviewInformationItem(
-                            "最强一击",
-                            "${damage.value}",
-                            damageAvatar?.iconUrl ?: damage.avatar_icon
-                        )
 
-                        val takeDamage = currentAbyssRecord.take_damage_rank.first()
-                        val takeDamageAvatar = remember {
-                            getAvatarFromMetadata(takeDamage.avatar_id)
+
+                        if (currentAbyssRecord.take_damage_rank.isNotEmpty()) {
+                            val takeDamage = currentAbyssRecord.take_damage_rank.first()
+                            val takeDamageAvatar = remember {
+                                getAvatarFromMetadata(takeDamage.avatar_id)
+                            }
+
+                            AbyssOverviewInformationItem(
+                                "最多承伤",
+                                "${takeDamage.value}",
+                                takeDamageAvatar?.iconUrl ?: takeDamage.avatar_icon
+                            )
                         }
 
-                        AbyssOverviewInformationItem(
-                            "最多承伤",
-                            "${takeDamage.value}",
-                            takeDamageAvatar?.iconUrl ?: takeDamage.avatar_icon
-                        )
+                        if (currentAbyssRecord.normal_skill_rank.isNotEmpty()) {
+                            val normalSkill =
+                                currentAbyssRecord.normal_skill_rank.first()
+                            val normalSkillAvatar = remember {
+                                getAvatarFromMetadata(normalSkill.avatar_id)
+                            }
 
-                        val normalSkill =
-                            currentAbyssRecord.normal_skill_rank.first()
-                        val normalSkillAvatar = remember {
-                            getAvatarFromMetadata(normalSkill.avatar_id)
+                            AbyssOverviewInformationItem(
+                                "元素战技次数",
+                                "${normalSkill.value}",
+                                normalSkillAvatar?.iconUrl ?: normalSkill.avatar_icon
+                            )
                         }
 
-                        AbyssOverviewInformationItem(
-                            "元素战技次数",
-                            "${normalSkill.value}",
-                            normalSkillAvatar?.iconUrl ?: normalSkill.avatar_icon
-                        )
+                        if (currentAbyssRecord.energy_skill_rank.isNotEmpty()) {
+                            val energySkill =
+                                currentAbyssRecord.energy_skill_rank.first()
+                            val energySkillAvatar = remember {
+                                getAvatarFromMetadata(energySkill.avatar_id)
+                            }
 
-                        val energySkill =
-                            currentAbyssRecord.energy_skill_rank.first()
-                        val energySkillAvatar = remember {
-                            getAvatarFromMetadata(energySkill.avatar_id)
+                            AbyssOverviewInformationItem(
+                                "元素爆发次数",
+                                "${energySkill.value}",
+                                energySkillAvatar?.iconUrl ?: energySkill.avatar_icon
+                            )
                         }
-
-                        AbyssOverviewInformationItem(
-                            "元素爆发次数",
-                            "${energySkill.value}",
-                            energySkillAvatar?.iconUrl ?: energySkill.avatar_icon
-                        )
                     }
 
                     Spacer(modifier = Modifier.width(8.dp))

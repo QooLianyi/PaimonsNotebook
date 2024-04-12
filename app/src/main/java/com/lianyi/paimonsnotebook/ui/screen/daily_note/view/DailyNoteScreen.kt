@@ -38,7 +38,7 @@ import com.lianyi.paimonsnotebook.common.components.dialog.LazyColumnDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.LoadingDialog
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
-import com.lianyi.paimonsnotebook.common.components.text.TitleText
+import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.TextSlider
 import com.lianyi.paimonsnotebook.common.extension.modifier.padding.paddingTop
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
@@ -86,7 +86,7 @@ class DailyNoteScreen : ComponentActivity() {
                                 .paddingTop(6.dp)
                         ) {
 
-                            TitleText(
+                            PrimaryText(
                                 text = "实时便笺",
                                 fontSize = 20.sp,
                                 modifier = Modifier.weight(1f)
