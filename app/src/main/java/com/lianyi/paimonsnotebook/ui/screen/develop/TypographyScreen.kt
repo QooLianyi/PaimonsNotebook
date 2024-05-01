@@ -2,14 +2,9 @@ package com.lianyi.paimonsnotebook.ui.screen.develop
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.runtime.mutableStateListOf
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.achievement.AchievementData
-import com.lianyi.paimonsnotebook.ui.screen.setting.data.StaticResourcesChannelData
-import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
 
 
 class TypographyScreen : BaseActivity() {
@@ -17,133 +12,42 @@ class TypographyScreen : BaseActivity() {
     private lateinit var start: ActivityResultLauncher<Intent>
 
     override fun onStartActivityForResult(result: ActivityResult) {
+        println("resultCode = ${result.resultCode} result = ${result.data}")
         super.onStartActivityForResult(result)
     }
+
+    override fun onNewIntent(intent: Intent?) {
+        println("onNewIntent = ${intent?.data}")
+        super.onNewIntent(intent)
+    }
+
+//    private fun bytes2MD5(byteStr: ByteArray): String {
+//        val stringBuffer = StringBuffer()
+//        try {
+//            val messageDigest = MessageDigest.getInstance("MD5")
+//            messageDigest.reset()
+//            messageDigest.update(byteStr)
+//            val digest = messageDigest.digest()
+//            for (b in digest) {
+//                val i = b.toInt() and UByte.MAX_VALUE.toInt()
+//                if (Integer.toHexString(i).length == 1) {
+//                    stringBuffer.append("0")
+//                    stringBuffer.append(Integer.toHexString(i))
+//                } else {
+//                    stringBuffer.append(Integer.toHexString(i))
+//                }
+//            }
+//        } catch (e: Exception) {
+//        }
+//        return stringBuffer.toString()
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         start = registerStartActivityForResult()
 
-        setContent {
-//            PaimonsNotebookTheme(this) {
-//
-//                ContentSpacerLazyColumn(
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .background(BackGroundColor)
-//                ) {
-//                    item {
-//                        Button(onClick = {
-//                            val achi = FileHelper.getMetadata(MetadataHelper.FileNameAchievement)
-//                            val goalFile = FileHelper.getMetadata(MetadataHelper.FileNameAchievementGoal)
-//
-//                            if (achi == null || goalFile == null) {
-//                                "缺少文件".errorNotify()
-//                                return@Button
-//                            }
-//
-//                            JsonReader(InputStreamReader(achi.inputStream())).use {
-//                                it.beginArray()
-//
-//                                while (it.hasNext()) {
-//
-//                                    var id = -1
-//                                    var goal = -1
-//                                    var order = -1
-//                                    var process = -1
-//                                    var previousId = 0
-//                                    var isDeleteWatcher = false
-//                                    var title = ""
-//                                    var description = ""
-//                                    var version = ""
-//                                    var reward = AchievementData.FinishReward(0, 0)
-//                                    var icon = ""
-//
-//                                    it.apply {
-//                                        beginObject()
-//
-//                                        while (hasNext()) {
-//                                            when (nextName()) {
-//                                                UIAFHelper.Field.Data.Id -> id = nextInt()
-//                                                UIAFHelper.Field.Data.Goal -> goal = nextInt()
-//                                                UIAFHelper.Field.Data.Order -> order = nextInt()
-//                                                UIAFHelper.Field.Data.Title -> title = nextString()
-//                                                UIAFHelper.Field.Data.Description -> description =
-//                                                    nextString()
-//
-//                                                UIAFHelper.Field.Data.FinishReward -> {
-//                                                    beginObject()
-//
-//                                                    var rewardId = -1
-//                                                    var count = -1
-//                                                    while (hasNext()) {
-//                                                        when (nextName()) {
-//                                                            UIAFHelper.Field.Data.Reward.Id -> rewardId =
-//                                                                nextInt()
-//
-//                                                            UIAFHelper.Field.Data.Reward.Count -> count =
-//                                                                nextInt()
-//                                                        }
-//                                                    }
-//                                                    endObject()
-//
-//                                                    reward = AchievementData.FinishReward(count, rewardId)
-//
-//                                                    continue
-//                                                }
-//
-//                                                UIAFHelper.Field.Data.IsDeleteWatcherAfterFinish -> isDeleteWatcher =
-//                                                    nextBoolean()
-//
-//                                                UIAFHelper.Field.Data.Progress -> process = nextInt()
-//                                                UIAFHelper.Field.Data.Version -> version = nextString()
-//                                                UIAFHelper.Field.Data.Icon -> icon = nextString()
-//                                                UIAFHelper.Field.Data.PreviousId -> previousId = nextInt()
-//                                            }
-//                                        }
-//
-//                                        endObject()
-//                                    }
-//
-//                                    list += AchievementData(
-//                                        description,
-//                                        reward,
-//                                        goal,
-//                                        id,
-//                                        isDeleteWatcher,
-//                                        order,
-//                                        process,
-//                                        title,
-//                                        version,
-//                                        icon,
-//                                        previousId
-//                                    )
-//                                }
-//
-//                                it.endArray()
-//                            }
-//                        }) {
-//                            Text(text = "JSON流测试")
-//                        }
-//                    }
-//                    items(list) { item ->
-//                        Row(
-//                            modifier = Modifier
-//                                .padding(10.dp)
-//                                .fillMaxWidth()
-//                        ) {
-//                            Column {
-//                                TitleText(text = item.title)
-//                                Spacer(modifier = Modifier.height(2.dp))
-//                                Text(text = item.description, fontSize = 12.sp, color = Font_Second)
-//                            }
-//                        }
-//                    }
-//                }
-//
-//            }
-
+    }
 //            PaimonsNotebookTheme(this) {
 //                val state = rememberLazyListState()
 //                val firstIndex by remember { derivedStateOf { state.firstVisibleItemIndex } }
@@ -320,6 +224,4 @@ class TypographyScreen : BaseActivity() {
 //                    }
 //                }
 //            }
-        }
-    }
 }

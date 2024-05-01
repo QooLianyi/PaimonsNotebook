@@ -32,20 +32,23 @@ import com.lianyi.paimonsnotebook.ui.theme.White
 internal fun WebHomeNearActivity(
     item: NearActivityData.Hots.Group2.Children.NearActivity,
     diskCache: DiskCache,
-    block: (url:String) -> Unit,
+    block: (url: String) -> Unit,
 ) {
     Box(
         Modifier
             .fillMaxWidth()
             .background(White)
             .padding(8.dp, 3.dp)
+            .radius(4.dp)
             .clickable {
-                println("before ${item.url}")
                 block(item.url)
-                println("after ${item.url}")
             }
             .background(Gray_F5)) {
-        Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier
+                .radius(4.dp)
+                .padding(8.dp), verticalAlignment = Alignment.CenterVertically
+        ) {
 
             NetworkImage(
                 url = item.icon,

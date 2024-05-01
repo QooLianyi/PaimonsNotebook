@@ -23,6 +23,15 @@ object CookieHelper {
         const val Cookie = CookieToken or Ltoken
     }
 
+    //连接字符串并转换为cookie
+    fun concatStringToCookie(vararg values: Pair<String, String>): Cookie {
+        val cookie = Cookie()
+        values.forEach { pair ->
+            cookie[pair.first] = pair.second
+        }
+        return cookie
+    }
+
     fun stringToCookieMap(cookieString: String?): Map<String, String> {
         val cookies = mutableMapOf<String, String>()
         cookieString?.split(";")?.toList()

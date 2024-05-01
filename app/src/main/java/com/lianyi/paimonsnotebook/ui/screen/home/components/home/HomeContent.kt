@@ -107,7 +107,6 @@ internal fun HomeContent(
                             lastUseFrom = "首页"
                         )
                     ) { url ->
-                        println("before goPostDetail")
                         goPostDetail(url, PostType.Notice)
                     }
                 }

@@ -162,7 +162,7 @@ class MiHoYoJSInterface(
     }
 
     private fun pushPage(payload: PushPagePayload): JsResult<Map<String, Any>>? {
-        HomeHelper.goActivityByIntent {
+        HomeHelper.goActivityByIntentNewTask {
             setComponentName(HoyolabWebActivity::class.java)
             putExtra(HoyolabWebActivity.EXTRA_URL, payload.page)
             putExtra(HoyolabWebActivity.EXTRA_MID, user.userEntity.mid)

@@ -210,7 +210,7 @@ class AbyssScreenViewModel : ViewModel() {
             return
         }
 
-        HomeHelper.goActivityByIntent {
+        HomeHelper.goActivityByIntentNewTask {
             setComponentName(HoyolabWebActivity::class.java)
             putExtra("mid", currentUser?.userEntity?.mid ?: "")
         }

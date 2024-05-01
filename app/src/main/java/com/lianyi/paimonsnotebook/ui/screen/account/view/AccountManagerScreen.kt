@@ -1,20 +1,26 @@
 package com.lianyi.paimonsnotebook.ui.screen.account.view
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
-import androidx.compose.runtime.*
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -35,9 +41,11 @@ import com.lianyi.paimonsnotebook.common.database.user.util.AccountHelper
 import com.lianyi.paimonsnotebook.common.extension.modifier.padding.paddingStart
 import com.lianyi.paimonsnotebook.common.extension.modifier.state.isScrollToEnd
 import com.lianyi.paimonsnotebook.ui.screen.account.components.AccountItem
-import com.lianyi.paimonsnotebook.ui.screen.account.components.CookieInputDialog
+import com.lianyi.paimonsnotebook.ui.screen.account.components.QRCodeLoginPopup
+import com.lianyi.paimonsnotebook.ui.screen.account.components.dialog.CookieInputDialog
 import com.lianyi.paimonsnotebook.ui.screen.account.viewmodel.AccountManagerScreenViewModel
-import com.lianyi.paimonsnotebook.ui.theme.*
+import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
+import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
 
 class AccountManagerScreen : BaseActivity() {
 
@@ -45,15 +53,14 @@ class AccountManagerScreen : BaseActivity() {
         ViewModelProvider(this)[AccountManagerScreenViewModel::class.java]
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+    }
+
     @OptIn(ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel.startActivity =
-            registerForActivityResult(
-                ActivityResultContracts.StartActivityForResult(),
-                viewModel::onActivityResult
-            )
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -74,9 +81,11 @@ class AccountManagerScreen : BaseActivity() {
 
                     ContentSpacerLazyColumn(state = state, modifier = Modifier.fillMaxSize()) {
                         item {
-                            PrimaryText(text = "账号列表", fontSize = 20.sp, modifier = Modifier
-                                .paddingStart(8.dp)
-                                .padding(8.dp))
+                            PrimaryText(
+                                text = "账号列表", fontSize = 20.sp, modifier = Modifier
+                                    .paddingStart(8.dp)
+                                    .padding(8.dp)
+                            )
                         }
 
                         items(viewModel.userList, { it.userEntity.mid }) { user ->
@@ -140,9 +149,9 @@ class AccountManagerScreen : BaseActivity() {
                                 }
                                 DropdownMenuItem(onClick = {
                                     viewModel.dismissMenu()
-                                    viewModel.loadWebView(this@AccountManagerScreen)
+                                    viewModel.showQRCodePopup()
                                 }) {
-                                    PrimaryText(text = "自动获取", fontSize = 16.sp)
+                                    PrimaryText(text = "通过米游社扫码", fontSize = 16.sp)
                                 }
                             }
 
@@ -151,10 +160,9 @@ class AccountManagerScreen : BaseActivity() {
                                     .padding(0.dp, 10.dp, 20.dp, 20.dp)
                                     .scale(anim.value),
                                 text = "添加账号",
-                                icon = painterResource(id = R.drawable.ic_add)
-                            ) {
-                                viewModel.showMenu()
-                            }
+                                icon = painterResource(id = R.drawable.ic_add),
+                                block = viewModel::showMenu
+                            )
                         }
 
                         NavigationBarPaddingSpacer()
@@ -181,6 +189,15 @@ class AccountManagerScreen : BaseActivity() {
                             onCancel = viewModel::dismissConfirmDialog
                         )
                     }
+
+                    QRCodeLoginPopup(
+                        visible = viewModel.showQRCodePopup,
+                        bitmap = viewModel.loginQrCodeBitmap,
+                        requestStoragePermission = this@AccountManagerScreen::requestStoragePermission,
+                        checkStoragePermission = this@AccountManagerScreen::checkStoragePermission,
+                        onRequestDismiss = viewModel::onRequestQRCodePopupDismiss,
+                        goLoginPage = viewModel::goHoyolabSelfPage
+                    )
 
                     if (viewModel.showLoadingDialog) {
                         LoadingDialog()

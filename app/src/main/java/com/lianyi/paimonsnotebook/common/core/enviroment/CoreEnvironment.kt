@@ -1,14 +1,18 @@
 package com.lianyi.paimonsnotebook.common.core.enviroment
 
 import android.os.Build
-import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.util.data_store.dataStoreValues
+import com.lianyi.paimonsnotebook.common.util.data_store.dataStoreValuesFirst
+import com.lianyi.paimonsnotebook.common.util.json.JSON
+import com.lianyi.paimonsnotebook.common.web.hoyolab.passport.AppSignInfoData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.public_data_api.PublicDataApiClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.nio.ByteBuffer
+import java.security.MessageDigest
 import java.util.UUID
 
 /*
@@ -19,13 +23,16 @@ object CoreEnvironment {
         PublicDataApiClient()
     }
 
-    init {
+    fun init() {
         CoroutineScope(Dispatchers.IO).launch {
+//            launch {
+//                setAppSignInfo()
+//            }
             launch {
                 dataStoreValues {
                     DeviceId = it[PreferenceKeys.DeviceId] ?: ""
                     BBSDeviceId = it[PreferenceKeys.BBSDeviceId] ?: ""
-
+                    DeviceId40 = it[PreferenceKeys.DeviceId40] ?: ""
 
                     if (DeviceId.isBlank()) {
                         generateDeviceId()
@@ -33,6 +40,11 @@ object CoreEnvironment {
 
                     if (BBSDeviceId.isBlank()) {
                         generateBBSDeviceId()
+                    }
+
+                    //生成40位的deviceId，通过当前的deviceId
+                    if (DeviceId40.isBlank()) {
+                        generateDeviceId40()
                     }
                 }
             }
@@ -48,6 +60,22 @@ object CoreEnvironment {
             }
         }
     }
+
+    //authorize_key 此处使用的是云·星铁的
+    const val AuthorizeKeyStarRailCould = "e45a5ea9b62b87aa"
+
+    //星铁的authorize_key
+    const val AuthorizeKeyStarRail = "c90mr1bwo2rk"
+
+    //app_key 此处使用的是云·星铁 2.1的app_sign
+    var AuthorizeAppSign: String = "9ddde935852443ac9ecc5e794f9917f0"
+        private set
+
+    //签名版本(程序版本)
+    var AuthorizeAppSignVersion = "2.1.0"
+        private set
+
+    const val SDKVersion = "2.22.1"
 
     //原神游戏id
     const val GameBizGenshin = "hk4e_cn"
@@ -69,7 +97,7 @@ object CoreEnvironment {
         "Mozilla/5.0 (Linux; Android 12) Mobile miHoYoBBS/$XrpcVersion"
 
     //TODO 添加版本限制(maybe)
-    const val PaimonsNotebookUA = "PaimonsNotebook/${PaimonsNotebookApplication.version}"
+    const val PaimonsNotebookUA = "PaimonsNotebook/"
 
     var DeviceFp = ""
         private set
@@ -77,17 +105,64 @@ object CoreEnvironment {
     var DeviceId = ""
         private set
 
+    var DeviceId40 = ""
+        private set
+
     var BBSDeviceId = ""
         private set
 
-    //生成设备id
+    //生成米游社设备id
     private suspend fun generateDeviceId() {
         PreferenceKeys.DeviceId.editValue(UUID.randomUUID().toString())
+    }
+
+    //扫码登录设备Id
+    private suspend fun generateDeviceId40() {
+        val namespaceUuid = UUID.fromString("9450ea74-be9c-35c0-9568-f97407856768")
+        val uuid = UUID.nameUUIDFromBytes("$DeviceId:$namespaceUuid".toByteArray(Charsets.UTF_8))
+
+        val uuidBytes = ByteBuffer.wrap(ByteArray(16))
+            .putLong(uuid.mostSignificantBits)
+            .putLong(uuid.leastSignificantBits)
+            .array()
+
+        val sha1Digest = MessageDigest.getInstance("SHA-1")
+        val hashBytes = sha1Digest.digest(uuidBytes)
+
+        PreferenceKeys.DeviceId40.editValue(hashBytes.joinToString("") { "%02x".format(it) })
     }
 
     private suspend fun generateBBSDeviceId() {
         val id = getRandomChars(16)
         PreferenceKeys.BBSDeviceId.editValue(id)
+    }
+
+    //设置App签名
+    private suspend fun setAppSignInfo() {
+        dataStoreValuesFirst {
+            val value = it[PreferenceKeys.AuthorizeAppSign] ?: JSON.EMPTY_OBJ
+
+            if (value == JSON.EMPTY_OBJ) {
+                return@dataStoreValuesFirst
+            }
+
+            val info = JSON.parse<AppSignInfoData>(value)
+
+            info.apply {
+                appSign?.apply {
+                    AuthorizeAppSign = this
+                }
+                appVersion?.apply {
+                    AuthorizeAppSignVersion = this
+                }
+            }
+
+
+            //当本地的值为不空表示需要使用本地的app_sign
+            if (value.isNotEmpty()) {
+                AuthorizeAppSign = value
+            }
+        }
     }
 
     private fun getRandomChars(times: Int) = with(StringBuilder()) {

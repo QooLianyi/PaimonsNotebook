@@ -82,12 +82,17 @@ object HomeHelper {
         }
     }
 
+    fun goActivityByIntentNewTask(block: Intent.() -> Unit) = goActivityByIntent {
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        block.invoke(this)
+    }
+
     @SuppressLint("IntentWithNullActionLaunch")
     fun goActivityByIntent(block: Intent.() -> Unit) {
         val intent = Intent().apply(block)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }
+
 
     fun goActivityForResultByIntent(
         launcher: ActivityResultLauncher<Intent>,

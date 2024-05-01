@@ -4,7 +4,9 @@ import android.os.Build
 import com.google.gson.Gson
 import com.lianyi.paimonsnotebook.common.core.enviroment.CoreEnvironment
 import com.lianyi.paimonsnotebook.common.data.ResultData
+import com.lianyi.paimonsnotebook.common.extension.request.setDeviceInfoHeaders
 import com.lianyi.paimonsnotebook.common.extension.request.setUserAgent
+import com.lianyi.paimonsnotebook.common.extension.request.setXRPCAppInfo
 import com.lianyi.paimonsnotebook.common.util.parameter.getParameterizedType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -34,16 +36,13 @@ val defaultOkHttpClient by lazy {
 
         addInterceptor {
             val request = it.request().newBuilder()
-            request.addHeader("x-rpc-client_type", CoreEnvironment.ClientType)
-            request.addHeader("x-rpc-app_version", CoreEnvironment.XrpcVersion)
             request.addHeader("x-rpc-sys_version", Build.VERSION.RELEASE)
-            request.addHeader("x-rpc-device_fp", CoreEnvironment.DeviceFp)
-            request.addHeader("x-rpc-device_name", "${Build.BRAND} ${Build.MODEL}")
-            request.addHeader("x-rpc-device_id", CoreEnvironment.DeviceId)
-            request.addHeader("x-rpc-device_model", Build.MODEL)
             request.addHeader("x-rpc-channel", "miyousheluodi")
-            request.addHeader("x-rpc-app_id", "bll8iq97cem8")
             request.addHeader("User-Agent", CoreEnvironment.HoyolabMobileUA)
+
+            request.setXRPCAppInfo()
+
+            request.setDeviceInfoHeaders()
 
             it.proceed(request.build())
         }

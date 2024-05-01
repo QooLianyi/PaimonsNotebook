@@ -2,6 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <queries>
+        <package android:name="com.mihoyo.hyperion" />
+
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+        </intent>
+    </queries>
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -17,7 +25,7 @@
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -41,6 +49,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PaimonsNotebook"
         tools:targetApi="33">
+
         <activity
             android:name=".ui.screen.shortcuts_manager.view.ShortcutsManagerScreen"
             android:theme="@style/Theme.PaimonsNotebook" />
@@ -91,9 +100,6 @@
             android:name=".ui.screen.setting.view.SettingsScreen"
             android:theme="@style/Theme.PaimonsNotebook" />
         <activity
-            android:name=".ui.screen.login.view.MihoyoLoginActivity"
-            android:theme="@style/Theme.PaimonsNotebookFullScreen" />
-        <activity
             android:name=".ui.screen.account.view.AccountManagerScreen"
             android:theme="@style/Theme.PaimonsNotebook" />
         <activity
@@ -133,13 +139,24 @@
             android:theme="@style/Theme.PaimonsNotebook" />
         <activity
             android:name=".ui.screen.develop.TypographyScreen"
-            android:theme="@style/Theme.PaimonsNotebook" />
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.PaimonsNotebook">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="mdk_e45a5ea9b62b87aa" />
+                <!--                <data android:scheme="mdk_47f91e6080ef9670"/>-->
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".ui.screen.home.view.HomeScreen"
             android:theme="@style/Theme.PaimonsNotebook" />
 
-        <service android:name=".common.service.overlay.debug.DebugOverlayService"
-            android:foregroundServiceType="specialUse"/>
+        <service
+            android:name=".common.service.overlay.debug.DebugOverlayService"
+            android:foregroundServiceType="specialUse" />
 
         <receiver
             android:name=".ui.widgets.widget.AppWidgetCommon1X1"

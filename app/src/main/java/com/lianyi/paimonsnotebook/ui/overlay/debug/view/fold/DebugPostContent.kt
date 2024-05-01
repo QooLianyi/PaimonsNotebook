@@ -25,7 +25,7 @@ fun DebugPostContent() {
         println(it)
     })
     Button(onClick = {
-        HomeHelper.goActivityByIntent {
+        HomeHelper.goActivityByIntentNewTask {
             setComponentName(PostDetailScreen::class.java)
             putExtra(PostHelper.PARAM_POST_ID, input.toLongOrNull() ?: 0L)
         }
@@ -33,7 +33,7 @@ fun DebugPostContent() {
         Text(text = "通过ID跳转帖子详情", fontSize = 18.sp)
     }
     Button(onClick = {
-        HomeHelper.goActivityByIntent {
+        HomeHelper.goActivityByIntentNewTask {
             setComponentName(TopicScreen::class.java)
             putExtra(PostHelper.PARAM_TOPIC_ID, input.toLongOrNull() ?: 0L)
         }

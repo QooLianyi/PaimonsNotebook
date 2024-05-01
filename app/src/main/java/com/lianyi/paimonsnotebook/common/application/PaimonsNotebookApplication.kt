@@ -16,11 +16,14 @@ import coil.decode.ImageDecoderDecoder
 import coil.disk.DiskCache
 import com.lianyi.paimonsnotebook.BuildConfig
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.common.core.enviroment.CoreEnvironment
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
+import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
 import com.lianyi.paimonsnotebook.common.util.builder.imageLoader
 import com.lianyi.paimonsnotebook.common.util.coil.MergeInterceptor
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.util.data_store.dataStoreValuesFirstLambda
+import com.lianyi.paimonsnotebook.common.util.file.FileHelper
 import com.lianyi.paimonsnotebook.common.util.image.PaimonsNotebookImageLoader
 import com.lianyi.paimonsnotebook.common.util.request.emptyOkHttpClient
 import com.lianyi.paimonsnotebook.common.view.CrashScreen
@@ -43,6 +46,8 @@ class PaimonsNotebookApplication : Application(), ImageLoaderFactory {
         const val version = BuildConfig.VERSION_NAME
 
         const val versionCode = BuildConfig.VERSION_CODE
+
+        const val PaimonsNotebookUA = "${CoreEnvironment.PaimonsNotebookUA}/${version}"
 
         val name by lazy {
             context.getString(R.string.app_name)
@@ -70,6 +75,10 @@ class PaimonsNotebookApplication : Application(), ImageLoaderFactory {
         super.onCreate()
         mContext = applicationContext
 
+        //调用核心环境初始化
+        CoreEnvironment.init()
+
+        //crashScreen
         CaocConfig.Builder.create()
             .backgroundMode(CaocConfig.BACKGROUND_MODE_SILENT)
             .enabled(true)
@@ -112,8 +121,8 @@ class PaimonsNotebookApplication : Application(), ImageLoaderFactory {
 //            }
         }
 
-
         ProcessLifecycleOwner.get().lifecycle.addObserver(ApplicationLifecycleObserver())
+        FileHelper.clearTempFile()
     }
 
     //监听全部activity的状态
@@ -156,23 +165,31 @@ class PaimonsNotebookApplication : Application(), ImageLoaderFactory {
 
     //清除计划删除图片文件
     private fun executeDiskCachePlanDelete() {
-        //TODO 目前已知删除disckCache文件会导致删除图片再次缓存图片,再从本地读取缓存为null
         CoroutineScope(Dispatchers.IO).launch {
-            val autoClean = dataStoreValuesFirstLambda {
-                this[PreferenceKeys.EnableAutoCleanExpiredImages] ?: true
-            }
-
-            if (!autoClean) return@launch
-
-            PaimonsNotebookDatabase.database.diskCacheDao.apply {
-                updateAllDataPlanDeleteStatus(System.currentTimeMillis(), deleteTimeStampLimit)
-
-                getPlanDeleteData().first().forEach {
-                    PaimonsNotebookImageLoader.getCacheImageFileByUrl(it.url)?.delete()
-                    PaimonsNotebookImageLoader.getCacheImageMetadataFileByUrl(it.url)?.delete()
+            //TODO 目前已知删除disckCache文件会导致删除图片再次缓存图片,再从本地读取缓存为null
+            launchIO {
+                val autoClean = dataStoreValuesFirstLambda {
+                    this[PreferenceKeys.EnableAutoCleanExpiredImages] ?: true
                 }
 
-                removeAllPlanDeleteData()
+                if (!autoClean) return@launchIO
+
+                PaimonsNotebookDatabase.database.diskCacheDao.apply {
+                    updateAllDataPlanDeleteStatus(System.currentTimeMillis(), deleteTimeStampLimit)
+
+                    getPlanDeleteData().first().forEach {
+                        PaimonsNotebookImageLoader.getCacheImageFileByUrl(it.url)?.delete()
+                        PaimonsNotebookImageLoader.getCacheImageMetadataFileByUrl(it.url)?.delete()
+                    }
+
+                    removeAllPlanDeleteData()
+                }
+            }
+
+
+            //删除私有目录下的临时文件
+            launchIO {
+
             }
         }
     }

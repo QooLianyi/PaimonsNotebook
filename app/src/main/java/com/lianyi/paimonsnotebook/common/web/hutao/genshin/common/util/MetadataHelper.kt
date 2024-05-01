@@ -140,9 +140,7 @@ object MetadataHelper {
     private suspend fun loadAndSaveFile(name: String) {
         val pair = buildRequest {
             url(HutaoEndpoints.metadata(LocaleNames.CHS, "${name}.json"))
-        }.getAsTextResult(applicationOkHttpClient).apply {
-            println("${this.first}")
-        }
+        }.getAsTextResult(applicationOkHttpClient)
 
         if (pair.first) {
             FileHelper.getMetadataSaveFile(name).apply {

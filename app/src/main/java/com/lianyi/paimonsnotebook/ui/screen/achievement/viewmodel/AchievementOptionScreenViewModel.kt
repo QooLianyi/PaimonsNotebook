@@ -194,7 +194,7 @@ class AchievementOptionScreenViewModel : ViewModel() {
             name = "关于UIAF",
             description = "点击以查看UIAF的介绍文档以及支持UIAF的相关软件",
             onClick = {
-                HomeHelper.goActivityByIntent {
+                HomeHelper.goActivityByIntentNewTask {
                     action = Intent.ACTION_VIEW
                     data = Uri.parse(UIAFHelper.UIAF_HOME_PAGE)
                 }

@@ -9,7 +9,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.ui.theme.Black
+import com.lianyi.paimonsnotebook.ui.theme.Font_Primary
 
 @Composable
 fun PrimaryText(
@@ -18,7 +18,7 @@ fun PrimaryText(
     fontSize: TextUnit = 15.sp,
     bold: Boolean = true,
     maxLines: Int = 1,
-    color: Color = Black,
+    color: Color = Font_Primary,
     textAlign: TextAlign = TextAlign.Start
 ) {
     Text(

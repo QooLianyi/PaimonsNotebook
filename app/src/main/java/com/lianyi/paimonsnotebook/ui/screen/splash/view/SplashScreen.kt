@@ -65,14 +65,14 @@ class SplashScreen : BaseActivity(false) {
     }
 
     private fun goHomeScreen() {
-        HomeHelper.goActivityByIntent {
+        HomeHelper.goActivityByIntentNewTask {
             setComponentName(HomeScreen::class.java)
         }
         finish()
     }
 
     private fun goDebugPage() {
-        HomeHelper.goActivityByIntent {
+        HomeHelper.goActivityByIntentNewTask {
             setComponentName(TypographyScreen::class.java)
         }
         finish()

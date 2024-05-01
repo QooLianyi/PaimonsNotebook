@@ -11,7 +11,6 @@ import com.microsoft.appcenter.crashes.model.ErrorReport
 class ApplicationCrashesListener:CrashesListener {
     //是否应该处理崩溃
     override fun shouldProcess(report: ErrorReport?): Boolean {
-        println("shouldProcess = ${report?.stackTrace}")
         return true
     }
 
