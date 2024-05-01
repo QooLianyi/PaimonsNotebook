@@ -23,23 +23,39 @@ data class UserFullInfoData(
         val is_customer_service_staff: Boolean,
     )
 
+    //将用不到的字段暂时去掉了
     data class UserInfo(
-        val achieve: Achieve,
+//        val achieve: Achieve,
         val avatar: String,
         val avatar_url: String,
-        val certification: Certification,
-        val certifications: List<Any>,
-        val community_info: CommunityInfo,
+//        val certification: Certification,
+//        val certifications: List<Any>,
+//        val community_info: CommunityInfo,
         val gender: Int,
         val introduce: String,
-        val ip_region: String,
-        val is_logoff: Boolean,
-        val level_exp: LevelExp,
-        val level_exps: List<LevelExp>,
+//        val ip_region: String,
+//        val is_logoff: Boolean,
+//        val level_exp: LevelExp,
+//        val level_exps: List<LevelExp>,
         val nickname: String,
         val pendant: String,
         val uid: String,
     ) {
+
+        companion object {
+            //返回一个空的占位
+            fun getEmptyPlaceholder(mid:String) =
+                UserInfo(
+                    avatar = "",
+                    avatar_url = "",
+                    gender = 0,
+                    introduce = "",
+                    nickname = mid,
+                    pendant = "",
+                    uid = "Cookie失效,请重新登录"
+                )
+        }
+
         data class Achieve(
             val follow_cnt: String,
             val follow_collection_cnt: String,

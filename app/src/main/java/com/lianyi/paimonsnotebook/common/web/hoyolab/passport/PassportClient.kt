@@ -1,31 +1,59 @@
 package com.lianyi.paimonsnotebook.common.web.hoyolab.passport
 
+import android.os.Build
 import com.lianyi.paimonsnotebook.common.core.enviroment.CoreEnvironment
-import com.lianyi.paimonsnotebook.common.data.hoyolab.user.User
+import com.lianyi.paimonsnotebook.common.extension.request.setDeviceInfoHeaders
+import com.lianyi.paimonsnotebook.common.extension.request.setXRPCAppInfo
 import com.lianyi.paimonsnotebook.common.util.request.buildRequest
+import com.lianyi.paimonsnotebook.common.util.request.emptyOkHttpClient
 import com.lianyi.paimonsnotebook.common.util.request.getAsJson
 import com.lianyi.paimonsnotebook.common.util.request.post
 import com.lianyi.paimonsnotebook.common.web.ApiEndpoints
 import com.lianyi.paimonsnotebook.common.web.hoyolab.cookie.Cookie
-import okhttp3.OkHttpClient
 
 class PassportClient {
 
-    suspend fun accountGetSTokenByOldToken(stokenV1: String, stuid: String, mid: String = "") =
+    suspend fun loginByTicket(ticket: String) =
         buildRequest {
-            url(ApiEndpoints.AccountGetSTokenByOldToken)
+            url(ApiEndpoints.loginByAuthTicket())
 
-            addHeader(
-                "Cookie",
-                "stoken=${stokenV1};stuid=${stuid};${if (mid.isNotBlank()) "mid=${mid}" else ""}"
-            )
+            addHeader("x-rpc-app_id", CoreEnvironment.AuthorizeKeyStarRail)
 
-            addHeader("x-rpc-aigis", "")
-            addHeader("x-rpc-game_biz", "bbs_cn")
-            addHeader("x-rpc-sdk_version", "1.3.1.2")
+            //以下的参数都是不必要的
+            addHeader("x-rpc-client_type", CoreEnvironment.ClientType)
+            addHeader("x-rpc-sys_version", Build.VERSION.RELEASE)
+            addHeader("x-rpc-device_fp", CoreEnvironment.DeviceFp)
+            addHeader("x-rpc-device_name", "${Build.BRAND} ${Build.MODEL}")
+            addHeader("x-rpc-device_id", CoreEnvironment.DeviceId)
+            addHeader("x-rpc-device_model", Build.MODEL)
+            addHeader("x-rpc-sdk_version", CoreEnvironment.SDKVersion)
 
-            mapOf<String, String>().post(this)
-        }.getAsJson<TokenByStokenData>()
+//            addHeader("x-rpc-app_version", CoreEnvironment.XrpcVersion)
+
+            buildMap {
+                put("ticket", ticket)
+            }.post(this)
+
+        }.getAsJson<LoginByAuthTicketData>(emptyOkHttpClient)
+
+    suspend fun getTokenByGameToken(accountId: Int, gameToken: String) = buildRequest {
+        url(ApiEndpoints.getTokenByGameToken)
+
+        addHeader("x-rpc-game_biz", "bbs_cn")
+        addHeader("x-rpc-aigis", "")
+        addHeader("x-rpc-sdk_version", CoreEnvironment.SDKVersion)
+
+        setXRPCAppInfo()
+
+        setDeviceInfoHeaders(CoreEnvironment.DeviceId40)
+
+        buildMap {
+            put("account_id", accountId)
+            put("game_token", gameToken)
+        }.post(this)
+
+    }.getAsJson<GetTokenByGameTokenData>(emptyOkHttpClient)
+
 
     suspend fun getCookieTokenBySToken(stokenV2: Cookie) =
         buildRequest {

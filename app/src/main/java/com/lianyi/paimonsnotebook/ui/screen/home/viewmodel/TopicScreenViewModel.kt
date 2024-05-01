@@ -140,7 +140,7 @@ class TopicScreenViewModel : ViewModel() {
 
         //如果当前的id与点击的id不同时,跳转到点击的主题界面
         if (currentTopicId != topic.id) {
-            HomeHelper.goActivityByIntent {
+            HomeHelper.goActivityByIntentNewTask {
                 setComponentName(TopicScreen::class.java)
                 putExtra(PostHelper.PARAM_TOPIC_ID, topic.id.toLong())
             }
@@ -149,7 +149,7 @@ class TopicScreenViewModel : ViewModel() {
 
     //当点击帖子列表项时
     fun onClickPostListItem(item: PainterTopicListData.TopicPost) {
-        HomeHelper.goActivityByIntent {
+        HomeHelper.goActivityByIntentNewTask {
             setComponentName(PostDetailScreen::class.java)
             putExtra(PostHelper.PARAM_POST_ID, item.post.post.post_id.toLongOrNull() ?: 0L)
         }

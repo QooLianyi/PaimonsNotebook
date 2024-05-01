@@ -22,7 +22,7 @@ class SlideOutActivityGesture(private val activity: Activity) : GestureDetector.
     private var currentX = xMin
     private var currentY = xMin
 
-    var isDragging = false
+    private var isDragging = false
         private set
 
     private val decorView by lazy {
@@ -65,18 +65,15 @@ class SlideOutActivityGesture(private val activity: Activity) : GestureDetector.
             updateDecorViewState()
 
             if (currentX == xMax) {
-                println("到达最大值")
                 activity.finish()
                 activity.overridePendingTransition(0, 0)
             }
         }
         anim.doOnEnd {
-            println("doOnEnd")
             currentY = xMin
         }
         anim.start()
         isDragging = false
-        println("action up")
     }
 
     override fun onDown(e: MotionEvent): Boolean {

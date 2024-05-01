@@ -1,6 +1,7 @@
 package com.lianyi.paimonsnotebook.common.util.file
 
 import android.content.ContentResolver
+import android.graphics.Bitmap
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
@@ -31,6 +32,13 @@ object FileHelper {
         get() = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
             ?.resolve("PaimonsNotebook") ?: privateStoragePath
 
+    /*
+    * 临时存储文件夹
+    * 此文件夹不能存储任何持久文件,每次启动时会删除该文件夹
+    * */
+    private val tempFilePath
+        get() = rootPath?.resolve("temp")!!
+
     //存储图片的路径
     private val saveImagePath
         get() =
@@ -42,7 +50,7 @@ object FileHelper {
             privateStoragePath?.resolve("metadata")!!
 
     //存储安装包的路径
-    val saveFilePackagePath
+    private val saveFilePackagePath
         get() =
             privateStoragePath?.resolve("package")!!
 
@@ -56,11 +64,42 @@ object FileHelper {
         get() =
             rootPath?.resolve("achievements")!!
 
+
+    //扫描图片,使其出现在相册中
+    private fun scanImage(file: File) {
+        MediaScannerConnection.scanFile(
+            context,
+            arrayOf(file.path),
+            arrayOf("*/*")
+        ) { _, _ ->
+
+        }
+    }
+
+    /*
+    * 保存临时图片
+    * */
+    fun saveTempImage(bitmap: Bitmap, enabledMediaScanner: Boolean = true) {
+        val file = File(tempFilePath, "tmp_img_${System.currentTimeMillis()}.png")
+
+        if (!tempFilePath.exists()) {
+            tempFilePath.mkdirs()
+        }
+
+        val fos = FileOutputStream(file)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+        fos.close()
+
+        if (enabledMediaScanner) {
+            scanImage(file)
+        }
+    }
+
     /*
     * 从coil本地磁盘缓存中保存图片
     * url:图片url
     * */
-    fun saveImage(
+    fun saveImageFromLocalCache(
         url: String,
         enabledMediaScanner: Boolean = true,
         onSuccess: (String) -> Unit,
@@ -92,13 +131,7 @@ object FileHelper {
         }
 
         if (enabledMediaScanner) {
-            MediaScannerConnection.scanFile(
-                context,
-                arrayOf(file.path),
-                arrayOf("*/*")
-            ) { _, _ ->
-
-            }
+            scanImage(file)
         }
 
         onSuccess.invoke(file.absolutePath)
@@ -237,6 +270,16 @@ object FileHelper {
     fun getPackageSaveFile(name: String) =
         getSaveFile(saveFilePackagePath, "${name}.apk")
 
+    /*
+    * 清理临时文件
+    * */
+    fun clearTempFile() {
+        if (tempFilePath.exists()) {
+            tempFilePath.listFiles()?.forEach {
+                it.delete()
+            }
+        }
+    }
 
     private val df
         get() =

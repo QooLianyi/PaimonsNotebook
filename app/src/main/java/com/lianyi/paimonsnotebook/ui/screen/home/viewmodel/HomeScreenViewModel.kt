@@ -124,7 +124,8 @@ class HomeScreenViewModel : ViewModel() {
                         },
                         onSuccess = {
                             "元数据更新完毕".notify()
-                        }
+                        },
+                        onLoadMetadataFile = {}
                     ) {}
                 }
             }
@@ -305,7 +306,7 @@ class HomeScreenViewModel : ViewModel() {
         postId: String,
         postType: PostType = PostType.Default,
     ) {
-        HomeHelper.goActivityByIntent {
+        HomeHelper.goActivityByIntentNewTask {
             when (postType) {
                 PostType.Default, PostType.Notice -> {
                     putExtra(PostHelper.PARAM_POST_ID, getArticleIdFromUrl(postId))

@@ -10,9 +10,15 @@ object PreferenceKeys {
     val DeviceFp by lazy {
         stringPreferencesKey("device_fp")
     }
+
     //device_id
     val DeviceId by lazy {
         stringPreferencesKey("device_id")
+    }
+
+    //device_id
+    val DeviceId40 by lazy {
+        stringPreferencesKey("device_id40")
     }
 
     //bbs_device_id
@@ -136,6 +142,11 @@ object PreferenceKeys {
     //启用快捷方式列表
     val EnableShortcutsList by lazy {
         booleanPreferencesKey("enableShortcutsList")
+    }
+
+    //本地存储的app_key
+    val AuthorizeAppSign by lazy {
+        stringPreferencesKey("authorizeAppSign")
     }
 
     val widgetsCount by lazy {

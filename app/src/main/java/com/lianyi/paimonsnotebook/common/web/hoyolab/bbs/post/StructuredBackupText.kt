@@ -65,10 +65,6 @@ data class StructuredBackupText(
                         PostStructuredContent.getTextItem(it.insert, it.attributes)
                     }
                 )
-            }.apply {
-                println("content = ${content}")
-                println("size = ${this.second.size}")
-                println("list = ${this.second}")
             }
         }
     }

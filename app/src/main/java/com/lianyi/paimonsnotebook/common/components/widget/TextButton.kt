@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -23,15 +23,16 @@ import com.lianyi.paimonsnotebook.ui.theme.White
 
 @Composable
 fun TextButton(
-    text:String,
+    text: String,
     modifier: Modifier = Modifier,
-    textSize:TextUnit = 16.sp,
-    backgroundColor:Color = Primary,
-    textColor:Color = White,
-    radius:Dp = 8.dp,
-    onClick:()->Unit
+    textSize: TextUnit = 16.sp,
+    backgroundColor: Color = Primary,
+    textColor: Color = White,
+    bold: Boolean = false,
+    radius: Dp = 4.dp,
+    onClick: () -> Unit
 ) {
-    Box(modifier = modifier){
+    Box(modifier = modifier) {
         Row(
             modifier = Modifier
                 .radius(radius)
@@ -44,7 +45,12 @@ fun TextButton(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = text, fontSize = textSize, color = textColor)
+            Text(
+                text = text,
+                fontSize = textSize,
+                color = textColor,
+                fontWeight = if (bold) FontWeight.SemiBold else FontWeight.Normal
+            )
         }
     }
 }

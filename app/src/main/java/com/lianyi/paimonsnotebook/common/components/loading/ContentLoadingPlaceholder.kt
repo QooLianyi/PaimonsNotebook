@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
@@ -45,7 +46,12 @@ fun ContentLoadingPlaceholder(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text(text = text, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+        Text(
+            text = text,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 

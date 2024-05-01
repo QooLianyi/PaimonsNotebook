@@ -12,12 +12,12 @@ import com.lianyi.paimonsnotebook.common.database.user.entity.User as UserEntity
 data class User(
     val userEntity: UserEntity,
     val userInfo: UserFullInfoData.UserInfo,
-    val userGameRoles: SnapshotStateList<UserGameRoleData.Role>
+    val userGameRoles: SnapshotStateList<UserGameRoleData.Role>,
+    val isAvailable: Boolean
 ) {
     var isSelected by mutableStateOf(userEntity.isSelected)
 
-    var isAvailable by mutableStateOf(true)
 
-    fun getSelectedGameRole():UserGameRoleData.Role? = userGameRoles.takeFirstIf { it.is_chosen }
+    fun getSelectedGameRole(): UserGameRoleData.Role? = userGameRoles.takeFirstIf { it.is_chosen }
 
 }

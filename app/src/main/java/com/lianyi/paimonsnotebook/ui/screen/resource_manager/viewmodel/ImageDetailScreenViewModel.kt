@@ -115,7 +115,7 @@ class ImageDetailScreenViewModel : ViewModel() {
 
         if (showRequestPermissionDialog) return
 
-        FileHelper.saveImage(diskCacheData.url, onSuccess = {
+        FileHelper.saveImageFromLocalCache(diskCacheData.url, onSuccess = {
             "图片保存到以下位置:${it}".notify(closeable = true)
         }) {
             "保存失败:本地图片不存在".errorNotify()

@@ -324,7 +324,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
             name = "关于UIGF",
             description = "点击以查看UIGF的介绍文档以及支持UIGF的相关软件",
             onClick = {
-                HomeHelper.goActivityByIntent {
+                HomeHelper.goActivityByIntentNewTask {
                     action = Intent.ACTION_VIEW
                     data = Uri.parse(UIGFHelper.UIGF_HOME_PAGE)
                 }

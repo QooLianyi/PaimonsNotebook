@@ -64,7 +64,7 @@ class PostDetailViewModel : ViewModel() {
     }
 
     fun hyperlinkNavigate(url: String) {
-        HomeHelper.goActivityByIntent {
+        HomeHelper.goActivityByIntentNewTask {
             PostHelper.checkUrlType(url = url, isPostID = {
                 putExtra(PostHelper.PARAM_POST_ID, it)
                 setComponentName(PostDetailScreen::class.java)
@@ -86,14 +86,14 @@ class PostDetailViewModel : ViewModel() {
         )
 
     fun onClickVideo(vod: PostFullData.Post.Vod) {
-        HomeHelper.goActivityByIntent {
+        HomeHelper.goActivityByIntentNewTask {
             setComponentName(VideoPlayScreen::class.java)
             putExtra("video_list", JSON.stringify(vod))
         }
     }
 
     fun onClickTag(topic: PostFullData.Post.Topic) {
-        HomeHelper.goActivityByIntent {
+        HomeHelper.goActivityByIntentNewTask {
             setComponentName(TopicScreen::class.java)
             putExtra(PostHelper.PARAM_TOPIC_ID, topic.id.toLong())
         }

@@ -54,9 +54,22 @@ object ApiEndpoints {
     private const val Hk4eApiAnnouncementApi = "${Hk4eApi}/common/hk4e_cn/announcement/api"
     private const val Hk4eApiGachaInfoApi = "${Hk4eApi}/event/gacha_info/api"
 
+    private const val Hk4eSdk = "https://hk4e-sdk.mihoyo.com"
+
     private const val PassportApi = "https://passport-api.mihoyo.com"
-    private const val PassportApiAuthApi = "${PassportApi}/account/auth/api"
+    private const val PassportApiAccountAuthApi = "${PassportApi}/account/auth/api"
     private const val PassportApiV4 = "https://passport-api-v4.mihoyo.com"
+
+    private const val PassportApiAccountMaCnSession = "${PassportApi}/account/ma-cn-session"
+
+
+    private const val PassportApiStatic = "https://passport-api-static.mihoyo.com"
+
+    private const val PassportApiStaticAccountMaCnPassport =
+        "${PassportApiStatic}/account/ma-cn-passport/passport"
+
+    private const val PublicOperationHk4e = "https://public-operation-hk4e.mihoyo.com";
+    private const val PublicOperationHk4eGachaInfoApi = "${PublicOperationHk4e}/gacha_info/api";
 
     private const val SdkStatic = "https://sdk-static.mihoyo.com"
     private const val SdkStaticLauncherApi = "${SdkStatic}/hk4e_cn/mdk/launcher/api"
@@ -182,6 +195,12 @@ object ApiEndpoints {
     fun getQRCodeConfirm(gameBiz: String) =
         "${ApiSDK}/${gameBiz}/combo/panda/qrcode/confirm"
 
+    fun getQRCodeFetch() =
+        "${ApiSDK}/hk4e_cn/combo/panda/qrcode/fetch"
+
+    fun getQRCodeQuery() =
+        "${ApiSDK}/hk4e_cn/combo/panda/qrcode/query"
+
 
     /// <summary>
     /// 角色基本信息
@@ -269,7 +288,6 @@ object ApiEndpoints {
     /// <param name="avatarId">角色Id</param>
     /// <param name="uid">uid</param>
     /// <returns>角色详情</returns>
-    //TODO 角色详情
 //    fun CalculateSyncAvatarDetail(avatarId:AvatarId,uid:PlayerUid) {
 //        return "${ApiTakumiEventCalculate}/v1/sync/avatar/detail?avatar_id={avatarId.Value}&uid={uid.Value}&region={uid.region}"
 //    }
@@ -331,23 +349,18 @@ object ApiEndpoints {
     /// <param name="query">query string</param>
     /// <returns>祈愿记录信息Url</returns>
     fun GachaInfoGetGachaLog(query: String) =
-        "${Hk4eApiGachaInfoApi}/getGachaLog?${query}"
+        "${PublicOperationHk4eGachaInfoApi}/getGachaLog?${query}"
 
     /// <summary>
     /// 获取 CookieToken
     /// </summary>
-    const val AccountGetCookieTokenBySToken = "${PassportApiAuthApi}/getCookieAccountInfoBySToken"
+    const val AccountGetCookieTokenBySToken =
+        "${PassportApiAccountAuthApi}/getCookieAccountInfoBySToken"
 
     /// <summary>
-    /// 获取Ltoken
+    /// 获取LToken
     /// </summary>
-    const val AccountGetLtokenByStoken = "${PassportApiAuthApi}/getLTokenBySToken"
-
-    /// <summary>
-    /// 获取V2Stoken
-    /// </summary>
-    const val AccountGetSTokenByOldToken =
-        "${PassportApi}/account/ma-cn-session/app/getTokenBySToken"
+    const val AccountGetLtokenByStoken = "${PassportApiAccountAuthApi}/getLTokenBySToken"
 
     //获取GameToken
     fun getGameToken(aid: String) =
@@ -440,5 +453,12 @@ object ApiEndpoints {
         gameId: Int = 0
     ) =
         "${BbsApiMiYouShePainterApiTopic}/list?topic_id=${topicId}&list_type=${listType}&offset=${offset}&size=${size}&game_id=${gameId}"
+
+    //通过ticket获取stoken?
+    fun loginByAuthTicket() =
+        "${PassportApiStaticAccountMaCnPassport}/loginByAuthTicket"
+
+    //通过gameToken获取SToken
+    val getTokenByGameToken = "${PassportApiAccountMaCnSession}/app/getTokenByGameToken"
 
 }

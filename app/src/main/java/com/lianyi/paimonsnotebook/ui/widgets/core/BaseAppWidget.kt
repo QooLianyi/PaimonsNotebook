@@ -134,7 +134,7 @@ open class BaseAppWidget : AppWidgetProvider() {
     }
 
     private fun goValidateScreen(context: Context, mid: String) {
-        HomeHelper.goActivityByIntent {
+        HomeHelper.goActivityByIntentNewTask {
             component = ComponentName(context, HoyolabWebActivity::class.java)
             putExtra("mid", mid)
         }

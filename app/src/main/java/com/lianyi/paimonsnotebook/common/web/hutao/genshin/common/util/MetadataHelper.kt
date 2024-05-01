@@ -10,6 +10,9 @@ import com.lianyi.paimonsnotebook.common.util.request.getAsText
 import com.lianyi.paimonsnotebook.common.util.request.getAsTextResult
 import com.lianyi.paimonsnotebook.common.web.HutaoEndpoints
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.LocaleNames
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /*
 * 元数据名称
@@ -97,6 +100,7 @@ object MetadataHelper {
     suspend fun updateMetadata(
         onFailed: suspend () -> Unit,
         onSuccess: suspend () -> Unit,
+        onLoadMetadataFile: (Int) -> Unit,
         finally: suspend () -> Unit
     ) {
         updateMetadataHashMap()
@@ -108,8 +112,13 @@ object MetadataHelper {
             return
         }
 
-        checkMetadata().forEach { name ->
-            loadAndSaveFile(name)
+        withContext(Dispatchers.IO) {
+            checkMetadata().forEach { name ->
+                launch {
+                    loadAndSaveFile(name)
+                    onLoadMetadataFile.invoke(metadataCheckList.size)
+                }
+            }
         }
 
         if (checkMetadata().isEmpty()) {
@@ -138,11 +147,10 @@ object MetadataHelper {
 
     //重新载入单个文件
     private suspend fun loadAndSaveFile(name: String) {
+
         val pair = buildRequest {
             url(HutaoEndpoints.metadata(LocaleNames.CHS, "${name}.json"))
-        }.getAsTextResult(applicationOkHttpClient).apply {
-            println("${this.first}")
-        }
+        }.getAsTextResult(applicationOkHttpClient)
 
         if (pair.first) {
             FileHelper.getMetadataSaveFile(name).apply {

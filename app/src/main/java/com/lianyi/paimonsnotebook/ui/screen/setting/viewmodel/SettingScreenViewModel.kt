@@ -193,7 +193,8 @@ class SettingScreenViewModel : ViewModel() {
                         },
                         onFailed = {
                             "更新元数据时出现错误".errorNotify()
-                        }
+                        },
+                        onLoadMetadataFile = {}
                     ) {}
                 }
             }

@@ -8,8 +8,10 @@ import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.extension.list.takeFirstIf
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.user.BbsUserClient
+import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.user.UserFullInfoData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.cookie.Cookie
 import com.lianyi.paimonsnotebook.common.web.hoyolab.cookie.CookieHelper.Keys
+import com.lianyi.paimonsnotebook.common.web.hoyolab.cookie.CookieHelper.concatStringToCookie
 import com.lianyi.paimonsnotebook.common.web.hoyolab.passport.CookieAccountInfoByStokenData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.passport.PassportClient
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.auth.AuthClient
@@ -99,13 +101,21 @@ object AccountHelper {
                 val user = getUserByUserEntity(userEntity) ?: return@forEach
 
                 if (userEntity.isSelected) {
-                    SelectedUser.value = user
+                    if (user.isAvailable) {
+                        SelectedUser.value = user
+                    } else {
+                        //如果cookie不可用就将选中状态去掉
+                        updateUserEntitySelectedState(userEntity, false)
+                    }
                 }
 
                 list += user
             }
         } else {
-            //更新用户列表用户实体部分
+            /*
+            * 更新用户列表用户实体部分(userEntity部分)
+            * 防止额外的网络请求
+            * */
             val map = mutableMapOf<String, UserEntity>()
 
             userEntityList.forEach { userEntity ->
@@ -114,6 +124,7 @@ object AccountHelper {
 
             UserListFlow.value.forEach { user ->
                 val newUserEntity = map[user.userEntity.mid] ?: user.userEntity
+
                 list += user.copy(userEntity = newUserEntity)
             }
         }
@@ -135,7 +146,7 @@ object AccountHelper {
     }
 
     //通过用户实体获取用户角色列表
-    suspend fun getUserGameRoles(
+    private suspend fun getUserGameRoles(
         user: UserEntity,
         errorNotify: Boolean = true,
     ): List<UserGameRoleData.Role> {
@@ -151,7 +162,7 @@ object AccountHelper {
             }
         } else {
             if (errorNotify) {
-                "账号[${user.mid}]角色信息获取失败:${userGameRoleBySTokenResult.retcode}".errorNotify()
+                "账号[${user.aid}]角色信息获取失败:${userGameRoleBySTokenResult.retcode}".errorNotify()
             }
         }
 
@@ -169,34 +180,48 @@ object AccountHelper {
         appWidgetBindingDao.deleteByUserMid(user.mid)
     }
 
-    fun addUser(userEntity: UserEntity) {
+    private fun addUser(userEntity: UserEntity) {
         CoroutineScope(Dispatchers.IO).launch {
-            val user = getUserByUserEntity(userEntity) ?: return@launch
+            val user = getUserByUserEntity(userEntity, true) ?: return@launch
 
-            UserListFlow.apply {
-                val list = value.toMutableList().apply {
-                    if (userListFlow.value.takeFirstIf { it.userEntity.mid == userEntity.mid } == null) {
-                        add(user)
-                    }
-                }
-                if (list.size != value.size) {
-                    emit(list)
+            val currentUserList = UserListFlow.value.toMutableList()
+
+            val sameMidUserIndexOf =
+                currentUserList.indexOfFirst { it.userEntity.mid == userEntity.mid }
+
+            //如果列表中没有相同mid的账号就添加到列表中
+            if (sameMidUserIndexOf == -1) {
+                currentUserList.add(user)
+            } else {
+                //如果已存在的账号不可用就更新
+                val sameMidUser = currentUserList[sameMidUserIndexOf]
+                if (!sameMidUser.isAvailable) {
+                    currentUserList[sameMidUserIndexOf] = user
                 }
             }
+
+            //更新列表与数据库
+            UserListFlow.emit(currentUserList)
             dao.insert(userEntity)
         }
     }
 
     //通过用户实体获取用户信息
-    private suspend fun getUserByUserEntity(user: UserEntity): User? {
+    private suspend fun getUserByUserEntity(user: UserEntity, isAdd: Boolean = false): User? {
         val userInfoResult = bbsUserClient.getFullInfo(user)
         val roles = getUserGameRoles(user)
 
         val userInfo = if (userInfoResult.success) {
             userInfoResult.data.user_info
         } else {
-            "账号:[${user.mid}]Cookie失效".errorNotify()
-            return null
+            "账号:[${user.aid}]Cookie失效".errorNotify()
+
+            //当添加用户时，请求必须成功
+            if (isAdd) {
+                return null
+            }
+
+            UserFullInfoData.UserInfo.getEmptyPlaceholder(user.mid)
         }
 
         return User(
@@ -204,15 +229,19 @@ object AccountHelper {
             userInfo = userInfo,
             userGameRoles = mutableStateListOf<UserGameRoleData.Role>().apply {
                 addAll(roles)
-            }
+            },
+            isAvailable = userInfoResult.success
         )
     }
 
     //更新用户选择状态
-    fun updateUserEntitySelectedState(user: User, isSelected: Boolean) {
+    fun updateUserEntitySelectedState(user: User, isSelected: Boolean) =
+        updateUserEntitySelectedState(user.userEntity, isSelected)
+
+    private fun updateUserEntitySelectedState(user: UserEntity, isSelected: Boolean) {
         CoroutineScope(Dispatchers.IO).launch {
             val value = if (isSelected) 1 else 0
-            dao.updateUserSelectState(value, user.userEntity.mid)
+            dao.updateUserSelectState(value, user.mid)
         }
     }
 
@@ -231,72 +260,73 @@ object AccountHelper {
         return result
     }
 
-    //通过stoken,stuid,获取账号
-    suspend fun getUserByCookieMap(
-        map: Map<String, String>,
-        onFailed: (String) -> Unit,
-        onSuccess: (UserEntity) -> Unit,
-    ) {
-        val stoken = map[Keys.SToken] ?: ""
-        val stuid = map[Keys.STuid] ?: ""
+    suspend fun addUserBySToken(
+        aid: String,
+        mid: String,
+        sTokenCookie: Cookie,
+        isSelected: Boolean = false
+    ): Boolean {
 
-        if (stoken.isBlank() || stuid.isBlank()) {
-            onFailed("stoken或stuid为空")
-            return
+        val cookieTokenRes =
+            passportClient.getCookieTokenBySToken(sTokenCookie)
+
+        val ltokenRes = passportClient.getLTokenBySToken(sTokenCookie)
+
+        if (!cookieTokenRes.success) {
+            "获取cookie_token失败".errorNotify()
+            return false
         }
 
-        val mid = map[Keys.Mid] ?: ""
+        val cookieTokenCookie = concatStringToCookie(
+            Keys.CookieToken to cookieTokenRes.data.cookie_token,
+            Keys.AccountID to aid
+        )
 
-        val getSTokenByOldTokenResult =
-            passportClient.accountGetSTokenByOldToken(stoken, stuid, mid)
 
-        if (!getSTokenByOldTokenResult.success) {
-            onFailed("添加账号时出现错误:${if (getSTokenByOldTokenResult.retcode == -100) "stoken或mid参数错误,请检查后重新尝试" else ""}")
-            return
+        if (!ltokenRes.success) {
+            "获取ltoken失败".errorNotify()
+            return false
         }
 
-        val stokenCookie = Cookie().apply {
-            this[Keys.SToken] = getSTokenByOldTokenResult.data.token.token
-            this[Keys.Mid] = getSTokenByOldTokenResult.data.user_info.mid
-            this[Keys.STuid] = stuid
-        }
+        val lTokenCookie = concatStringToCookie(
+            Keys.LToken to ltokenRes.data.ltoken,
+            Keys.LTuid to aid
+        )
 
-        val getLTokenBySTokenResult = passportClient.getLTokenBySToken(stokenCookie)
-
-        if (!getLTokenBySTokenResult.success) {
-            onFailed("获取时出现错误:ltoken-${getLTokenBySTokenResult.retcode}")
-            return
-        }
-
-        val ltokenCookie = Cookie().apply {
-            this[Keys.LToken] = getLTokenBySTokenResult.data.ltoken
-            this[Keys.LTuid] = getSTokenByOldTokenResult.data.user_info.aid
-        }
-
-        val getCookieTokenBySTokenResult = passportClient.getCookieTokenBySToken(stokenCookie)
-        if (!getCookieTokenBySTokenResult.success) {
-            onFailed("获取时出现错误:cookieToken-${getCookieTokenBySTokenResult.retcode}")
-            return
-        }
-
-        val cookieTokenCookie = Cookie().apply {
-            this[Keys.CookieToken] = getCookieTokenBySTokenResult.data.cookie_token
-            this[Keys.AccountID] = getCookieTokenBySTokenResult.data.uid
-        }
-
-        onSuccess(
+        addUser(
             UserEntity(
-                aid = getSTokenByOldTokenResult.data.user_info.aid,
-                mid = getSTokenByOldTokenResult.data.user_info.mid,
+                aid = aid,
+                mid = mid,
                 cookieToken = cookieTokenCookie,
-                ltoken = ltokenCookie,
-                stoken = stokenCookie,
-                isSelected = selectedUserFlow.value == null //当没有选中的用户时自动设置为选中用户
+                ltoken = lTokenCookie,
+                stoken = sTokenCookie,
+                isSelected = isSelected
             )
         )
 
+        return true
     }
 
+    /*
+    * 通过cookieMap添加用户
+    *
+    * */
+    suspend fun addUserByCookieMap(
+        map: Map<String, String>
+    ): String {
+        val stoken = map[Keys.SToken] ?: ""
+        val stuid = map[Keys.STuid] ?: ""
+        val mid = map[Keys.Mid] ?: ""
+
+        val stokenCookie = concatStringToCookie(
+            Keys.STuid to stuid,
+            Keys.Mid to mid,
+            Keys.SToken to stoken
+        )
+        val addUserSuccess = addUserBySToken(aid = stuid, mid = mid, sTokenCookie = stokenCookie)
+
+        return if (addUserSuccess) stuid else ""
+    }
 }
 
 

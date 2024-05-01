@@ -89,7 +89,7 @@ class ResourceManagerViewModel : ViewModel() {
                 selectedUrls.value += diskCache.url
             }
         } else {
-            HomeHelper.goActivityByIntent {
+            HomeHelper.goActivityByIntentNewTask {
                 setComponentName(ImageDetailScreen::class.java)
                 putExtra(ImageDetailScreen.EXTRA_IMAGE_URL, diskCache.url)
                 if (currentTabIndex == 1) {

@@ -18,6 +18,16 @@ data class ResultData<T>(
         //ds错误
         const val INVALID_REQUEST_CODE = -10001
 
+        const val RET_AIGIS_FAILED = -3102
+        const val RET_BAN = -3201
+        const val RET_CHECK_BAN = -3260
+        const val RET_NEED_AIGIS = -3101
+        const val RET_NEED_RISK_VERIFY = -3235
+        const val RET_PROTECT_BAN = -3254
+        const val RET_QR_URL_EXPIRED = -3501
+        const val RET_SUCCESS = 0
+        const val RET_TOKEN_INVALID = -100
+
         //网络错误
         const val NETWORK_ERROR = -200
 

@@ -288,8 +288,6 @@ class AchievementGoalScreenViewModel : ViewModel() {
                 }
             }
 
-            println("list = ${list}")
-
             //更新
             achievementsDao.update(list)
         }

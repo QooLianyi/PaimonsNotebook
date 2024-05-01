@@ -6,9 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -25,7 +23,10 @@ internal fun AppWidgetOptionColor(
     selected: Boolean,
     onClick: () -> Unit,
 ) {
-    val borderColor by animateColorAsState(targetValue = if (selected) Black else Transparent)
+    val borderColor by animateColorAsState(
+        targetValue = if (selected) Black else Transparent,
+        label = ""
+    )
 
     Box(modifier = Modifier
         .paddingTop(6.dp)
@@ -35,9 +36,6 @@ internal fun AppWidgetOptionColor(
         .border(3.dp, borderColor, RoundedCornerShape(4.dp))
         .clickable {
             onClick.invoke()
-            if (selected) {
-                println("点击了选中的颜色")
-            }
         }
     )
 }

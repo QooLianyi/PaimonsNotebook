@@ -201,8 +201,6 @@ class AchievementImportService(
             }
         }
 
-        println("list = ${list.size}")
-
         list.forEachIndexed { index, uiafItem ->
 
             uiafItem.apply {

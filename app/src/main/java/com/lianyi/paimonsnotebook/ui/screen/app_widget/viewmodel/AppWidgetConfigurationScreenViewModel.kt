@@ -220,7 +220,7 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
             }
 
             1 -> {
-                HomeHelper.goActivityByIntent {
+                HomeHelper.goActivityByIntentNewTask {
                     action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                     data = Uri.fromParts("package", context.packageName, null)
                 }

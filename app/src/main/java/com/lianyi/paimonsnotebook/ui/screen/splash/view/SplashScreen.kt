@@ -56,7 +56,7 @@ class SplashScreen : BaseActivity(false) {
                                 .background(BackGroundColor),
                             contentAlignment = Alignment.Center
                         ) {
-                            ContentLoadingPlaceholder(text = "正在下载所需的元数据...")
+                            ContentLoadingPlaceholder(text = "正在下载所需的元数据...\n${viewModel.currentMetadataLoadCount}/${viewModel.maxMetadataCount}")
                         }
                     }
                 }
@@ -65,14 +65,14 @@ class SplashScreen : BaseActivity(false) {
     }
 
     private fun goHomeScreen() {
-        HomeHelper.goActivityByIntent {
+        HomeHelper.goActivityByIntentNewTask {
             setComponentName(HomeScreen::class.java)
         }
         finish()
     }
 
     private fun goDebugPage() {
-        HomeHelper.goActivityByIntent {
+        HomeHelper.goActivityByIntentNewTask {
             setComponentName(TypographyScreen::class.java)
         }
         finish()

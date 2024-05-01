@@ -58,7 +58,6 @@ object SystemService {
 
     //安装程序
     fun installAndroidApplication(file: File) {
-        println(file.absolutePath)
         context.startActivity(
             Intent(Intent.ACTION_VIEW).apply {
                 val uri =

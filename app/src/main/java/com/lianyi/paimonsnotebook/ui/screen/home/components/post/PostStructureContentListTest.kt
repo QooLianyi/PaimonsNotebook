@@ -98,7 +98,6 @@ internal fun PostStructureContentListTest(
         }
 
         itemsIndexed(structuredContent) { i, item ->
-            println("item = ${item}")
             if (item.isEmpty()) return@itemsIndexed
 
             if (item.size > 1) {

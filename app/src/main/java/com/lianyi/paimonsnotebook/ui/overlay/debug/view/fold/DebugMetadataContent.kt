@@ -14,7 +14,7 @@ fun DebugMetadataContent() {
 
     Button(onClick = {
         CoroutineScope(Dispatchers.IO).launch {
-            MetadataHelper.updateMetadata({},{},{})
+            MetadataHelper.updateMetadata({},{},{},{})
         }
     }) {
         Text(text = "同步元数据", fontSize = 16.sp)

@@ -28,20 +28,20 @@ class AchievementScreenViewModel : ViewModel() {
 
     private val achievementService by lazy {
         AchievementService {
+            loadingState = LoadingState.Error
         }
     }
 
     private val achievementList = mutableStateListOf<AchievementData>()
 
+    //成就分类列表
     val achievementGoalList = mutableStateListOf<AchievementGoalOverviewData>()
 
     //成就列表map,key = goal_id
     private val achievementListGoalMap = mutableMapOf<Int, List<AchievementData>>()
 
-    //成就分类map,key = id
-    private val achievementGoalMap by lazy {
-        achievementGoalList.associateBy { it.goal.id }
-    }
+    //成就分类map,key = id , value = overview data
+    private val achievementGoalMap = mutableMapOf<Int, AchievementGoalOverviewData>()
 
     private val achievementsDao = PaimonsNotebookDatabase.database.achievementsDao
     private val achievementUserDao = PaimonsNotebookDatabase.database.achievementUserDao
@@ -71,7 +71,7 @@ class AchievementScreenViewModel : ViewModel() {
         private set
 
     init {
-        //每当选中的用户更改时更新数据
+        //当选中的用户更改时更新数据
         viewModelScope.launchIO {
             achievementUserDao.getSelectedUserFlow().collect { user ->
                 launchMain {
@@ -125,8 +125,11 @@ class AchievementScreenViewModel : ViewModel() {
         processPercent = 0f
 
         viewModelScope.launchIO {
+            achievementListGoalMap.clear()
             achievementList.clear()
             achievementGoalList.clear()
+            achievementGoalMap.clear()
+
 
             val mAchievementList = achievementService.achievementList
             achievementListGoalMap += mAchievementList.groupBy { it.goal }
@@ -142,7 +145,7 @@ class AchievementScreenViewModel : ViewModel() {
                         AchievementHelper.getAchievementsFinishCountByList(userId, list)
                     val goalCount = list.size
 
-                    //此处更新记录值
+                    //更新成就专辑完成个数
                     if (goalCount == finishCount) {
                         achievementGoalFinishCount++
                     }
@@ -165,6 +168,9 @@ class AchievementScreenViewModel : ViewModel() {
             //更新成就与分类个数
             achievementGoalCount = achievementGoalList.size
             achievementsCount = achievementList.size
+
+            //更新总览数据
+            achievementGoalMap += achievementGoalList.associateBy { it.goal.id }
 
             //更新进度
             processPercent = achievementFinishCount.toFloat() / achievementsCount
@@ -195,7 +201,7 @@ class AchievementScreenViewModel : ViewModel() {
             "出现错误:无法查看当前成就分类".errorNotify()
         }
 
-        HomeHelper.goActivityByIntent {
+        HomeHelper.goActivityByIntentNewTask {
             setComponentName(AchievementGoalScreen::class.java)
             putExtra("goal", JSON.stringify(goalOverviewData))
             putExtra("target_id", targetId)
@@ -232,7 +238,7 @@ class AchievementScreenViewModel : ViewModel() {
     }
 
     fun goOptionScreen() {
-        HomeHelper.goActivityByIntent {
+        HomeHelper.goActivityByIntentNewTask {
             setComponentName(AchievementOptionScreen::class.java)
         }
     }
