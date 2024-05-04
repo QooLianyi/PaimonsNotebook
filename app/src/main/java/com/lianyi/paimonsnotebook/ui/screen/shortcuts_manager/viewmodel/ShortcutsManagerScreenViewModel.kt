@@ -35,7 +35,7 @@ class ShortcutsManagerScreenViewModel : ViewModel() {
 
     init {
         //将所有侧边栏功能添加至列表
-        shortcutsList += HomeHelper.modalItems.map {
+        shortcutsList += HomeHelper.modalItemData.map {
             ShortcutsListData(it)
         }
 

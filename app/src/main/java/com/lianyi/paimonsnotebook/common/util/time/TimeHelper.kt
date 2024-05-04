@@ -77,6 +77,13 @@ object TimeHelper {
     fun getOffsetTimeHour() = TimeZone.getDefault().rawOffset / 3600000
 
     /*
+    * 返回现在的时间
+    * */
+    fun now(
+        timeStampType: TimeStampType = TimeStampType.YYYY_MM_DD_HH_MM_SS
+    ) = getTime(System.currentTimeMillis(), timeStampType)
+
+    /*
     * 获取时间,会自动判断传入的秒还是毫秒
     * */
     fun getTime(
@@ -110,7 +117,6 @@ object TimeHelper {
             }
         )
     }
-
 
     fun getTime(
         timeStamp: Long,

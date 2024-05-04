@@ -2,7 +2,17 @@ package com.lianyi.paimonsnotebook.common.components.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidthIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -27,6 +37,7 @@ fun PropertiesDialog(
     fontSize: TextUnit = 16.sp,
     buttonGroupAlign: Arrangement.Horizontal = Arrangement.End,
     buttons: Array<String> = arrayOf("关闭"),
+    slot: @Composable ColumnScope.() -> Unit = {},
     onButtonClick: (Int) -> Unit = {},
     onCopyPropertiesValue: (String) -> Unit = {},
 ) {
@@ -46,7 +57,7 @@ fun PropertiesDialog(
                     .clip(RoundedCornerShape(4.dp))
                     .fillMaxWidth()
                     .background(White)
-                    .padding(20.dp)
+                    .padding(16.dp)
             ) {
 
                 Text(
@@ -59,7 +70,6 @@ fun PropertiesDialog(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 properties.forEach {
-
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -85,6 +95,8 @@ fun PropertiesDialog(
                     }
                 }
 
+                slot.invoke(this)
+
                 if (buttons.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -101,12 +113,8 @@ fun PropertiesDialog(
                             }
                         }
                     }
-
                 }
-
             }
-
         }
-
     }
 }

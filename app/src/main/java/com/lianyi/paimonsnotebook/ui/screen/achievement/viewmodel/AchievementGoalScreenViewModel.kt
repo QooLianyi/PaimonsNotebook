@@ -223,8 +223,9 @@ class AchievementGoalScreenViewModel : ViewModel() {
 
             AchievementEditActionType.DisableInteraction, AchievementEditActionType.EnableInteraction -> {
                 viewModelScope.launchIO {
-                    PreferenceKeys.DisableAchievementInteraction.editValue(!disableInteraction)
-                    if (disableInteraction) {
+                    val newValue = !disableInteraction
+                    PreferenceKeys.DisableAchievementInteraction.editValue(newValue)
+                    if (newValue) {
                         "成就记录交互已禁用".warnNotify(false)
                     } else {
                         "成就记录交互已启用".notify()

@@ -133,4 +133,16 @@ interface GachaItemsDao {
     * */
     @Query("select uigf_gacha_type,rank_type,id,name,item_type from gacha_items where uigf_gacha_type = :uigfGachaType and uid = :uid order by id")
     fun getHistoryWishByUIGFGachaTypeAndUid(uigfGachaType: String, uid:String):List<WishHistoryItem>
+
+
+    /*
+    * 通知room gacha_items表更新
+    *
+    * 更新一个不存在的id的数据来触发room更新
+    * 调用原生的插入方法并不会触发room的更新,因此需要手动来通知
+    * */
+    @Query(
+        "update gacha_items set gacha_type = gacha_type where '-1' = '-1'"
+    )
+    fun notifyRoomGachaItemsUpdate()
 }

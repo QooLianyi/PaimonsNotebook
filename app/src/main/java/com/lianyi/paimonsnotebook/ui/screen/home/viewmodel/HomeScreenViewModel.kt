@@ -183,7 +183,7 @@ class HomeScreenViewModel : ViewModel() {
 
     var isRefreshing by mutableStateOf(false)
 
-    val modalItems = HomeHelper.modalItems
+    val modalItems = HomeHelper.modalItemData
 
     fun init() {
         viewModelScope.launch(Dispatchers.IO) {

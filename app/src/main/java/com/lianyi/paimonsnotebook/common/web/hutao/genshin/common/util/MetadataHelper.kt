@@ -50,6 +50,12 @@ object MetadataHelper {
 
     private val hashMap = mutableMapOf<String, String>()
 
+
+    private var latestCheckHashMapTime = 0L
+
+    //哈希表的检查时间
+    private const val HashMapCheckInterval = 600000L
+
     /*
     * 检查元数据,判断是否有元数据需要更新
     *
@@ -132,6 +138,8 @@ object MetadataHelper {
 
     //更新元数据map
     private suspend fun updateMetadataHashMap() {
+        val needCheckHashMap = System.currentTimeMillis() + latestCheckHashMapTime
+
         val metaJson = buildRequest {
             url(HutaoEndpoints.metadata(LocaleNames.CHS, "$MetaFileName.json"))
         }.getAsText(applicationOkHttpClient)
@@ -143,6 +151,8 @@ object MetadataHelper {
                 getParameterizedType(Map::class.java, String::class.java, String::class.java)
             )
         )
+
+        latestCheckHashMapTime = System.currentTimeMillis()
     }
 
     //重新载入单个文件

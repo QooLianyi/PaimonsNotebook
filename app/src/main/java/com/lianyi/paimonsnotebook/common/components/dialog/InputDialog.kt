@@ -13,12 +13,13 @@ import com.lianyi.paimonsnotebook.common.components.widget.InputTextFiled
 fun InputDialog(
     title: String = "输入框",
     placeholder: String = "请输入内容",
+    initialValue: String = "",
     onConfirm: (value: String) -> Unit,
     onCancel: () -> Unit,
 ) {
     //输入值
     var value by remember {
-        mutableStateOf("")
+        mutableStateOf(initialValue)
     }
 
     LazyColumnDialog(

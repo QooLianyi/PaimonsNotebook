@@ -5,16 +5,23 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.text.InfoText
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.database.achievement.entity.AchievementUser
+import com.lianyi.paimonsnotebook.common.extension.intent.setComponentName
 import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
 import com.lianyi.paimonsnotebook.common.extension.scope.launchMain
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
@@ -27,6 +34,7 @@ import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
 import com.lianyi.paimonsnotebook.ui.screen.achievement.service.AchievementExportService
 import com.lianyi.paimonsnotebook.ui.screen.achievement.service.AchievementImportService
 import com.lianyi.paimonsnotebook.ui.screen.achievement.util.enums.AchievementActionType
+import com.lianyi.paimonsnotebook.ui.screen.achievement.view.AchievementRecordExportDataScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
 import com.lianyi.paimonsnotebook.ui.screen.setting.data.OptionListData
 import com.lianyi.paimonsnotebook.ui.theme.Primary_2
@@ -35,8 +43,6 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class AchievementOptionScreenViewModel : ViewModel() {
-
-    private lateinit var activityResultFile: File
 
     private var selectedUser by mutableStateOf<AchievementUser?>(null)
 
@@ -61,6 +67,8 @@ class AchievementOptionScreenViewModel : ViewModel() {
             }
         }
     }
+
+    private lateinit var activityResultFile: File
 
     //加载对话框
     var showLoadingDialog by mutableStateOf(false)
@@ -123,6 +131,20 @@ class AchievementOptionScreenViewModel : ViewModel() {
                 showAddAchievementUserDialog = true
             }
         ),
+        OptionListData(
+            name = "导出的祈愿记录",
+            description = "查看与管理导出的祈愿记录",
+            onClick = {
+                goAchievementRecordExportDataListScreen()
+            },
+            slot = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_chevron_right),
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+        )
 //        OptionListData(
 //            name = "删除成就记录用户",
 //            description = "选中一个用户,删除该用户的全部记录,此操作不可逆,请谨慎操作",
@@ -157,11 +179,6 @@ class AchievementOptionScreenViewModel : ViewModel() {
             name = "UIAF Json导出",
             description = "将所选用户的UIAF数据导出",
             onClick = {
-                showRequestPermissionDialog =
-                    !(this::storagePermission.isInitialized && storagePermission.invoke())
-
-                if (showRequestPermissionDialog) return@OptionListData
-
                 actionType = AchievementActionType.SelectForExport
                 showSelectAchievementUserDialog = true
             }
@@ -172,7 +189,8 @@ class AchievementOptionScreenViewModel : ViewModel() {
         user: AchievementUser
     ) {
         viewModelScope.launchIO {
-            val saveFile = FileHelper.getUIAFJsonSaveFile(user.name)
+            val fileName = "${user.name}_${System.currentTimeMillis()}"
+            val saveFile = FileHelper.getUIAFJsonSaveFile(fileName)
             exportService.exportAchievementToUIAF(file = saveFile, user)
 
             "成就记录导出到以下路径:${saveFile.path}".notify(closeable = true)
@@ -308,9 +326,9 @@ class AchievementOptionScreenViewModel : ViewModel() {
         }
 
         viewModelScope.launchIO {
-            importService.importAchivementFromUIAFJson(
+            importService.importAchievementFromUIAFJson(
                 userId = userId,
-                UIAFJson = activityResultFile
+                file = activityResultFile
             )
 
             //触发room更新
@@ -367,4 +385,11 @@ class AchievementOptionScreenViewModel : ViewModel() {
         }
         showImportResultDialog = false
     }
+
+    private fun goAchievementRecordExportDataListScreen() {
+        HomeHelper.goActivityByIntentNewTask {
+            setComponentName(AchievementRecordExportDataScreen::class.java)
+        }
+    }
+
 }

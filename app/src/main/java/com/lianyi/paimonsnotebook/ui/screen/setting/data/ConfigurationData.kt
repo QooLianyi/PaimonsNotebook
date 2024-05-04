@@ -28,12 +28,16 @@ class ConfigurationData {
     //启用检查新版本
     var enableCheckNewVersion by mutableStateOf(enableCheckNewVersionDefault)
 
+    //启用metadata
+    var enableMetadata by mutableStateOf(enableMetadataDefault)
+
     companion object {
         val homeScreenDisplayStateDefault = HomeScreenDisplayState.Community
         const val enableOverlayDefault = false
         const val alwaysUseDefaultUserDefault = true
         const val enableAutoCleanExpiredImagesDefault = true
         const val enableCheckNewVersionDefault = true
+        const val enableMetadataDefault = true
 
         //重置选项
         suspend fun resetConfig() {
@@ -44,6 +48,7 @@ class ConfigurationData {
                 it[PreferenceKeys.EnableAutoCleanExpiredImages] =
                     enableAutoCleanExpiredImagesDefault
                 it[PreferenceKeys.EnableCheckNewVersion] = enableCheckNewVersionDefault
+                it[PreferenceKeys.EnableMetadata] = enableMetadataDefault
             }
         }
     }

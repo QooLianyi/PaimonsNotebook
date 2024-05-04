@@ -26,9 +26,16 @@ open class BaseActivity(
     private val enableGesture: Boolean = true,
 ) : ComponentActivity() {
     private val storagePermissions by lazy {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             arrayOf(
                 Manifest.permission.READ_MEDIA_IMAGES,
+                Manifest.permission.READ_MEDIA_VIDEO,
+                Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
+            )
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arrayOf(
+                Manifest.permission.READ_MEDIA_IMAGES,
+                Manifest.permission.READ_MEDIA_VIDEO
             )
         } else {
             arrayOf(
@@ -75,7 +82,8 @@ open class BaseActivity(
     //注册ActivityResult
     protected fun registerStartActivityForResult() =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            onStartActivityForResult(it)
+            val intent = it.data
+            onStartActivityForResult(ActivityResult(it.resultCode,intent))
         }
 
     protected fun registerPressedCallback() =
@@ -96,9 +104,9 @@ open class BaseActivity(
     protected fun checkInstallPermission() = packageManager.canRequestPackageInstalls()
 
     //申请安装权限
-    protected fun requestInstallPermission(){
+    protected fun requestInstallPermission() {
         val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
-        intent.setData(Uri.fromParts("package", packageName,null))
+        intent.setData(Uri.fromParts("package", packageName, null))
         startActivity(intent)
     }
 

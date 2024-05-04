@@ -9,7 +9,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.DropdownMenu
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -18,10 +20,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.components.dialog.LazyColumnDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.PropertiesDialog
@@ -32,6 +36,7 @@ import com.lianyi.paimonsnotebook.common.data.hoyolab.user.User
 import com.lianyi.paimonsnotebook.common.data.hoyolab.user.UserAndUid
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
+import com.lianyi.paimonsnotebook.common.extension.intent.setComponentName
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.common.extension.string.notify
 import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
@@ -53,6 +58,7 @@ import com.lianyi.paimonsnotebook.ui.screen.account.components.dialog.UserGameRo
 import com.lianyi.paimonsnotebook.ui.screen.gacha.service.GachaItemsExportService
 import com.lianyi.paimonsnotebook.ui.screen.gacha.service.GachaItemsImportService
 import com.lianyi.paimonsnotebook.ui.screen.gacha.service.GachaLogService
+import com.lianyi.paimonsnotebook.ui.screen.gacha.view.GachaRecordExportDataScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
 import com.lianyi.paimonsnotebook.ui.screen.setting.data.OptionListData
 import com.lianyi.paimonsnotebook.ui.theme.Black_60
@@ -79,6 +85,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
         viewModelScope.launch {
             launch {
                 dao.getAllGameUidFlow().collect {
+                    println("dao.getAllGameUidFlow() = ${it}")
                     gachaRecordGameUid.clear()
                     gachaRecordGameUid += it
                 }
@@ -180,6 +187,20 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
                         }
                     }
                 }
+            }
+        ),
+        OptionListData(
+            name = "导出的祈愿记录",
+            description = "查看与管理导出的祈愿记录",
+            onClick = {
+                goGachaRecordExportDataListScreen()
+            },
+            slot = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_chevron_right),
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
+                )
             }
         ),
 //        OptionListData(
@@ -663,17 +684,15 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
             return
         }
 
-        showRequestPermissionDialog =
-            !(this::storagePermission.isInitialized && storagePermission.invoke())
-
-        if (showRequestPermissionDialog) return
-
         loadingDialogTitle = "导出祈愿记录"
         loadingDialogDescription = "正在导出数据,导出的时长与数据量有关"
         showLoadingDialog = true
 
         viewModelScope.launch(Dispatchers.IO) {
-            val file = FileHelper.getUIGFJsonSaveFile(currentGameUid)
+
+            val fileName = "${currentGameUid}_${System.currentTimeMillis()}"
+
+            val file = FileHelper.getUIGFJsonSaveFile(fileName)
             exportService.exportGachaRecordToUIGFJson(currentGameUid, file)
 
             showLoadingDialog = false
@@ -681,4 +700,12 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
             "祈愿记录导出到以下路径:${file.path}".notify(closeable = true)
         }
     }
+
+    //前往祈愿记录导出数据界面
+    private fun goGachaRecordExportDataListScreen() {
+        HomeHelper.goActivityByIntentNewTask {
+            setComponentName(GachaRecordExportDataScreen::class.java)
+        }
+    }
+
 }

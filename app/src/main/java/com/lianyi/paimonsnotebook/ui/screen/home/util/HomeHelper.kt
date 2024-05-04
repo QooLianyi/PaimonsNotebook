@@ -16,55 +16,85 @@ import com.lianyi.paimonsnotebook.ui.screen.home.data.ModalItemData
 import com.lianyi.paimonsnotebook.ui.screen.items.view.AvatarScreen
 import com.lianyi.paimonsnotebook.ui.screen.items.view.CultivationMaterialScreen
 import com.lianyi.paimonsnotebook.ui.screen.items.view.WeaponScreen
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 object HomeHelper {
     private val context by lazy {
         PaimonsNotebookApplication.context
     }
 
-
-    val modalItems = listOf(
+    val modalItemData = listOf(
         ModalItemData(
-            "实时便笺",
-            R.drawable.ic_moon,
-            DailyNoteScreen::class.java
+            name = "实时便笺",
+            icon = R.drawable.ic_moon,
+            target = DailyNoteScreen::class.java,
+            sortIndex = 1
         ),
         ModalItemData(
-            "祈愿记录",
-            R.drawable.ic_genshin_game_wish,
-            GachaRecordScreen::class.java
+            name = "祈愿记录",
+            icon = R.drawable.ic_genshin_game_wish,
+            target = GachaRecordScreen::class.java,
+            sortIndex = 2,
+            requireMetadata = true
         ),
         ModalItemData(
-            "角色资料",
-            R.drawable.ic_genshin_game_character,
-            AvatarScreen::class.java
+            name = "角色资料",
+            icon = R.drawable.ic_genshin_game_character,
+            target = AvatarScreen::class.java,
+            sortIndex = 3,
+            requireMetadata = true
         ),
         ModalItemData(
-            "武器资料",
-            R.drawable.ic_genshin_game_equip,
-            WeaponScreen::class.java
+            name = "武器资料",
+            icon = R.drawable.ic_genshin_game_equip,
+            target = WeaponScreen::class.java,
+            sortIndex = 3,
+            requireMetadata = true
         ),
         ModalItemData(
-            "养成材料",
-            R.drawable.ic_genshin_game_material,
-            CultivationMaterialScreen::class.java
+            name = "养成材料",
+            icon = R.drawable.ic_genshin_game_material,
+            target = CultivationMaterialScreen::class.java,
+            sortIndex = 4,
+            requireMetadata = true
         ),
         ModalItemData(
-            "深境螺旋",
-            R.drawable.ic_genshin_game_spiral_abyss,
-            AbyssScreen::class.java
+            name = "深境螺旋",
+            icon = R.drawable.ic_genshin_game_spiral_abyss,
+            target = AbyssScreen::class.java,
+            sortIndex = 5,
+            requireMetadata = true
         ),
         ModalItemData(
-            "成就管理",
-            R.drawable.ic_genshin_game_sign_cup,
-            AchievementScreen::class.java
+            name = "成就管理",
+            icon = R.drawable.ic_genshin_game_sign_cup,
+            target = AchievementScreen::class.java,
+            sortIndex = 6,
+            requireMetadata = true
         ),
         ModalItemData(
-            "桌面组件",
-            R.drawable.ic_appwidget,
-            AppWidgetScreen::class.java
+            name = "桌面组件",
+            icon = R.drawable.ic_appwidget,
+            target = AppWidgetScreen::class.java,
+            sortIndex = 7,
+            requireMetadata = true
         )
     )
+
+    private val ModalItemsStateFlow = MutableStateFlow<List<ModalItemData>>(listOf())
+
+    //对外开放的modalItems流
+    val modalItemsFlow = ModalItemsStateFlow.asStateFlow()
+
+    init {
+//        CoroutineScope(Dispatchers.IO).launchIO {
+//            val v = dataStoreValuesFirstLambda {
+//                this[PreferenceKeys.EnableMetadata] ?: false
+//            }
+//
+//        }
+    }
 
     fun <T : Activity> goActivity(
         cls: Class<T>,

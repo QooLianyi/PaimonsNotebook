@@ -8,10 +8,14 @@ import android.os.Build
 import android.os.Environment
 import android.os.FileUtils
 import android.webkit.MimeTypeMap
+import androidx.core.content.FileProvider
+import com.lianyi.paimonsnotebook.BuildConfig
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
+import com.lianyi.paimonsnotebook.common.extension.number.decimal.format.format
 import com.lianyi.paimonsnotebook.common.util.image.PaimonsNotebookImageLoader
 import java.io.BufferedInputStream
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.net.URI
@@ -21,6 +25,10 @@ object FileHelper {
 
     private val context by lazy {
         PaimonsNotebookApplication.context
+    }
+
+    val contentResolver by lazy {
+        context.contentResolver
     }
 
     private val privateStoragePath by lazy {
@@ -55,14 +63,14 @@ object FileHelper {
             privateStoragePath?.resolve("package")!!
 
     //存储祈愿记录的路径
-    private val saveFileGachaItemsPath
+    val saveFileGachaItemsPath
         get() =
-            rootPath?.resolve("gacha")!!
+            privateStoragePath?.resolve("gacha")!!
 
     //存储成就记录的路径
-    private val saveFileAchievementsPath
+    val saveFileAchievementsPath
         get() =
-            rootPath?.resolve("achievements")!!
+            privateStoragePath?.resolve("achievements")!!
 
 
     //扫描图片,使其出现在相册中
@@ -123,7 +131,6 @@ object FileHelper {
 
         if (file.exists()) {
             file.delete()
-            file.mkdirs()
         }
 
         FileOutputStream(file).use {
@@ -164,10 +171,14 @@ object FileHelper {
         } else null
 
     fun uriToFile(uri: Uri): File? {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            uriToFileInAndroidQ(uri)
-        } else {
-            File(URI(uri.toString()))
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                uriToFileInAndroidQ(uri)
+            } else {
+                File(URI(uri.toString()))
+            }
+        } catch (_: Exception) {
+            null
         }
     }
 
@@ -189,6 +200,25 @@ object FileHelper {
         return File(rootPath, fileName)
     }
 
+    /*
+    * 获取文件uri
+    * scheme = content
+    * */
+    fun getContentUriForFile(file: File) =
+        FileProvider.getUriForFile(context, "${BuildConfig.APPLICATION_ID}.provider", file)
+
+    /*
+    * 从content uri获取file out put stream
+    * */
+    fun getFileOutputStreamByContentUri(uri: Uri, mode: String = "rw") =
+        contentResolver.openFileDescriptor(uri, mode)?.use { fileDescriptor ->
+            FileOutputStream(fileDescriptor.fileDescriptor)
+        }
+
+    fun getFileInputStreamByContentUri(uri: Uri, mode: String = "rw") =
+        contentResolver.openFileDescriptor(uri, mode)?.use { fileDescriptor ->
+            FileInputStream(fileDescriptor.fileDescriptor)
+        }
 
     /*
     * 以流的方式保存文件
@@ -244,7 +274,12 @@ object FileHelper {
         val file = File(rootPath, fileName)
 
         if (file.exists() && onExistsDelete) {
-            file.delete()
+            val uri = getContentUriForFile(file)
+
+            val deleteRow = contentResolver.delete(uri, null, null)
+            if (deleteRow == 0) {
+                file.delete()
+            }
         }
 
         return file
@@ -280,6 +315,31 @@ object FileHelper {
             }
         }
     }
+
+
+    /*
+    * 获得文件尺寸描述文本
+    * */
+    fun getFileSizeDescribeString(length: Long): String {
+        val kb = byteToKB(length)
+
+        if (kb < 1024) {
+            return "${kb.format()}KB"
+        }
+
+        val mb = byteToMB(length)
+
+        if (mb < 1024) {
+            return "${mb.format()}MB"
+        }
+
+        return "${byteToGB(length).format()}GB"
+    }
+
+    private fun byteToKB(length: Long) = length / 1024f
+    private fun byteToMB(length: Long) = length / (1024f * 1024f)
+    private fun byteToGB(length: Long) = length / (1024f * 1024f * 1024)
+
 
     private val df
         get() =

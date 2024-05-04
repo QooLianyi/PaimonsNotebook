@@ -1,53 +1,19 @@
 package com.lianyi.paimonsnotebook.ui.screen.develop
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.compose.setContent
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 
 
 class TypographyScreen : BaseActivity() {
 
-    private lateinit var start: ActivityResultLauncher<Intent>
-
-    override fun onStartActivityForResult(result: ActivityResult) {
-        println("resultCode = ${result.resultCode} result = ${result.data}")
-        super.onStartActivityForResult(result)
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        println("onNewIntent = ${intent?.data}")
-        super.onNewIntent(intent)
-    }
-
-//    private fun bytes2MD5(byteStr: ByteArray): String {
-//        val stringBuffer = StringBuffer()
-//        try {
-//            val messageDigest = MessageDigest.getInstance("MD5")
-//            messageDigest.reset()
-//            messageDigest.update(byteStr)
-//            val digest = messageDigest.digest()
-//            for (b in digest) {
-//                val i = b.toInt() and UByte.MAX_VALUE.toInt()
-//                if (Integer.toHexString(i).length == 1) {
-//                    stringBuffer.append("0")
-//                    stringBuffer.append(Integer.toHexString(i))
-//                } else {
-//                    stringBuffer.append(Integer.toHexString(i))
-//                }
-//            }
-//        } catch (e: Exception) {
-//        }
-//        return stringBuffer.toString()
-//    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        start = registerStartActivityForResult()
-
+        setContent {
+        }
     }
+
 //            PaimonsNotebookTheme(this) {
 //                val state = rememberLazyListState()
 //                val firstIndex by remember { derivedStateOf { state.firstVisibleItemIndex } }

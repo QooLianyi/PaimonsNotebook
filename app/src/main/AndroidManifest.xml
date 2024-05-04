@@ -27,20 +27,21 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32"
-        tools:ignore="ScopedStorage" />
+    <!-- Devices running Android 12L (API level 32) or lower  -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
 
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-
+    <!-- Devices running Android 13 (API level 33) or higher -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+
+    <!-- To handle the reselection within the app on devices running Android 14
+         or higher if your app targets Android 14 (API level 34) or higher.  -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
 
     <application
         android:name=".common.application.PaimonsNotebookApplication"
         android:allowBackup="true"
+        android:requestLegacyExternalStorage="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_paimonsnotebook"
@@ -52,6 +53,9 @@
 
         <activity
             android:name=".ui.screen.shortcuts_manager.view.ShortcutsManagerScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.achievement.view.AchievementRecordExportDataScreen"
             android:theme="@style/Theme.PaimonsNotebook" />
         <activity
             android:name=".ui.screen.achievement.view.AchievementOptionScreen"
@@ -92,6 +96,9 @@
             android:theme="@style/Theme.PaimonsNotebook" />
         <activity
             android:name=".ui.screen.gacha.view.GachaRecordOptionScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.gacha.view.GachaRecordExportDataScreen"
             android:theme="@style/Theme.PaimonsNotebook" />
         <activity
             android:name=".ui.screen.daily_note.view.DailyNoteScreen"
@@ -145,8 +152,8 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="mdk_e45a5ea9b62b87aa" />
-                <!--                <data android:scheme="mdk_47f91e6080ef9670"/>-->
+<!--                <data android:scheme="mdk_e45a5ea9b62b87aa" />-->
+<!--                <data android:scheme="mdk_47f91e6080ef9670"/>-->
             </intent-filter>
         </activity>
 
@@ -254,24 +261,14 @@
                 android:resource="@xml/widget_common_4x3" />
         </receiver>
 
-        <!--        <provider-->
-        <!--            android:name="androidx.core.content.FileProvider"-->
-        <!--            android:authorities="com.lianyi.paimonsnotebook.fileprovider"-->
-        <!--            android:exported="false"-->
-        <!--            android:grantUriPermissions="true">-->
-        <!--            <meta-data-->
-        <!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
-        <!--                android:resource="@xml/filepaths" />-->
-        <!--        </provider>-->
-
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.fileprovider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
+                android:resource="@xml/provider_paths" />
         </provider>
 
     </application>

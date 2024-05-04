@@ -149,6 +149,11 @@ object PreferenceKeys {
         stringPreferencesKey("authorizeAppSign")
     }
 
+    //启用元数据
+    val EnableMetadata by lazy {
+        booleanPreferencesKey("enableMetadata")
+    }
+
     val widgetsCount by lazy {
         intPreferencesKey("widgetsCount")
     }

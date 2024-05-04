@@ -39,7 +39,7 @@ class Shortcut3X2RemoteViews(
             }
             PreferenceKeys.AppWidgetShortcutCurrentPage.editValue(tempValue)
 
-            val items = HomeHelper.modalItems
+            val items = HomeHelper.modalItemData
 
             val maxPage = items.size / count + if (items.size % count == 0) 0 else 1
 

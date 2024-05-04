@@ -11,9 +11,19 @@ data class FunctionItemData(
     val shortcut: Boolean = false,
 )
 
+/*
+* 主页侧边栏选项数据
+*
+* name:功能名称
+* icon:图标资源ID
+* target:目标activity
+* sortIndex:排序类型,升序
+* requireMetadata:是否需要metadata
+* */
 data class ModalItemData(
     val name: String,
     val icon: Int,
     val target: Class<out Activity>,
-    val offline: Boolean = false
+    val sortIndex: Int = 0,
+    val requireMetadata: Boolean = false
 )
