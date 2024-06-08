@@ -37,6 +37,7 @@ fun TextSlider(
     range: ClosedFloatingPointRange<Float> = (0f..1f),
     enabled: Boolean = true,
     textMinWidth: Dp = 70.dp,
+    fontSize:Int = 16,
     textContentPadding: PaddingValues = PaddingValues(12.dp, 6.dp),
     textContentBackgroundColor: Color = White_60,
     colors: SliderColors = SliderDefaults.colors(
@@ -81,7 +82,67 @@ fun TextSlider(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = text(value), fontSize = 16.nonScaledSp(), fontWeight = FontWeight.SemiBold)
+            Text(text = text(value), fontSize = fontSize.nonScaledSp(), fontWeight = FontWeight.SemiBold)
+        }
+    }
+}
+
+@Composable
+fun TextSliderRtL(
+    value: Float,
+    onValueChange: (Float) -> Unit,
+    text: (Float) -> String,
+    title: String = "",
+    range: ClosedFloatingPointRange<Float> = (0f..1f),
+    enabled: Boolean = true,
+    textMinWidth: Dp = 70.dp,
+    fontSize:Int = 16,
+    textContentPadding: PaddingValues = PaddingValues(12.dp, 6.dp),
+    textContentBackgroundColor: Color = White_60,
+    colors: SliderColors = SliderDefaults.colors(
+        thumbColor = Black,
+        inactiveTrackColor = Black_40,
+        activeTrackColor = Black_40,
+        disabledThumbColor = Black_40,
+        disabledActiveTickColor = Black_10,
+        disabledInactiveTrackColor = Black_10,
+    ),
+){
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Row(
+            modifier = Modifier
+                .clip(CircleShape)
+                .background(textContentBackgroundColor)
+                .requiredWidthIn(textMinWidth,240.dp)
+                .padding(textContentPadding),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(text = text(value), fontSize = fontSize.nonScaledSp(), fontWeight = FontWeight.SemiBold)
+        }
+
+        Slider(
+            value = value,
+            onValueChange = onValueChange,
+            valueRange = range,
+            colors = colors,
+            enabled = enabled,
+            modifier = Modifier
+                .weight(1f)
+                .height(30.dp)
+        )
+
+        if (title.isNotBlank()) {
+            Text(
+                text = title,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold
+            )
         }
     }
 }

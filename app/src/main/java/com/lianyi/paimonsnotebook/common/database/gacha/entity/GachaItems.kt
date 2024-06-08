@@ -7,7 +7,9 @@ import androidx.room.Index
 * 祈愿记录实体表
 * */
 @Entity(
-    "gacha_items", indices = [
+    "gacha_items",
+    //添加索引增加查询速度
+    indices = [
         Index(
             "uigf_gacha_type",
             "rank_type",

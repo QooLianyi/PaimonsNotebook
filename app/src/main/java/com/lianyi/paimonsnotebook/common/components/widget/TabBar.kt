@@ -31,22 +31,25 @@ import com.lianyi.paimonsnotebook.ui.theme.Black_20
 fun TabBar(
     tabs: Array<String>,
     tabBarPadding: PaddingValues,
-    requiredWidthIn: Pair<Dp, Dp> = 50.dp to 120.dp,
+    index: Int = 0,
+    requiredWidthIn: Pair<Dp, Dp> = 50.dp to 240.dp,
     textSelectColor: Color = Black,
     textUnSelectColor: Color = Black_20,
     textSelectSize: TextUnit = 20.sp,
     textUnSelectSize: TextUnit = 14.sp,
+    tabsSpace: Dp = 0.dp,
     onSelect: (Int) -> Unit
 ) {
 
-    var currentIndex by remember {
-        mutableIntStateOf(0)
+    var currentIndex by remember(index) {
+        mutableIntStateOf(index)
     }
 
     Row(
-        modifier = Modifier.padding(tabBarPadding),
-        verticalAlignment = Alignment.CenterVertically
+        modifier = Modifier.padding(tabBarPadding)
     ) {
+
+        //以选中的字体样式撑起高度
         Text(
             text = "", style = TextStyle(
                 color = textSelectColor,
@@ -55,34 +58,39 @@ fun TabBar(
             )
         )
 
-        tabs.forEachIndexed { index, s ->
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(tabsSpace),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            tabs.forEachIndexed { index, s ->
 
-            val textStyle by animateTextStyleAsState(
-                targetValue = if (currentIndex == index) TextStyle(
-                    color = textSelectColor,
-                    fontSize = textSelectSize,
-                    fontWeight = FontWeight.SemiBold
+                val textStyle by animateTextStyleAsState(
+                    targetValue = if (currentIndex == index) TextStyle(
+                        color = textSelectColor,
+                        fontSize = textSelectSize,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    else TextStyle(
+                        color = textUnSelectColor,
+                        fontSize = textUnSelectSize,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 )
-                else TextStyle(
-                    color = textUnSelectColor,
-                    fontSize = textUnSelectSize,
-                    fontWeight = FontWeight.SemiBold
-                )
-            )
 
-            Column(
-                modifier = Modifier
-                    .requiredWidthIn(requiredWidthIn.first, requiredWidthIn.second)
-                    .pointerInput(Unit) {
-                        detectTapGestures {
-                            currentIndex = index
-                            onSelect(currentIndex)
-                        }
-                    },
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = s, style = textStyle)
+                Column(
+                    modifier = Modifier
+                        .requiredWidthIn(requiredWidthIn.first, requiredWidthIn.second)
+                        .pointerInput(Unit) {
+                            detectTapGestures {
+                                currentIndex = index
+                                onSelect.invoke(currentIndex)
+                            }
+                        },
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = s, style = textStyle)
+                }
             }
         }
     }

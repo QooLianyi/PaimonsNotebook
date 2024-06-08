@@ -1,7 +1,7 @@
 package com.lianyi.paimonsnotebook.common.database.app_widget_binding.type_converter
 
 import androidx.room.TypeConverter
-import com.lianyi.paimonsnotebook.common.database.user.type_converter.ITypeConverter
+import com.lianyi.paimonsnotebook.common.database.util.ITypeConverter
 import com.lianyi.paimonsnotebook.common.util.json.JSON
 import com.lianyi.paimonsnotebook.common.util.parameter.getParameterizedType
 import com.lianyi.paimonsnotebook.ui.widgets.util.RemoteViewsDataType

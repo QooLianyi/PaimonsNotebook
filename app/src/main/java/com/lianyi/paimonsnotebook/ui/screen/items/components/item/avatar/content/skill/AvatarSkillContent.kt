@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.components.layout.blur_card.widget.ItemSlider
+import com.lianyi.paimonsnotebook.common.components.layout.blur_card.widget.ItemLevelSlider
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.common.components.text.RichText
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
@@ -125,10 +125,11 @@ internal fun AvatarSkillContent(
                         Spacer(modifier = Modifier.height(4.dp))
 
                         NoRippleThemeProvides {
-                            ItemSlider(
-                                value = skill.currentLevel,
+                            ItemLevelSlider(
+                                value = skill.sliderValue,
+                                level = skill.currentLevel,
                                 range = (1f..skill.maxLevel.toFloat()),
-                                onValueChange = skill::setLevel
+                                onValueChange = skill::updateSliderValue
                             )
                         }
 

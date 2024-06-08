@@ -30,16 +30,6 @@ class WebHomeClient {
             setReferer("https://bbs.mihoyo.com/")
         }.getAsJson<PostFullData>()
 
-    suspend fun getActivityCalendar() =
-        buildRequest {
-            url(ApiEndpoints.ActivityCalendar)
-        }.getAsJson<ActivityCalendarData>()
-
-    suspend fun getUserFullInfo(bbsUid: String) =
-        buildRequest {
-            url(ApiEndpoints.UserFullInfoQuery(bbsUid))
-        }.getAsJson<HoyolabAccountData>()
-
     suspend fun getNearActivity() =
         buildRequest {
             url(ApiEndpoints.NearActivity)

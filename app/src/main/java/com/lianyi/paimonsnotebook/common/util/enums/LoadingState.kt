@@ -7,5 +7,6 @@ enum class LoadingState {
     Loading,
     Error,
     Empty,
-    Success
+    Success,
+    NoData
 }

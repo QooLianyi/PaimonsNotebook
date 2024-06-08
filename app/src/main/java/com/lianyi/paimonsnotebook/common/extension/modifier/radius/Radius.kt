@@ -5,4 +5,5 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 
-fun Modifier.radius(size: Dp) = this.clip(RoundedCornerShape(size))
+fun Modifier.radius(size: Dp) = clip(RoundedCornerShape(size))
+

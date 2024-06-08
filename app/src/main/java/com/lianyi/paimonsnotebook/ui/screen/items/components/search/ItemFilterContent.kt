@@ -42,6 +42,7 @@ internal fun <T> ItemFilterContent(
     itemFilterViewModel: ItemFilterViewModel<T>,
     itemSlot: @Composable (data: T, layoutStyle: ListLayoutStyle, type: ItemFilterType) -> Unit
 ) {
+
     AnimatedVisibility(
         visible = itemFilterViewModel.showFilterContent,
         enter = slideIn(spring()) {
@@ -52,6 +53,7 @@ internal fun <T> ItemFilterContent(
         },
         modifier = Modifier.zIndex(5f),
     ) {
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -136,7 +138,7 @@ internal fun <T> ItemFilterContent(
                                         itemSlot.invoke(
                                             it,
                                             itemFilterViewModel.itemListLayoutStyle,
-                                            itemFilterViewModel.orderByType
+                                            itemFilterViewModel.currentOrderByKeyType
                                         )
                                     }
                                 }
@@ -161,7 +163,7 @@ internal fun <T> ItemFilterContent(
                                         itemSlot.invoke(
                                             it,
                                             itemFilterViewModel.itemListLayoutStyle,
-                                            itemFilterViewModel.orderByType
+                                            itemFilterViewModel.currentOrderByKeyType
                                         )
                                     }
                                 }

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.common.components.layout.column.TabBarColumnLayout
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyVerticalGrid
+import com.lianyi.paimonsnotebook.common.components.popup.IconTitleInformationPopupWindow
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.items.components.item.list_card.ItemGridListCard
@@ -52,6 +53,7 @@ class CultivationMaterialScreen : BaseActivity() {
                     TabBarColumnLayout(
                         tabs = viewModel.tabs,
                         onTabBarSelect = viewModel::onChangePage,
+                        tabsSpace = 12.dp,
                         topSlot = {
                             Row(
                                 modifier = Modifier
@@ -66,7 +68,7 @@ class CultivationMaterialScreen : BaseActivity() {
                                         fontWeight = FontWeight.SemiBold,
                                         fontSize = 16.sp,
                                         modifier = Modifier
-                                            .requiredWidthIn(60.dp,180.dp)
+                                            .requiredWidthIn(60.dp, 180.dp)
                                             .radius(2.dp)
                                             .clickable {
                                                 viewModel.showDropMenu()
@@ -109,7 +111,10 @@ class CultivationMaterialScreen : BaseActivity() {
                                 when (it) {
                                     1 -> {
                                         viewModel.weaponList.forEach { pair ->
-                                            materialTitle(pair.first)
+                                            materialTitle(
+                                                pair.first,
+                                                viewModel::onClickMaterialItem
+                                            )
 
                                             items(pair.second, key = { it.id }) { weapon ->
                                                 ItemGridListCard(
@@ -127,7 +132,10 @@ class CultivationMaterialScreen : BaseActivity() {
 
                                     else -> {
                                         viewModel.avatarList.forEach { pair ->
-                                            materialTitle(pair.first)
+                                            materialTitle(
+                                                pair.first,
+                                                viewModel::onClickMaterialItem
+                                            )
 
                                             items(pair.second, key = { it.id }) { weapon ->
                                                 ItemGridListCard(
@@ -145,6 +153,15 @@ class CultivationMaterialScreen : BaseActivity() {
                                 }
                             }
                         }
+
+                        if (viewModel.showMaterialPopupWindow) {
+                            IconTitleInformationPopupWindow(
+                                data = viewModel.popupWindowData,
+                                popupProvider = viewModel.popupWindowProvider,
+                                onDismissRequest = viewModel::dismissPopupWindow
+                            )
+                        }
+
                     }
                 }
             }

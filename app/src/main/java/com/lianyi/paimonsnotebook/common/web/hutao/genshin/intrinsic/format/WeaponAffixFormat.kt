@@ -4,7 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.weapon.WeaponData
-import kotlin.math.roundToInt
 
 data class WeaponAffixFormat(
     val affix: WeaponData.Affix?
@@ -20,15 +19,13 @@ data class WeaponAffixFormat(
     var maxLevel: Int = affix?.Descriptions?.size ?: 1
 
     init {
-        setLevel(1f)
+        //初始化武器描述
+        onSliderValueChange(1f)
     }
 
-    fun setLevel(level: Float) {
-        currentLevel = if (level >= maxLevel) {
-            maxLevel
-        } else {
-            level.roundToInt()
-        }
+    //当滑动条值改变时
+    fun onSliderValueChange(value: Float) {
+        updateSliderValue(value)
 
         affixText = map[currentLevel - 1] ?: ""
     }

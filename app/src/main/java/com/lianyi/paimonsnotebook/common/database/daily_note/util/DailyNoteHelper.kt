@@ -13,7 +13,6 @@ import com.lianyi.paimonsnotebook.common.database.user.util.AccountHelper
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.common.extension.string.notify
 import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
-import com.lianyi.paimonsnotebook.common.web.hoyolab.geetest.GeeTestClient
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.binding.UserGameRoleData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.GameRecordClient
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.daily_note.DailyNoteData
@@ -48,10 +47,6 @@ object DailyNoteHelper {
 
     private val gameRecordClient by lazy {
         GameRecordClient()
-    }
-
-    private val geeTestClient by lazy {
-        GeeTestClient()
     }
 
     init {
@@ -122,7 +117,7 @@ object DailyNoteHelper {
                 }
             }
         } else {
-            "添加失败,可能是实时便笺自动验证失败导致的,稍后重新获取或前往「米游社-我的角色-实时便笺」以解决".warnNotify()
+            "添加失败,可能是实时便笺触发验证操作导致的,稍后重新获取或前往「米游社-我的角色-实时便笺」以解决".warnNotify()
         }
     }
 
@@ -194,16 +189,6 @@ object DailyNoteHelper {
             playerUid = playerUid
         )
         val result = gameRecordClient.getDailyNote(userAndUid)
-
-        if(result.retcode == ResultData.NEED_VALIDATE){
-            val xrpcChallenge = geeTestClient.getXrpcChallenge(user)
-
-            if (xrpcChallenge != "error") {
-                return gameRecordClient.getDailyNote(
-                    userAndUid,xrpcChallenge
-                )
-            }
-        }
 
         if (result.success) {
             dailyNoteDao.upsert(

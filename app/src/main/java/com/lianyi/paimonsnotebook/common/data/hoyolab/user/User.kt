@@ -17,7 +17,6 @@ data class User(
 ) {
     var isSelected by mutableStateOf(userEntity.isSelected)
 
-
     fun getSelectedGameRole(): UserGameRoleData.Role? = userGameRoles.takeFirstIf { it.is_chosen }
 
 }

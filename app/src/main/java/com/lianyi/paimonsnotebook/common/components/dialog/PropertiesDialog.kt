@@ -89,7 +89,7 @@ fun PropertiesDialog(
                             color = Black,
                             modifier = Modifier
                                 .clickable {
-                                    onCopyPropertiesValue(it.second)
+                                    onCopyPropertiesValue.invoke(it.second)
                                 }
                                 .fillMaxWidth())
                     }
@@ -105,7 +105,7 @@ fun PropertiesDialog(
                         horizontalArrangement = buttonGroupAlign
                     ) {
                         buttons.forEachIndexed { index, s ->
-                            TextButton(onClick = { onButtonClick(index) }) {
+                            TextButton(onClick = { onButtonClick.invoke(index) }) {
                                 Text(text = s, fontSize = 18.sp, color = Primary_1)
                             }
                             if (index != buttons.size - 1) {

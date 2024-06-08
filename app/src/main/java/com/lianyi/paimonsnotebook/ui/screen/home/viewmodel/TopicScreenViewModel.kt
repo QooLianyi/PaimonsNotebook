@@ -53,7 +53,7 @@ class TopicScreenViewModel : ViewModel() {
     /*
     * 初始化
     * */
-    fun init(intent: Intent) {
+    fun update(intent: Intent) {
         viewModelScope.launchIO {
             val topicId = intent.getLongExtra(PostHelper.PARAM_TOPIC_ID, -1)
 
@@ -81,7 +81,9 @@ class TopicScreenViewModel : ViewModel() {
 
             tabs = topicInfo!!.topic.topic_sort_config.map { it.name }.toTypedArray()
 
-            getTopicList(topicId)
+
+            topicListMap.clear()
+            onTabBarSelect(0)
 
             loadingState = LoadingState.Success
         }

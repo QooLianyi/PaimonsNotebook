@@ -1,6 +1,7 @@
 package com.lianyi.paimonsnotebook.ui.screen.resource_manager.viewmodel
 
 import android.content.Intent
+import android.os.Build
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,6 +16,7 @@ import com.lianyi.paimonsnotebook.common.extension.string.notify
 import com.lianyi.paimonsnotebook.common.util.file.FileHelper
 import com.lianyi.paimonsnotebook.common.util.image.PaimonsNotebookImageLoader
 import com.lianyi.paimonsnotebook.common.util.system_service.SystemService
+import com.lianyi.paimonsnotebook.common.util.system_service.sdkVersionLessThanOrEqualTo29
 import com.lianyi.paimonsnotebook.ui.screen.resource_manager.view.ImageDetailScreen
 import java.io.File
 
@@ -94,12 +96,12 @@ class ImageDetailScreenViewModel : ViewModel() {
         "已将属性复制到剪切板".notify()
     }
 
-    fun deleteImage(callback:()->Unit) {
+    fun deleteImage(callback: () -> Unit) {
         viewModelScope.launchIO {
-            val targetValue = if(removePlanDelete){
+            val targetValue = if (removePlanDelete) {
                 "已移出计划删除队列".notify()
                 0
-            }else{
+            } else {
                 "已加入计划删除队列".notify()
                 1
             }
@@ -110,15 +112,18 @@ class ImageDetailScreenViewModel : ViewModel() {
     }
 
     fun saveImage() {
-        showRequestPermissionDialog =
-            !(this::checkStoragePermission.isInitialized && checkStoragePermission.invoke())
+        sdkVersionLessThanOrEqualTo29 {
+            showRequestPermissionDialog =
+                !(this::checkStoragePermission.isInitialized && checkStoragePermission.invoke())
+
+        }
 
         if (showRequestPermissionDialog) return
 
         FileHelper.saveImageFromLocalCache(diskCacheData.url, onSuccess = {
-            "图片保存到以下位置:${it}".notify(closeable = true)
+            "图片已保存".notify()
         }) {
-            "保存失败:本地图片不存在".errorNotify()
+            "保存失败:${it ?: "未知原因"}".errorNotify()
         }
     }
 }

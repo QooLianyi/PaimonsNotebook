@@ -1,7 +1,11 @@
 package com.lianyi.paimonsnotebook.common.util.notification
 
 import androidx.compose.runtime.mutableStateListOf
-import kotlinx.coroutines.*
+import com.lianyi.paimonsnotebook.common.extension.scope.withContextMain
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 object PaimonsNotebookNotification {
 
@@ -26,11 +30,13 @@ object PaimonsNotebookNotification {
             keepShow = keepShow
         )
 
-        notifications.add(data)
+        CoroutineScope(Dispatchers.Unconfined).launch {
+            withContextMain {
+                notifications.add(data)
+            }
 
-        //设置自动消失
-        if(!(data.keepShow || data.closeable)){
-            CoroutineScope(Dispatchers.Unconfined).launch {
+            //设置自动消失
+            if (!(data.keepShow || data.closeable)) {
                 delay(data.autoDismissTime)
                 delayRemove(data)
             }
@@ -39,7 +45,7 @@ object PaimonsNotebookNotification {
         return data.notificationId
     }
 
-    private suspend fun delayRemove(data:PaimonsNotebookNotificationData, delayTime:Long = 500L) {
+    private suspend fun delayRemove(data: PaimonsNotebookNotificationData, delayTime: Long = 500L) {
         data.isShowing.value = false
         delay(delayTime)
         remove(data.notificationId)

@@ -25,8 +25,12 @@ fun AccountItemGameRole(
     onChangeAccountPlayerUid: (UserGameRoleData.Role) -> Unit,
 ) {
     //player uid 指示器动画
-    val playerUidIndicatorHeightAnim by animateDpAsState(targetValue = if (role.is_chosen) 20.dp else 0.dp)
-    val playerUidIndicatorAlphaAnim by animateFloatAsState(targetValue = if (role.is_chosen) 1f else 0f)
+    val playerUidIndicatorHeightAnim by animateDpAsState(targetValue = if (role.is_chosen) 20.dp else 0.dp,
+        label = ""
+    )
+    val playerUidIndicatorAlphaAnim by animateFloatAsState(targetValue = if (role.is_chosen) 1f else 0f,
+        label = ""
+    )
 
     Row(modifier = Modifier
         .fillMaxWidth()
@@ -35,7 +39,7 @@ fun AccountItemGameRole(
         .combinedClickable(
             onClick = {},
             onLongClick ={
-                onChangeAccountPlayerUid(role)
+                onChangeAccountPlayerUid.invoke(role)
             }
         )
         .background(CardBackGroundColor_Light_1)

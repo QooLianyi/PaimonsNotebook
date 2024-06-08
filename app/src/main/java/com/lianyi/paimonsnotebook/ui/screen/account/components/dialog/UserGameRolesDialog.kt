@@ -50,7 +50,7 @@ fun UserGameRolesDialog(
                     .radius(4.dp)
                     .fillMaxWidth()
                     .clickable {
-                        onSelectRole(role)
+                        onSelectRole.invoke(role)
                     }
                     .padding(0.dp, 4.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -127,7 +127,7 @@ fun UserGameRolesDialog(
                             .radius(4.dp)
                             .fillMaxWidth()
                             .clickable {
-                                onSelectRole(user, role)
+                                onSelectRole.invoke(user,role)
                             }
                             .padding(0.dp, 4.dp),
                         verticalAlignment = Alignment.CenterVertically

@@ -19,7 +19,7 @@ val Black_40 = Color(0x66111111)
 val Black_30 = Color(0x4D111111)
 val Black_20 = Color(0x33111111)
 val Black_10 = Color(0x1A111111)
-val Black_5 = Color(0xD111111)
+val Black_5 = Color(0x0D111111)
 
 val White = Color(0xFFFFFFFF)
 val White_98 = Color(0xFAFFFFFF)
@@ -114,6 +114,13 @@ val ElementIceColor = Color(0xFF68BFD8)
 val ElementRockColor = Color(0xFFC09257)
 val ElementWindColor = Color(0xFF378383)
 val ElementWaterColor = Color(0xFF518ABB)
+
+
+val Quality1Color = Color(0XFFBDC5D0)
+val Quality2Color = Color(0XFF7FC2A3)
+val Quality3Color = Color(0XFF8CB5E7)
+val Quality4Color = Color(0XFFA88AEC)
+val Quality5Color = Color(0XFFD6AD81)
 
 
 

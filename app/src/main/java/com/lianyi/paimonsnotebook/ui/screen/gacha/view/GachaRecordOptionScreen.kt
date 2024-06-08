@@ -114,17 +114,17 @@ class GachaRecordOptionScreen : BaseActivity() {
             )
         }
 
-        if (viewModel.showRequestPermissionDialog) {
-            ConfirmDialog(title = "缺少权限",
-                content = "使用相应功能需要存储权限,点击确定前往申请",
-                onConfirm = {
-                    viewModel.showRequestPermissionDialog = false
-                    requestStoragePermission()
-                },
-                onCancel = {
-                    viewModel.showRequestPermissionDialog = false
-                })
-        }
+//        if (viewModel.showRequestPermissionDialog) {
+//            ConfirmDialog(title = "缺少权限",
+//                content = "使用相应功能需要存储权限,点击确定前往申请",
+//                onConfirm = {
+//                    viewModel.showRequestPermissionDialog = false
+//                    requestStoragePermission()
+//                },
+//                onCancel = {
+//                    viewModel.showRequestPermissionDialog = false
+//                })
+//        }
     }
 
     override fun onRequestPermissionsResult(result: Boolean) {

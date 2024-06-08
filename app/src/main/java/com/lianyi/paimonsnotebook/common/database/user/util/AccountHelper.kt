@@ -270,7 +270,7 @@ object AccountHelper {
         val cookieTokenRes =
             passportClient.getCookieTokenBySToken(sTokenCookie)
 
-        val ltokenRes = passportClient.getLTokenBySToken(sTokenCookie)
+        val lTokenRes = passportClient.getLTokenBySToken(sTokenCookie)
 
         if (!cookieTokenRes.success) {
             "获取cookie_token失败".errorNotify()
@@ -283,13 +283,13 @@ object AccountHelper {
         )
 
 
-        if (!ltokenRes.success) {
+        if (!lTokenRes.success) {
             "获取ltoken失败".errorNotify()
             return false
         }
 
         val lTokenCookie = concatStringToCookie(
-            Keys.LToken to ltokenRes.data.ltoken,
+            Keys.LToken to lTokenRes.data.ltoken,
             Keys.LTuid to aid
         )
 

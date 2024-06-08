@@ -40,7 +40,7 @@ internal fun ItemInformationContentLayout(
 
         //背景
         Image(
-            painter = painterResource(id = R.drawable.bg_character),
+            painter = painterResource(id = R.drawable.bg_items),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize()
@@ -77,7 +77,7 @@ internal fun ItemInformationContentLayout(
                 .fillMaxWidth()
                 .height(imageHeight)
                 .zIndex(0f),
-            contentScale = itemImageContentScale
+            contentScale = itemImageContentScale,
         )
 
         content.invoke(this)

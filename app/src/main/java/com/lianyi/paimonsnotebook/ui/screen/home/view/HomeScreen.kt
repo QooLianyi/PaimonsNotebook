@@ -175,14 +175,6 @@ class HomeScreen : BaseActivity() {
                         ) {
                             when (it) {
                                 HomeScreenDisplayState.Simple -> {
-//                                    HomeContentSimple(
-//                                        dailyNoteOverviewList = viewModel.dailyNoteList,
-//                                        gachaRecordOverviewList = viewModel.gachaRecordOverviewList,
-//                                        gachaEventList = viewModel.gachaEventList,
-//                                        eventList = viewModel.eventList,
-//                                        onNavigationClick = {
-//
-//                                        })
                                 }
 
                                 HomeScreenDisplayState.Community -> {

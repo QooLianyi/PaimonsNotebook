@@ -27,9 +27,10 @@ import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpace
 import com.lianyi.paimonsnotebook.common.components.text.InfoText
 import com.lianyi.paimonsnotebook.common.components.widget.Switch
 import com.lianyi.paimonsnotebook.common.components.widget.TextButton
+import com.lianyi.paimonsnotebook.common.util.file.FileHelper
+import com.lianyi.paimonsnotebook.common.util.system_service.sdkVersionLessThanOrEqualTo29
 import com.lianyi.paimonsnotebook.ui.screen.setting.components.SettingOption
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
-import com.lianyi.paimonsnotebook.ui.theme.Error
 import com.lianyi.paimonsnotebook.ui.theme.Font_Primary
 import com.lianyi.paimonsnotebook.ui.theme.Transparent
 
@@ -38,13 +39,12 @@ fun QRCodeLoginPopup(
     visible: Boolean,
     bitmap: Bitmap?,
     requestStoragePermission: () -> Unit,
-    checkStoragePermission: () -> Boolean,
     onRequestDismiss: () -> Unit,
     goLoginPage: (Boolean) -> Unit
 ) {
     //保存二维码到本地
     var saveQRCodeToLocal by remember {
-        mutableStateOf(checkStoragePermission.invoke())
+        mutableStateOf(FileHelper.hasWriteExternalStorage)
     }
 
     BasePopup(
@@ -100,15 +100,17 @@ fun QRCodeLoginPopup(
                     title = "将二维码保存至本地",
                     description = "将登录二维码保存至本地,跳转米游社扫码后可以在相册中找到二维码,保存的二维码将在下次启动程序时删除。使用此功能需要给予外部存储权限。",
                     onClick = {
-                        val noStoragePermission = !checkStoragePermission.invoke()
-
-                        if (noStoragePermission) {
-                            requestStoragePermission.invoke()
-                            saveQRCodeToLocal = false
-                            return@SettingOption
+                        sdkVersionLessThanOrEqualTo29(
+                            finally = {
+                                saveQRCodeToLocal = !saveQRCodeToLocal
+                            }
+                        ) {
+                            if (!FileHelper.hasReadExternalStorage) {
+                                requestStoragePermission.invoke()
+                                saveQRCodeToLocal = false
+                                return@sdkVersionLessThanOrEqualTo29
+                            }
                         }
-
-                        saveQRCodeToLocal = !saveQRCodeToLocal
                     }
                 ) {
                     Switch(checked = saveQRCodeToLocal)

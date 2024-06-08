@@ -58,7 +58,6 @@ fun <T> ItemGridListCard(
             )
 
             Column(modifier = Modifier.fillMaxSize()) {
-                //此处使用Compose Image会稍微降低列表滚动时的性能损耗(原因暂时未知)
                 NetworkImageForMetadata(
                     url = itemListCardData.iconUrl,
                     modifier = Modifier.size(60.dp)

@@ -42,7 +42,7 @@ class GachaRecordService {
         }
     }
 
-    suspend fun updateData() {
+    private suspend fun updateData() {
         setGachaRecordOverviewForCurrentUidFlow()
     }
 
@@ -119,16 +119,12 @@ class GachaRecordService {
 
     //获取记录总览
     private suspend fun getGachaRecordOverviewByUid() {
-        println("开始获取总览")
         val map = dao.getOverviews().groupBy { it.uid }
 
         val list = mutableListOf<GachaRecordOverview>()
 
-        println("map ${map.keys.toList()}")
         //提交祈愿总览
         GachaRecordOverviewListFlow.emit(list)
-        println("list size = ${list.size}")
-        println("获取结束")
     }
 
 }

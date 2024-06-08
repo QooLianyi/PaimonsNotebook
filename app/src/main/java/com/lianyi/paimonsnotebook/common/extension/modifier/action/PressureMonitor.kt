@@ -19,10 +19,10 @@ fun Modifier.pressureMonitor(
 
 //            设置长按删除标识
         if (isPressed) {
-            onBegin()
+            onBegin.invoke()
             DisposableEffect(Unit) {
                 onDispose {
-                    onEnd()
+                    onEnd.invoke()
                 }
             }
         }

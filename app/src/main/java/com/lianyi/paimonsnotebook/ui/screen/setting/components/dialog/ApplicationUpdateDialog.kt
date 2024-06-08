@@ -2,6 +2,9 @@ package com.lianyi.paimonsnotebook.ui.screen.setting.components.dialog
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,10 +25,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.dialog.LazyColumnDialog
+import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.extension.string.show
 import com.lianyi.paimonsnotebook.common.util.enums.DownloadState
+import com.lianyi.paimonsnotebook.ui.screen.setting.util.UpdateService
 import com.lianyi.paimonsnotebook.ui.theme.Black
 import com.lianyi.paimonsnotebook.ui.theme.ElementGrassColor
+import com.lianyi.paimonsnotebook.ui.theme.Primary_9
 
 
 @Composable
@@ -34,7 +40,7 @@ fun ApplicationUpdateDialog(
     downloadProgress: Float,
     requestInstallPermission: () -> Unit,
     checkInstallPermission: () -> Boolean,
-    onStartDownload: () -> Unit,
+    onStartDownload: (String) -> Unit,
     onInstall: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
@@ -44,9 +50,7 @@ fun ApplicationUpdateDialog(
         titleTextSize = 18.sp,
         buttons =
         when (downloadState) {
-            DownloadState.Error -> arrayOf("关闭")
             DownloadState.Success -> arrayOf("关闭", "立即安装")
-            DownloadState.UnStart -> arrayOf("关闭", "下载")
             else -> arrayOf("关闭")
         },
         onClickButton = { index ->
@@ -56,19 +60,12 @@ fun ApplicationUpdateDialog(
             if (index == 1) {
                 when (downloadState) {
                     DownloadState.Success -> {
-
-                        println(checkInstallPermission.invoke())
-
                         if (!checkInstallPermission.invoke()) {
                             "缺少安装权限,请给予安装权限后再次尝试安装".show()
                             requestInstallPermission.invoke()
                         } else {
                             onInstall.invoke()
                         }
-                    }
-
-                    DownloadState.UnStart -> {
-                        onStartDownload.invoke()
                     }
 
                     else -> {}
@@ -88,8 +85,8 @@ fun ApplicationUpdateDialog(
                                 id =
                                 when (state) {
                                     DownloadState.Success -> R.drawable.emotion_icon_keqing_sleeping
-                                    DownloadState.UnStart -> R.drawable.emotion_icon_nahida_thinking
                                     DownloadState.Downloading -> R.drawable.emotion_icon_nahida_drink
+                                    DownloadState.UnStart -> R.drawable.emotion_icon_nahida_thinking
                                     else -> R.drawable.emotion_icon_paimon_error
                                 }
                             ),
@@ -101,7 +98,7 @@ fun ApplicationUpdateDialog(
                             DownloadState.Success -> {
                                 Text(
                                     text = "下载完成,现在要进行安装吗?",
-                                    modifier = Modifier.padding(top = 12.dp),
+                                    modifier = Modifier.padding(top = 12.dp, bottom = 24.dp),
                                     color = Black,
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.SemiBold
@@ -110,12 +107,35 @@ fun ApplicationUpdateDialog(
 
                             DownloadState.UnStart -> {
                                 Text(
-                                    text = "发现新版本,现在要下载新版本安装包吗?",
-                                    modifier = Modifier.padding(top = 12.dp),
+                                    text = "发现新版本!请选择一个下载的站点",
+                                    modifier = Modifier,
                                     color = Black,
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.SemiBold
                                 )
+
+                                Spacer(modifier = Modifier.height(16.dp))
+
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    UpdateService.updateRemoteEndpoints.forEach {
+                                        Text(
+                                            text = it,
+                                            modifier = Modifier
+                                                .radius(2.dp)
+                                                .fillMaxWidth()
+                                                .background(Primary_9)
+                                                .clickable {
+                                                    onStartDownload.invoke(it)
+                                                }
+                                                .padding(8.dp, 6.dp),
+                                            color = Black,
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                    }
+                                }
                             }
 
                             DownloadState.Downloading -> {
@@ -152,7 +172,7 @@ fun ApplicationUpdateDialog(
                             else -> {
                                 Text(
                                     text = "下载过程中出现了错误",
-                                    modifier = Modifier.padding(top = 12.dp),
+                                    modifier = Modifier.padding(vertical = 12.dp),
                                     color = Black,
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.SemiBold

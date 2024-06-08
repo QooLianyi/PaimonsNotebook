@@ -3,6 +3,7 @@ package com.lianyi.paimonsnotebook.ui.screen.gacha.viewmodel
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.clickable
@@ -85,7 +86,6 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
         viewModelScope.launch {
             launch {
                 dao.getAllGameUidFlow().collect {
-                    println("dao.getAllGameUidFlow() = ${it}")
                     gachaRecordGameUid.clear()
                     gachaRecordGameUid += it
                 }
@@ -112,8 +112,8 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
     }
 
     var showLoadingDialog by mutableStateOf(false)
-    private var loadingDialogCurrentGacheLogIndex = 0
-    private var loadingDialogCurrentGacheLogType = UIGFHelper.gachaList.first()
+    private var loadingDialogCurrentGachaLogIndex = 0
+    private var loadingDialogCurrentGachaLogType = UIGFHelper.gachaList.first()
 
     var showRequestPermissionDialog by mutableStateOf(false)
 
@@ -388,7 +388,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
                     SystemService.setClipBoardText(
                         ApiEndpoints.GachaInfoGetGachaLog(
                             GachaQueryConfigData(
-                                gachaType = loadingDialogCurrentGacheLogType,
+                                gachaType = loadingDialogCurrentGachaLogType,
                                 gameAuthKeyData = authKey,
                                 genAuthKeyData = GenAuthKeyData.createForWebViewGacha(playerUid = playerUid),
                             ).asQueryParameter
@@ -436,21 +436,21 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
             map[k] = v
         }
 
-        val authkey = map["authkey"]
-        val authkey_ver = (map["authkey_ver"] ?: "").toIntOrNull()
-        val sign_type = (map["sign_type"] ?: "").toIntOrNull()
+        val authKey = map["authkey"]
+        val authKeyVer = (map["authkey_ver"] ?: "").toIntOrNull()
+        val signType = (map["sign_type"] ?: "").toIntOrNull()
 
         val region = map["region"]
 
-        if (authkey.isNullOrBlank() || authkey_ver == null || sign_type == null || region.isNullOrBlank()) {
+        if (authKey.isNullOrBlank() || authKeyVer == null || signType == null || region.isNullOrBlank()) {
             "URL中缺少参数,需要的参数:authkey,authkey_ver,sign_type,region".errorNotify()
             showLoadingDialog = false
         } else {
             getGachaLog(
                 gameAuthKeyData = GameAuthKeyData(
-                    authkey = authkey,
-                    authkey_ver = authkey_ver,
-                    sign_type = sign_type
+                    authkey = authKey,
+                    authkey_ver = authKeyVer,
+                    sign_type = signType
                 ),
                 PlayerUid(value = "", region = region)
             )
@@ -459,9 +459,9 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
 
     //重置内部变量
     private fun resetLocalValues(gameUid: String = "") {
-        loadingDialogCurrentGacheLogIndex = 0
+        loadingDialogCurrentGachaLogIndex = 0
         loadingDialogProgressBarValue = 0f
-        loadingDialogCurrentGacheLogType = UIGFHelper.gachaList.first()
+        loadingDialogCurrentGachaLogType = UIGFHelper.gachaList.first()
         inputDialogValue = ""
         showLoadingDialog = false
 
@@ -496,17 +496,17 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
             var currentGameUidGachaTypeEndId =
                 dao.getLastIdByUidAndUIGFGachaType(
                     gameUid,
-                    loadingDialogCurrentGacheLogType
+                    loadingDialogCurrentGachaLogType
                 )
 
             while (true) {
                 //更新描述
                 loadingDialogDescription =
-                    "正在获取${UIGFHelper.getUIGFName(loadingDialogCurrentGacheLogType)}的第${pageCount++}页记录"
+                    "正在获取${UIGFHelper.getUIGFName(loadingDialogCurrentGachaLogType)}的第${pageCount++}页记录"
 
                 val result = gachaInfoClient.getGachaLogPage(
                     GachaQueryConfigData(
-                        gachaType = loadingDialogCurrentGacheLogType,
+                        gachaType = loadingDialogCurrentGachaLogType,
                         gameAuthKeyData = gameAuthKeyData,
                         genAuthKeyData = GenAuthKeyData.createForWebViewGacha(playerUid = playerUid),
                         endId = endId
@@ -544,7 +544,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
                     nextGachaLogItemType()
 
                     //所有卡池都遍历完毕
-                    if (loadingDialogCurrentGacheLogType.isBlank()) {
+                    if (loadingDialogCurrentGachaLogType.isBlank()) {
                         break
                     }
 
@@ -556,7 +556,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
                     currentGameUidGachaTypeEndId =
                         dao.getLastIdByUidAndUIGFGachaType(
                             gameUid,
-                            loadingDialogCurrentGacheLogType
+                            loadingDialogCurrentGachaLogType
                         )
 
                     ""
@@ -584,24 +584,26 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
     }
 
     private fun nextGachaLogItemType() {
-        loadingDialogCurrentGacheLogType =
-            if (++loadingDialogCurrentGacheLogIndex < UIGFHelper.uigfGachaTypeCount) {
-                UIGFHelper.gachaList[loadingDialogCurrentGacheLogIndex]
+        loadingDialogCurrentGachaLogType =
+            if (++loadingDialogCurrentGachaLogIndex < UIGFHelper.uigfGachaTypeCount) {
+                UIGFHelper.gachaList[loadingDialogCurrentGachaLogIndex]
             } else {
                 ""
             }
         loadingDialogProgressBarValue =
-            loadingDialogCurrentGacheLogIndex.toFloat() / UIGFHelper.uigfGachaTypeCount
+            loadingDialogCurrentGachaLogIndex.toFloat() / UIGFHelper.uigfGachaTypeCount
     }
 
     private fun launchSelectJsonActivity() {
-        showRequestPermissionDialog =
-            !(this::storagePermission.isInitialized && storagePermission.invoke())
-
-        if (showRequestPermissionDialog) return
-
-        startActivity.launch(Intent(Intent.ACTION_GET_CONTENT).apply {
+        startActivity.launch(Intent(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Intent.ACTION_OPEN_DOCUMENT
+            } else {
+                Intent.ACTION_GET_CONTENT
+            }
+        ).apply {
             type = "application/json"
+            addCategory(Intent.CATEGORY_OPENABLE)
         })
     }
 
@@ -690,14 +692,14 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
 
-            val fileName = "${currentGameUid}_${System.currentTimeMillis()}"
+            val fileName = "UIGF_${currentGameUid}_${System.currentTimeMillis()}"
 
             val file = FileHelper.getUIGFJsonSaveFile(fileName)
             exportService.exportGachaRecordToUIGFJson(currentGameUid, file)
 
             showLoadingDialog = false
 
-            "祈愿记录导出到以下路径:${file.path}".notify(closeable = true)
+            "祈愿记录已导出,通过[导出的祈愿记录功能]管理已导出的祈愿记录文件".notify(autoDismissTime = 5000)
         }
     }
 

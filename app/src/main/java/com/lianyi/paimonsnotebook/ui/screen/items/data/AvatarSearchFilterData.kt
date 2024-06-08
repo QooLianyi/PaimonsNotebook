@@ -140,85 +140,39 @@ class AvatarSearchFilterData {
     //武器类型
     private val weaponList by lazy {
         listOf(
+            WeaponType.WEAPON_SWORD_ONE_HAND,
+            WeaponType.WEAPON_CLAYMORE,
+            WeaponType.WEAPON_BOW,
+            WeaponType.WEAPON_POLE,
+            WeaponType.WEAPON_CATALYST
+        ).map {
             SearchOptionData(
                 sortBy = ItemFilterType.Weapon,
-                iconUrl = WeaponTypeIconConverter.weaponTypeToIconUrl(WeaponType.WEAPON_SWORD_ONE_HAND),
-                name = WeaponType.getWeaponTypeName(WeaponType.WEAPON_SWORD_ONE_HAND),
-                value = WeaponType.WEAPON_SWORD_ONE_HAND
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Weapon,
-                iconUrl = WeaponTypeIconConverter.weaponTypeToIconUrl(WeaponType.WEAPON_CLAYMORE),
-                name = WeaponType.getWeaponTypeName(WeaponType.WEAPON_CLAYMORE),
-                value = WeaponType.WEAPON_CLAYMORE
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Weapon,
-                iconUrl = WeaponTypeIconConverter.weaponTypeToIconUrl(WeaponType.WEAPON_BOW),
-                name = WeaponType.getWeaponTypeName(WeaponType.WEAPON_BOW),
-                value = WeaponType.WEAPON_BOW
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Weapon,
-                iconUrl = WeaponTypeIconConverter.weaponTypeToIconUrl(WeaponType.WEAPON_POLE),
-                name = WeaponType.getWeaponTypeName(WeaponType.WEAPON_POLE),
-                value = WeaponType.WEAPON_POLE
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Weapon,
-                iconUrl = WeaponTypeIconConverter.weaponTypeToIconUrl(WeaponType.WEAPON_CATALYST),
-                name = WeaponType.getWeaponTypeName(WeaponType.WEAPON_CATALYST),
-                value = WeaponType.WEAPON_CATALYST
+                iconUrl = WeaponTypeIconConverter.weaponTypeToIconUrl(it),
+                name = WeaponType.getWeaponTypeName(it),
+                value = it
             )
-        )
+        }
     }
 
     //元素类型
     private val elementList by lazy {
         listOf(
+            ElementType.Fire,
+            ElementType.Water,
+            ElementType.Grass,
+            ElementType.Electric,
+            ElementType.Ice,
+            ElementType.Wind,
+            ElementType.Rock
+        ).map {
             SearchOptionData(
                 sortBy = ItemFilterType.Element,
-                name = ElementType.getElementNameByType(ElementType.Fire),
-                iconResId = ElementType.getElementResourceIdByType(ElementType.Fire),
-                value = ElementType.Fire
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Element,
-                name = ElementType.getElementNameByType(ElementType.Water),
-                iconResId = ElementType.getElementResourceIdByType(ElementType.Water),
-                value = ElementType.Water
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Element,
-                name = ElementType.getElementNameByType(ElementType.Grass),
-                iconResId = ElementType.getElementResourceIdByType(ElementType.Grass),
-                value = ElementType.Grass
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Element,
-                name = ElementType.getElementNameByType(ElementType.Electric),
-                iconResId = ElementType.getElementResourceIdByType(ElementType.Electric),
-                value = ElementType.Electric
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Element,
-                name = ElementType.getElementNameByType(ElementType.Ice),
-                iconResId = ElementType.getElementResourceIdByType(ElementType.Ice),
-                value = ElementType.Ice
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Element,
-                name = ElementType.getElementNameByType(ElementType.Wind),
-                iconResId = ElementType.getElementResourceIdByType(ElementType.Wind),
-                value = ElementType.Wind
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Element,
-                name = ElementType.getElementNameByType(ElementType.Rock),
-                iconResId = ElementType.getElementResourceIdByType(ElementType.Rock),
-                value = ElementType.Rock
+                name = ElementType.getElementNameByType(it),
+                iconResId = ElementType.getElementResourceIdByType(it),
+                value = it
             )
-        )
+        }
     }
 
     //地区

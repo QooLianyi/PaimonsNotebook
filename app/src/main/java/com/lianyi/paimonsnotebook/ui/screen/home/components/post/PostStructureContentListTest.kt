@@ -419,7 +419,7 @@ private fun TextBuildAnnotatedSpannableString(
 
             annotatedString.forEach {
                 if (index in (it.start..it.end)) {
-                    block(it.item)
+                    block.invoke(it.item)
                     return@forEach
                 }
             }
@@ -455,5 +455,5 @@ private fun TextBuildAnnotatedSpannableString(
             }
         }
     }
-    textSlot(text)
+    textSlot.invoke(text)
 }

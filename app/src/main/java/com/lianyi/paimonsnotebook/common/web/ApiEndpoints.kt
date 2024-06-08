@@ -23,10 +23,10 @@ object ApiEndpoints {
     private const val ApiTakumiAuthApi = "${ApiTakumi}/auth/api"
     private const val ApiTaKumiBindingApi = "${ApiTakumi}/binding/api"
 
-    private const val ApiTakumiMiyoushe = "https://api-takumi.miyoushe.com"
-    private const val ApiTakumiMiyousheBindingApi = "${ApiTakumiMiyoushe}/binding/api"
+    private const val ApiTakumiMiYouShe = "https://api-takumi.miyoushe.com"
+    private const val ApiTakumiMiYouSheBindingApi = "${ApiTakumiMiYouShe}/binding/api"
 
-    private const val ApiTakumiMiyousheAuthApi = "${ApiTakumiMiyoushe}/auth/api"
+    private const val ApiTakumiMiYouSheAuthApi = "${ApiTakumiMiYouShe}/auth/api"
 
     private const val ApiTakumiRecord = "https://api-takumi-record.mihoyo.com"
     private const val ApiTakumiRecordApi = "${ApiTakumiRecord}/game_record/app/genshin/api"
@@ -152,7 +152,7 @@ object ApiEndpoints {
     /// <summary>
     /// 用户游戏角色
     /// </summary>
-    const val UserGameRolesByStoken = "${ApiTakumiMiyousheBindingApi}/getUserGameRolesByStoken"
+    const val UserGameRolesByStoken = "${ApiTakumiMiYouSheBindingApi}/getUserGameRolesByStoken"
 
     /// <summary>
     /// AuthKey
@@ -262,6 +262,8 @@ object ApiEndpoints {
     /// </summary>
     const val CalculateCompute = "${ApiTakumiEventCalculate}/v2/compute"
 
+    const val CalculateBatchCompute = "${ApiTakumiEventCalculate}/v3/batch_compute"
+
     /// <summary>
     /// 计算器洞天摹本
     /// </summary>
@@ -364,7 +366,7 @@ object ApiEndpoints {
 
     //获取GameToken
     fun getGameToken(aid: String) =
-        "${ApiTakumiMiyousheAuthApi}/getGameToken?uid=${aid}"
+        "${ApiTakumiMiYouSheAuthApi}/getGameToken?uid=${aid}"
 
 
     /// <summary>
@@ -459,6 +461,6 @@ object ApiEndpoints {
         "${PassportApiStaticAccountMaCnPassport}/loginByAuthTicket"
 
     //通过gameToken获取SToken
-    val getTokenByGameToken = "${PassportApiAccountMaCnSession}/app/getTokenByGameToken"
+    const val getTokenByGameToken = "${PassportApiAccountMaCnSession}/app/getTokenByGameToken"
 
 }

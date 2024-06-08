@@ -1,8 +1,26 @@
 -keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
 
--keep class com.lianyi.paimonsnotebook.**{*;}
+#-keep class com.lianyi.paimonsnotebook.**{*;}
 
--keep class android.*{*;}
+#保持所有在data路径下的类
+-keep class com.lianyi.**.data.** {*;}
+
+# 米游社数据类
+-keep class com.lianyi.paimonsnotebook.common.web.hoyolab.** {*;}
+# 元数据数据类
+-keep class com.lianyi.paimonsnotebook.common.web.hutao.genshin.** {*;}
+# mihoyo webview
+-keep class com.lianyi.paimonsnotebook.common.web.bridge.model.** {*;}
+
+# 桌面组件远端视图
+-keep class com.lianyi.paimonsnotebook.ui.widgets.remoteviews.** {*;}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
 -keep class androidx.*{*;}
 
 -keep public class * extends android.app.Activity
@@ -14,6 +32,38 @@
 -keep public class * extends android.app.backup.BackupAgentHelper
 -keep public class * extends android.preference.Preference
 
+#Room
+-keep class * extends androidx.room.RoomDatabase
+-dontwarn androidx.room.paging.**
+
+### Kotlin Coroutine
+# ServiceLoader support
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+-keepnames class kotlinx.coroutines.android.AndroidExceptionPreHandler {}
+-keepnames class kotlinx.coroutines.android.AndroidDispatcherFactory {}
+# Most of volatile fields are updated with AFU and should not be mangled
+-keepclassmembernames class kotlinx.** {
+    volatile <fields>;
+}
+# Same story for the standard library's SafeContinuation that also uses AtomicReferenceFieldUpdater
+-keepclassmembernames class kotlin.coroutines.SafeContinuation {
+    volatile <fields>;
+}
+# https://github.com/Kotlin/kotlinx.atomicfu/issues/57
+-dontwarn kotlinx.atomicfu.**
+
+-dontwarn kotlinx.coroutines.flow.**
+
+
+# kotlin
+-keepclassmembers class **$WhenMappings {
+    <fields>;
+}
+-keep class kotlin.Metadata { *; }
+-keepclassmembers class kotlin.Metadata {
+    public <methods>;
+}
 
 ################################ retrofit ################################
 # Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and

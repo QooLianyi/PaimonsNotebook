@@ -63,7 +63,7 @@ fun PopupDiskCacheDetail(
             Animatable(1f, Float.VectorConverter)
         }
 
-        var isTouching by remember {
+        val isTouching by remember {
             mutableStateOf(false)
         }
 

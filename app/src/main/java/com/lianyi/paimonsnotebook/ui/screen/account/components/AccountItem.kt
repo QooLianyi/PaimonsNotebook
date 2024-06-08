@@ -36,9 +36,9 @@ fun AccountItem(
     modifier: Modifier = Modifier,
     user: User,
     onDelete: (User) -> Unit = {},
-    onCopyCookie: () -> Unit = {},
+    onCopyCookie: (User) -> Unit = {},
     onSetDefault: (User) -> Unit = {},
-    onRefreshCookie: () -> Unit,
+    onRefreshCookie: (User) -> Unit,
     diskCache: DiskCache = DiskCache(user.userInfo.avatar_url),
     onChangeAccountPlayerUid: (User, UserGameRoleData.Role) -> Unit = { _, _ -> },
 ) {
@@ -73,7 +73,7 @@ fun AccountItem(
                 deleteAccountAnim.snapTo(0f)
                 showGameRoles = false
                 deleteIsPressed = false
-                onDelete(user)
+                onDelete.invoke(user)
             }
         }
 
@@ -117,7 +117,7 @@ fun AccountItem(
                             showGameRoles = !showGameRoles
                         },
                         onLongClick = {
-                            onSetDefault(user)
+                            onSetDefault.invoke(user)
                         }
                     ),
                     verticalAlignment = Alignment.CenterVertically
@@ -172,7 +172,7 @@ fun AccountItem(
                             .size(30.dp)
                             .clip(RoundedCornerShape(2.dp))
                             .clickable {
-                                onRefreshCookie.invoke()
+                                onRefreshCookie.invoke(user)
                             }, tint = Black
                     )
 
@@ -184,7 +184,7 @@ fun AccountItem(
                             .size(30.dp)
                             .clip(RoundedCornerShape(2.dp))
                             .clickable {
-                                onCopyCookie.invoke()
+                                onCopyCookie.invoke(user)
                             }, tint = Black
                     )
 

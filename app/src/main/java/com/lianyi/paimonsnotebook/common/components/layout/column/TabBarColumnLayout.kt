@@ -19,6 +19,7 @@ internal fun TabBarColumnLayout(
     backgroundColor: Color = BackGroundColor,
     tabBarPaddingVertical: Dp = 4.dp,
     tabBarPaddingHorizontal: Dp = 12.dp,
+    tabsSpace: Dp = 0.dp,
     onTabBarSelect: (Int) -> Unit,
     statusBarEnabled: Boolean = true,
     topSlot: @Composable RowScope.() -> Unit = {},
@@ -29,7 +30,8 @@ internal fun TabBarColumnLayout(
             TabBar(
                 tabs = tabs,
                 onSelect = onTabBarSelect,
-                tabBarPadding = PaddingValues(tabBarPaddingHorizontal, tabBarPaddingVertical)
+                tabBarPadding = PaddingValues(tabBarPaddingHorizontal, tabBarPaddingVertical),
+                tabsSpace = tabsSpace
             )
             topSlot.invoke(this)
         },

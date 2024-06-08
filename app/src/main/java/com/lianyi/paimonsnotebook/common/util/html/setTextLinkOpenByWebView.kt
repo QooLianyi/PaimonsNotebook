@@ -2,7 +2,9 @@ package com.lianyi.paimonsnotebook.common.util.html
 
 import android.content.Context
 import android.content.Intent
-import android.text.*
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.TextPaint
 import android.text.style.ClickableSpan
 import android.text.style.URLSpan
 import android.view.View
@@ -36,9 +38,13 @@ fun setTextLinkOpenByWebView(
                                 .data(it)
                                 .build()
                         var drawable = request.context.imageLoader.execute(request).drawable
-                        drawable = drawable ?: ContextCompat.getDrawable(context, R.drawable.icon_klee)!!.current
+                        drawable = drawable ?: ContextCompat.getDrawable(
+                            context,
+                            R.drawable.icon_klee
+                        )!!.current
 
-                        val screenWidth = context.resources.displayMetrics.widthPixels - (30 * density).toInt()
+                        val screenWidth =
+                            context.resources.displayMetrics.widthPixels - (30 * density).toInt()
                         //计算缩放比例
                         val scaleValue =
                             screenWidth / drawable.intrinsicWidth.toFloat()
@@ -46,13 +52,16 @@ fun setTextLinkOpenByWebView(
                         val drawableHeight =
                             scaleValue * drawable.intrinsicHeight
 
-                        drawable.setBounds(0,
+                        drawable.setBounds(
+                            0,
                             0,
                             screenWidth,
-                            drawableHeight.toInt())
+                            drawableHeight.toInt()
+                        )
                         drawable
                     }
-                }, null)
+                }, null
+            )
             if (textContent is SpannableStringBuilder) {
                 if (useWebView) {
                     textContent.apply {
@@ -71,8 +80,10 @@ fun setTextLinkOpenByWebView(
                                         }
 
                                         override fun onClick(widget: View) {
-                                            context.startActivity(Intent(context,
-                                                WebViewScreen::class.java).apply {
+                                            context.startActivity(Intent(
+                                                context,
+                                                WebViewScreen::class.java
+                                            ).apply {
                                                 putExtra("url", url)
                                             })
                                         }
@@ -83,10 +94,10 @@ fun setTextLinkOpenByWebView(
                     }
                 }
 
-                block(textContent)
+                block.invoke(textContent)
             }
         } else {
-            block(SpannableStringBuilder(htmlText))
+            block.invoke(SpannableStringBuilder(htmlText))
         }
     }
 }

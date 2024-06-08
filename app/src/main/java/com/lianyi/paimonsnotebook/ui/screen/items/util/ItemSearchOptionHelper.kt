@@ -4,19 +4,85 @@ import androidx.compose.ui.unit.dp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.util.enums.ListLayoutStyle
 import com.lianyi.paimonsnotebook.common.util.enums.SortOrderBy
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.AvatarService
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.WeaponService
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.conveter.AssociationIconConverter
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.conveter.WeaponTypeIconConverter
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.AssociationType
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.ElementType
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.WeaponType
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.weapon.WeaponData
 import com.lianyi.paimonsnotebook.ui.screen.items.components.widget.StarGroup
 import com.lianyi.paimonsnotebook.ui.screen.items.data.SearchOptionData
+import com.lianyi.paimonsnotebook.ui.screen.items.viewmodel.filter.ItemFilterViewModel
 import com.lianyi.paimonsnotebook.ui.theme.GachaStar5Color
 
 object ItemSearchOptionHelper {
     private val list by lazy {
         mutableListOf<Pair<String, List<SearchOptionData>>>()
     }
+
+    fun getAvatarItemFilterViewModel(
+        avatarService: AvatarService
+    ) = ItemFilterViewModel(
+        items = avatarService.avatarList,
+        searchOptionList = ItemSearchOptionHelper
+            .apply {
+                setListLayout()
+                setOrderBy(
+                    options = listOf(
+                        ItemFilterType.Default,
+                        ItemFilterType.BaseATK,
+                        ItemFilterType.BaseHp,
+                        ItemFilterType.BaseDef,
+                        ItemFilterType.BirthDay,
+                        ItemFilterType.CostumeCount
+                    )
+                )
+                setStar()
+                setWeapon()
+                setElement()
+                setAssociation()
+            }.get(),
+        getFilteredItemList = ItemSearchOptionHelper::filterAvatarList,
+        itemSortCompareBy = { avatar, type ->
+            ItemContentFilterHelper.getAvatarGroupByKeyByType(
+                type = type,
+                avatar = avatar,
+                fightPropertyValueCalculateService = avatarService.fightPropertyValueCalculateService
+            )
+        }
+    )
+
+
+    fun getWeaponFilterItemViewModel(
+        weaponService: WeaponService
+    ) =
+        ItemFilterViewModel(
+            items = weaponService.weaponList,
+            searchOptionList = ItemSearchOptionHelper
+                .apply {
+                    setListLayout()
+                    setOrderBy(
+                        options = listOf(
+                            ItemFilterType.Default,
+                            ItemFilterType.BaseATK,
+                        )
+                    )
+                    setStar(starRange = 5 downTo 1)
+                    setWeapon()
+                }.get(),
+            getFilteredItemList = ItemSearchOptionHelper::filterWeaponList,
+            itemSortCompareBy = { weapon, type ->
+                ItemContentFilterHelper.getWeaponGroupByKeyByType(
+                    type,
+                    weapon,
+                    weaponService.fightPropertyValueCalculateService
+                )
+            }
+        )
+
 
     //列表布局
     fun setListLayout() {
@@ -70,121 +136,58 @@ object ItemSearchOptionHelper {
     //武器类型
     fun setWeapon() {
         list += "武器" to listOf(
+            WeaponType.WEAPON_SWORD_ONE_HAND,
+            WeaponType.WEAPON_CLAYMORE,
+            WeaponType.WEAPON_BOW,
+            WeaponType.WEAPON_POLE,
+            WeaponType.WEAPON_CATALYST
+        ).map {
             SearchOptionData(
                 sortBy = ItemFilterType.Weapon,
-                iconUrl = WeaponTypeIconConverter.weaponTypeToIconUrl(WeaponType.WEAPON_SWORD_ONE_HAND),
-                name = WeaponType.getWeaponTypeName(WeaponType.WEAPON_SWORD_ONE_HAND),
-                value = WeaponType.WEAPON_SWORD_ONE_HAND
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Weapon,
-                iconUrl = WeaponTypeIconConverter.weaponTypeToIconUrl(WeaponType.WEAPON_CLAYMORE),
-                name = WeaponType.getWeaponTypeName(WeaponType.WEAPON_CLAYMORE),
-                value = WeaponType.WEAPON_CLAYMORE
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Weapon,
-                iconUrl = WeaponTypeIconConverter.weaponTypeToIconUrl(WeaponType.WEAPON_BOW),
-                name = WeaponType.getWeaponTypeName(WeaponType.WEAPON_BOW),
-                value = WeaponType.WEAPON_BOW
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Weapon,
-                iconUrl = WeaponTypeIconConverter.weaponTypeToIconUrl(WeaponType.WEAPON_POLE),
-                name = WeaponType.getWeaponTypeName(WeaponType.WEAPON_POLE),
-                value = WeaponType.WEAPON_POLE
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Weapon,
-                iconUrl = WeaponTypeIconConverter.weaponTypeToIconUrl(WeaponType.WEAPON_CATALYST),
-                name = WeaponType.getWeaponTypeName(WeaponType.WEAPON_CATALYST),
-                value = WeaponType.WEAPON_CATALYST
+                iconUrl = WeaponTypeIconConverter.weaponTypeToIconUrl(it),
+                name = WeaponType.getWeaponTypeName(it),
+                value = it
             )
-        )
+        }
     }
 
     //元素类型
     fun setElement() {
         list += "元素" to listOf(
+            ElementType.Fire,
+            ElementType.Water,
+            ElementType.Grass,
+            ElementType.Electric,
+            ElementType.Ice,
+            ElementType.Wind,
+            ElementType.Rock
+        ).map {
             SearchOptionData(
                 sortBy = ItemFilterType.Element,
-                name = ElementType.getElementNameByType(ElementType.Fire),
-                iconResId = ElementType.getElementResourceIdByType(ElementType.Fire),
-                value = ElementType.Fire
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Element,
-                name = ElementType.getElementNameByType(ElementType.Water),
-                iconResId = ElementType.getElementResourceIdByType(ElementType.Water),
-                value = ElementType.Water
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Element,
-                name = ElementType.getElementNameByType(ElementType.Grass),
-                iconResId = ElementType.getElementResourceIdByType(ElementType.Grass),
-                value = ElementType.Grass
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Element,
-                name = ElementType.getElementNameByType(ElementType.Electric),
-                iconResId = ElementType.getElementResourceIdByType(ElementType.Electric),
-                value = ElementType.Electric
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Element,
-                name = ElementType.getElementNameByType(ElementType.Ice),
-                iconResId = ElementType.getElementResourceIdByType(ElementType.Ice),
-                value = ElementType.Ice
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Element,
-                name = ElementType.getElementNameByType(ElementType.Wind),
-                iconResId = ElementType.getElementResourceIdByType(ElementType.Wind),
-                value = ElementType.Wind
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Element,
-                name = ElementType.getElementNameByType(ElementType.Rock),
-                iconResId = ElementType.getElementResourceIdByType(ElementType.Rock),
-                value = ElementType.Rock
+                name = ElementType.getElementNameByType(it),
+                iconResId = ElementType.getElementResourceIdByType(it),
+                value = it
             )
-        )
+        }
     }
 
     //地区
     fun setAssociation() {
         list += "地区" to listOf(
+            AssociationType.ASSOC_TYPE_MONDSTADT,
+            AssociationType.ASSOC_TYPE_LIYUE,
+            AssociationType.ASSOC_TYPE_INAZUMA,
+            AssociationType.ASSOC_TYPE_SUMERU,
+            AssociationType.ASSOC_TYPE_FONTAINE,
+            AssociationType.ASSOC_TYPE_FATUI
+        ).map {
             SearchOptionData(
                 sortBy = ItemFilterType.Association,
-                name = AssociationType.getAssociationNameByType(AssociationType.ASSOC_TYPE_MONDSTADT),
-                iconUrl = AssociationIconConverter.avatarAssociationToUrl(AssociationType.ASSOC_TYPE_MONDSTADT),
-                value = AssociationType.ASSOC_TYPE_MONDSTADT
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Association,
-                name = AssociationType.getAssociationNameByType(AssociationType.ASSOC_TYPE_LIYUE),
-                iconUrl = AssociationIconConverter.avatarAssociationToUrl(AssociationType.ASSOC_TYPE_LIYUE),
-                value = AssociationType.ASSOC_TYPE_LIYUE
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Association,
-                name = AssociationType.getAssociationNameByType(AssociationType.ASSOC_TYPE_INAZUMA),
-                iconUrl = AssociationIconConverter.avatarAssociationToUrl(AssociationType.ASSOC_TYPE_INAZUMA),
-                value = AssociationType.ASSOC_TYPE_INAZUMA
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Association,
-                name = AssociationType.getAssociationNameByType(AssociationType.ASSOC_TYPE_SUMERU),
-                iconUrl = AssociationIconConverter.avatarAssociationToUrl(AssociationType.ASSOC_TYPE_SUMERU),
-                value = AssociationType.ASSOC_TYPE_SUMERU
-            ),
-            SearchOptionData(
-                sortBy = ItemFilterType.Association,
-                name = AssociationType.getAssociationNameByType(AssociationType.ASSOC_TYPE_FONTAINE),
-                iconUrl = AssociationIconConverter.avatarAssociationToUrl(AssociationType.ASSOC_TYPE_FONTAINE),
-                value = AssociationType.ASSOC_TYPE_FONTAINE
-            ),
-        )
+                name = AssociationType.getAssociationNameByType(it),
+                iconUrl = AssociationIconConverter.avatarAssociationToUrl(it),
+                value = it
+            )
+        }
     }
 
     fun get(): List<Pair<String, List<SearchOptionData>>> {
@@ -192,4 +195,76 @@ object ItemSearchOptionHelper {
         list.clear()
         return result
     }
+
+
+    //过滤武器列表
+    private fun filterWeaponList(
+        itemFilterViewModel: ItemFilterViewModel<WeaponData>,
+        items: List<WeaponData>
+    ): List<WeaponData> {
+        val list = mutableListOf<WeaponData>()
+
+        items.forEach { weaponData ->
+
+            itemFilterViewModel.apply {
+
+                if (!filterValueExists(ItemFilterType.Weapon, weaponData.weaponType)) return@forEach
+
+                if (!filterValueExists(ItemFilterType.Star, weaponData.rankLevel)) return@forEach
+
+                //匹配名称与称号
+                if (inputNameValue.isNotEmpty() &&
+                    weaponData.name.indexOf(inputNameValue) == -1
+                ) {
+                    return@forEach
+                }
+            }
+
+            list += weaponData
+        }
+
+        return list
+    }
+
+    //过滤角色列表
+    private fun filterAvatarList(
+        itemFilterViewModel: ItemFilterViewModel<AvatarData>,
+        items: List<AvatarData>
+    ): List<AvatarData> {
+        val list = mutableListOf<AvatarData>()
+
+        items.forEach { avatarData ->
+
+            val fetterInfo = avatarData.fetterInfo
+
+            itemFilterViewModel.apply {
+
+                if (!filterValueExists(
+                        ItemFilterType.Association,
+                        fetterInfo.Association
+                    )
+                ) return@forEach
+
+                if (!filterValueExists(ItemFilterType.Weapon, avatarData.weapon)) return@forEach
+
+                val elementType = ElementType.getElementTypeByName(fetterInfo.VisionBefore)
+                if (!filterValueExists(ItemFilterType.Element, elementType)) return@forEach
+
+                if (!filterValueExists(ItemFilterType.Star, avatarData.starCount)) return@forEach
+
+                //匹配名称与称号
+                if (inputNameValue.isNotEmpty() &&
+                    avatarData.name.indexOf(inputNameValue) == -1 &&
+                    fetterInfo.Title.indexOf(inputNameValue) == -1
+                ) {
+                    return@forEach
+                }
+            }
+
+            list += avatarData
+        }
+
+        return list
+    }
+
 }

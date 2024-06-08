@@ -14,6 +14,7 @@ object AssociationType {
             ASSOC_TYPE_FONTAINE -> "枫丹"
             ASSOC_TYPE_NATLAN -> "纳塔"
             ASSOC_TYPE_SNEZHNAYA -> "至冬"
+            ASSOC_TYPE_FATUI-> "愚人众"
             else -> ""
         }
 

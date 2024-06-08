@@ -4,13 +4,11 @@ import android.webkit.CookieManager
 import android.webkit.WebView
 import com.lianyi.paimonsnotebook.common.web.hoyolab.cookie.Cookie
 
-fun WebView.setCookie(
+fun WebView.setMiyouSheWebViewCookie(
     cookieToken: Cookie? = null,
     lToken: Cookie? = null,
     sToken: Cookie? = null,
 ) {
-    val url = ".mihoyo.com"
-
     val manager = CookieManager.getInstance()
 
     listOf(
@@ -19,7 +17,8 @@ fun WebView.setCookie(
         sToken
     ).forEach {
         it?.foreach { s, s2 ->
-            manager.setCookie(url, "${s}=${s2}")
+            manager.setCookie(".mihoyo.com", "${s}=${s2}")
+            manager.setCookie(".miyoushe.com", "${s}=${s2}")
         }
     }
     manager.flush()

@@ -44,6 +44,7 @@ import com.lianyi.paimonsnotebook.ui.screen.setting.util.UpdateService
 import com.lianyi.paimonsnotebook.ui.screen.setting.util.enums.HomeScreenDisplayState
 import com.lianyi.paimonsnotebook.ui.screen.shortcuts_manager.view.ShortcutsManagerScreen
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -68,6 +69,8 @@ class SettingScreenViewModel : ViewModel() {
     private val updateService by lazy {
         UpdateService()
     }
+
+    private var downloadJob: Job? = null
 
     val settings = listOf(
         OptionListData(
@@ -143,19 +146,39 @@ class SettingScreenViewModel : ViewModel() {
                 viewModelScope.launchIO {
                     val dao = PaimonsNotebookDatabase.database.diskCacheDao
                     var count = 0
-                    dao.getAllData().first().forEach {
+                    val list = dao.getAllData().first()
+                    val deleteUrls = mutableListOf<String>()
+
+                    //设置为只检查图片的像素尺寸
+                    val options = BitmapFactory.Options().apply {
+                        inJustDecodeBounds = true
+                    }
+
+                    list.forEach {
                         val file = PaimonsNotebookImageLoader.getCacheImageFileByUrl(it.url)
-                        val bitmap = BitmapFactory.decodeFile(file?.absolutePath ?: "")
-                        if (bitmap == null) {
+
+                        val fileAbsolutePath = file?.absolutePath ?: ""
+
+                        BitmapFactory.decodeFile(fileAbsolutePath, options)
+
+                        /*
+                        * 图片路径为空表明这个图片不存在
+                        * 如果编码的结果等于-1表示解析时出现错误,表明这个图片损坏了
+                        * */
+                        if (fileAbsolutePath.isEmpty() || options.outWidth == -1 && options.outHeight == -1) {
                             PaimonsNotebookImageLoader.getCacheImageFileByUrl(it.url)?.delete()
                             PaimonsNotebookImageLoader.getCacheImageMetadataFileByUrl(it.url)
                                 ?.delete()
-                            dao.deleteByUrl(it.url)
+
+                            deleteUrls += it.url
+
                             count++
                         }
                     }
 
-                    "清理了${count}张失效图片".warnNotify(false)
+                    dao.deleteByUrls(deleteUrls)
+
+                    "在全部的${list.size}张图片中,清理了${count}张失效图片".warnNotify(false)
                 }
             },
             slot = {
@@ -266,6 +289,7 @@ class SettingScreenViewModel : ViewModel() {
             onClick = {
                 viewModelScope.launchIO {
                     "正在检查更新".notify()
+
                     updateService.checkNewVersion(onFoundNewVersion = {
                         "发现新版本".notify()
                         //将下载状态设置为未开始
@@ -309,13 +333,14 @@ class SettingScreenViewModel : ViewModel() {
                         downloadProgress = downloadProgress,
                         requestInstallPermission = requestInstallPermission,
                         checkInstallPermission = checkInstallPermission,
-                        onStartDownload = {
+                        onStartDownload = { endpointName ->
                             //清空下载进度
                             downloadProgress = 0f
                             downloadState = DownloadState.Downloading
 
-                            viewModelScope.launchIO {
+                            downloadJob = viewModelScope.launchIO {
                                 updateService.downloadNewVersionPackage(
+                                    remoteEndpointName = endpointName,
                                     onSuccess = {
                                         downloadState = DownloadState.Success
                                     },
@@ -330,9 +355,9 @@ class SettingScreenViewModel : ViewModel() {
                         },
                         onInstall = {
                             SystemService.installAndroidApplication(updateService.newVersionPackage)
-                        }) {
-                        showDownloadDialog = false
-                    }
+                        }, onDismissRequest = {
+                            onUpdateDialogDismissRequest()
+                        })
                 }
             }
         ),
@@ -356,7 +381,7 @@ class SettingScreenViewModel : ViewModel() {
         ),
         OptionListData(
             name = "派蒙笔记本QQ群",
-            description = "通过QQ群与开发者进行问题反馈、新功能建议等(遇到BUG不反馈的话开发者是没办法修复的)",
+            description = "通过QQ群与开发者进行问题反馈、新功能建议等(遇到BUG不反馈的话开发者是没办法修复的),新版本也会第一时间发布到这里",
             onClick = {
                 "正在尝试唤起手机QQ".show()
                 val intent = Intent().apply {
@@ -393,6 +418,13 @@ class SettingScreenViewModel : ViewModel() {
         viewModelScope.launch {
             PreferenceKeys.HomeScreenDisplayState.editValue(state.name)
         }
+    }
+
+
+    private fun onUpdateDialogDismissRequest() {
+        showDownloadDialog = false
+
+        downloadJob?.cancel()
     }
 
     private var c = 0

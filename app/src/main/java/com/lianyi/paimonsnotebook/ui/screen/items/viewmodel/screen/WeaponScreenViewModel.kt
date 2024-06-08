@@ -4,8 +4,8 @@ import android.content.Intent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lianyi.paimonsnotebook.common.database.cultivate.data.CultivateItemType
 import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
@@ -14,27 +14,17 @@ import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.Materi
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.WeaponService
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.format.FightPropertyFormat
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.format.WeaponAffixFormat
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.item.Material
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.weapon.WeaponData
+import com.lianyi.paimonsnotebook.ui.screen.items.data.cultivate.CultivateConfigData
 import com.lianyi.paimonsnotebook.ui.screen.items.util.ItemContentFilterHelper
 import com.lianyi.paimonsnotebook.ui.screen.items.util.ItemFilterType
 import com.lianyi.paimonsnotebook.ui.screen.items.util.ItemHelper
 import com.lianyi.paimonsnotebook.ui.screen.items.util.ItemSearchOptionHelper
-import com.lianyi.paimonsnotebook.ui.screen.items.viewmodel.filter.ItemFilterViewModel
+import com.lianyi.paimonsnotebook.ui.screen.items.viewmodel.base.ItemBaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class WeaponScreenViewModel : ViewModel() {
-    private var currentItemLevel = 1
-
-    var currentItem by mutableStateOf<WeaponData?>(null)
-
-    var compareItem by mutableStateOf<WeaponData?>(null)
-
-    //加载状态
-    var loadingState by mutableStateOf(LoadingState.Loading)
-
-    var selectCompareItem = false
+class WeaponScreenViewModel : ItemBaseViewModel<WeaponData>() {
 
     private val weaponService by lazy {
         WeaponService {
@@ -59,47 +49,17 @@ class WeaponScreenViewModel : ViewModel() {
     var weaponAffixFormat by mutableStateOf<WeaponAffixFormat?>(null)
         private set
 
-    //材料列表
-    var materialList by mutableStateOf(listOf<Material>())
-        private set
-
-    //当缺少文件时
-    private fun onMissingFile() {
-        loadingState = LoadingState.Error
-    }
-
     val itemFilterViewModel by lazy {
-        ItemFilterViewModel(
-            items = weaponService.weaponList,
-            searchOptionList = ItemSearchOptionHelper
-                .apply {
-                    setListLayout()
-                    setOrderBy(
-                        options = listOf(
-                            ItemFilterType.Default,
-                            ItemFilterType.BaseATK,
-                        )
-                    )
-                    setStar(starRange = 5 downTo 1)
-                    setWeapon()
-                }.get(),
-            getFilteredItemList = this::filterItemList,
-            itemSortCompareBy = { weapon, type ->
-                ItemContentFilterHelper.getWeaponGroupByKeyByType(
-                    type,
-                    weapon,
-                    weaponService.fightPropertyValueCalculateService
-                )
-            }
-        )
+        ItemSearchOptionHelper.getWeaponFilterItemViewModel(weaponService = weaponService)
     }
 
-    fun init(intent: Intent) {
+    override fun init(intent: Intent) {
         viewModelScope.launch(Dispatchers.IO) {
             val list = weaponService.weaponList
 
-            if(list.isNotEmpty()){
-                val weapon = ItemHelper.getItemFromIntent(intent, weaponService.weaponList) { it.id }
+            if (list.isNotEmpty()) {
+                val weapon =
+                    ItemHelper.getItemFromIntent(intent, weaponService.weaponList) { it.id }
 
                 onClickItem(weapon)
             }
@@ -110,11 +70,8 @@ class WeaponScreenViewModel : ViewModel() {
         }
     }
 
-    val tabs = arrayOf(
-        "属性",
-        "精炼",
-        "资料",
-        "材料"
+    override val tabs = arrayOf(
+        "属性", "精炼", "资料", "材料"
     )
 
     //更新面板
@@ -122,9 +79,7 @@ class WeaponScreenViewModel : ViewModel() {
         if (currentItem == null) return
 
         propertyList = weaponService.getFightPropertyFormatList(
-            currentItem!!,
-            currentItemLevel,
-            promoted
+            currentItem!!, currentItemLevel, promoted
         )
     }
 
@@ -137,9 +92,7 @@ class WeaponScreenViewModel : ViewModel() {
             return
         }
         compareItemPropertyList = weaponService.getFightPropertyFormatList(
-            compareItem!!,
-            currentItemLevel,
-            promoted
+            compareItem!!, currentItemLevel, promoted
         )
     }
 
@@ -157,10 +110,11 @@ class WeaponScreenViewModel : ViewModel() {
     }
 
     //更新材料
-    private fun updateMaterial() {
+    override fun updateMaterial() {
         if (currentItem == null) return
+        materialList.clear()
 
-        materialList = materialService.getMaterialListByIds(currentItem!!.cultivationItems)
+        materialList += materialService.getMaterialListByIds(currentItem!!.cultivationItems)
     }
 
     //重置比对角色
@@ -170,33 +124,34 @@ class WeaponScreenViewModel : ViewModel() {
         selectCompareItem = false
     }
 
-    fun onClickItem(weaponData: WeaponData) {
-        if (weaponData.id == currentItem?.id) return
+    override fun onClickItem(item: WeaponData) {
+        if (item.id == currentItem?.id) return
 
         if (selectCompareItem) {
-            compareItem = weaponData
+            compareItem = item
             updateCompareAvatarProperty()
             selectCompareItem = false
 
             itemFilterViewModel.showResultList()
         } else {
-            currentItem = weaponData
+            currentItem = item
             resetCompareItem()
 
             updateProperty()
             updateSkill()
 
             updateMaterial()
+            viewModelScope.launchIO {
+                PreferenceKeys.LastViewWeaponId.editValue(item.id)
+            }
         }
 
         itemFilterViewModel.dismissFilterContent()
 
-        viewModelScope.launchIO {
-            PreferenceKeys.LastViewWeaponId.editValue(weaponData.id)
-        }
+
     }
 
-    fun onClickCompareItem() {
+    override fun onClickCompareItem() {
         selectCompareItem = compareItem == null
 
         if (selectCompareItem) {
@@ -207,19 +162,19 @@ class WeaponScreenViewModel : ViewModel() {
     }
 
     //当更改等级时
-    fun onChangeItemLevel(value: Int) {
+    override fun onChangeItemLevel(value: Int, promoted: Boolean) {
         currentItemLevel = value
 
-        updateProperty()
-        updateCompareAvatarProperty()
-    }
-
-    fun onPromotedChange(promoted: Boolean) {
         updateProperty(promoted)
         updateCompareAvatarProperty(promoted)
     }
 
-    fun toggleFilterContent() {
+    override fun onPromotedChange(promoted: Boolean) {
+        updateProperty(promoted)
+        updateCompareAvatarProperty(promoted)
+    }
+
+    override fun toggleFilterContent() {
         itemFilterViewModel.toggleFilterContent()
 
         if (!itemFilterViewModel.showFilterContent) {
@@ -227,21 +182,18 @@ class WeaponScreenViewModel : ViewModel() {
         }
     }
 
-    fun getItemDataContent(
-        weaponData: WeaponData,
-        type: ItemFilterType,
-        isList: Boolean = false
+    override fun getItemDataContent(
+        item: WeaponData, type: ItemFilterType, isList: Boolean
     ): String {
         val dataContent = ItemContentFilterHelper.getWeaponShowContentByType(
             type = type,
-            weapon = weaponData,
+            weapon = item,
             fightPropertyValueCalculateService = weaponService.fightPropertyValueCalculateService
         )
 
         return if (isList) {
             when (type) {
-                ItemFilterType.Default,
-                ItemFilterType.Name -> ""
+                ItemFilterType.Default, ItemFilterType.Name -> ""
 
                 else -> "${ItemContentFilterHelper.getSortTypeNameByType(type)}:${dataContent}"
             }
@@ -250,28 +202,23 @@ class WeaponScreenViewModel : ViewModel() {
         }
     }
 
-    private fun filterItemList(items: List<WeaponData>): List<WeaponData> {
-        val list = mutableListOf<WeaponData>()
+    override fun getCurrentItemId(): Int = currentItem?.id ?: 0
 
-        items.forEach { weaponData ->
+    override fun onShowItemConfigDialog() {
+        super.onShowItemConfigDialog()
 
-            itemFilterViewModel.apply {
+        val weapon = currentItem ?: return
 
-                if (!filterValueExists(ItemFilterType.Weapon, weaponData.weaponType)) return@forEach
+        //TODO 适配武器等级为100
+        val weaponMaxLevel = weapon.maxLevel
 
-                if (!filterValueExists(ItemFilterType.Star, weaponData.rankLevel)) return@forEach
-
-                //匹配名称与称号
-                if (inputNameValue.isNotEmpty() &&
-                    weaponData.name.indexOf(inputNameValue) == -1
-                ) {
-                    return@forEach
-                }
-            }
-
-            list += weaponData
-        }
-
-        return list
+        cultivateConfigList += CultivateConfigData(
+            name = "武器等级",
+            iconUrl = weapon.iconUrl,
+            id = weapon.id,
+            type = CultivateItemType.Weapon,
+            maxLevel = weaponMaxLevel,
+            tintIcon = false
+        )
     }
 }

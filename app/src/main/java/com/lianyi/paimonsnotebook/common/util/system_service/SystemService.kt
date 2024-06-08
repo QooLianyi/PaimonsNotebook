@@ -13,6 +13,7 @@ import android.view.WindowManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
+import com.lianyi.paimonsnotebook.common.util.file.FileHelper
 import java.io.File
 
 @SuppressLint("InternalInsetResource", "DiscouragedApi")
@@ -61,7 +62,7 @@ object SystemService {
         context.startActivity(
             Intent(Intent.ACTION_VIEW).apply {
                 val uri =
-                    FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+                    FileProvider.getUriForFile(context, FileHelper.provider, file)
                 setDataAndType(uri, "application/vnd.android.package-archive")
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
             }

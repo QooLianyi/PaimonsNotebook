@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -48,11 +47,14 @@ import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
 * */
 class TopicScreen : BaseActivity() {
 
+    companion object {
+    }
+
     private val viewModel by lazy {
         ViewModelProvider(this)[TopicScreenViewModel::class.java]
     }
 
-    @OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
+    @OptIn(ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -64,7 +66,7 @@ class TopicScreen : BaseActivity() {
             }
         }
 
-        viewModel.init(intent)
+        viewModel.update(intent)
 
         setContent {
             PaimonsNotebookTheme(this) {
@@ -131,7 +133,8 @@ class TopicScreen : BaseActivity() {
                                     onSelect = viewModel::onTabBarSelect,
                                     tabBarPadding = PaddingValues(horizontal = 16.dp, 8.dp),
                                     textUnSelectSize = 12.sp,
-                                    textSelectSize = 14.sp
+                                    textSelectSize = 14.sp,
+                                    index = viewModel.currentIndex
                                 )
                             }
                         }
@@ -141,7 +144,7 @@ class TopicScreen : BaseActivity() {
                                 Box(
                                     modifier = Modifier.fillMaxSize(),
                                     contentAlignment = Alignment.Center
-                                ){
+                                ) {
                                     EmptyPlaceholder("这里暂时没有内容,稍后再来看看吧!")
                                 }
                             }

@@ -2,7 +2,6 @@ package com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.format
 
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.conveter.SkillIconConverter
-import kotlin.math.roundToInt
 
 /*
 * 角色技能格式化
@@ -14,7 +13,7 @@ data class AvatarSkillFormat(
     val icon: String,
     val maxLevel: Int,
     val proud: AvatarData.Proud
-):BaseFormat() {
+) : BaseFormat() {
     companion object {
         //通过命座获取
         fun getValueForTalent(talent: AvatarData.Talent, subName: String) =
@@ -38,17 +37,6 @@ data class AvatarSkillFormat(
                 proud = skill.Proud
             )
 
-        //通过元素爆发技能获取
-        fun getValueForEnergySkill(energySkill: AvatarData.EnergySkill) =
-            AvatarSkillFormat(
-                name = energySkill.Name,
-                description = energySkill.Description,
-                icon = energySkill.Icon,
-                maxLevel = energySkill.Proud.Parameters.size,
-                subName = "元素爆发",
-                proud = energySkill.Proud
-            )
-
         //通过固有天赋技能获取
         fun getValueForInherent(inherent: AvatarData.Inherent) =
             AvatarSkillFormat(
@@ -64,11 +52,4 @@ data class AvatarSkillFormat(
     val iconUrl: String
         get() = SkillIconConverter.iconNameToUrl(name = icon)
 
-    fun setLevel(level: Float) {
-        currentLevel = if (level >= maxLevel) {
-            maxLevel
-        } else {
-            level.roundToInt()
-        }
-    }
 }

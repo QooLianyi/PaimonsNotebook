@@ -16,7 +16,7 @@ import com.lianyi.paimonsnotebook.common.extension.list.takeFirstIf
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.common.web.ApiEndpoints
 import com.lianyi.paimonsnotebook.common.web.bridge.MiHoYoJSInterface
-import com.lianyi.paimonsnotebook.common.web.bridge.setCookie
+import com.lianyi.paimonsnotebook.common.web.bridge.setMiyouSheWebViewCookie
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.binding.UserGameRoleData
 
 class HoyolabWebActivity : BaseActivity() {
@@ -105,8 +105,8 @@ class HoyolabWebActivity : BaseActivity() {
 
         val url = getExtraUrl(role)
 
-        webView.setCookie(
-            cookieToken = user.userEntity.cookieToken, lToken = user.userEntity.ltoken
+        webView.setMiyouSheWebViewCookie(
+            cookieToken = user.userEntity.cookieToken, lToken = user.userEntity.ltoken,sToken = user.userEntity.stoken
         )
         webView.loadUrl(url)
     }

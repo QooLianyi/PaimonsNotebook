@@ -35,7 +35,7 @@ internal fun SideBarMenuListItem(
             .fillMaxWidth()
             .height(42.dp)
             .clickable {
-                block(item)
+                block.invoke(item)
             }
             .padding(8.dp,4.dp),
         verticalAlignment = Alignment.CenterVertically

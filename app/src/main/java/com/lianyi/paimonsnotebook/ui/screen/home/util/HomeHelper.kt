@@ -10,7 +10,9 @@ import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.ui.screen.abyss.view.AbyssScreen
 import com.lianyi.paimonsnotebook.ui.screen.achievement.view.AchievementScreen
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.view.AppWidgetScreen
+import com.lianyi.paimonsnotebook.ui.screen.cultivate_project.view.CultivateProjectScreen
 import com.lianyi.paimonsnotebook.ui.screen.daily_note.view.DailyNoteScreen
+import com.lianyi.paimonsnotebook.ui.screen.develop.TypographyScreen
 import com.lianyi.paimonsnotebook.ui.screen.gacha.view.GachaRecordScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.data.ModalItemData
 import com.lianyi.paimonsnotebook.ui.screen.items.view.AvatarScreen
@@ -29,55 +31,62 @@ object HomeHelper {
             name = "实时便笺",
             icon = R.drawable.ic_moon,
             target = DailyNoteScreen::class.java,
-            sortIndex = 1
+            sortIndex = 10
         ),
         ModalItemData(
             name = "祈愿记录",
             icon = R.drawable.ic_genshin_game_wish,
             target = GachaRecordScreen::class.java,
-            sortIndex = 2,
+            sortIndex = 20,
             requireMetadata = true
         ),
         ModalItemData(
             name = "角色资料",
             icon = R.drawable.ic_genshin_game_character,
             target = AvatarScreen::class.java,
-            sortIndex = 3,
+            sortIndex = 30,
             requireMetadata = true
         ),
         ModalItemData(
             name = "武器资料",
             icon = R.drawable.ic_genshin_game_equip,
             target = WeaponScreen::class.java,
-            sortIndex = 3,
+            sortIndex = 40,
+            requireMetadata = true
+        ),
+        ModalItemData(
+            name = "养成计划",
+            icon = R.drawable.ic_genshin_game_ggc_book,
+            target = CultivateProjectScreen::class.java,
+            sortIndex = 50,
             requireMetadata = true
         ),
         ModalItemData(
             name = "养成材料",
             icon = R.drawable.ic_genshin_game_material,
             target = CultivationMaterialScreen::class.java,
-            sortIndex = 4,
+            sortIndex = 60,
             requireMetadata = true
         ),
         ModalItemData(
             name = "深境螺旋",
             icon = R.drawable.ic_genshin_game_spiral_abyss,
             target = AbyssScreen::class.java,
-            sortIndex = 5,
+            sortIndex = 70,
             requireMetadata = true
         ),
         ModalItemData(
             name = "成就管理",
             icon = R.drawable.ic_genshin_game_sign_cup,
             target = AchievementScreen::class.java,
-            sortIndex = 6,
+            sortIndex = 80,
             requireMetadata = true
         ),
         ModalItemData(
             name = "桌面组件",
             icon = R.drawable.ic_appwidget,
             target = AppWidgetScreen::class.java,
-            sortIndex = 7,
+            sortIndex = 90,
             requireMetadata = true
         )
     )

@@ -2,7 +2,9 @@ package com.lianyi.paimonsnotebook.ui.screen.items.components.information
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -79,5 +81,41 @@ internal fun InformationItem(
         }
 
         slot.invoke()
+    }
+}
+
+
+@Composable
+fun ClickableInformationItem(
+    iconResId: Int = -1,
+    iconUrl: String = "",
+    text: String = "",
+    iconSize: Dp = 16.dp,
+    textSize: TextUnit = 12.sp,
+    textColor: Color = Black,
+    tint: Color? = textColor,
+    backgroundColor: Color = White_40,
+    paddingValues: PaddingValues = PaddingValues(8.dp, 4.dp),
+    slot: @Composable () -> Unit = {},
+    onClick: () -> Unit
+) {
+    Box(modifier = Modifier
+        .clip(CircleShape)
+        .clickable {
+            onClick.invoke()
+        }
+    ) {
+        InformationItem(
+            iconResId,
+            iconUrl,
+            text,
+            iconSize,
+            textSize,
+            textColor,
+            tint,
+            backgroundColor,
+            paddingValues,
+            slot
+        )
     }
 }

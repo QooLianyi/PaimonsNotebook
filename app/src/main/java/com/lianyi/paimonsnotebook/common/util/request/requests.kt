@@ -9,6 +9,8 @@ import com.lianyi.paimonsnotebook.common.extension.request.setUserAgent
 import com.lianyi.paimonsnotebook.common.extension.request.setXRPCAppInfo
 import com.lianyi.paimonsnotebook.common.util.parameter.getParameterizedType
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import okhttp3.Call
@@ -24,6 +26,7 @@ import java.lang.reflect.ParameterizedType
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.coroutineContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -156,6 +159,11 @@ suspend inline fun <reified T> Request.getAsJson(
 
 private suspend fun Call.await(): Response =
     suspendCancellableCoroutine { cancellableContinuation ->
+        //当外部协程作用域被取消时,取消请求
+        cancellableContinuation.invokeOnCancellation {
+            this.cancel()
+        }
+
         enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 cancellableContinuation.resumeWithException(e)

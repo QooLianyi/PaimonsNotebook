@@ -1,12 +1,22 @@
 package com.lianyi.paimonsnotebook.common.components.media
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerScope
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
@@ -49,16 +59,17 @@ fun <T> LazyBanner(
     //空列表直接返回
     if (bannerData.isEmpty()) return
 
+    val pageCount = bannerData.size * 100
+
     //开始索引
     val startIndex by remember {
-        mutableIntStateOf((Int.MAX_VALUE / 2) - (Int.MAX_VALUE / 2) % bannerData.size)
+        mutableIntStateOf((pageCount / 2) - (pageCount / 2) % bannerData.size)
     }
-    val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(initialPage = startIndex) {
-        Int.MAX_VALUE
+        pageCount
     }
 
-    val isDragged by pagerState.interactionSource.collectIsFocusedAsState()
+    val isDragged by pagerState.interactionSource.collectIsDraggedAsState()
 
     //启用自动轮播
     if (enableAutoLoop && !isDragged) {
@@ -67,16 +78,17 @@ fun <T> LazyBanner(
                 yield()
                 delay(delay)
                 val target = pagerState.currentPage + 1
-                scope.launch {
+
+                launch {
                     val realTarget = when (target) {
-                        Int.MAX_VALUE -1 -> {
-                            pagerState.scrollToPage(0)
-                            0
+                        pageCount, pageCount - bannerData.size -> {
+                            pagerState.scrollToPage(startIndex)
+                            startIndex
                         }
 
                         1 -> {
                             pagerState.scrollToPage(startIndex)
-                            startIndex
+                            startIndex + 1
                         }
 
                         else -> pagerState.currentPage + 1
@@ -138,7 +150,7 @@ fun <T> LazyBanner(
         itemSpacing = itemSpacing,
         content = content,
         indicator = { index, currentPageIndex ->
-            Indicator(currentPageIndex,index, modifier = Modifier.padding(bottom = 4.dp))
+            Indicator(currentPageIndex, index, modifier = Modifier.padding(bottom = 4.dp))
         }
     )
 

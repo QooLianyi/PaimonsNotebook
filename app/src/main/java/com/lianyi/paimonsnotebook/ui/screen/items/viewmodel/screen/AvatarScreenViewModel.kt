@@ -4,38 +4,27 @@ import android.content.Intent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lianyi.paimonsnotebook.common.database.cultivate.data.CultivateItemType
 import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.util.enums.LoadingState
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.AvatarService
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.MaterialService
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.ElementType
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.format.AvatarSkillFormat
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.format.FightPropertyFormat
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.item.Material
+import com.lianyi.paimonsnotebook.ui.screen.items.data.cultivate.CultivateConfigData
 import com.lianyi.paimonsnotebook.ui.screen.items.util.ItemContentFilterHelper
 import com.lianyi.paimonsnotebook.ui.screen.items.util.ItemFilterType
 import com.lianyi.paimonsnotebook.ui.screen.items.util.ItemHelper
 import com.lianyi.paimonsnotebook.ui.screen.items.util.ItemSearchOptionHelper
-import com.lianyi.paimonsnotebook.ui.screen.items.viewmodel.filter.ItemFilterViewModel
+import com.lianyi.paimonsnotebook.ui.screen.items.viewmodel.base.ItemBaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AvatarScreenViewModel : ViewModel() {
-
-    //当前角色
-    var currentItem by mutableStateOf<AvatarData?>(null)
-
-    //比对的角色
-    var compareItem by mutableStateOf<AvatarData?>(null)
-
-    //加载状态
-    var loadingState by mutableStateOf(LoadingState.Loading)
-
+class AvatarScreenViewModel : ItemBaseViewModel<AvatarData>() {
     //属性列表
     var propertyList by mutableStateOf(listOf<FightPropertyFormat>())
         private set
@@ -51,56 +40,13 @@ class AvatarScreenViewModel : ViewModel() {
     var talentList by mutableStateOf(listOf<AvatarSkillFormat>())
         private set
 
-    //材料列表
-    var materialList by mutableStateOf(listOf<Material>())
-        private set
-
-
     val itemFilterViewModel by lazy {
-        ItemFilterViewModel(
-            items = avatarService.avatarList,
-            searchOptionList = ItemSearchOptionHelper
-                .apply {
-                    setListLayout()
-                    setOrderBy(
-                        options = listOf(
-                            ItemFilterType.Default,
-                            ItemFilterType.BaseATK,
-                            ItemFilterType.BaseHp,
-                            ItemFilterType.BaseDef,
-                            ItemFilterType.BirthDay,
-                            ItemFilterType.CostumeCount
-                        )
-                    )
-                    setStar()
-                    setWeapon()
-                    setElement()
-                    setAssociation()
-                }.get(),
-            getFilteredItemList = this::filterItemList,
-            itemSortCompareBy = { avatar, type ->
-                ItemContentFilterHelper.getAvatarGroupByKeyByType(
-                    type = type,
-                    avatar = avatar,
-                    fightPropertyValueCalculateService = avatarService.fightPropertyValueCalculateService
-                )
-            }
-        )
+        ItemSearchOptionHelper.getAvatarItemFilterViewModel(avatarService = avatarService)
     }
-
-    //当缺少文件时
-    private fun onMissingFile() {
-        loadingState = LoadingState.Error
-    }
-
-    private var currentItemLevel = 1
-
-    //是否选择对比角色
-    var selectCompareItem = false
 
     private val avatarService by lazy {
         AvatarService {
-            onMissingFile()
+            super.onMissingFile()
         }
     }
 
@@ -110,11 +56,11 @@ class AvatarScreenViewModel : ViewModel() {
         }
     }
 
-    fun init(intent: Intent) {
+    override fun init(intent: Intent) {
         viewModelScope.launch(Dispatchers.IO) {
             val list = avatarService.avatarList
 
-            if(list.isNotEmpty()){
+            if (list.isNotEmpty()) {
                 val avatar = ItemHelper.getItemFromIntent(intent, list) { it.id }
                 onClickItem(avatar)
             }
@@ -125,7 +71,7 @@ class AvatarScreenViewModel : ViewModel() {
         }
     }
 
-    val tabs = arrayOf(
+    override val tabs = arrayOf(
         "属性",
         "技能",
         "命之座",
@@ -170,7 +116,7 @@ class AvatarScreenViewModel : ViewModel() {
             )
         }
 
-        list += AvatarSkillFormat.getValueForEnergySkill(currentItem!!.skillDepot.EnergySkill)
+        list += AvatarSkillFormat.getValueForSkill(currentItem!!.skillDepot.EnergySkill, "元素爆发")
 
         list += currentItem!!.skillDepot.Inherents.map {
             AvatarSkillFormat.getValueForInherent(it)
@@ -187,8 +133,9 @@ class AvatarScreenViewModel : ViewModel() {
     }
 
     //更新材料
-    private fun updateMaterial() {
-        materialList = materialService.getMaterialListByIds(currentItem!!.cultivationItems)
+    override fun updateMaterial() {
+        materialList.clear()
+        materialList += materialService.getMaterialListByIds(currentItem!!.cultivationItems)
     }
 
     //重置比对角色
@@ -199,17 +146,17 @@ class AvatarScreenViewModel : ViewModel() {
     }
 
     //当点击角色时
-    fun onClickItem(avatarData: AvatarData) {
-        if (avatarData.id == currentItem?.id) return
+    override fun onClickItem(item: AvatarData) {
+        if (item.id == currentItem?.id) return
 
         if (selectCompareItem) {
-            compareItem = avatarData
+            compareItem = item
             updateCompareAvatarProperty()
             selectCompareItem = false
 
             itemFilterViewModel.showResultList()
         } else {
-            currentItem = avatarData
+            currentItem = item
             resetCompareItem()
 
             updateProperty()
@@ -217,17 +164,18 @@ class AvatarScreenViewModel : ViewModel() {
             updateTalent()
 
             updateMaterial()
+
+            super.updateCurrentItemSelectedState(item.id)
+            viewModelScope.launchIO {
+                PreferenceKeys.LastViewAvatarId.editValue(item.id)
+            }
         }
 
         itemFilterViewModel.dismissFilterContent()
-
-        viewModelScope.launchIO {
-            PreferenceKeys.LastViewAvatarId.editValue(avatarData.id)
-        }
     }
 
     //当点击比对角色时
-    fun onClickCompareItem() {
+    override fun onClickCompareItem() {
         selectCompareItem = compareItem == null
 
         if (selectCompareItem) {
@@ -238,19 +186,19 @@ class AvatarScreenViewModel : ViewModel() {
     }
 
     //当更改等级时
-    fun onChangeItemLevel(value: Int) {
+    override fun onChangeItemLevel(value: Int, promoted: Boolean) {
         currentItemLevel = value
 
-        updateProperty()
-        updateCompareAvatarProperty()
-    }
-
-    fun onPromotedChange(promoted: Boolean) {
         updateProperty(promoted)
         updateCompareAvatarProperty(promoted)
     }
 
-    fun toggleFilterContent() {
+    override fun onPromotedChange(promoted: Boolean) {
+        updateProperty(promoted)
+        updateCompareAvatarProperty(promoted)
+    }
+
+    override fun toggleFilterContent() {
         itemFilterViewModel.toggleFilterContent()
 
         if (!itemFilterViewModel.showFilterContent) {
@@ -259,14 +207,14 @@ class AvatarScreenViewModel : ViewModel() {
     }
 
     //获取角色显示的数据内容
-    fun getItemDataContent(
-        avatarData: AvatarData,
+    override fun getItemDataContent(
+        item: AvatarData,
         type: ItemFilterType,
-        isList: Boolean = false
+        isList: Boolean
     ): String {
         val dataContent = ItemContentFilterHelper.getAvatarShowContentByType(
             type = type,
-            avatar = avatarData,
+            avatar = item,
             fightPropertyValueCalculateService = avatarService.fightPropertyValueCalculateService
         )
 
@@ -282,41 +230,57 @@ class AvatarScreenViewModel : ViewModel() {
         }
     }
 
-    //过滤角色列表
-    private fun filterItemList(items: List<AvatarData>): List<AvatarData> {
-        val list = mutableListOf<AvatarData>()
+    override fun getCurrentItemId(): Int = currentItem?.id ?: 0
 
-        items.forEach { avatarData ->
+    override fun onShowItemConfigDialog() {
+        super.onShowItemConfigDialog()
 
-            val fetterInfo = avatarData.fetterInfo
+        val avatar = this.currentItem ?: return
 
-            itemFilterViewModel.apply {
+        //TODO 角色等级上限提升至100
+        val avatarMaxLevel = 90
+        val skillMaxLevel = 10
 
-                if (!filterValueExists(
-                        ItemFilterType.Association,
-                        fetterInfo.Association
-                    )
-                ) return@forEach
-
-                if (!filterValueExists(ItemFilterType.Weapon, avatarData.weapon)) return@forEach
-
-                val elementType = ElementType.getElementTypeByName(fetterInfo.VisionBefore)
-                if (!filterValueExists(ItemFilterType.Element, elementType)) return@forEach
-
-                if (!filterValueExists(ItemFilterType.Star, avatarData.starCount)) return@forEach
-
-                //匹配名称与称号
-                if (inputNameValue.isNotEmpty() &&
-                    avatarData.name.indexOf(inputNameValue) == -1 &&
-                    fetterInfo.Title.indexOf(inputNameValue) == -1
-                ) {
-                    return@forEach
-                }
-            }
-
-            list += avatarData
+        cultivateConfigList += CultivateConfigData(
+            name = "角色等级",
+            iconUrl = avatar.iconUrl,
+            maxLevel = avatarMaxLevel,
+            tintIcon = false,
+            type = CultivateItemType.Avatar,
+            id = avatar.id,
+            itemTypeId = avatar.fetterInfo.elementType
+        ).apply {
+            avatarEnergySkillId = avatar.skillDepot.EnergySkill.GroupId
         }
 
-        return list
+        cultivateConfigList += avatar.skillDepot.Skills.first().let { skill ->
+            CultivateConfigData(
+                name = "普通攻击",
+                iconUrl = skill.iconUrl,
+                maxLevel = skillMaxLevel,
+                type = CultivateItemType.Skill,
+                id = skill.GroupId
+            )
+        }
+
+        cultivateConfigList += avatar.skillDepot.Skills.last().let { skill ->
+            CultivateConfigData(
+                name = "元素战技",
+                iconUrl = skill.iconUrl,
+                maxLevel = skillMaxLevel,
+                type = CultivateItemType.Skill,
+                id = skill.GroupId
+            )
+        }
+
+        cultivateConfigList += avatar.skillDepot.EnergySkill.let { skill ->
+            CultivateConfigData(
+                name = "元素爆发",
+                iconUrl = skill.iconUrl,
+                maxLevel = skillMaxLevel,
+                type = CultivateItemType.Skill,
+                id = skill.GroupId
+            )
+        }
     }
 }

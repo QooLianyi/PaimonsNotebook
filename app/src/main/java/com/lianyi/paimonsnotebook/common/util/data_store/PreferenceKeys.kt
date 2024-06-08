@@ -154,6 +154,16 @@ object PreferenceKeys {
         booleanPreferencesKey("enableMetadata")
     }
 
+    //所需的元数据
+    val RequireMetadata by lazy {
+        stringPreferencesKey("requireMetadata")
+    }
+
+    //根据养成计划类型进行排序
+    val CultivateProjectSortByEntityType by lazy {
+        booleanPreferencesKey("cultivateProjectSortByEntityType")
+    }
+
     val widgetsCount by lazy {
         intPreferencesKey("widgetsCount")
     }

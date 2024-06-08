@@ -12,7 +12,9 @@ import androidx.room.PrimaryKey
 data class CultivateProject(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo("project_id")
-    val projectId: Int,
+    val projectId: Int = 0, //计划id
     @ColumnInfo("project_name")
-    val projectName:String
+    val projectName: String, //计划名称
+    @ColumnInfo("is_selected")
+    val isSelected: Boolean //是否为选中状态(当前档案)
 )

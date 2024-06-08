@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,12 +46,15 @@ fun TopicPostItem(
     //如果此项不为空,表示post一定为空,直接返回
     if (item.instant != null) return
 
-    val cover = remember(item.id) {
-        if (item.post.post.cover.isEmpty() && item.post.image_list.isNotEmpty()) {
-            item.post.image_list.first().url
-        } else {
-            item.post.post.cover
-        }
+    val imageList = item.post.image_list
+    val videoList = item.post.vod_list
+
+    val cover = if (imageList.isNotEmpty()) {
+        imageList.first().url
+    } else if (videoList.isNotEmpty()) {
+        videoList.first().cover
+    } else {
+        ""
     }
 
     Column(
@@ -90,7 +92,6 @@ fun TopicPostItem(
 
             InfoText(text = TimeHelper.getDifferenceTimeText(item.post.post.created_at))
         }
-
 
         if (cover.isNotEmpty()) {
             NetworkImage(

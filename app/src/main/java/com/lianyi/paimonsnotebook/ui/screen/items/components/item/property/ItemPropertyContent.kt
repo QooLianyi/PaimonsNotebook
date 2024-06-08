@@ -16,6 +16,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,26 +29,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.common.components.layout.blur_card.widget.ItemSlider
+import com.lianyi.paimonsnotebook.common.components.layout.blur_card.widget.ItemLevelSlider
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.format.FightPropertyFormat
 import com.lianyi.paimonsnotebook.ui.screen.items.components.information.InformationItem
 import com.lianyi.paimonsnotebook.ui.theme.Black
 import com.lianyi.paimonsnotebook.ui.theme.White
 import com.lianyi.paimonsnotebook.ui.theme.White_40
-import kotlin.math.roundToInt
 
 
 @Composable
 internal fun ItemPropertyContent(
     iconUrl: String,
     name: String,
+    maxLevel: Int,
     compareIconUrl: String,
     propertyList: List<FightPropertyFormat>,
     compareItemPropertyList: List<FightPropertyFormat>,
     showPromotedButton: Boolean = true,
-    onClickCompareAvatar: () -> Unit,
-    onLevelChange: (Int) -> Unit,
+    onClickCompareItem: () -> Unit,
+    onLevelChange: (Int, Boolean) -> Unit,
     onPromotedChange: (Boolean) -> Unit,
     informationSlot: @Composable () -> Unit
 ) {
@@ -57,6 +58,10 @@ internal fun ItemPropertyContent(
 
     var level by remember {
         mutableIntStateOf(1)
+    }
+
+    var sliderValue by remember {
+        mutableFloatStateOf(1f)
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -97,7 +102,7 @@ internal fun ItemPropertyContent(
             Box(modifier = Modifier
                 .clip(CircleShape)
                 .clickable {
-                    onClickCompareAvatar.invoke()
+                    onClickCompareItem.invoke()
                 }
             ) {
                 InformationItem(
@@ -145,12 +150,14 @@ internal fun ItemPropertyContent(
                 )
             }
 
-            ItemSlider(
-                value = level,
-                range = (1f..90f),
+            ItemLevelSlider(
+                value = sliderValue,
+                level = level,
+                range = (1f..maxLevel.toFloat()),
                 onValueChange = {
-                    level = it.roundToInt()
-                    onLevelChange.invoke(level)
+                    sliderValue = it
+                    level = it.toInt()
+                    onLevelChange.invoke(level, promoted)
                 }
             )
         }

@@ -15,11 +15,12 @@ import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
 @Composable
 fun ContentLoadingLayout(
     loadingState: LoadingState,
-    loadingContent: @Composable () -> Unit,
-    emptyContent: @Composable () -> Unit,
-    errorContent: @Composable () -> Unit,
-    defaultContent: @Composable () -> Unit,
-    successContent: @Composable () -> Unit
+    loadingContent: @Composable () -> Unit = {},
+    emptyContent: @Composable () -> Unit = {},
+    errorContent: @Composable () -> Unit = {},
+    defaultContent: @Composable () -> Unit = {},
+    noDataContent: @Composable () -> Unit = {},
+    successContent: @Composable () -> Unit = {}
 ) {
     Crossfade(
         targetState = loadingState, label = "",
@@ -43,6 +44,10 @@ fun ContentLoadingLayout(
 
             LoadingState.Error -> {
                 errorContent.invoke()
+            }
+
+            LoadingState.NoData -> {
+                noDataContent.invoke()
             }
 
             else -> {

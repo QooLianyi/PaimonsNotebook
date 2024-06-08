@@ -48,11 +48,13 @@ class AbyssScreen : BaseActivity() {
                             horizontalArrangement = Arrangement.End
                         ) {
 
-                            Row(modifier = Modifier
-                                .radius(2.dp)
-                                .clickable {
-                                    viewModel.showUserGameRoleDialog()
-                                }
+                            Row(
+                                modifier = Modifier
+                                    .radius(2.dp)
+                                    .clickable {
+                                        viewModel.showUserGameRoleDialog()
+                                    },
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
                                     text = viewModel.currentGameRole?.game_uid ?: "",

@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 class ItemFilterViewModel<T>(
     private val items: List<T>,
     val searchOptionList: List<Pair<String, List<SearchOptionData>>>,
-    val getFilteredItemList: (List<T>) -> List<T>,
+    val getFilteredItemList: (ItemFilterViewModel<T>,List<T>) -> List<T>,
     private val itemSortCompareBy: (T, type: ItemFilterType) -> Long
 ) {
 
@@ -31,7 +31,9 @@ class ItemFilterViewModel<T>(
     var itemList by mutableStateOf(items)
         private set
 
+    //筛选的选项映射
     private val selectedOptionMap = mutableStateMapOf<ItemFilterType, Set<Int>>()
+
 
     init {
         searchOptionList.forEach { pair ->
@@ -49,27 +51,34 @@ class ItemFilterViewModel<T>(
 
     //是否显示过滤条件内容
     var showFilterContent: Boolean by mutableStateOf(false)
+        private set
 
     //是否显示清除过滤条件选项
     var showClearFilter: Boolean by mutableStateOf(false)
+        private set
 
     //是否显示过滤结果内容
     var showResultList: Boolean by mutableStateOf(false)
+        private set
 
     //输入的文本
     var inputNameValue: String by mutableStateOf("")
+        private set
 
     //搜索结果列表样式
     var itemListLayoutStyle: ListLayoutStyle by mutableStateOf(ListLayoutStyle.ListVertical)
+        private set
 
     //是否更新列表标记,防止筛选条件不变的情况下开关列表导致重复筛选排序
     private var updateList = true
 
-    //排序类型,通过该值对列表进行排序
-    var orderByType = ItemFilterType.Default
+    //当前排序类型,通过该值对列表进行排序
+    var currentOrderByKeyType = ItemFilterType.Default
+        private set
 
     //列表倒序
     var reverseList = true
+        private set
 
     //列表滚动状态
     val lazyGridState = LazyGridState()
@@ -87,6 +96,8 @@ class ItemFilterViewModel<T>(
     fun showResultList() {
         if (updateList) {
             onShowResultList()
+
+            listScrollToFirstItem()
             updateList = false
         }
     }
@@ -99,7 +110,7 @@ class ItemFilterViewModel<T>(
 
     //根据过滤方法获取过滤后的列表
     private fun filterItem() {
-        itemList = getFilteredItemList.invoke(items)
+        itemList = getFilteredItemList.invoke(this,items)
     }
 
     //根据当前的排序方法对列表进行排序
@@ -109,7 +120,7 @@ class ItemFilterViewModel<T>(
         }
 
         list.sortBy {
-            itemSortCompareBy.invoke(it, orderByType)
+            itemSortCompareBy.invoke(it, currentOrderByKeyType)
         }
 
         if (reverseList) {
@@ -135,7 +146,7 @@ class ItemFilterViewModel<T>(
 
         filterItem()
 
-        if(showResultList){
+        if (showResultList) {
             sortItem()
             resetListState()
         }
@@ -167,6 +178,9 @@ class ItemFilterViewModel<T>(
     private fun resetListState() {
         if (!showResultList) return
 
+        listScrollToFirstItem()
+    }
+    private fun listScrollToFirstItem(){
         CoroutineScope(Dispatchers.Main).launch {
             lazyListState.scrollToItem(0)
             lazyGridState.scrollToItem(0)
@@ -181,6 +195,7 @@ class ItemFilterViewModel<T>(
     //当选择选项时,根据不同的选项类型进行不同的处理
     fun onSelectOption(data: SearchOptionData) {
         when (data.sortBy) {
+            //设置排序类型,正序倒序
             ItemFilterType.Default -> {
 
                 //判断是否点击了相同的选项,是:反向列表
@@ -198,15 +213,17 @@ class ItemFilterViewModel<T>(
                 reverseList = data.orderBy == SortOrderBy.Descend
 
                 //从枚举类中找到值为data.value的枚举类型并赋值
-                orderByType = ItemFilterType.entries.first { it.ordinal == data.value }
+                currentOrderByKeyType = ItemFilterType.entries.first { it.ordinal == data.value }
             }
 
+            //设置列表显示格式
             ItemFilterType.ListLayout -> {
                 itemListLayoutStyle = ListLayoutStyle.entries.toTypedArray()[data.value]
 
                 selectedOptionMap[data.sortBy] = setOf(itemListLayoutStyle.ordinal)
             }
 
+            //其余的都按照筛选条件来处理
             else -> {
                 val set = selectedOptionMap[data.sortBy]
                 selectedOptionMap[data.sortBy] = if (set?.contains(data.value) == true) {

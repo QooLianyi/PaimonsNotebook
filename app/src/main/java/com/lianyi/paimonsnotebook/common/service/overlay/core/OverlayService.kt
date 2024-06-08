@@ -18,8 +18,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.IntOffset
+import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.service.util.ServiceHelper
+import kotlinx.coroutines.cancel
 
 /*
 * 悬浮窗服务
@@ -36,8 +39,9 @@ open class OverlayService(
     private val content: @Composable (overlayState: OverlayState) -> Unit,
     private val onStartCommandBlock: (overlayState: OverlayState, command: String?) -> Unit,
 ) : Service() {
-
     private var isStarted = false
+
+    private var isExited = false
 
     private val density get() = resources.displayMetrics.density
     private val controllerContentSizePx get() = (controllerContentSizeDp * density).toInt()
@@ -94,6 +98,11 @@ open class OverlayService(
 
             //监测内容显示状态
             LaunchedEffect(state.showContent) {
+                if (isExited) {
+                    cancel()
+                    return@LaunchedEffect
+                }
+
                 //根据状态设置是否能够获取触摸与焦点事件
                 contentViewHolder.params.flags = if (state.showContent) {
                     contentViewHolder.view.visibility = View.VISIBLE
@@ -105,6 +114,11 @@ open class OverlayService(
             }
             //监测动画进度并从窗体中移除
             LaunchedEffect(contentAlphaAnim) {
+                if (isExited) {
+                    cancel()
+                    return@LaunchedEffect
+                }
+
                 if (contentAlphaAnim == 0f) {
                     contentViewHolder.view.visibility = View.GONE
                     windowManager.updateViewLayout(contentViewHolder.view, contentViewHolder.params)
@@ -146,8 +160,16 @@ open class OverlayService(
                     windowManager.removeView(contentViewHolder.view)
                     windowManager.removeView(controllerViewHolder.view)
 
+                    contentViewHolder.view.findViewTreeLifecycleOwner()?.lifecycle?.coroutineScope?.cancel()
+                    controllerViewHolder.view.findViewTreeLifecycleOwner()?.lifecycle?.coroutineScope?.cancel()
+
                     contentViewHolder.view.disposeComposition()
                     controllerViewHolder.view.disposeComposition()
+
+                    contentViewHolder.job.cancel()
+                    controllerViewHolder.job.cancel()
+
+                    isExited = true
 
                     stopSelf()
                     return START_NOT_STICKY

@@ -27,7 +27,7 @@ class QRCodeClient {
         setDeviceInfoHeaders(CoreEnvironment.DeviceId40)
 
         buildMap {
-            put("app_id", "12")
+            put("app_id", CoreEnvironment.APP_ID)
             put("device", CoreEnvironment.DeviceId40)
         }.post(this)
 
@@ -43,7 +43,7 @@ class QRCodeClient {
         setDeviceInfoHeaders(CoreEnvironment.DeviceId40)
 
         buildMap {
-            put("app_id", "12")
+            put("app_id", CoreEnvironment.APP_ID)
             put("device", CoreEnvironment.DeviceId40)
             put("ticket", ticket)
         }.post(this)
@@ -57,7 +57,7 @@ class QRCodeClient {
 
             buildMap {
                 put("app_id", param.appId)
-                put("device", CoreEnvironment.DeviceId40)
+                put("device", CoreEnvironment.DeviceId)
                 put("ticket", param.ticket)
             }.post(this)
 

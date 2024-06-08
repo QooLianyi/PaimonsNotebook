@@ -60,7 +60,7 @@ fun UserDialog(
                     .radius(4.dp)
                     .fillMaxWidth()
                     .clickable {
-                        onClickUser(user)
+                        onClickUser.invoke(user)
                     }
                     .padding(0.dp, 4.dp),
                 verticalAlignment = Alignment.CenterVertically

@@ -42,7 +42,7 @@ fun VideoPlayerPlaceholder(
         .fillMaxWidth()
         .height(160.dp)
         .clickable {
-            onClick()
+            onClick.invoke()
         }
     ) {
 

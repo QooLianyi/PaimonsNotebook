@@ -1,6 +1,11 @@
 package com.lianyi.paimonsnotebook.ui.screen.account.components.dialog
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -27,8 +32,12 @@ fun CookieInputDialog(
 
     LazyColumnDialog(
         title = "通过Cookie添加账号", onDismissRequest = onDismissRequest,
-        buttons = arrayOf("确定"),
+        buttons = arrayOf("取消", "确定"),
         onClickButton = {
+            if (it == 0) {
+                onDismissRequest.invoke()
+                return@LazyColumnDialog
+            }
             onSuccess()
         },
     ) {

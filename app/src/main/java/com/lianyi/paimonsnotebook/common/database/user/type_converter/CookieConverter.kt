@@ -1,6 +1,7 @@
 package com.lianyi.paimonsnotebook.common.database.user.type_converter
 
 import androidx.room.TypeConverter
+import com.lianyi.paimonsnotebook.common.database.util.ITypeConverter
 import com.lianyi.paimonsnotebook.common.web.hoyolab.cookie.Cookie
 
 

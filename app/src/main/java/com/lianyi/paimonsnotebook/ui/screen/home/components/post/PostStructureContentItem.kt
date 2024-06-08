@@ -301,5 +301,5 @@ private fun TextBuildAnnotatedSpannableString(
             }
         }
     }
-    textSlot(text)
+    textSlot.invoke(text)
 }

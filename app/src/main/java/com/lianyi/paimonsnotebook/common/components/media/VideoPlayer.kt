@@ -48,7 +48,6 @@ import com.lianyi.paimonsnotebook.common.extension.modifier.action.doubleClick
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
 import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.post.PostFullData
-import com.lianyi.paimonsnotebook.ui.theme.Black
 import com.lianyi.paimonsnotebook.ui.theme.Black_30
 import com.lianyi.paimonsnotebook.ui.theme.Black_50
 import com.lianyi.paimonsnotebook.ui.theme.Transparent
@@ -143,12 +142,6 @@ fun VideoPlayer(
         modifier = Modifier
             .fillMaxSize()
     ) {
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Black)
-        )
 
         //VideoView
         AndroidView(
@@ -315,7 +308,7 @@ fun VideoPlayer(
                                     .radius(2.dp)
                                     .size(controllerIconSize)
                                     .clickable {
-                                        onVideoFullScreen(!videoFullScreen)
+                                        onVideoFullScreen.invoke(!videoFullScreen)
                                     })
                         }
                     }

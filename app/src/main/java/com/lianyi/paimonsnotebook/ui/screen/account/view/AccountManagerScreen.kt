@@ -1,6 +1,5 @@
 package com.lianyi.paimonsnotebook.ui.screen.account.view
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
@@ -53,11 +52,6 @@ class AccountManagerScreen : BaseActivity() {
         ViewModelProvider(this)[AccountManagerScreenViewModel::class.java]
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-
-    }
-
     @OptIn(ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +63,9 @@ class AccountManagerScreen : BaseActivity() {
                 }
             }
         })
+
+        viewModel.checkStoragePermission = this::checkStoragePermission
+        viewModel.requestStoragePermission = this::requestStoragePermission
 
         setContent {
             PaimonsNotebookTheme(this) {
@@ -94,20 +91,11 @@ class AccountManagerScreen : BaseActivity() {
                                     .background(BackGroundColor)
                                     .animateItemPlacement(),
                                 user = user,
-                                onSetDefault = {
-                                    viewModel.switchUserSelectState(it)
-                                },
-                                onDelete = {
-                                    viewModel.deleteUser(user)
-                                },
-                                onCopyCookie = {
-                                    viewModel.copyCookie(user)
-                                }, onChangeAccountPlayerUid = { u, r ->
-                                    viewModel.changeUserChosePlayer(u, r)
-                                },
-                                onRefreshCookie = {
-                                    viewModel.showConfirmDialog(user)
-                                },
+                                onSetDefault = viewModel::switchUserSelectState,
+                                onDelete = viewModel::deleteUser,
+                                onCopyCookie = viewModel::copyCookie,
+                                onChangeAccountPlayerUid = viewModel::changeUserChosePlayer,
+                                onRefreshCookie = viewModel::showConfirmDialog,
                                 diskCache = viewModel.getUserAvatarDiskCacheData(user)
                             )
                         }
@@ -194,7 +182,6 @@ class AccountManagerScreen : BaseActivity() {
                         visible = viewModel.showQRCodePopup,
                         bitmap = viewModel.loginQrCodeBitmap,
                         requestStoragePermission = this@AccountManagerScreen::requestStoragePermission,
-                        checkStoragePermission = this@AccountManagerScreen::checkStoragePermission,
                         onRequestDismiss = viewModel::onRequestQRCodePopupDismiss,
                         goLoginPage = viewModel::goHoyolabSelfPage
                     )

@@ -1,0 +1,54 @@
+package com.lianyi.paimonsnotebook.common.web.hutao.genshin.item
+
+object MaterialType {
+    const val MATERIAL_NONE = 0
+    const val MATERIAL_FOOD = 1
+    const val MATERIAL_QUEST = 2
+    const val MATERIAL_EXCHANGE = 4
+    const val MATERIAL_CONSUME = 5
+    const val MATERIAL_EXP_FRUIT = 6
+    const val MATERIAL_AVATAR = 7
+    const val MATERIAL_ADSORBATE = 8
+    const val MATERIAL_CRICKET = 9
+    const val MATERIAL_ELEM_CRYSTAL = 10
+    const val MATERIAL_WEAPON_EXP_STONE = 11
+    const val MATERIAL_CHEST = 12
+    const val MATERIAL_RELIQUARY_MATERIAL = 13
+    const val MATERIAL_AVATAR_MATERIAL = 14
+    const val MATERIAL_NOTICE_ADD_HP = 15
+    const val MATERIAL_SEA_LAMP = 16
+    const val MATERIAL_SELECTABLE_CHEST = 17
+    const val MATERIAL_FLYCLOAK = 18
+    const val MATERIAL_NAMECARD = 19
+    const val MATERIAL_TALENT = 20
+    const val MATERIAL_WIDGET = 21
+    const val MATERIAL_CHEST_BATCH_USE = 22
+    const val MATERIAL_FAKE_ABSORBATE = 23
+    const val MATERIAL_CONSUME_BATCH_USE = 24
+    const val MATERIAL_WOOD = 25
+    const val MATERIAL_FURNITURE_FORMULA = 27
+    const val MATERIAL_CHANNELLER_SLAB_BUFF = 28
+    const val MATERIAL_FURNITURE_SUITE_FORMULA = 29
+    const val MATERIAL_COSTUME = 30
+    const val MATERIAL_HOME_SEED = 31
+    const val MATERIAL_FISH_BAIT = 32
+    const val MATERIAL_FISH_ROD = 33
+    const val MATERIAL_SUMO_BUFF = 34 // sumo 活动道具，never appear
+    const val MATERIAL_FIREWORKS = 35
+    const val MATERIAL_BGM = 36
+    const val MATERIAL_SPICE_FOOD = 37
+    const val MATERIAL_ACTIVITY_ROBOT = 38
+    const val MATERIAL_ACTIVITY_GEAR = 39
+    const val MATERIAL_ACTIVITY_JIGSAW = 40
+    const val MATERIAL_ARANARA = 41
+    const val MATERIAL_GCG_CARD = 42
+    const val MATERIAL_GCG_CARD_FACE = 43 // 影幻卡面
+    const val MATERIAL_GCG_CARD_BACK = 44
+    const val MATERIAL_GCG_FIELD = 45
+    const val MATERIAL_DESHRET_MANUAL = 46
+    const val MATERIAL_RENAME_ITEM = 47
+    const val MATERIAL_GCG_EXCHANGE_ITEM = 48
+    const val MATERIAL_QUEST_EVENT_BOOK = 49
+    const val MATERIAL_PROFILE_PICTURE = 50
+    const val MATERIAL_RAINBOW_PRINCE_HAND_BOOK = 51
+}

@@ -11,11 +11,6 @@ import com.lianyi.paimonsnotebook.common.web.hoyolab.cookie.CookieHelper
 
 class AuthClient {
 
-    suspend fun getAuthMultiToken(login_ticket: String, stuid: String) =
-        buildRequest {
-            url(ApiEndpoints.AuthMultiToken(login_ticket, stuid))
-        }.getAsJson<MultiTokenByLoginTicketData>()
-
     suspend fun getActionTicketBySToken(user: User, action: String = "game_role") =
         buildRequest {
             url(ApiEndpoints.AuthActionTicket(action, "", user.aid))
@@ -28,7 +23,7 @@ class AuthClient {
         buildRequest {
             url(ApiEndpoints.getGameToken(user.aid))
 
-            setUser(user,CookieHelper.Type.Stoken)
+            setUser(user, CookieHelper.Type.Stoken)
         }.getAsJson<GameTokenData>()
 
 }

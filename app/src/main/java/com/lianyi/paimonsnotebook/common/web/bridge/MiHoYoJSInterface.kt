@@ -17,6 +17,7 @@ import com.lianyi.paimonsnotebook.common.web.bridge.model.JsParams
 import com.lianyi.paimonsnotebook.common.web.bridge.model.JsResult
 import com.lianyi.paimonsnotebook.common.web.bridge.model.PushPagePayload
 import com.lianyi.paimonsnotebook.common.web.hoyolab.cookie.CookieHelper
+import com.lianyi.paimonsnotebook.common.web.hoyolab.passport.PassportClient
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.auth.AuthClient
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
 import kotlinx.coroutines.CoroutineScope
@@ -31,6 +32,10 @@ class MiHoYoJSInterface(
 
     private val authClient by lazy {
         AuthClient()
+    }
+
+    private val passportClient by lazy {
+        PassportClient()
     }
 
     private fun closePage(params: JsParams<Any?>): JsResult<Map<String, Any>>? {
@@ -65,13 +70,12 @@ class MiHoYoJSInterface(
         )
     }
 
-    private fun getCookieToken(params: JsParams<CookieTokenPayload>): IJsResult {
-        val cookieToken = user.userEntity.cookieToken
+    private suspend fun getCookieToken(params: JsParams<CookieTokenPayload>): IJsResult? {
+        val res = passportClient.getCookieTokenBySToken(user.userEntity.stoken)
+        if (!res.success) return null
 
         return JsResult(
-            data = mapOf(
-                CookieHelper.Keys.CookieToken to cookieToken[CookieHelper.Keys.CookieToken]
-            )
+            data = res.data
         )
     }
 
@@ -143,7 +147,7 @@ class MiHoYoJSInterface(
             //始终将状态栏的高度设置为24
             data = mapOf(
 //                "statusBarHeight" to SystemService.statusBarHeight,
-                "statusBarHeight" to 24,
+                "statusBarHeight" to 0,
             )
         )
     }

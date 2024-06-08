@@ -3,7 +3,9 @@ package com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar
 import com.google.gson.annotations.SerializedName
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.conveter.AssociationIconConverter
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.conveter.AvatarIconConverter
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.conveter.GachaAvatarIconConverter
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.conveter.GachaAvatarImgConverter
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.conveter.SkillIconConverter
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.conveter.WeaponTypeIconConverter
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.ElementType
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.QualityType
@@ -52,8 +54,13 @@ data class AvatarData(
     val iconUrl: String
         get() = AvatarIconConverter.iconNameToUrl(icon)
 
+    //角色祈愿立绘
     val gachaAvatarImg: String
         get() = GachaAvatarImgConverter.iconNameToUrl(icon)
+
+    //角色祈愿图标图
+    val gachaAvatarIcon: String
+        get() = GachaAvatarIconConverter.iconNameToUrl(icon)
 
     //武器图标url
     val weaponIconUrl: String
@@ -71,7 +78,7 @@ data class AvatarData(
         get() = QualityType.getStarCountByType(quality)
 
     //实装日期
-    val beginTimeFormat:String
+    val beginTimeFormat: String
         get() = LocalDateTime.parse(beginTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME).let {
             "${it.year}年${it.monthValue}月${it.dayOfMonth}日"
         }
@@ -110,8 +117,8 @@ data class AvatarData(
         val VisionAfter: String,
         val VisionBefore: String
     ) {
-        //元素属性资源
-        val elementResource: Int
+        //元素属性图标资源id
+        val elementIconResId: Int
             get() = ElementType.getElementResourceIdByName(VisionBefore)
 
         //元素颜色
@@ -121,6 +128,9 @@ data class AvatarData(
         //地区图标url
         val associationIconUrl: String
             get() = AssociationIconConverter.avatarAssociationToUrl(Association)
+
+        val elementType: Int
+            get() = ElementType.getElementTypeByName(VisionBefore)
     }
 
     data class GrowCurve(
@@ -129,11 +139,19 @@ data class AvatarData(
     )
 
     data class SkillDepot(
-        val EnergySkill: EnergySkill,
+        val EnergySkill: Skill,
         val Inherents: List<Inherent>,
         val Skills: List<Skill>,
         val Talents: List<Talent>
-    )
+    ) {
+        val skillIds: List<Int>
+            get() = Skills.map { it.GroupId } + EnergySkill.GroupId
+
+        val skillIdMap: Map<Int, Skill>
+            get() = (Skills + EnergySkill).associateBy {
+                it.GroupId
+            }
+    }
 
     data class CookBonus(
         val InputList: List<Int>,
@@ -149,15 +167,6 @@ data class AvatarData(
     data class Fetter(
         val Context: String,
         val Title: String
-    )
-
-    data class EnergySkill(
-        val Description: String,
-        val GroupId: Int,
-        val Icon: String,
-        val Id: Int,
-        val Name: String,
-        val Proud: Proud
     )
 
     data class Inherent(
@@ -176,7 +185,10 @@ data class AvatarData(
         val Id: Int,
         val Name: String,
         val Proud: Proud
-    )
+    ) {
+        val iconUrl: String
+            get() = SkillIconConverter.iconNameToUrl(name = Icon)
+    }
 
     data class Talent(
         val Description: String,
@@ -242,6 +254,7 @@ data class AvatarData(
         * level:技能等级
         * */
         fun descriptions(level: Int): List<Pair<String, String>> = try {
+            val regex1 = Regex("\\d+")
             Descriptions.mapIndexed { index, s ->
                 val result = regex.findAll(s)
 
@@ -252,7 +265,7 @@ data class AvatarData(
                     val sp1 = split.first().removePrefix("{")
                     val sp2 = split.last().removeSuffix("}")
 
-                    val paramIndex = Regex("\\d+").find(sp1)?.value?.toInt()
+                    val paramIndex = regex1.find(sp1)?.value?.toInt()
 
                     val value =
                         if (paramIndex != null && parametersMap[level] != null) parametersMap[level]!!.Parameters[paramIndex - 1] else Parameters[level].Parameters[index]

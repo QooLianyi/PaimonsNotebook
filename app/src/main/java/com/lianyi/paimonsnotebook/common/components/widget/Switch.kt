@@ -55,7 +55,7 @@ fun Switch(
             .background(trackColor)
             .border(borderDp, borderColor, CircleShape)
             .clickable {
-                onValueChange(!checked)
+                onValueChange.invoke(!checked)
             }
             .width(45.dp)
             .padding(2.dp)

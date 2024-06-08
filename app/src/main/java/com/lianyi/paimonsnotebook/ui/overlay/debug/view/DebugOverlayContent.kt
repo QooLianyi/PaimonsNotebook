@@ -24,6 +24,7 @@ import com.lianyi.paimonsnotebook.common.service.overlay.debug.DebugOverlayServi
 import com.lianyi.paimonsnotebook.common.service.util.ServiceHelper
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugAchievementContent
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugAppWidgetContent
+import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugCultivateProjectContent
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugDeviceFpContent
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugDeviceInfoContent
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugDynamicSecretContent
@@ -141,6 +142,14 @@ fun DebugOverlayContent(overlayState: OverlayState) {
                 Text(text = "成就", fontSize = 20.sp)
             }) {
                 DebugAchievementContent()
+            }
+        }
+
+        item {
+            FoldTextContent(titleSlot = {
+                Text(text = "养成计划", fontSize = 20.sp)
+            }) {
+                DebugCultivateProjectContent()
             }
         }
 

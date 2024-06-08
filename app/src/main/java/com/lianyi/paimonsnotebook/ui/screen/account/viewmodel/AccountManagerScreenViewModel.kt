@@ -22,7 +22,7 @@ import com.lianyi.paimonsnotebook.common.database.disk_cache.util.DiskCacheDataT
 import com.lianyi.paimonsnotebook.common.database.user.util.AccountHelper
 import com.lianyi.paimonsnotebook.common.extension.list.takeFirstIf
 import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
-import com.lianyi.paimonsnotebook.common.extension.scope.launchMain
+import com.lianyi.paimonsnotebook.common.extension.scope.withContextMain
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.common.extension.string.notify
 import com.lianyi.paimonsnotebook.common.extension.string.takeValueFromUrl
@@ -30,6 +30,7 @@ import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
 import com.lianyi.paimonsnotebook.common.util.enums.HelperTextStatus
 import com.lianyi.paimonsnotebook.common.util.file.FileHelper
 import com.lianyi.paimonsnotebook.common.util.system_service.SystemService
+import com.lianyi.paimonsnotebook.common.util.system_service.sdkVersionLessThanOrEqualTo29
 import com.lianyi.paimonsnotebook.common.web.hoyolab.api_sdk.combo_panda.QRCodeClient
 import com.lianyi.paimonsnotebook.common.web.hoyolab.cookie.CookieHelper
 import com.lianyi.paimonsnotebook.common.web.hoyolab.passport.PassportClient
@@ -48,19 +49,21 @@ class AccountManagerScreenViewModel : ViewModel() {
     private var selectedUser: User? = null
 
     init {
-        viewModelScope.launchMain {
+        viewModelScope.launchIO {
             //在主线程等待state对象创建完毕
-            userList.clear()
-
             launchIO {
                 AccountHelper.userListFlow.collect { list ->
-                    userList.clear()
-                    userList.addAll(list)
+                    withContextMain {
+                        userList.clear()
+                        userList.addAll(list)
+                    }
                 }
             }
             launchIO {
                 AccountHelper.selectedUserFlow.collect {
-                    selectedUser = it
+                    withContextMain {
+                        selectedUser = it
+                    }
                 }
             }
         }
@@ -103,6 +106,11 @@ class AccountManagerScreenViewModel : ViewModel() {
     lateinit var startActivity: ActivityResultLauncher<Intent>
 
     var showLoadingDialog by mutableStateOf(false)
+
+
+    lateinit var requestStoragePermission: () -> Unit
+
+    lateinit var checkStoragePermission: () -> Boolean
 
 
     private val bindingClient by lazy {
@@ -335,7 +343,6 @@ class AccountManagerScreenViewModel : ViewModel() {
                 "没有获取到ticket".errorNotify()
                 return@launchIO
             }
-
             loginQrCodeBitmap = createQrCode(res.data.url, 200)
 
             loopQueryQrCodeState(ticket)
@@ -368,16 +375,16 @@ class AccountManagerScreenViewModel : ViewModel() {
     //通过gameToken获取cookie
     private suspend fun getCookieByGameToken(uid: String, token: String) {
         val uidNumber = uid.toIntOrNull() ?: 0
-        val stokenRes = passportClient.getTokenByGameToken(uidNumber, token)
+        val sTokenRes = passportClient.getTokenByGameToken(uidNumber, token)
 
-        if (!stokenRes.success) {
+        if (!sTokenRes.success) {
             "获取stoken失败".errorNotify()
             return
         }
 
-        val sToken = stokenRes.data.token.token
-        val mid = stokenRes.data.user_info.mid
-        val aid = stokenRes.data.user_info.aid
+        val sToken = sTokenRes.data.token.token
+        val mid = sTokenRes.data.user_info.mid
+        val aid = sTokenRes.data.user_info.aid
 
         val sTokenCookie = CookieHelper.concatStringToCookie(
             CookieHelper.Keys.SToken to sToken,
@@ -390,7 +397,7 @@ class AccountManagerScreenViewModel : ViewModel() {
             aid = aid,
             mid = mid,
             sTokenCookie = sTokenCookie,
-            isSelected = userList.isEmpty()
+            isSelected = userList.isEmpty() || selectedUser?.userEntity?.mid == mid
         )
 
         if (addUserSuccess) {
@@ -429,7 +436,15 @@ class AccountManagerScreenViewModel : ViewModel() {
             return
         }
 
-        FileHelper.saveTempImage(loginQrCodeBitmap!!)
+        sdkVersionLessThanOrEqualTo29(
+            finally = {
+                FileHelper.saveTempImage(loginQrCodeBitmap!!)
+            }
+        ) {
+            if (!FileHelper.hasWriteExternalStorage) {
+                return@sdkVersionLessThanOrEqualTo29
+            }
+        }
     }
 
     /*
@@ -457,7 +472,7 @@ class AccountManagerScreenViewModel : ViewModel() {
         Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888).apply {
             setPixels(pixels, 0, size, 0, 0, size, size)
         }
-    } catch (e: java.lang.Exception) {
+    } catch (e: Exception) {
         e.printStackTrace()
         null
     }

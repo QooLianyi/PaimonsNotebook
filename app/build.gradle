@@ -55,7 +55,7 @@ android {
     }
     buildFeatures {
         compose true
-        viewBinding true
+//        viewBinding true
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_compiler_version
@@ -68,14 +68,14 @@ android {
 }
 
 dependencies {
+    //开发测试
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:${compose_version}"
 
 
-    api 'androidx.core:core-ktx:1.12.0'
+    api 'androidx.core:core-ktx:1.13.1'
     //Compose Activity
-    api 'androidx.activity:activity-compose:1.8.0-rc01'
+    api 'androidx.activity:activity-compose:1.9.0'
     api 'androidx.appcompat:appcompat:1.6.1'
     api 'com.google.android.material:material:1.9.0'
     api 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -86,9 +86,10 @@ dependencies {
     api "androidx.compose.ui:ui-tooling-preview:$compose_version"
     debugApi "androidx.compose.ui:ui-tooling:$compose_version"
     debugApi "androidx.compose.ui:ui-test-manifest:$compose_version"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:${compose_version}"
 
     //Lifecycle
-    def lifecycle_version = "2.6.2"
+    def lifecycle_version = "2.8.0"
     api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     api("androidx.lifecycle:lifecycle-process:$lifecycle_version")
 
@@ -99,12 +100,12 @@ dependencies {
 //    implementation("androidx.glance:glance-appwidget:$glance_version")
 
     //Coil
-    def coil_version = "2.5.0"
+    def coil_version = "2.6.0"
     api("io.coil-kt:coil-compose:$coil_version")
     api("io.coil-kt:coil-gif:$coil_version")
 
     //Retrofit2
-    def retrofit2_version = "2.9.0"
+    def retrofit2_version = "2.11.0"
     api("com.squareup.retrofit2:retrofit:$retrofit2_version")
     api("com.squareup.retrofit2:converter-gson:$retrofit2_version")
 
@@ -129,13 +130,10 @@ dependencies {
     //Datastore
     api 'androidx.datastore:datastore-preferences:1.0.0'
 
-    //GeeTest
-//    api 'com.geetest.sensebot:sensebot:4.4.2.1'
-
     //ColorPicker
     api("com.github.skydoves:colorpicker-compose:1.0.7")
 
-    // debugImplementation because LeakCanary should only run in debug builds.
+    //debugImplementation because LeakCanary should only run in debug builds.
     debugApi 'com.squareup.leakcanary:leakcanary-android:2.12'
 
     //zxing-lite AndroidX

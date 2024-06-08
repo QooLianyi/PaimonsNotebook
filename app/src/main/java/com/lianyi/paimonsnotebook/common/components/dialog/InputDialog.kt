@@ -16,6 +16,7 @@ fun InputDialog(
     initialValue: String = "",
     onConfirm: (value: String) -> Unit,
     onCancel: () -> Unit,
+    textMaxLength:Int = Int.MAX_VALUE
 ) {
     //输入值
     var value by remember {
@@ -36,7 +37,9 @@ fun InputDialog(
             item {
                 InputTextFiled(
                     value = value, onValueChange = {
-                        value = it
+                        if(it.length < textMaxLength){
+                            value = it
+                        }
                     }, placeholder = placeholder,
                     contentAlignment = Alignment.CenterStart
                 )

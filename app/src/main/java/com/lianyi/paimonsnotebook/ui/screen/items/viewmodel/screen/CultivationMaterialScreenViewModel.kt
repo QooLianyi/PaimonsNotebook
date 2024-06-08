@@ -5,15 +5,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lianyi.paimonsnotebook.common.data.popup.IconTitleInformationPopupWindowData
+import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
 import com.lianyi.paimonsnotebook.common.extension.list.takeFirstIf
 import com.lianyi.paimonsnotebook.common.util.enums.LoadingState
+import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.AvatarService
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.MaterialService
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.WeaponService
-import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.item.Material
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.item.Materials
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.weapon.WeaponData
@@ -42,6 +47,10 @@ class CultivationMaterialScreenViewModel : ViewModel() {
         }
     }
 
+    init {
+        setWeekData(LocalDateTime.now().dayOfWeek.value)
+    }
+
     private val weaponService by lazy {
         WeaponService {
             onMissingFile()
@@ -60,9 +69,6 @@ class CultivationMaterialScreenViewModel : ViewModel() {
     var weekName by mutableStateOf("")
         private set
 
-    init {
-        setWeekData(LocalDateTime.now().dayOfWeek.value)
-    }
 
     val dropMenuList by lazy {
         (1..7).map {
@@ -71,12 +77,21 @@ class CultivationMaterialScreenViewModel : ViewModel() {
     }
 
     var currentPageIndex by mutableIntStateOf(0)
+        private set
 
     val tabs by lazy {
         arrayOf(
             "天赋培养", "武器突破"
         )
     }
+
+    var showMaterialPopupWindow by mutableStateOf(false)
+        private set
+
+    var popupWindowProvider by mutableStateOf(InformationPopupPositionProvider())
+        private set
+
+    lateinit var popupWindowData: IconTitleInformationPopupWindowData
 
     fun onChangePage(value: Int) {
         currentPageIndex = value
@@ -174,6 +189,10 @@ class CultivationMaterialScreenViewModel : ViewModel() {
         showDropMenu = false
     }
 
+    fun dismissPopupWindow() {
+        showMaterialPopupWindow = false
+    }
+
     fun onClickAvatar(avatarData: AvatarData) {
         HomeHelper.goActivity(AvatarScreen::class.java, Bundle().apply {
             putInt(ItemHelper.PARAM_INT_ITEM_ID, avatarData.id)
@@ -185,4 +204,17 @@ class CultivationMaterialScreenViewModel : ViewModel() {
             putInt(ItemHelper.PARAM_INT_ITEM_ID, weaponData.id)
         })
     }
+
+    fun onClickMaterialItem(material: Material, intSize: IntSize, offset: Offset) {
+        popupWindowProvider = InformationPopupPositionProvider(
+            contentOffset = offset,
+            itemSize = intSize,
+            itemSpace = 8.dp
+        )
+
+        popupWindowData = material.getShowPopupWindowInfo()
+
+        showMaterialPopupWindow = true
+    }
+
 }

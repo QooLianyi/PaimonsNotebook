@@ -93,6 +93,18 @@ object Materials {
         )
     }
 
+    //角色提升宝石
+    val AvatarPromotionGemSimpleItems = setOf(
+        104104,
+        104114,
+        104124,
+        104134,
+        104144,
+        104154,
+        104164,
+        104174
+    )
+
     /*
     * 获取材料id列表
     * */

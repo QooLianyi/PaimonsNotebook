@@ -9,14 +9,6 @@ import com.lianyi.paimonsnotebook.common.web.ApiEndpoints
 import com.lianyi.paimonsnotebook.common.web.hoyolab.cookie.CookieHelper
 
 class BbsUserClient {
-    suspend fun getFullInfo(ltoken: String) =
-        buildRequest {
-            url(ApiEndpoints.UserFullInfo)
-
-            addHeader("Cookie", ltoken)
-            setReferer("https://bbs-api.mihoyo.com")
-        }.getAsJson<UserFullInfoData>()
-
     suspend fun getFullInfo(user: User) =
         buildRequest {
             url(ApiEndpoints.UserFullInfo)

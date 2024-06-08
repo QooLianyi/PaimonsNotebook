@@ -16,7 +16,6 @@ import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.InputDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.LazyColumnDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.LoadingDialog
@@ -24,7 +23,6 @@ import com.lianyi.paimonsnotebook.common.components.dialog.PropertiesDialog
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
-import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
 import com.lianyi.paimonsnotebook.ui.screen.achievement.viewmodel.AchievementOptionScreenViewModel
 import com.lianyi.paimonsnotebook.ui.screen.setting.components.SettingOptionGroup
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
@@ -42,7 +40,7 @@ class AchievementOptionScreen : BaseActivity() {
         registerRequestPermissionsResult()
         viewModel.startActivity = registerStartActivityForResult()
 
-        viewModel.storagePermission = this::checkStoragePermission
+        viewModel.checkStoragePermission = this::checkStoragePermission
 
         setContent {
             PaimonsNotebookTheme(this) {
@@ -90,19 +88,8 @@ class AchievementOptionScreen : BaseActivity() {
                         title = "添加成就记录用户",
                         placeholder = "请输入用户名称(名称不可重复)",
                         onConfirm = viewModel::createAchievementUser,
-                        onCancel = viewModel::onAddAchievementDialogDismissRequest
-                    )
-                }
-
-                if (viewModel.showRequestPermissionDialog) {
-                    ConfirmDialog(
-                        title = "缺少权限",
-                        content = "使用相应功能需要存储权限,点击确定前往申请",
-                        onConfirm = {
-                            viewModel.dismissRequestPermissionDialog()
-                            requestStoragePermission()
-                        },
-                        onCancel = viewModel::dismissRequestPermissionDialog
+                        onCancel = viewModel::onAddAchievementDialogDismissRequest,
+                        textMaxLength = 10
                     )
                 }
 
@@ -116,17 +103,10 @@ class AchievementOptionScreen : BaseActivity() {
                     )
                 }
 
-                if(viewModel.showLoadingDialog){
+                if (viewModel.showLoadingDialog) {
                     LoadingDialog()
                 }
             }
-        }
-    }
-
-    override fun onRequestPermissionsResult(result: Boolean) {
-        viewModel.showRequestPermissionDialog = !result
-        if (!result) {
-            "没有获取到所需权限".warnNotify()
         }
     }
 

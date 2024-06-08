@@ -18,7 +18,7 @@ internal fun SideBarMenuList(
     ) {
         items(list) { data ->
             SideBarMenuListItem(data) {
-                block(it)
+                block.invoke(it)
             }
         }
     }

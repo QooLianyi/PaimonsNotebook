@@ -1,25 +1,32 @@
 package com.lianyi.paimonsnotebook.common.util.file
 
+import android.Manifest
 import android.content.ContentResolver
+import android.content.ContentValues
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.os.FileUtils
+import android.provider.MediaStore
 import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
 import com.lianyi.paimonsnotebook.BuildConfig
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.extension.number.decimal.format.format
+import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
 import com.lianyi.paimonsnotebook.common.util.image.PaimonsNotebookImageLoader
+import kotlinx.coroutines.isActive
 import java.io.BufferedInputStream
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
-import java.net.URI
 import java.util.zip.ZipFile
+import kotlin.coroutines.coroutineContext
+
 
 object FileHelper {
 
@@ -31,6 +38,10 @@ object FileHelper {
         context.contentResolver
     }
 
+    val provider by lazy {
+        "${BuildConfig.APPLICATION_ID}.provider"
+    }
+
     private val privateStoragePath by lazy {
         context.getExternalFilesDir(null)
     }
@@ -39,6 +50,12 @@ object FileHelper {
     private val rootPath: File?
         get() = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
             ?.resolve("PaimonsNotebook") ?: privateStoragePath
+
+    private const val SAVE_FILE_ROOT_PATH = "PaimonsNotebook"
+
+    private const val SAVE_IMAGE_RELATIVE_PATH = "${SAVE_FILE_ROOT_PATH}/images"
+
+    private const val SAVE_TEMP_FILE_RELATIVE_PATH = "${SAVE_FILE_ROOT_PATH}/temp"
 
     /*
     * 临时存储文件夹
@@ -72,15 +89,22 @@ object FileHelper {
         get() =
             privateStoragePath?.resolve("achievements")!!
 
+    //写外部存储文件的权限
+    val hasWriteExternalStorage
+        get() = context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+
+    //读外部存储文件的权限
+    val hasReadExternalStorage
+        get() = context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+
 
     //扫描图片,使其出现在相册中
-    private fun scanImage(file: File) {
+    private fun scanImage(path: String) {
         MediaScannerConnection.scanFile(
             context,
-            arrayOf(file.path),
+            arrayOf(path),
             arrayOf("*/*")
         ) { _, _ ->
-
         }
     }
 
@@ -88,19 +112,22 @@ object FileHelper {
     * 保存临时图片
     * */
     fun saveTempImage(bitmap: Bitmap, enabledMediaScanner: Boolean = true) {
-        val file = File(tempFilePath, "tmp_img_${System.currentTimeMillis()}.png")
-
-        if (!tempFilePath.exists()) {
-            tempFilePath.mkdirs()
-        }
-
-        val fos = FileOutputStream(file)
+        val fos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
-        fos.close()
 
-        if (enabledMediaScanner) {
-            scanImage(file)
-        }
+        saveFileToPublicFolder(
+            byteArray = fos.toByteArray(),
+            name = "tmp_img_${System.currentTimeMillis()}",
+            extension = "png",
+            relativePath = SAVE_TEMP_FILE_RELATIVE_PATH,
+            onSuccess = {
+                if (it != null && enabledMediaScanner) {
+                    scanImage(it)
+                }
+            }
+        )
+
+        fos.close()
     }
 
     /*
@@ -111,73 +138,59 @@ object FileHelper {
         url: String,
         enabledMediaScanner: Boolean = true,
         onSuccess: (String) -> Unit,
-        onFail: () -> Unit
+        onFail: (String?) -> Unit
     ) {
         val cacheImage =
             PaimonsNotebookImageLoader.getCacheImageFileByUrl(url)
 
         if (cacheImage == null) {
-            onFail.invoke()
+            onFail.invoke("没有找到缓存的图片")
             return
         }
 
-        if (!saveImagePath.exists()) {
-            saveImagePath.mkdirs()
-        }
+        saveFileToPublicFolder(
+            byteArray = cacheImage.readBytes(),
+            name = url,
+            extension = "",
+            onFail = onFail,
+            relativePath = SAVE_IMAGE_RELATIVE_PATH,
+            onSuccess = {
+                if (enabledMediaScanner && !it.isNullOrEmpty()) {
+                    scanImage(it)
+                }
 
-        val name = url.split("/").last()
-
-        val file = File(saveImagePath, name)
-
-        if (file.exists()) {
-            file.delete()
-        }
-
-        FileOutputStream(file).use {
-            it.write(cacheImage.readBytes())
-        }
-
-        if (enabledMediaScanner) {
-            scanImage(file)
-        }
-
-        onSuccess.invoke(file.absolutePath)
+                onSuccess.invoke(it ?: "")
+            }
+        )
     }
-
-    private fun uriToFileInAndroidQ(uri: Uri): File? =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (uri.scheme == ContentResolver.SCHEME_FILE) {
-                File(uri.path!!)
-            } else if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
-                //将目标文件复制到本地沙盒环境后进行操作
-                val contentResolver = context.contentResolver
-                val cacheName = "${System.currentTimeMillis()}.${
-                    MimeTypeMap.getSingleton().getExtensionFromMimeType(
-                        contentResolver.getType(
-                            uri
-                        )
-                    )
-                }"
-                val ios = contentResolver.openInputStream(uri)
-                if (ios != null) {
-                    File("${context.cacheDir}/${cacheName}").apply {
-                        val fos = FileOutputStream(this)
-                        FileUtils.copy(ios, fos)
-                        ios.close()
-                        fos.close()
-                    }
-                } else null
-            } else null
-        } else null
 
     fun uriToFile(uri: Uri): File? {
         return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                uriToFileInAndroidQ(uri)
-            } else {
-                File(URI(uri.toString()))
+            val scheme = uri.scheme
+            val uriPath = uri.path
+
+            if (scheme == null && uriPath != null) {
+                return File(uriPath)
             }
-        } catch (_: Exception) {
+
+            if (ContentResolver.SCHEME_FILE == scheme && uriPath != null) {
+                return File(uriPath)
+            }
+
+            //复制到externalCacheDir路径下
+            val tempFileName = "temp_${System.currentTimeMillis()}"
+            val file = File(context.externalCacheDir, tempFileName)
+
+            val fos = FileOutputStream(file)
+            contentResolver.openInputStream(uri)?.use {
+                it.copyTo(fos)
+            }
+            fos.flush()
+            fos.close()
+
+            return file
+        } catch (e: Exception) {
+            "发生错误:${e.message}".warnNotify()
             null
         }
     }
@@ -192,12 +205,87 @@ object FileHelper {
         }
     }
 
-    fun getFile(rootPath: File, fileName: String): File {
-        if (!rootPath.exists()) {
-            rootPath.mkdirs()
-        }
 
-        return File(rootPath, fileName)
+    /*
+    * 保存文件到公共存储路径下
+    *
+    * */
+    fun saveFileToPublicFolder(
+        byteArray: ByteArray,
+        name: String,
+        extension: String,
+        directoryType: String = Environment.DIRECTORY_DOCUMENTS,
+        relativePath: String = "",
+        onFail: (String?) -> Unit = {},
+        onSuccess: (String?) -> Unit = {}
+    ) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val savePath = "${directoryType}/${relativePath}"
+
+                val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+                    put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, savePath)
+                }
+
+                val uri =
+                    contentResolver.insert(
+                        MediaStore.Files.getContentUri("external"),
+                        contentValues
+                    )
+
+                if (uri == null) {
+                    onFail.invoke("contentResolver.insert is null")
+                    return
+                }
+
+                val os = contentResolver.openOutputStream(uri)
+
+                if (os == null) {
+                    onFail.invoke("contentResolver.openOutputStream is null")
+                    return
+                }
+
+                os.use {
+                    it.write(byteArray)
+                }
+
+                val path = if (extension.isEmpty()) {
+                    "${savePath}${name}"
+                } else {
+                    "${savePath}${name}.${extension}"
+                }
+
+                onSuccess.invoke(path)
+            } else {
+                if (!hasWriteExternalStorage) {
+                    onFail.invoke("没有外部存储权限")
+                    return
+                }
+
+                val dir =
+                    File(Environment.getExternalStoragePublicDirectory(directoryType), relativePath)
+
+                if (!dir.exists()) {
+                    dir.mkdirs()
+                }
+
+                //文件名替换
+                val file = File(dir, name.replace("/", "_"))
+
+                FileOutputStream(file).use {
+                    it.write(byteArray)
+                }
+
+                onSuccess.invoke(file.absolutePath)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onFail.invoke(e.message)
+        }
     }
 
     /*
@@ -205,17 +293,17 @@ object FileHelper {
     * scheme = content
     * */
     fun getContentUriForFile(file: File) =
-        FileProvider.getUriForFile(context, "${BuildConfig.APPLICATION_ID}.provider", file)
+        FileProvider.getUriForFile(context, provider, file)
 
     /*
     * 从content uri获取file out put stream
     * */
-    fun getFileOutputStreamByContentUri(uri: Uri, mode: String = "rw") =
+    fun getFileOutputStreamByContentUri(uri: Uri, mode: String = "r") =
         contentResolver.openFileDescriptor(uri, mode)?.use { fileDescriptor ->
             FileOutputStream(fileDescriptor.fileDescriptor)
         }
 
-    fun getFileInputStreamByContentUri(uri: Uri, mode: String = "rw") =
+    fun getFileInputStreamByContentUri(uri: Uri, mode: String = "r") =
         contentResolver.openFileDescriptor(uri, mode)?.use { fileDescriptor ->
             FileInputStream(fileDescriptor.fileDescriptor)
         }
@@ -225,18 +313,20 @@ object FileHelper {
     *
     * callback:返回已读字节数
     * */
-    fun saveFile(file: File, inputStream: InputStream, callback: (Long) -> Unit) {
+    suspend fun saveFile(file: File, inputStream: InputStream, callback: (Long) -> Unit) {
         val outputStream = FileOutputStream(file)
         val bufferSize = 1024 * 8
         val byteArray = ByteArray(bufferSize)
         val buffer = BufferedInputStream(inputStream, bufferSize)
 
-        var readLength: Int
+        var readLength = 0
         var totalReadLength = 0L
-        while (buffer.read(byteArray, 0, bufferSize).also {
-                readLength = it
-            } != -1) {
 
+        while (coroutineContext.isActive &&
+            buffer.read(byteArray, 0, bufferSize).also {
+                readLength = it
+            } != -1
+        ) {
             outputStream.write(byteArray, 0, readLength)
             totalReadLength += readLength
             callback.invoke(totalReadLength)
@@ -314,6 +404,11 @@ object FileHelper {
                 it.delete()
             }
         }
+
+        //删除外部cache目录(/data/data/package_name/cache)
+        context.externalCacheDir?.listFiles()?.forEach {
+            it.delete()
+        }
     }
 
 
@@ -339,7 +434,6 @@ object FileHelper {
     private fun byteToKB(length: Long) = length / 1024f
     private fun byteToMB(length: Long) = length / (1024f * 1024f)
     private fun byteToGB(length: Long) = length / (1024f * 1024f * 1024)
-
 
     private val df
         get() =

@@ -5,13 +5,13 @@ package com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.post
 * */
 object PostLinkCardType {
     //商品链接
-    val LINK_TYPE_MIHOYO_SHOP = 2
+    const val LINK_TYPE_MIHOYO_SHOP = 2
     //内部链接
-    val LINK_TYPE_UNIVERSAL = 1
+    const val LINK_TYPE_UNIVERSAL = 1
     //状态
-    val STATUS_DEFAULT = 1
-    val STATUS_DISABLE = 2
+    const val STATUS_DEFAULT = 1
+    const val STATUS_DISABLE = 2
     //URL类型
-    val URL_TYPE_MIHOYO = 1
-    val URL_TYPE_OTHER = 2
+    const val URL_TYPE_MIHOYO = 1
+    const val URL_TYPE_OTHER = 2
 }

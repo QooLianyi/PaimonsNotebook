@@ -12,14 +12,25 @@ import com.lianyi.paimonsnotebook.common.web.hoyolab.cookie.CookieHelper
 import okhttp3.RequestBody.Companion.toRequestBody
 
 class CalculateClient {
-
-    suspend fun getCalculateCompute(user: User, avatarPromotionDelta: AvatarPromotionDelta) =
+    suspend fun getCalculateCompute(user: User, promotionDetail: PromotionDetail) =
         buildRequest {
             url(ApiEndpoints.CalculateCompute)
 
-            setUser(user.userEntity,CookieHelper.Type.CookieToken)
+            setUser(user.userEntity, CookieHelper.Type.CookieToken)
             setReferer(ApiEndpoints.WebStaticMihoyoReferer)
 
-            post(JSON.stringify(avatarPromotionDelta).toRequestBody())
+            post(JSON.stringify(promotionDetail).toRequestBody())
         }.getAsJson<Consumption>(emptyOkHttpClient)
+
+    suspend fun getCalculateBatchCompute(
+        user: User,
+        promotionDetail: BatchCalculatePromotionDetail
+    ) = buildRequest {
+        url(ApiEndpoints.CalculateBatchCompute)
+
+        setUser(user = user.userEntity, CookieHelper.Type.CookieToken)
+        setReferer(ApiEndpoints.WebStaticMihoyoReferer)
+
+        post(JSON.stringify(promotionDetail).toRequestBody())
+    }.getAsJson<BatchComputeData>(emptyOkHttpClient)
 }

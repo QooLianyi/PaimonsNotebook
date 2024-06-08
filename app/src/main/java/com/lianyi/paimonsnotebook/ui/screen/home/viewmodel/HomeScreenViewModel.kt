@@ -15,7 +15,6 @@ import com.king.camera.scan.CameraScan
 import com.lianyi.paimonsnotebook.common.data.hoyolab.game_record.DailyNote
 import com.lianyi.paimonsnotebook.common.data.hoyolab.user.User
 import com.lianyi.paimonsnotebook.common.database.daily_note.util.DailyNoteHelper
-import com.lianyi.paimonsnotebook.common.database.gacha.data.GachaRecordOverview
 import com.lianyi.paimonsnotebook.common.database.user.util.AccountHelper
 import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.extension.intent.setComponentName
@@ -33,15 +32,9 @@ import com.lianyi.paimonsnotebook.common.view.HoyolabWebActivity
 import com.lianyi.paimonsnotebook.common.view.QRCodeScanActivity
 import com.lianyi.paimonsnotebook.common.web.ApiEndpoints
 import com.lianyi.paimonsnotebook.common.web.WebHomeClient
-import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.ActivityCalendarData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.NearActivityData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.OfficialRecommendedPostsData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.WebHomeData
-import com.lianyi.paimonsnotebook.common.web.hoyolab.hk4e.announcement.AnnouncementClient
-import com.lianyi.paimonsnotebook.common.web.hoyolab.hk4e.announcement.AnnouncementContentData
-import com.lianyi.paimonsnotebook.common.web.hoyolab.hk4e.announcement.AnnouncementData
-import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.common.GachaPoolData
-import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.common.TakumiCommonClient
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util.MetadataHelper
 import com.lianyi.paimonsnotebook.ui.screen.home.data.ModalItemData
 import com.lianyi.paimonsnotebook.ui.screen.home.service.HoyolabQRCodeService
@@ -69,9 +62,6 @@ class HomeScreenViewModel : ViewModel() {
     //祈愿记录列表
     val dailyNoteList = mutableStateListOf<DailyNote>()
 
-    //祈愿记录总览列表
-    val gachaRecordOverviewList = mutableStateListOf<GachaRecordOverview>()
-
     var showConfirm by mutableStateOf(false)
 
     private val updateService = UpdateService()
@@ -95,12 +85,6 @@ class HomeScreenViewModel : ViewModel() {
                     dailyNoteList.addAll(it)
                 }
             }
-//            launch {
-//                GachaRecordService.gachaRecordOverviewListFlow.collect {
-//                    gachaRecordOverviewList.clear()
-//                    gachaRecordOverviewList.addAll(it)
-//                }
-//            }
 
             launch {
                 dataStoreValuesFirst {
@@ -143,40 +127,12 @@ class HomeScreenViewModel : ViewModel() {
         WebHomeClient()
     }
 
-    private val takumiCommonClient by lazy {
-        TakumiCommonClient()
-    }
-
-    private val announcementClient by lazy {
-        AnnouncementClient()
-    }
-
     //轮播图列表
     val bannerList = mutableStateListOf<WebHomeData.Carousel>()
-
-    //轮播图加载状态
-    var bannerStatus by mutableStateOf(LoadingState.Empty)
-
-    val activityCalendarList = mutableStateListOf<ActivityCalendarData.ActivityCalendarDataItem>()
-    var activityCalendarStatus by mutableStateOf(LoadingState.Empty)
-
-    //活动列表
-    val annList = mutableStateListOf<AnnouncementData.AnnouncementList.AnnouncementItem>()
-
-    //祈愿活动
-    val gachaEventList = mutableStateListOf<AnnouncementData.AnnouncementList.AnnouncementItem>()
-
-    //活动
-    val eventList = mutableStateListOf<AnnouncementData.AnnouncementList.AnnouncementItem>()
-
-    //活动列表id内容映射
-    val annMap = mutableMapOf<Int, AnnouncementContentData.AnnouncementContentItem>()
 
     lateinit var startActivity: ActivityResultLauncher<Intent>
 
     val nearActivity = mutableStateListOf<NearActivityData.Hots.Group2.Children.NearActivity>()
-
-    val gachaPools = mutableStateListOf<GachaPoolData.Pool>()
 
     val noticeList = mutableStateListOf<OfficialRecommendedPostsData.OfficialRecommendedPost>()
     var noticeStatus by mutableStateOf(LoadingState.Empty)
@@ -190,46 +146,6 @@ class HomeScreenViewModel : ViewModel() {
             getWebHome()
             getOfficialRecommendedPosts()
             getNearActivity()
-
-//            val r2 = announcementClient.getAnnList()
-//            if (r2.success) {
-//                val map =
-//                    mutableMapOf<String, MutableList<AnnouncementData.AnnouncementList.AnnouncementItem>>()
-//                r2.data.list.forEach { item ->
-//                    val iMap = item.list.groupBy { it.tag_label }
-//                    iMap.forEach { (t, u) ->
-//                        if (map[t] == null) map[t] = mutableListOf()
-//                        map[t]!!.addAll(u)
-//                    }
-//                }
-//
-//                val mEventList = map["活动"]
-//                if (!mEventList.isNullOrEmpty()) {
-//                    mEventList.removeAll { it.type != 1 }
-//
-//                    eventList.clear()
-//                    eventList.addAll(mEventList)
-//                }
-//
-//                val mGachaEventList = map["扭蛋"]
-//                if (!mGachaEventList.isNullOrEmpty()) {
-//                    gachaEventList.clear()
-//                    gachaEventList.addAll(mGachaEventList)
-//                    gachaEventList.sortBy { it.ann_id }
-//                }
-//            } else {
-//                "获取活动失败".errorNotify()
-//            }
-//
-//            val result = announcementClient.getAnnContent()
-//            if (result.success) {
-//                annMap.clear()
-//                result.data.list.forEach {
-//                    annMap[it.ann_id] = it
-//                }
-//            } else {
-//                "获取活动内容失败".errorNotify()
-//            }
         }
     }
 
@@ -288,18 +204,6 @@ class HomeScreenViewModel : ViewModel() {
             }
         }
     }
-
-    //获取祈愿记录卡池
-    private suspend fun getGachaPool() {
-        val result = takumiCommonClient.getGachaPool()
-        if (result.success) {
-            gachaPools.clear()
-            gachaPools.addAll(result.data.list)
-        } else {
-            "获取当期卡池失败".errorNotify()
-        }
-    }
-
 
     //文章跳转
     fun goPostDetail(

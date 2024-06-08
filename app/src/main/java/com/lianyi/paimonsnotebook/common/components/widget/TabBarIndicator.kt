@@ -81,7 +81,7 @@ fun TabBarIndicator(
                     .pointerInput(Unit){
                         detectTapGestures {
                             currentIndex = index
-                            onSelect(currentIndex)
+                            onSelect.invoke(currentIndex)
                         }
                     },
                 verticalArrangement = Arrangement.SpaceBetween,

@@ -3,6 +3,7 @@ package com.lianyi.paimonsnotebook.ui.screen.achievement.viewmodel
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.size
@@ -50,8 +51,6 @@ class AchievementOptionScreenViewModel : ViewModel() {
 
     private val achievementUserDao = PaimonsNotebookDatabase.database.achievementUserDao
 
-    private val achievementsDao = PaimonsNotebookDatabase.database.achievementsDao
-
     init {
         viewModelScope.launchMain {
             launchMain {
@@ -83,16 +82,13 @@ class AchievementOptionScreenViewModel : ViewModel() {
     //导入属性列表
     val importPropertyList = mutableListOf<Pair<String, String>>()
 
-    //显示请求权限对话框
-    var showRequestPermissionDialog by mutableStateOf(false)
-
     //确认删除对话框
-    var showConfirmDeleteDialog by mutableStateOf(false)
+    private var showConfirmDeleteDialog by mutableStateOf(false)
 
     lateinit var startActivity: ActivityResultLauncher<Intent>
 
     //存储权限检查方法
-    lateinit var storagePermission: () -> Boolean
+    lateinit var checkStoragePermission: () -> Boolean
 
     //显示选择档案对话框
     var showSelectAchievementUserDialog by mutableStateOf(false)
@@ -103,9 +99,7 @@ class AchievementOptionScreenViewModel : ViewModel() {
         private set
 
     private val importService by lazy {
-        AchievementImportService(
-
-        )
+        AchievementImportService()
     }
 
     private val exportService by lazy {
@@ -132,8 +126,8 @@ class AchievementOptionScreenViewModel : ViewModel() {
             }
         ),
         OptionListData(
-            name = "导出的祈愿记录",
-            description = "查看与管理导出的祈愿记录",
+            name = "导出的成就记录",
+            description = "查看与管理导出的成就记录",
             onClick = {
                 goAchievementRecordExportDataListScreen()
             },
@@ -189,11 +183,11 @@ class AchievementOptionScreenViewModel : ViewModel() {
         user: AchievementUser
     ) {
         viewModelScope.launchIO {
-            val fileName = "${user.name}_${System.currentTimeMillis()}"
+            val fileName = "UIAF_${user.name}_${System.currentTimeMillis()}"
             val saveFile = FileHelper.getUIAFJsonSaveFile(fileName)
             exportService.exportAchievementToUIAF(file = saveFile, user)
 
-            "成就记录导出到以下路径:${saveFile.path}".notify(closeable = true)
+            "成就记录已导出,通过[导出的成就记录功能]管理已导出的成就记录文件".notify(autoDismissTime = 5000)
         }
     }
 
@@ -230,11 +224,6 @@ class AchievementOptionScreenViewModel : ViewModel() {
             return
         }
 
-        if (name.length > 10) {
-            "名称最长只能为10位".show()
-            return
-        }
-
         viewModelScope.launchIO {
             if (achievementUserDao.checkUserExistByName(name)) {
                 launchMain {
@@ -258,18 +247,16 @@ class AchievementOptionScreenViewModel : ViewModel() {
         this.showAddAchievementUserDialog = false
     }
 
-    fun dismissRequestPermissionDialog() {
-        this.showRequestPermissionDialog = false
-    }
-
     private fun launchSelectJsonActivity() {
-        showRequestPermissionDialog =
-            !(this::storagePermission.isInitialized && storagePermission.invoke())
-
-        if (showRequestPermissionDialog) return
-
-        startActivity.launch(Intent(Intent.ACTION_GET_CONTENT).apply {
+        startActivity.launch(Intent(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Intent.ACTION_OPEN_DOCUMENT
+            } else {
+                Intent.ACTION_GET_CONTENT
+            }
+        ).apply {
             type = "application/json"
+            addCategory(Intent.CATEGORY_OPENABLE)
         })
     }
 

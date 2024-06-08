@@ -1,5 +1,6 @@
 package com.lianyi.paimonsnotebook.ui.screen.items.components.content
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,7 @@ import com.lianyi.paimonsnotebook.ui.screen.items.components.widget.ItemTabLayou
 import com.lianyi.paimonsnotebook.ui.screen.items.data.ItemListCardData
 import com.lianyi.paimonsnotebook.ui.screen.items.util.ItemFilterType
 import com.lianyi.paimonsnotebook.ui.screen.items.viewmodel.filter.ItemFilterViewModel
+import com.lianyi.paimonsnotebook.ui.theme.Error
 
 /*
 * 物品界面内容
@@ -49,6 +51,7 @@ internal fun <T> ItemScreenContent(
     baseInfoIconUrl: String,
     tabs: Array<String>,
     enabledItemShadow: Boolean = false,
+    itemAddedCurrentCultivateProject: Boolean = false,
     itemBackgroundResId: Int = -1,
     itemFilterViewModel: ItemFilterViewModel<T>,
     onClickListButton: () -> Unit,
@@ -57,6 +60,7 @@ internal fun <T> ItemScreenContent(
     getItemListCardData: (T) -> ItemListCardData,
     informationContentSlot: @Composable (T) -> Unit,
     onClickListItemCard: (T) -> Unit,
+    onClickAddButton: () -> Unit,
     cardContent: @Composable (Int) -> Unit
 ) {
     var showFullScreenImg by remember {
@@ -85,6 +89,7 @@ internal fun <T> ItemScreenContent(
                     Spacer(
                         modifier = Modifier
                             .height(this@ItemInformationContentLayout.maxHeight * .6f)
+                            .background(Error)
                     )
                 }
             }
@@ -135,7 +140,9 @@ internal fun <T> ItemScreenContent(
         ItemScreenTopBar(
             onClickListButton = onClickListButton,
             lazyListState = lazyListState,
-            text = listButtonText
+            text = listButtonText,
+            onClickAddButton = onClickAddButton,
+            added = itemAddedCurrentCultivateProject
         )
 
         ItemFilterContent(
@@ -143,7 +150,11 @@ internal fun <T> ItemScreenContent(
             itemSlot = { data, layoutStyle, type ->
 
                 val dataContent = remember(data) {
-                    getListItemDataContent(data, type, layoutStyle == ListLayoutStyle.ListVertical)
+                    getListItemDataContent.invoke(
+                        data,
+                        type,
+                        layoutStyle == ListLayoutStyle.ListVertical
+                    )
                 }
 
                 when (layoutStyle) {
