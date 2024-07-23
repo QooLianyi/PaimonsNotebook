@@ -40,7 +40,7 @@ import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
 import com.lianyi.paimonsnotebook.common.components.layout.column.TopSlotColumnLayout
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
-import com.lianyi.paimonsnotebook.common.components.text.InfoText
+import com.lianyi.core.ui.components.text.InfoText
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
@@ -118,7 +118,7 @@ class AchievementGoalScreen : BaseActivity() {
 
                                         Spacer(modifier = Modifier.height(2.dp))
 
-                                        InfoText(text = "${viewModel.goalFinishCount}/${viewModel.goalOverviewData?.total}")
+                                        com.lianyi.core.ui.components.text.InfoText(text = "${viewModel.goalFinishCount}/${viewModel.goalOverviewData?.total}")
                                     }
                                 }
 
@@ -209,7 +209,7 @@ class AchievementGoalScreen : BaseActivity() {
 
                                         Spacer(modifier = Modifier.width(8.dp))
 
-                                        InfoText(
+                                        com.lianyi.core.ui.components.text.InfoText(
                                             text = item.description,
                                             fontSize = 10.sp
                                         )
@@ -228,7 +228,7 @@ class AchievementGoalScreen : BaseActivity() {
                                             modifier = Modifier.size(20.dp)
                                         )
 
-                                        InfoText(
+                                        com.lianyi.core.ui.components.text.InfoText(
                                             text = "${item.finishReward.Count}",
                                             fontSize = 10.sp
                                         )
@@ -250,7 +250,7 @@ class AchievementGoalScreen : BaseActivity() {
                                             horizontalArrangement = Arrangement.SpaceBetween,
                                             verticalAlignment = Alignment.Bottom
                                         ) {
-                                            InfoText(
+                                            com.lianyi.core.ui.components.text.InfoText(
                                                 text = "完成于 ${TimeHelper.getTime(entity?.timestamp ?: 0)}",
                                                 fontSize = 10.sp
                                             )

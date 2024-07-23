@@ -68,10 +68,11 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
+
     //开发测试
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-
 
     api 'androidx.core:core-ktx:1.13.1'
     //Compose Activity
@@ -145,4 +146,6 @@ dependencies {
     //为测试导入json包
     testImplementation 'org.json:json:20231013'
     testImplementation 'junit:junit:4.13.2'
+
+    implementation 'com.geetest.sensebot:sensebot:4.4.2.1'
 }

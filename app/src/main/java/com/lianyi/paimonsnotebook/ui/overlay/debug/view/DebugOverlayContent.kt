@@ -18,7 +18,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
-import com.lianyi.paimonsnotebook.common.components.text.FoldTextContent
+import com.lianyi.paimonsnotebook.common.components.layout.FoldTextContent
 import com.lianyi.paimonsnotebook.common.service.overlay.core.OverlayState
 import com.lianyi.paimonsnotebook.common.service.overlay.debug.DebugOverlayService
 import com.lianyi.paimonsnotebook.common.service.util.ServiceHelper
@@ -29,6 +29,7 @@ import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugDeviceFpConten
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugDeviceInfoContent
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugDynamicSecretContent
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugGachaContent
+import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugGeeTestContent
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugMetadataContent
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugPostContent
 import com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold.DebugTempContent
@@ -150,6 +151,14 @@ fun DebugOverlayContent(overlayState: OverlayState) {
                 Text(text = "养成计划", fontSize = 20.sp)
             }) {
                 DebugCultivateProjectContent()
+            }
+        }
+
+        item {
+            FoldTextContent(titleSlot = {
+                Text(text = "GeeTest", fontSize = 20.sp)
+            }) {
+                DebugGeeTestContent()
             }
         }
 

@@ -24,7 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
 import com.lianyi.paimonsnotebook.common.database.cultivate.data.CultivateEntityType
 import com.lianyi.paimonsnotebook.common.database.cultivate.entity.CultivateEntity
@@ -130,7 +130,7 @@ fun CultivateMaterialGroup(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            PrimaryText(text = groupName, fontSize = 14.sp)
+            com.lianyi.core.ui.components.text.PrimaryText(text = groupName, fontSize = 14.sp)
 
             Spacer(modifier = Modifier.weight(1f))
 

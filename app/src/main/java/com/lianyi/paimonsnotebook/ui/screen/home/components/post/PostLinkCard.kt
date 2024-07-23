@@ -24,9 +24,9 @@ import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.post.PostFullData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.post.PostLinkCardType
-import com.lianyi.paimonsnotebook.ui.theme.CardBackGroundColor_Gray
 import com.lianyi.paimonsnotebook.ui.theme.LinkColor
 import com.lianyi.paimonsnotebook.ui.theme.PriceColor
+import com.lianyi.paimonsnotebook.ui.theme.White_50
 
 @Composable
 internal fun PostLinkCard(
@@ -62,7 +62,7 @@ internal fun PostLinkCard(
     Row(
         modifier = Modifier
             .radius(4.dp)
-            .background(CardBackGroundColor_Gray)
+            .background(White_50)
             .clickable {
                 onClick.invoke(item)
             }

@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.ui.screen.resource_manager.data.ImageHeaderData
 import com.lianyi.paimonsnotebook.ui.theme.BlurCardBackgroundColor
 
@@ -30,7 +30,7 @@ fun ImageItemHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        PrimaryText(
+        com.lianyi.core.ui.components.text.PrimaryText(
             text = "${imageHeaderData.text} | 共${imageHeaderData.count}张",
             fontSize = 18.sp
         )
@@ -43,7 +43,10 @@ fun ImageItemHeader(
             }
             .padding(8.dp, 4.dp)
         ) {
-            PrimaryText(text = if (selected) "取消全选" else "全选", fontSize = 13.sp)
+            com.lianyi.core.ui.components.text.PrimaryText(
+                text = if (selected) "取消全选" else "全选",
+                fontSize = 13.sp
+            )
         }
     }
 }

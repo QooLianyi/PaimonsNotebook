@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.util.Base64
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -12,6 +13,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.geetest.sdk.GT3ConfigBean
+import com.geetest.sdk.GT3GeetestUtils
+import com.geetest.sdk.utils.GT3ServiceNode
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.QRCodeWriter
@@ -29,18 +33,24 @@ import com.lianyi.paimonsnotebook.common.extension.string.takeValueFromUrl
 import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
 import com.lianyi.paimonsnotebook.common.util.enums.HelperTextStatus
 import com.lianyi.paimonsnotebook.common.util.file.FileHelper
+import com.lianyi.paimonsnotebook.common.util.json.JSON
 import com.lianyi.paimonsnotebook.common.util.system_service.SystemService
 import com.lianyi.paimonsnotebook.common.util.system_service.sdkVersionLessThanOrEqualTo29
 import com.lianyi.paimonsnotebook.common.web.hoyolab.api_sdk.combo_panda.QRCodeClient
 import com.lianyi.paimonsnotebook.common.web.hoyolab.cookie.CookieHelper
 import com.lianyi.paimonsnotebook.common.web.hoyolab.passport.PassportClient
+import com.lianyi.paimonsnotebook.common.web.hoyolab.passport.XRpcAigisData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.auth.AuthClient
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.binding.BindingClient
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.binding.UserGameRoleData
+import com.lianyi.paimonsnotebook.ui.screen.account.data.LoginByCaptchaCache
+import com.lianyi.paimonsnotebook.ui.screen.account.util.CaptchaCallbackType
+import com.lianyi.paimonsnotebook.ui.screen.account.util.GT3ListenerImpl
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 class AccountManagerScreenViewModel : ViewModel() {
 
@@ -69,9 +79,6 @@ class AccountManagerScreenViewModel : ViewModel() {
         }
     }
 
-    //当前用户,刷新cookie时使用
-    private var currentUser: User? = null
-
     //登录二维码bitmap
     var loginQrCodeBitmap: Bitmap? by mutableStateOf(null)
         private set
@@ -79,8 +86,6 @@ class AccountManagerScreenViewModel : ViewModel() {
     //显示二维码popup
     var showQRCodePopup by mutableStateOf(false)
         private set
-
-    var showConfirmDialog by mutableStateOf(false)
 
     private val cookieMap by lazy {
         mutableMapOf<String, String>()
@@ -98,15 +103,37 @@ class AccountManagerScreenViewModel : ViewModel() {
         }
     }
 
+    //待操作用户
+    var pendingActionUser: User? = null
+
     var showMenu by mutableStateOf(false)
+
+    var showRefreshCookieConfirmDialog by mutableStateOf(false)
+        private set
+
+    //cookie输入对话框
     var showAddAccountByCookieDialog by mutableStateOf(false)
+        private set
+
+    //确认删除用户对话框
+    var showConfirmDeleteUserDialog by mutableStateOf(false)
+        private set
+
+    //手机号输入对话框
+    var showPhoneNumberInputDialog by mutableStateOf(false)
+        private set
+
+    //验证码输入对话框
+    var showLoginCaptchaCodeInputDialog by mutableStateOf(false)
+        private set
 
     var cookieInputValue by mutableStateOf("")
-
-    lateinit var startActivity: ActivityResultLauncher<Intent>
+        private set
 
     var showLoadingDialog by mutableStateOf(false)
+        private set
 
+    lateinit var startActivity: ActivityResultLauncher<Intent>
 
     lateinit var requestStoragePermission: () -> Unit
 
@@ -129,22 +156,30 @@ class AccountManagerScreenViewModel : ViewModel() {
         QRCodeClient()
     }
 
+    lateinit var getGeeTestUtils: () -> GT3GeetestUtils
+
     fun showConfirmDialog(user: User) {
-        currentUser = user
-        showConfirmDialog = true
+        pendingActionUser = user
+        showRefreshCookieConfirmDialog = true
     }
 
-    fun confirmRefreshDialog() {
-        currentUser?.let { refreshUserCookie(it) }
+    fun confirmRefreshCookieDialog() {
+        val user = pendingActionUser
+        if (user == null) {
+            "刷新cookie失败:选中用户为空".errorNotify()
+            return
+        }
+
+        refreshUserCookie(user)
         dismissConfirmDialog()
     }
 
     fun dismissConfirmDialog() {
-        showConfirmDialog = false
+        showRefreshCookieConfirmDialog = false
     }
 
-    fun showMenu() {
-        showMenu = true
+    fun toggleMenu() {
+        showMenu = !showMenu
     }
 
     fun dismissMenu() {
@@ -165,6 +200,30 @@ class AccountManagerScreenViewModel : ViewModel() {
 
     fun dismissCookieInputDialog() {
         resetCookieInputDialog()
+    }
+
+    fun showConfirmDeleteUserDialog() {
+        showConfirmDeleteUserDialog = true
+    }
+
+    fun dismissConfirmDeleteUserDialog() {
+        showConfirmDeleteUserDialog = false
+    }
+
+    fun showPhoneNumberInputDialog() {
+        showPhoneNumberInputDialog = true
+    }
+
+    fun dismissPhoneNumberInputDialog() {
+        showPhoneNumberInputDialog = false
+    }
+
+    fun showLoginCaptchaCodeInputDialog() {
+        showLoginCaptchaCodeInputDialog = true
+    }
+
+    fun dismissLoginCaptchaCodeInputDialog() {
+        showLoginCaptchaCodeInputDialog = false
     }
 
 
@@ -218,11 +277,27 @@ class AccountManagerScreenViewModel : ViewModel() {
         addAccountCookieValueValidate()
     }
 
-    fun deleteUser(user: User) {
+    fun deleteUser() {
+        val user = pendingActionUser
+
+        if (user == null) {
+            "待删除用户为空".errorNotify()
+            return
+        }
+
         viewModelScope.launch(Dispatchers.IO) {
             AccountHelper.deleteUser(user.userEntity)
+
+            pendingActionUser = null
+            dismissConfirmDeleteUserDialog()
+
             "账号[${user.userInfo.nickname}]已删除".notify()
         }
+    }
+
+    fun onDeleteUser(user: User) {
+        pendingActionUser = user
+        showConfirmDeleteUserDialog()
     }
 
     fun copyCookie(user: User) {
@@ -239,7 +314,7 @@ class AccountManagerScreenViewModel : ViewModel() {
     }
 
     private fun refreshUserCookie(user: User) {
-        "正在刷新用户的Cookie".notify()
+        "正在刷新[${user.userInfo.nickname}]的Cookie".notify()
         showLoadingDialog()
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -251,7 +326,7 @@ class AccountManagerScreenViewModel : ViewModel() {
                 "刷新失败:${result.retcode}".errorNotify()
             }
             dismissLoadingDialog()
-            currentUser = null
+            pendingActionUser = null
         }
     }
 
@@ -382,27 +457,11 @@ class AccountManagerScreenViewModel : ViewModel() {
             return
         }
 
-        val sToken = sTokenRes.data.token.token
-        val mid = sTokenRes.data.user_info.mid
-        val aid = sTokenRes.data.user_info.aid
-
-        val sTokenCookie = CookieHelper.concatStringToCookie(
-            CookieHelper.Keys.SToken to sToken,
-            CookieHelper.Keys.Mid to mid,
-            CookieHelper.Keys.STuid to aid,
+        addUserBySTokenString(
+            sTokenRes.data.token.token,
+            sTokenRes.data.user_info.mid,
+            sTokenRes.data.user_info.aid,
         )
-
-        //通过st添加账号,如果用户列表为空就设置为默认角色
-        val addUserSuccess = AccountHelper.addUserBySToken(
-            aid = aid,
-            mid = mid,
-            sTokenCookie = sTokenCookie,
-            isSelected = userList.isEmpty() || selectedUser?.userEntity?.mid == mid
-        )
-
-        if (addUserSuccess) {
-            "账号[${aid}]添加完毕".notify()
-        }
 
         onRequestQRCodePopupDismiss()
         loginQrCodeBitmap = null
@@ -477,4 +536,181 @@ class AccountManagerScreenViewModel : ViewModel() {
         null
     }
 
+    private suspend fun addUserBySTokenString(
+        sToken: String,
+        mid: String,
+        aid: String
+    ) {
+        val sTokenCookie = CookieHelper.concatStringToCookie(
+            CookieHelper.Keys.SToken to sToken,
+            CookieHelper.Keys.Mid to mid,
+            CookieHelper.Keys.STuid to aid,
+        )
+
+        //通过st添加账号,如果用户列表为空就设置为默认角色
+        val addUserSuccess = AccountHelper.addUserBySToken(
+            aid = aid,
+            mid = mid,
+            sTokenCookie = sTokenCookie,
+            isSelected = userList.isEmpty() || selectedUser?.userEntity?.mid == mid
+        )
+
+        if (addUserSuccess) {
+            "账号[${aid}]添加完毕".notify()
+        }
+    }
+
+    private var geetestUtils: GT3GeetestUtils? = null
+
+    private suspend fun configAndShowGeeTestCaptcha(
+        rawAigis: String,
+        callbackType: CaptchaCallbackType
+    ) {
+        if (!this::getGeeTestUtils.isInitialized) {
+            "登录失败:方法未初始化".errorNotify()
+            return
+        }
+
+        val aigisData = JSON.parse<XRpcAigisData>(rawAigis)
+
+        geetestUtils = getGeeTestUtils.invoke()
+
+        val config = GT3ConfigBean().apply {
+            pattern = 1
+            isCanceledOnTouchOutside = false
+            lang = "zh-cn"
+            timeout = 10000
+            webviewTimeout = 10000
+            gt3ServiceNode = GT3ServiceNode.NODE_IPV6
+
+            listener = GT3ListenerImpl(
+                onButtonClick = {
+                    this.api1Json = JSONObject().apply {
+                        put("gt", aigisData.data.gt)
+                        put("challenge", aigisData.data.challenge)
+                        put("success", aigisData.data.success)
+                        put("new_captcha", aigisData.data.new_captcha)
+                    }
+                    geetestUtils?.getGeetest()
+                },
+                onDialogResult = {
+                    val aigis =
+                        "${aigisData.session_id};${Base64.encodeToString(it.toByteArray(), 2)}"
+                    when (callbackType) {
+                        CaptchaCallbackType.LoginByCaptcha -> {
+                            loginByMobileCaptcha(captchaCache.code, aigis)
+                        }
+
+                        CaptchaCallbackType.CreateCaptcha -> {
+                            createLoginCaptcha(captchaCache.mobile, aigis)
+                        }
+                    }
+
+                    geetestUtils?.destory()
+                    geetestUtils = null
+                }
+            )
+        }
+
+        geetestUtils?.init(config)
+
+        dismissPhoneNumberInputDialog()
+        dismissLoginCaptchaCodeInputDialog()
+
+        withContextMain {
+            geetestUtils?.startCustomFlow()
+        }
+    }
+
+    private val captchaCache by lazy {
+        LoginByCaptchaCache()
+    }
+
+    private suspend fun onNeedCaptcha(
+        headers: List<Pair<String, String>>?,
+        callbackType: CaptchaCallbackType
+    ) {
+        if (headers == null) {
+            "需要进行验证,但没有获取到验证内容".warnNotify()
+
+            dismissLoginCaptchaCodeInputDialog()
+            dismissPhoneNumberInputDialog()
+            return
+        }
+        val rawAigis = headers.takeFirstIf { it.first == "X-Rpc-Aigis" }
+
+        if (rawAigis == null) {
+            "需要进行验证,但没有获取到验证内容".errorNotify()
+            return
+        }
+
+        configAndShowGeeTestCaptcha(
+            rawAigis.second,
+            callbackType
+        )
+    }
+
+    fun createLoginCaptcha(mobile: String, aigis: String = "") {
+        if (mobile.length != 11) {
+            "手机号必须为11位".warnNotify(false)
+            return
+        }
+
+        captchaCache.mobile = mobile
+
+        viewModelScope.launchIO {
+            val res =
+                passportClient.createLoginCaptcha(
+                    mobile = captchaCache.mobile,
+                    areaCode = captchaCache.areaCode,
+                    aigis = aigis
+                )
+
+            if (res.success) {
+                captchaCache.actionType = res.data.action_type
+
+                showLoginCaptchaCodeInputDialog()
+                dismissPhoneNumberInputDialog()
+
+                "验证码已发送".notify()
+            } else if (res.needAigis) {
+                onNeedCaptcha(res.responseHeaders, CaptchaCallbackType.CreateCaptcha)
+            } else {
+                "发送验证码失败:${res.message}".errorNotify()
+            }
+        }
+    }
+
+    fun loginByMobileCaptcha(code: String, aigis: String = "") {
+        captchaCache.code = code
+        viewModelScope.launchIO {
+            val res = passportClient.loginByMobileCaptcha(
+                actionType = captchaCache.actionType,
+                mobile = captchaCache.mobile,
+                areaCode = captchaCache.areaCode,
+                code = code,
+                aigis = aigis
+            )
+
+            if (res.success) {
+                addUserBySTokenString(
+                    sToken = res.data.token.token,
+                    mid = res.data.user_info.mid,
+                    aid = res.data.user_info.aid
+                )
+
+                dismissLoginCaptchaCodeInputDialog()
+            } else if (res.needAigis) {
+                onNeedCaptcha(res.responseHeaders, CaptchaCallbackType.LoginByCaptcha)
+            } else {
+                "登录失败:${res.message}".errorNotify()
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        geetestUtils?.destory()
+        geetestUtils = null
+    }
 }

@@ -30,7 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.ExpansionIndicator
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
@@ -62,7 +62,7 @@ fun FloorItem(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            PrimaryText(text = "第${floor.index}层")
+            com.lianyi.core.ui.components.text.PrimaryText(text = "第${floor.index}层")
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -75,7 +75,7 @@ fun FloorItem(
                     tint = Black
                 )
 
-                PrimaryText(text = "${floor.star}/${floor.max_star}")
+                com.lianyi.core.ui.components.text.PrimaryText(text = "${floor.star}/${floor.max_star}")
 
                 ExpansionIndicator(expand = showAll, size = 20.dp) {
                     showAll = !showAll
@@ -252,7 +252,7 @@ private fun FloorHalf(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            PrimaryText(text = subText, fontSize = 14.sp)
+            com.lianyi.core.ui.components.text.PrimaryText(text = subText, fontSize = 14.sp)
         }
     }
 }

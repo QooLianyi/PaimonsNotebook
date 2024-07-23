@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.lianyi.paimonsnotebook.common.extension.modifier.state.isScrollToEnd
 import com.lianyi.paimonsnotebook.ui.theme.Black
 import com.lianyi.paimonsnotebook.ui.theme.Black_40
 import com.lianyi.paimonsnotebook.ui.theme.Primary_1
@@ -70,11 +69,6 @@ fun LazyColumnDialog(
 
         val topDividerAnimation by animateFloatAsState(
             targetValue = if (offset == 0) 0f else 1f,
-            animationSpec = tween(300), label = ""
-        )
-
-        val bottomDividerAnimation by animateFloatAsState(
-            targetValue = if (state.isScrollToEnd && state.canScrollBackward) 1f else 0f,
             animationSpec = tween(300), label = ""
         )
 
@@ -117,22 +111,6 @@ fun LazyColumnDialog(
                         verticalArrangement = Arrangement.spacedBy(verticalSpacedBy)
                     ) {
                         content()
-
-                        if (buttons.isNotEmpty()) {
-                            item {
-                                Column {
-                                    Spacer(
-                                        modifier = Modifier
-                                            .alpha(bottomDividerAnimation)
-                                            .height(.5.dp)
-                                            .fillMaxWidth()
-                                            .background(Black_40)
-                                    )
-
-                                    Spacer(modifier = Modifier.height(16.dp))
-                                }
-                            }
-                        }
                     }
                 }
 

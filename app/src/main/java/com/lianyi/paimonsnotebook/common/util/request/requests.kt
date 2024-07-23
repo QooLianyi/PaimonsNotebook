@@ -6,11 +6,9 @@ import com.lianyi.paimonsnotebook.common.core.enviroment.CoreEnvironment
 import com.lianyi.paimonsnotebook.common.data.ResultData
 import com.lianyi.paimonsnotebook.common.extension.request.setDeviceInfoHeaders
 import com.lianyi.paimonsnotebook.common.extension.request.setUserAgent
-import com.lianyi.paimonsnotebook.common.extension.request.setXRPCAppInfo
+import com.lianyi.paimonsnotebook.common.extension.request.setXRpcAppInfo
 import com.lianyi.paimonsnotebook.common.util.parameter.getParameterizedType
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import okhttp3.Call
@@ -26,7 +24,6 @@ import java.lang.reflect.ParameterizedType
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
-import kotlin.coroutines.coroutineContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -44,7 +41,7 @@ val defaultOkHttpClient by lazy {
             request.addHeader("x-rpc-channel", "miyousheluodi")
             request.addHeader("User-Agent", CoreEnvironment.HoyolabMobileUA)
 
-            request.setXRPCAppInfo()
+            request.setXRpcAppInfo()
 
             request.setDeviceInfoHeaders()
 
@@ -94,7 +91,8 @@ suspend fun Request.getAsByte(client: OkHttpClient = emptyOkHttpClient) =
 suspend fun Request.getAsText(client: OkHttpClient = emptyOkHttpClient) =
     withContext(Dispatchers.IO) {
         try {
-            client.newCall(this@getAsText).await().body?.string() ?: ""
+            val res = client.newCall(this@getAsText).await()
+            res.body?.string() ?: ""
         } catch (e: Exception) {
             e.printStackTrace()
             val (code, msg) = if (e is SocketTimeoutException || e is UnknownHostException) {
@@ -103,6 +101,22 @@ suspend fun Request.getAsText(client: OkHttpClient = emptyOkHttpClient) =
                 ResultData.UNKNOWN_EXCEPTION to "未知错误"
             }
             "{\"retcode\":${code},\"message\":\"${msg}\",\"data\":null}"
+        }
+    }
+
+suspend fun Request.getAsTextWithHeader(client: OkHttpClient = emptyOkHttpClient): Pair<String, List<Pair<String, String>>> =
+    withContext(Dispatchers.IO) {
+        try {
+            val res = client.newCall(this@getAsTextWithHeader).await()
+            (res.body?.string() ?: "") to res.headers.toList()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            val (code, msg) = if (e is SocketTimeoutException || e is UnknownHostException) {
+                ResultData.NETWORK_ERROR to "网络异常"
+            } else {
+                ResultData.UNKNOWN_EXCEPTION to "未知错误"
+            }
+            "{\"retcode\":${code},\"message\":\"${msg}\",\"data\":null}" to listOf()
         }
     }
 
@@ -140,16 +154,33 @@ suspend fun <T> Request.getAsJsonNative(
     null
 }
 
-suspend inline fun <reified T> Request.getAsJson(client: OkHttpClient = defaultOkHttpClient): ResultData<T> =
-    getAsJson(getParameterizedType(ResultData::class.java, T::class.java), client)
+suspend inline fun <reified T> Request.getAsJson(
+    client: OkHttpClient = defaultOkHttpClient,
+    carryResponseHeaders: Boolean = false
+): ResultData<T> =
+    getAsJson(
+        getParameterizedType(ResultData::class.java, T::class.java),
+        client,
+        carryResponseHeaders
+    )
 
 suspend inline fun <reified T> Request.getAsJson(
     type: ParameterizedType,
     client: OkHttpClient = defaultOkHttpClient,
+    carryResponseHeaders: Boolean
 ): ResultData<T> {
     return try {
-        Gson().fromJson(this.getAsText(client), type)
+        val pair = this.getAsTextWithHeader(client)
+
+        val result = Gson().fromJson<ResultData<T>>(pair.first, type)
+
+        if (carryResponseHeaders) {
+            result.setResponseHeaders(pair.second)
+        }
+
+        result
     } catch (e: Exception) {
+        e.printStackTrace()
         Gson().fromJson(
             "{\"retcode\":${ResultData.RESPONSE_CONVERT_EXCEPTION},\"message\":\"请求结果转换异常\",\"data\":null}",
             getParameterizedType(ResultData::class.java, T::class.java)

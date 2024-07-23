@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.common.components.layout.blur_card.widget.ItemLevelSlider
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
-import com.lianyi.paimonsnotebook.common.components.text.RichText
+import com.lianyi.core.ui.components.text.RichText
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.util.compose.provider.NoRippleThemeProvides
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.format.AvatarSkillFormat
@@ -89,7 +89,10 @@ internal fun AvatarSkillContent(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                RichText(text = skill.description, fontSize = 14.sp)
+                com.lianyi.core.ui.components.text.RichText(
+                    text = skill.description,
+                    fontSize = 14.sp
+                )
 
                 AnimatedVisibility(visible = skill.maxLevel != 1 && skill.show) {
                     Column(

@@ -43,7 +43,7 @@ import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
 import com.lianyi.paimonsnotebook.common.components.placeholder.EmptyPagePlaceholder
 import com.lianyi.paimonsnotebook.common.components.placeholder.ErrorPlaceholder
 import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
-import com.lianyi.paimonsnotebook.common.components.text.InfoText
+import com.lianyi.core.ui.components.text.InfoText
 import com.lianyi.paimonsnotebook.common.components.widget.InputTextFiled
 import com.lianyi.paimonsnotebook.common.components.widget.button.TitleAndDescriptionActionButton
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
@@ -159,7 +159,7 @@ class AchievementScreen : BaseActivity() {
 
                                 Spacer(modifier = Modifier.width(8.dp))
 
-                                InfoText(
+                                com.lianyi.core.ui.components.text.InfoText(
                                     text = "${item.finishCount}/${item.total}",
                                     fontSize = 10.sp
                                 )
@@ -236,7 +236,7 @@ class AchievementScreen : BaseActivity() {
 
                             Spacer(modifier = Modifier.width(8.dp))
 
-                            InfoText(
+                            com.lianyi.core.ui.components.text.InfoText(
                                 text = item.description,
                                 fontSize = 10.sp
                             )

@@ -15,7 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.components.text.AutoSizeText
+import com.lianyi.core.ui.components.text.AutoSizeText
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.items.components.item.icon.ItemIconCard
 import com.lianyi.paimonsnotebook.ui.theme.White
@@ -47,7 +47,7 @@ fun ItemCard(
                 .padding(2.dp, 0.dp),
             contentAlignment = Alignment.Center
         ) {
-            AutoSizeText(
+            com.lianyi.core.ui.components.text.AutoSizeText(
                 text = text,
                 targetTextSize = 10.sp,
                 textAlign = TextAlign.Center,

@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
-import com.lianyi.paimonsnotebook.common.components.text.InfoText
-import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
+import com.lianyi.core.ui.components.text.InfoText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.data.popup.IconTitleInformationPopupWindowData
 import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
 import com.lianyi.paimonsnotebook.ui.theme.Black
@@ -160,19 +160,22 @@ fun IconTitleInformationPopupWindow(
                     Spacer(modifier = Modifier.width(6.dp))
 
                     Column {
-                        PrimaryText(
+                        com.lianyi.core.ui.components.text.PrimaryText(
                             text = data.title,
                             fontSize = 14.sp,
                             color = White
                         )
                         Spacer(modifier = Modifier.height(2.dp))
-                        InfoText(text = data.subTitle, fontSize = 10.sp)
+                        com.lianyi.core.ui.components.text.InfoText(
+                            text = data.subTitle,
+                            fontSize = 10.sp
+                        )
                     }
                 }
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                InfoText(
+                com.lianyi.core.ui.components.text.InfoText(
                     text = data.content,
                     maxLines = data.maxLine
                 )

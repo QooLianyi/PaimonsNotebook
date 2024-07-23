@@ -5,7 +5,6 @@ import com.lianyi.paimonsnotebook.common.data.EmptyData
 import com.lianyi.paimonsnotebook.common.extension.request.setDeviceInfoHeaders
 import com.lianyi.paimonsnotebook.common.extension.request.setHost
 import com.lianyi.paimonsnotebook.common.extension.request.setReferer
-import com.lianyi.paimonsnotebook.common.extension.request.setXRPCAppInfo
 import com.lianyi.paimonsnotebook.common.util.request.buildRequest
 import com.lianyi.paimonsnotebook.common.util.request.emptyOkHttpClient
 import com.lianyi.paimonsnotebook.common.util.request.getAsJson

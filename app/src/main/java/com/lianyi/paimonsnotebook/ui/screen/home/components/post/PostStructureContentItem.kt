@@ -33,10 +33,10 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.common.components.layout.FoldTextContent
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
 import com.lianyi.paimonsnotebook.common.components.placeholder.TextPlaceholder
 import com.lianyi.paimonsnotebook.common.components.placeholder.VideoPlayerPlaceholder
-import com.lianyi.paimonsnotebook.common.components.text.FoldTextContent
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.post.PostFullData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.bbs.post.PostStructuredContent
@@ -130,8 +130,14 @@ fun PostStructureContentItem(
         StructuredContentType.LinkCard -> {
             val linkCard = item.second.first().insert.linkCard
             if (linkCard != null) {
-                PostLinkCard(item = linkCard) {
-                    onClickLinkCard.invoke(it.origin_url)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
+                ) {
+                    PostLinkCard(item = linkCard) {
+                        onClickLinkCard.invoke(it.origin_url)
+                    }
                 }
             }
         }
@@ -139,8 +145,10 @@ fun PostStructureContentItem(
         StructuredContentType.Fold -> {
             val fold = item.second.first().insert.backupText?.fold
             if (fold != null) {
-                FoldTextContent(modifier = Modifier.padding(0.dp, 6.dp),
-                    backgroundColor = CardBackGroundColor_Light_1,
+                FoldTextContent(modifier = Modifier.padding(
+                    0.dp,
+                    6.dp
+                ), backgroundColor = CardBackGroundColor_Light_1,
                     borderColor = Black_10,
                     titleSlot = {
                         Icon(

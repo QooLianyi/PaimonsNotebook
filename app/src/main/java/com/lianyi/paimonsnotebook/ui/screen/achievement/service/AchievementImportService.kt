@@ -78,7 +78,10 @@ class AchievementImportService(
                 UIAFHelper.Field.Info.ExportApp -> UIAFHelper.Field.Info.ExportApp
                 UIAFHelper.Field.Info.ExportAppVersion -> UIAFHelper.Field.Info.ExportAppVersion
                 UIAFHelper.Field.Info.UIAFVersion -> UIAFHelper.Field.Info.UIAFVersion
-                else -> ""
+                else -> {
+                    reader.skipValue()
+                    ""
+                }
             }
 
             when (key) {
@@ -185,6 +188,10 @@ class AchievementImportService(
                         UIAFHelper.Field.Item.Timestamp -> timestamp = nextLong()
                         UIAFHelper.Field.Item.Current -> current = nextInt()
                         UIAFHelper.Field.Item.Status -> status = nextInt()
+                        //其余字段直接跳过值
+                        else -> {
+                            skipValue()
+                        }
                     }
                 }
 

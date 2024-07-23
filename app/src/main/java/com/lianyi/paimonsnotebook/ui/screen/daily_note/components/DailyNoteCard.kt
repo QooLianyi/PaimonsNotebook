@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
-import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.extension.modifier.action.pressureMonitor
 import com.lianyi.paimonsnotebook.common.extension.modifier.animation.drawArcBorder
@@ -229,7 +229,7 @@ fun DailyNoteCard(
         ) {
 
             Row {
-                PrimaryText(
+                com.lianyi.core.ui.components.text.PrimaryText(
                     text = "${userGameRole.nickname} | ${userGameRole.region_name} | Lv.${userGameRole.level}",
                     modifier = Modifier.weight(1f)
                 )

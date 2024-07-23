@@ -88,7 +88,7 @@ object HomeHelper {
             target = AppWidgetScreen::class.java,
             sortIndex = 90,
             requireMetadata = true
-        )
+        ),
     )
 
     private val ModalItemsStateFlow = MutableStateFlow<List<ModalItemData>>(listOf())

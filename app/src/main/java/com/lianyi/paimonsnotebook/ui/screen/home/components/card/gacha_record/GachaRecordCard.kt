@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.database.gacha.data.GachaRecordOverview
 import com.lianyi.paimonsnotebook.common.util.metadata.genshin.uigf.UIGFHelper
 
@@ -24,7 +24,7 @@ internal fun GachaRecordCard(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            PrimaryText(text = "祈愿记录", fontSize = 16.sp)
+            com.lianyi.core.ui.components.text.PrimaryText(text = "祈愿记录", fontSize = 16.sp)
 
             Text(text = item.uid, fontSize = 14.sp)
         }

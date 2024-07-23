@@ -38,7 +38,7 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.spacer.NavigationBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
-import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.TextButton
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
@@ -125,7 +125,10 @@ fun ColorPickerPopup(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        PrimaryText(text = "透明度", modifier = Modifier.width(60.dp))
+                        com.lianyi.core.ui.components.text.PrimaryText(
+                            text = "透明度",
+                            modifier = Modifier.width(60.dp)
+                        )
 
                         AlphaSlider(
                             controller = controller,
@@ -139,7 +142,10 @@ fun ColorPickerPopup(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        PrimaryText(text = "亮度", modifier = Modifier.width(60.dp))
+                        com.lianyi.core.ui.components.text.PrimaryText(
+                            text = "亮度",
+                            modifier = Modifier.width(60.dp)
+                        )
 
                         BrightnessSlider(
                             controller = controller,
@@ -162,7 +168,10 @@ fun ColorPickerPopup(
                             controller
                         )
 
-                        PrimaryText(text = text, fontSize = 12.sp)
+                        com.lianyi.core.ui.components.text.PrimaryText(
+                            text = text,
+                            fontSize = 12.sp
+                        )
                     }
                 }
 

@@ -23,7 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.LazyColumnDialog
 import com.lianyi.paimonsnotebook.common.components.layout.blur_card.widget.ItemLevelSlider
-import com.lianyi.paimonsnotebook.common.components.text.RichText
+import com.lianyi.core.ui.components.text.RichText
 import com.lianyi.paimonsnotebook.ui.screen.items.components.content.ItemScreenContent
 import com.lianyi.paimonsnotebook.ui.screen.items.components.cultivate.WeaponCultivateConfigCard
 import com.lianyi.paimonsnotebook.ui.screen.items.components.information.InformationItem
@@ -144,7 +144,7 @@ class WeaponScreen : ComponentActivity() {
                                     fontWeight = FontWeight.SemiBold
                                 )
 
-                                RichText(text = viewModel.weaponAffixFormat!!.affixText)
+                                com.lianyi.core.ui.components.text.RichText(text = viewModel.weaponAffixFormat!!.affixText)
                             }
 
                             Spacer(modifier = Modifier.height(12.dp))

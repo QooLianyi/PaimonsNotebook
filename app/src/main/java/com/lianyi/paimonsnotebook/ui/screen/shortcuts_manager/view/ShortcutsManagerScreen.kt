@@ -25,8 +25,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.spacer.NavigationBarPaddingSpacer
-import com.lianyi.paimonsnotebook.common.components.text.InfoText
-import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
+import com.lianyi.core.ui.components.text.InfoText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.TextButton
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
@@ -77,7 +77,7 @@ class ShortcutsManagerScreen : BaseActivity() {
 
                         item {
                             if (viewModel.selectedShortcutsCount != 0) {
-                                InfoText(
+                                com.lianyi.core.ui.components.text.InfoText(
                                     text = "已选功能:",
                                     modifier = Modifier.padding(vertical = 4.dp)
                                 )
@@ -91,7 +91,7 @@ class ShortcutsManagerScreen : BaseActivity() {
                             Column(modifier = Modifier.animateItemPlacement()) {
 
                                 if (index == viewModel.selectedShortcutsCount) {
-                                    InfoText(
+                                    com.lianyi.core.ui.components.text.InfoText(
                                         text = "可选功能:",
                                         modifier = Modifier.padding(vertical = 4.dp)
                                     )
@@ -120,7 +120,7 @@ class ShortcutsManagerScreen : BaseActivity() {
 
                                     Spacer(modifier = Modifier.width(8.dp))
 
-                                    PrimaryText(
+                                    com.lianyi.core.ui.components.text.PrimaryText(
                                         text = item.modalItemData.name,
                                         modifier = Modifier.weight(1f)
                                     )

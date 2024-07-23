@@ -5,7 +5,7 @@ import com.lianyi.paimonsnotebook.common.data.hoyolab.PlayerUid
 import com.lianyi.paimonsnotebook.common.data.hoyolab.user.UserAndUid
 import com.lianyi.paimonsnotebook.common.extension.request.setDynamicSecret
 import com.lianyi.paimonsnotebook.common.extension.request.setUser
-import com.lianyi.paimonsnotebook.common.extension.request.setXrpcChallenge
+import com.lianyi.paimonsnotebook.common.extension.request.setXRpcChallenge
 import com.lianyi.paimonsnotebook.common.util.hoyolab.DynamicSecret
 import com.lianyi.paimonsnotebook.common.util.request.buildRequest
 import com.lianyi.paimonsnotebook.common.util.request.getAsJson
@@ -54,7 +54,7 @@ class GameRecordClient {
             )
 
             if (challenge.isNotBlank() && challenge != "error") {
-                setXrpcChallenge(challenge)
+                setXRpcChallenge(challenge)
             }
 
         }.getAsJson<DailyNoteData>()

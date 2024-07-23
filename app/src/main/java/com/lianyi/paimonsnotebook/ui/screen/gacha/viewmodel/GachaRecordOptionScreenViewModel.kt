@@ -30,7 +30,6 @@ import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.components.dialog.LazyColumnDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.PropertiesDialog
-import com.lianyi.paimonsnotebook.common.components.text.InfoText
 import com.lianyi.paimonsnotebook.common.components.widget.InputTextFiled
 import com.lianyi.paimonsnotebook.common.data.hoyolab.PlayerUid
 import com.lianyi.paimonsnotebook.common.data.hoyolab.user.User
@@ -338,7 +337,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
                 "${PaimonsNotebookApplication.name}当前的UIGF版本是${UIGFHelper.UIGF_VERSION}".notify()
             },
             slot = {
-                InfoText(text = UIGFHelper.UIGF_VERSION)
+                com.lianyi.core.ui.components.text.InfoText(text = UIGFHelper.UIGF_VERSION)
             }
         ),
         OptionListData(
@@ -533,8 +532,8 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
                 if (shouldAddItemList.isNotEmpty()) {
                     //添加至数据库,此处的数据长度在[0,20]
                     importService.gachaItemListFlush(shouldAddItemList.map {
-                        val id = gachaLogService.getItemIdByName(it.name)
-                        it.asGachaItems(itemId = "$id")
+                        val model = gachaLogService.getModelByName(it.name)
+                        it.asGachaItems(itemId = "${model?.id ?: ""}")
                     })
                 }
 

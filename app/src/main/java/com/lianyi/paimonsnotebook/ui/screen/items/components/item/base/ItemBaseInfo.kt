@@ -15,7 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
-import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.ui.screen.items.components.widget.StarGroup
 import com.lianyi.paimonsnotebook.ui.theme.White_40
 
@@ -35,7 +35,7 @@ internal fun ItemBaseInfo(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
-            PrimaryText(
+            com.lianyi.core.ui.components.text.PrimaryText(
                 text = name,
                 fontSize = 20.sp
             )

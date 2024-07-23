@@ -20,7 +20,7 @@ import androidx.lifecycle.viewModelScope
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
-import com.lianyi.paimonsnotebook.common.components.text.InfoText
+import com.lianyi.core.ui.components.text.InfoText
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
@@ -303,29 +303,30 @@ class SettingScreenViewModel : ViewModel() {
                 }
             },
             slot = {
-                InfoText(text = PaimonsNotebookApplication.version, modifier = Modifier
-                    .pointerInput(Unit) {
-                        detectDragGestures { _, dragAmount ->
-                            if (c == 8 && dragAmount.y > 10) {
-                                "下次启动时会开启调试面板".show()
+                com.lianyi.core.ui.components.text.InfoText(text = PaimonsNotebookApplication.version,
+                    modifier = Modifier
+                        .pointerInput(Unit) {
+                            detectDragGestures { _, dragAmount ->
+                                if (c == 8 && dragAmount.y > 10) {
+                                    "下次启动时会开启调试面板".show()
 
-                                PaimonsNotebookApplication.context
-                                    .getExternalFilesDir(null)
-                                    ?.resolve("debug")
-                                    ?.mkdirs()
+                                    PaimonsNotebookApplication.context
+                                        .getExternalFilesDir(null)
+                                        ?.resolve("debug")
+                                        ?.mkdirs()
 
-                                viewModelScope.launch {
-                                    PreferenceKeys.EnableOverlay.editValue(true)
+                                    viewModelScope.launch {
+                                        PreferenceKeys.EnableOverlay.editValue(true)
+                                    }
+                                    c++
                                 }
-                                c++
                             }
                         }
-                    }
-                    .pointerInput(Unit) {
-                        detectTapGestures(onTap = {
-                            c++
+                        .pointerInput(Unit) {
+                            detectTapGestures(onTap = {
+                                c++
+                            })
                         })
-                    })
 
                 if (showDownloadDialog) {
                     ApplicationUpdateDialog(

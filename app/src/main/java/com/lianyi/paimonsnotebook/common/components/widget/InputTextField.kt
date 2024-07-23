@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -109,6 +110,51 @@ fun InputTextFiled(
         placeholder = {
             Text(text = placeholder, fontSize = 14.sp, color = Black_60)
         }
+    )
+}
+
+@Composable
+fun PasswordInputTextFiled(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    inputFieldHeight: Dp = 40.dp,
+    padding: PaddingValues = PaddingValues(8.dp, 5.dp, 5.dp, 5.dp),
+    backgroundColor: Color = White,
+    borderWidth: Dp = 1.dp,
+    borderColor: Color = Gray_F0,
+    borderRadius: Dp = 2.dp,
+    textStyle: TextStyle = TextStyle(fontSize = 18.sp, color = Black),
+    contentAlignment: Alignment = Alignment.TopStart,
+    imeAction: ImeAction = ImeAction.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    maxLines: Int = Int.MAX_VALUE,
+    placeholder: String,
+) {
+    BasicTextField(
+        value = value,
+        onValueChange = onValueChange,
+        cursorBrush = SolidColor(colorPrimary),
+        keyboardOptions = KeyboardOptions.Default.copy(imeAction = imeAction),
+        keyboardActions = keyboardActions, maxLines = maxLines,
+        visualTransformation = PasswordVisualTransformation(),
+        decorationBox = { innerTextField ->
+            Box(
+                modifier = Modifier
+                    .radius(borderRadius)
+                    .fillMaxWidth()
+                    .height(inputFieldHeight)
+                    .background(backgroundColor)
+                    .border(borderWidth, borderColor, RoundedCornerShape(borderRadius))
+                    .padding(padding),
+                contentAlignment = contentAlignment
+            ) {
+                if (value.isBlank()) {
+                    Text(text = placeholder, fontSize = 14.sp, color = Black_60)
+                }
+                innerTextField()
+            }
+        }, textStyle = textStyle, modifier = modifier
     )
 }
 

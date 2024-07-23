@@ -26,8 +26,8 @@ import com.lianyi.paimonsnotebook.common.components.dialog.FilePropertiesOperati
 import com.lianyi.paimonsnotebook.common.components.dialog.InputDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.LoadingDialog
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
-import com.lianyi.paimonsnotebook.common.components.text.InfoText
-import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
+import com.lianyi.core.ui.components.text.InfoText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.base.file_operation.viewmodel.FileOperationScreenViewModel
@@ -56,7 +56,7 @@ open class FileOperationScreen : BaseActivity() {
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     item {
-                        PrimaryText(text = viewModel.pageTitle)
+                        com.lianyi.core.ui.components.text.PrimaryText(text = viewModel.pageTitle)
                     }
 
 
@@ -91,10 +91,10 @@ open class FileOperationScreen : BaseActivity() {
                             )
 
                             Column {
-                                PrimaryText(text = item.name)
+                                com.lianyi.core.ui.components.text.PrimaryText(text = item.name)
                                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    InfoText(text = item.lastModifierTimeText)
-                                    InfoText(text = item.sizeText)
+                                    com.lianyi.core.ui.components.text.InfoText(text = item.lastModifierTimeText)
+                                    com.lianyi.core.ui.components.text.InfoText(text = item.sizeText)
                                 }
                             }
                         }

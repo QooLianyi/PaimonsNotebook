@@ -29,10 +29,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lianyi.core.ui.components.text.DividerText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
-import com.lianyi.paimonsnotebook.common.components.text.DividerText
-import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.RoundedTag
 import com.lianyi.paimonsnotebook.common.util.html.RichTextParser
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
@@ -68,7 +68,10 @@ internal fun PostStructureContentList(
         //标题
         item {
             Column(modifier = Modifier.fillMaxWidth()) {
-                PrimaryText(text = postFull.post.post.subject, fontSize = 18.sp)
+                PrimaryText(
+                    text = postFull.post.post.subject,
+                    fontSize = 18.sp
+                )
 
                 DividerText(
                     text = "文章发表:${TimeHelper.getDifferenceTimeText(postFull.post.post.created_at)}",

@@ -47,6 +47,16 @@ data class ResultData<T>(
     val success: Boolean
         get() = retcode == SUCCESS_CODE
 
-    val validate:Boolean
+    val validate: Boolean
         get() = retcode == NEED_VALIDATE
+
+    val needAigis: Boolean
+        get() = retcode == RET_NEED_AIGIS
+
+    var responseHeaders: List<Pair<String, String>>? = null
+        private set
+
+    fun setResponseHeaders(list: List<Pair<String, String>>) {
+        responseHeaders = list
+    }
 }

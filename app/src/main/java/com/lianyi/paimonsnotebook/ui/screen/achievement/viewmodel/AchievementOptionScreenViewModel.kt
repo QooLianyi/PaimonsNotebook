@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.paimonsnotebook.common.components.text.InfoText
+import com.lianyi.core.ui.components.text.InfoText
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.database.achievement.entity.AchievementUser
 import com.lianyi.paimonsnotebook.common.extension.intent.setComponentName
@@ -199,7 +199,7 @@ class AchievementOptionScreenViewModel : ViewModel() {
                 "派蒙笔记本当前的UIAF版本是${UIAFHelper.UIAF_VERSION}".notify()
             },
             slot = {
-                InfoText(text = UIAFHelper.UIAF_VERSION)
+                com.lianyi.core.ui.components.text.InfoText(text = UIAFHelper.UIAF_VERSION)
             }
         ),
         OptionListData(

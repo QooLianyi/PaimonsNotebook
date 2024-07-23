@@ -101,7 +101,7 @@ object CoreEnvironment {
     const val PaimonsNotebookUA = "PaimonsNotebook/${PaimonsNotebookApplication.version}"
 
     //原神4 星铁8 ZZZ 12
-    const val APP_ID = "4"
+    const val APP_ID = "8"
 
     var DeviceFp = ""
         private set

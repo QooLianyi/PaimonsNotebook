@@ -1,9 +1,11 @@
 package com.lianyi.paimonsnotebook.common.web.hoyolab.passport
 
 import android.os.Build
+import com.lianyi.core.common.util.RSAHelper
 import com.lianyi.paimonsnotebook.common.core.enviroment.CoreEnvironment
 import com.lianyi.paimonsnotebook.common.extension.request.setDeviceInfoHeaders
-import com.lianyi.paimonsnotebook.common.extension.request.setXRPCAppInfo
+import com.lianyi.paimonsnotebook.common.extension.request.setXRpcAigis
+import com.lianyi.paimonsnotebook.common.extension.request.setXRpcAppInfo
 import com.lianyi.paimonsnotebook.common.util.request.buildRequest
 import com.lianyi.paimonsnotebook.common.util.request.emptyOkHttpClient
 import com.lianyi.paimonsnotebook.common.util.request.getAsJson
@@ -34,7 +36,52 @@ class PassportClient {
                 put("ticket", ticket)
             }.post(this)
 
-        }.getAsJson<LoginByAuthTicketData>(emptyOkHttpClient)
+        }.getAsJson<LoginResultData>(emptyOkHttpClient)
+
+
+    suspend fun createLoginCaptcha(mobile: String, areaCode: String, aigis: String = "") =
+        buildRequest {
+            url(ApiEndpoints.createLoginCaptcha)
+
+            setXRpcAppInfo()
+            setDeviceInfoHeaders()
+
+            if (aigis.isNotEmpty()) {
+                setXRpcAigis(aigis)
+            }
+
+            buildMap {
+                put("area_code", RSAHelper.encryptWithPublicKeyString(areaCode))
+                put("mobile", RSAHelper.encryptWithPublicKeyString(mobile))
+            }.post(this)
+
+        }.getAsJson<CreateLoginCaptchaData>(carryResponseHeaders = true)
+
+    suspend fun loginByMobileCaptcha(
+        actionType: String,
+        mobile: String,
+        areaCode: String,
+        code: String,
+        aigis: String = ""
+    ) = buildRequest {
+        url(ApiEndpoints.loginByMobileCaptcha)
+
+        setXRpcAppInfo()
+        setDeviceInfoHeaders()
+
+        if (aigis.isNotEmpty()) {
+            setXRpcAigis(aigis)
+        }
+
+        buildMap {
+            put("action_type", actionType)
+            put("captcha", code)
+            put("area_code", RSAHelper.encryptWithPublicKeyString(areaCode))
+            put("mobile", RSAHelper.encryptWithPublicKeyString(mobile))
+        }.post(this)
+
+    }.getAsJson<LoginResultData>(carryResponseHeaders = true)
+
 
     suspend fun getTokenByGameToken(accountId: Int, gameToken: String) = buildRequest {
         url(ApiEndpoints.getTokenByGameToken)
@@ -43,7 +90,7 @@ class PassportClient {
         addHeader("x-rpc-aigis", "")
         addHeader("x-rpc-sdk_version", CoreEnvironment.SDKVersion)
 
-        setXRPCAppInfo()
+        setXRpcAppInfo()
 
         setDeviceInfoHeaders(CoreEnvironment.DeviceId40)
 

@@ -61,20 +61,28 @@ object UIGFHelper {
             const val Uid = "uid"
             const val Lang = "lang"
             const val ExportTimestamp = "export_timestamp"
+            const val ExportTime = "export_time"
             const val ExportApp = "export_app"
             const val ExportAppVersion = "export_app_version"
             const val UIGFVersion = "uigf_version"
             const val RegionTimeZone = "region_time_zone"
 
-            val fields = arrayOf(
+            //必须有的字段
+            val requiredFields = arrayOf(
                 Uid,
-                Lang,
-                ExportTimestamp,
-                ExportApp,
-                ExportAppVersion,
                 UIGFVersion,
-//                RegionTimeZone //时区不是必须有的
             )
+
+//            val fields = arrayOf(
+//                Uid,
+//                Lang,
+//                ExportTimestamp,
+//                ExportTime,
+//                ExportApp,
+//                ExportAppVersion,
+//                UIGFVersion,
+//                RegionTimeZone //时区不是必须有的
+//            )
         }
 
         object Item {
@@ -88,17 +96,26 @@ object UIGFHelper {
             const val RankType = "rank_type"
             const val Id = "id"
 
-            val fields = arrayOf(
+            val requiredFields = arrayOf(
                 UigfGachaType,
                 GachaType,
                 ItemId,
-                Count,
+                Id,
                 Time,
-                Name,
-                ItemType,
-                RankType,
-                Id
+                Name
             )
+//
+//            val fields = arrayOf(
+//                UigfGachaType,
+//                GachaType,
+//                ItemId,
+//                Count,
+//                Time,
+//                Name,
+//                ItemType,
+//                RankType,
+//                Id
+//            )
         }
     }
 

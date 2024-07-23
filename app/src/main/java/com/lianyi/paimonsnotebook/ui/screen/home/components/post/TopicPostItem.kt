@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
-import com.lianyi.paimonsnotebook.common.components.text.InfoText
-import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
+import com.lianyi.core.ui.components.text.InfoText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.RoundedTag
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
@@ -80,17 +80,17 @@ fun TopicPostItem(
             Spacer(modifier = Modifier.width(8.dp))
 
             Column(modifier = Modifier.weight(1f)) {
-                PrimaryText(
+                com.lianyi.core.ui.components.text.PrimaryText(
                     text = item.post.user.nickname,
                     fontSize = 13.sp
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                InfoText(text = "uid:${item.post.user.uid}")
+                com.lianyi.core.ui.components.text.InfoText(text = "uid:${item.post.user.uid}")
             }
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            InfoText(text = TimeHelper.getDifferenceTimeText(item.post.post.created_at))
+            com.lianyi.core.ui.components.text.InfoText(text = TimeHelper.getDifferenceTimeText(item.post.post.created_at))
         }
 
         if (cover.isNotEmpty()) {
@@ -118,7 +118,7 @@ fun TopicPostItem(
                 modifier = Modifier.size(16.dp)
             )
 
-            InfoText(text = "${item.post.stat.like_num}")
+            com.lianyi.core.ui.components.text.InfoText(text = "${item.post.stat.like_num}")
 
             Icon(
                 painter = painterResource(id = R.drawable.ic_comment_outline),
@@ -126,12 +126,12 @@ fun TopicPostItem(
                 modifier = Modifier.size(16.dp)
             )
 
-            InfoText(text = "${item.post.stat.reply_num}")
+            com.lianyi.core.ui.components.text.InfoText(text = "${item.post.stat.reply_num}")
         }
 
-        PrimaryText(text = item.post.post.subject)
+        com.lianyi.core.ui.components.text.PrimaryText(text = item.post.post.subject)
 
-        InfoText(text = item.post.post.summary)
+        com.lianyi.core.ui.components.text.InfoText(text = item.post.post.summary)
 
         FlowRow(
             modifier = Modifier.fillMaxWidth(),

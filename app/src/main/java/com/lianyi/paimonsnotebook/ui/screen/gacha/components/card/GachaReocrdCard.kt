@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.layout.card.MaterialCard
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
-import com.lianyi.paimonsnotebook.common.components.text.AutoSizeText
-import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
+import com.lianyi.core.ui.components.text.AutoSizeText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.ExpansionIndicator
 import com.lianyi.paimonsnotebook.common.database.gacha.data.GachaRecordOverview
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
@@ -70,7 +70,10 @@ fun GachaRecordCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                PrimaryText(text = item.uigfGachaTypeName, fontSize = 16.sp)
+                com.lianyi.core.ui.components.text.PrimaryText(
+                    text = item.uigfGachaTypeName,
+                    fontSize = 16.sp
+                )
 
                 Row {
 
@@ -180,7 +183,7 @@ private fun PieChartContent(item: GachaRecordOverview.Item) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        AutoSizeText(
+        com.lianyi.core.ui.components.text.AutoSizeText(
             text = "${item.minTime} - ${item.maxTime}",
             targetTextSize = 14.nonScaledSp(),
             color = Black_30,

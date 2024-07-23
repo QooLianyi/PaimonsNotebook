@@ -5,7 +5,7 @@ import com.lianyi.paimonsnotebook.common.data.hoyolab.user.UserAndUid
 import com.lianyi.paimonsnotebook.common.database.user.entity.User
 import com.lianyi.paimonsnotebook.common.extension.request.setDynamicSecret
 import com.lianyi.paimonsnotebook.common.extension.request.setUser
-import com.lianyi.paimonsnotebook.common.extension.request.setXrpcClientType
+import com.lianyi.paimonsnotebook.common.extension.request.setXRpcClientType
 import com.lianyi.paimonsnotebook.common.util.hoyolab.DynamicSecret
 import com.lianyi.paimonsnotebook.common.util.request.buildRequest
 import com.lianyi.paimonsnotebook.common.util.request.getAsJson
@@ -38,7 +38,7 @@ class BindingClient {
 
             setUser(user.userEntity, CookieHelper.Type.Stoken)
             setDynamicSecret(DynamicSecret.SaltType.LK2, DynamicSecret.Version.Gen1, true)
-            setXrpcClientType(EnvironmentClientType.WEB)
+            setXRpcClientType(EnvironmentClientType.WEB)
 
             buildMap {
                 put("auth_appid", "webview_gacha")

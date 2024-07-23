@@ -1,14 +1,18 @@
 package com.lianyi.paimonsnotebook.ui.overlay.debug.view.fold
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Environment
 import android.os.StatFs
+import android.provider.ContactsContract
+import android.provider.Settings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 
+@SuppressLint("HardwareIds")
 @Composable
 fun DebugDeviceInfoContent() {
     Column {
@@ -39,5 +43,7 @@ fun DebugDeviceInfoContent() {
             """.trimIndent()
         }, fontSize = 18.sp)
         Text(text = "DataDirectoryTotalSpace:${Environment.getDataDirectory().totalSpace / 1024 / 1024}", fontSize = 18.sp)
+
+        Text(text = "安卓ID:${Settings.Secure.getString(PaimonsNotebookApplication.context.contentResolver,"android_id")}", fontSize = 18.sp)
     }
 }

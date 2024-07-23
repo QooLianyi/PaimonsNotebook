@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.common.components.popup.IconTitleInformationPopupWindow
-import com.lianyi.paimonsnotebook.common.components.text.AutoSizeText
+import com.lianyi.core.ui.components.text.AutoSizeText
 import com.lianyi.paimonsnotebook.common.data.popup.IconTitleInformationPopupWindowData
 import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
@@ -122,7 +122,7 @@ internal fun ItemMaterialContent(
                                 .padding(2.dp, 0.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            AutoSizeText(
+                            com.lianyi.core.ui.components.text.AutoSizeText(
                                 text = material.Name,
                                 targetTextSize = 10.sp,
                                 textAlign = TextAlign.Center,

@@ -24,7 +24,7 @@ import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.popup.BasePopup
 import com.lianyi.paimonsnotebook.common.components.spacer.NavigationBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
-import com.lianyi.paimonsnotebook.common.components.text.InfoText
+import com.lianyi.core.ui.components.text.InfoText
 import com.lianyi.paimonsnotebook.common.components.widget.Switch
 import com.lianyi.paimonsnotebook.common.components.widget.TextButton
 import com.lianyi.paimonsnotebook.common.util.file.FileHelper
@@ -87,8 +87,8 @@ fun QRCodeLoginPopup(
                     }
                 }
 
-                InfoText(text = "使用米游社扫码并确认登录游戏以获取Cookie")
-                InfoText(text = "* 实际上并不会登录/注册该游戏")
+                com.lianyi.core.ui.components.text.InfoText(text = "使用米游社扫码并确认登录游戏以获取Cookie")
+                com.lianyi.core.ui.components.text.InfoText(text = "* 实际上并不会登录/注册该游戏")
             }
 
             Column(

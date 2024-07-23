@@ -32,6 +32,13 @@
 -keep public class * extends android.app.backup.BackupAgentHelper
 -keep public class * extends android.preference.Preference
 
+# geetest
+-keep class com.geetest.sdk.** {*;}
+
+-keepclassmembers class com.geetest.sdk.R$* {
+    public static <fields>;
+}
+
 #Room
 -keep class * extends androidx.room.RoomDatabase
 -dontwarn androidx.room.paging.**

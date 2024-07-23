@@ -3,7 +3,6 @@ package com.lianyi.paimonsnotebook.ui.screen.home.components.post
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -39,12 +38,12 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import com.lianyi.core.ui.components.text.DividerText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.R
+import com.lianyi.paimonsnotebook.common.components.layout.FoldTextContent
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
-import com.lianyi.paimonsnotebook.common.components.text.DividerText
-import com.lianyi.paimonsnotebook.common.components.text.FoldTextContent
-import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.util.html.RichTextParser
@@ -82,7 +81,10 @@ internal fun PostStructureContentListTest(
     ) {
         item {
             Column(modifier = Modifier.fillMaxWidth()) {
-                PrimaryText(text = postFull.post.post.subject, fontSize = 18.sp)
+                PrimaryText(
+                    text = postFull.post.post.subject,
+                    fontSize = 18.sp
+                )
 
                 DividerText(
                     text = "文章发表:${
@@ -168,7 +170,10 @@ internal fun PostStructureContentListTest(
                         )
                     }
                     if (fold != null) {
-                        FoldTextContent(modifier = Modifier.padding(0.dp, 6.dp),
+                        FoldTextContent(modifier = Modifier.padding(
+                            0.dp,
+                            6.dp
+                        ),
                             titleSlot = {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_fold_content_icon),
@@ -328,7 +333,7 @@ internal fun PostStructureContentListTest(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 postFull.post.topics.forEach {
-                    BoxWithConstraints {
+                    Box {
                         Text(
                             text = it.name, fontSize = 10.sp, color = Font_Normal,
                             modifier = Modifier

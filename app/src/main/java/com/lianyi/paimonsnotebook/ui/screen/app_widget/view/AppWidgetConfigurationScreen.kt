@@ -34,7 +34,7 @@ import com.lianyi.paimonsnotebook.common.components.dialog.InformationDialog
 import com.lianyi.paimonsnotebook.common.components.layout.ShowIf
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.popup.ColorPickerPopup
-import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.TextButton
 import com.lianyi.paimonsnotebook.common.components.widget.TextSlider
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
@@ -106,7 +106,10 @@ class AppWidgetConfigurationScreen : BaseActivity() {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        PrimaryText(text = viewModel.configuration.remoteViewsName, fontSize = 16.sp)
+                        com.lianyi.core.ui.components.text.PrimaryText(
+                            text = viewModel.configuration.remoteViewsName,
+                            fontSize = 16.sp
+                        )
 
                         ShowIf(show = viewModel.configuration.showChangeWidget) {
                             Row(

@@ -153,6 +153,7 @@ class GachaItemsImportService(
                 UIGFHelper.Field.Info.Uid -> UIGFHelper.Field.Info.Uid
                 UIGFHelper.Field.Info.Lang -> UIGFHelper.Field.Info.Lang
                 UIGFHelper.Field.Info.ExportTimestamp -> UIGFHelper.Field.Info.ExportTimestamp
+                UIGFHelper.Field.Info.ExportTime -> UIGFHelper.Field.Info.ExportTime
                 UIGFHelper.Field.Info.ExportApp -> UIGFHelper.Field.Info.ExportApp
                 UIGFHelper.Field.Info.ExportAppVersion -> UIGFHelper.Field.Info.ExportAppVersion
                 UIGFHelper.Field.Info.UIGFVersion -> UIGFHelper.Field.Info.UIGFVersion
@@ -171,7 +172,7 @@ class GachaItemsImportService(
         reader.endObject()
 
         //检查info是否包含所需的字段
-        UIGFHelper.Field.Info.fields.forEach { infoField ->
+        UIGFHelper.Field.Info.requiredFields.forEach { infoField ->
             if (infoMap[infoField].isNullOrBlank()) {
                 error("导入的数据结构错误:data.info中的[$infoField]字段未找到")
             }
@@ -186,11 +187,12 @@ class GachaItemsImportService(
 
         UIGFJsonData.Info(
             uid = uid,
-            lang = infoMap[UIGFHelper.Field.Info.Lang]!!,
+            lang = infoMap[UIGFHelper.Field.Info.Lang] ?: "",
             export_timestamp = infoMap[UIGFHelper.Field.Info.ExportTimestamp]
                 ?.toLongOrNull() ?: 0L,
-            export_app = infoMap[UIGFHelper.Field.Info.ExportApp]!!,
-            export_app_version = infoMap[UIGFHelper.Field.Info.ExportAppVersion]!!,
+            export_time = infoMap[UIGFHelper.Field.Info.ExportTime] ?: "",
+            export_app = infoMap[UIGFHelper.Field.Info.ExportApp] ?: "",
+            export_app_version = infoMap[UIGFHelper.Field.Info.ExportAppVersion] ?: "",
             uigf_version = infoMap[UIGFHelper.Field.Info.UIGFVersion]!!,
             region_time_zone = regionTimeZone
         )
@@ -236,7 +238,7 @@ class GachaItemsImportService(
                 endObject()
 
                 //检查info是否包含所需的字段
-                UIGFHelper.Field.Item.fields.forEach { itemField ->
+                UIGFHelper.Field.Item.requiredFields.forEach { itemField ->
                     when (itemField) {
                         /*
                         * id是可空的
@@ -250,29 +252,36 @@ class GachaItemsImportService(
                         }
                     }
                 }
-                val name = itemMap[UIGFHelper.Field.Item.Name] ?: ""
-                val itemType = itemMap[UIGFHelper.Field.Item.ItemType] ?: ""
-                val itemId =
-                    itemMap[UIGFHelper.Field.Item.ItemId].takeIf { !it.isNullOrBlank() }
-                        ?: "${gachaLogService.getItemIdByName(name)}"
 
-                if (itemId.isEmpty()) {
-                    error("数据结构或本地元数据错误:data.list.item item_id field is empty")
+                val itemId = itemMap[UIGFHelper.Field.Item.ItemId] ?: ""
+                val name = itemMap[UIGFHelper.Field.Item.Name] ?: ""
+
+                var model = gachaLogService.getGachaModelByItemId(itemId = itemId)
+                if (model == null) {
+                    model = gachaLogService.getModelByName(name = name)
                 }
 
+                if (model == null) {
+                    error("没有找到id为[${itemId}],name为[${name}]的实体,请检查json文件或尝试更新元数据后再次尝试")
+                }
+
+                val itemType = itemMap[UIGFHelper.Field.Item.ItemType] ?: model.type
+
                 list += GachaItems(
-                    count = itemMap[UIGFHelper.Field.Item.Count]!!,
+                    count = itemMap[UIGFHelper.Field.Item.Count] ?: "1",
                     gacha_type = itemMap[UIGFHelper.Field.Item.GachaType]!!,
                     id = itemMap[UIGFHelper.Field.Item.Id] ?: "",
-                    item_id = itemId,
+                    item_id = "${model.id}",
                     item_type = itemType,
-                    name = name,
-                    rank_type = itemMap[UIGFHelper.Field.Item.RankType]!!,
+                    name = model.name,
+                    rank_type = itemMap[UIGFHelper.Field.Item.RankType] ?: "${model.rank}",
                     time = itemMap[UIGFHelper.Field.Item.Time]!!,
                     uigf_gacha_type = itemMap[UIGFHelper.Field.Item.UigfGachaType]!!,
                     uid = info.uid,
                     lang = info.lang
                 )
+
+                itemMap.clear()
 
                 count++
 

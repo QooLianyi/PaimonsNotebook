@@ -32,12 +32,12 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.core.graphics.toColorInt
 import androidx.core.text.HtmlCompat
 import androidx.core.text.toSpannable
+import com.lianyi.paimonsnotebook.common.components.layout.FoldTextContent
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.media.FullScreenImage
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
 import com.lianyi.paimonsnotebook.common.components.placeholder.TextPlaceholder
 import com.lianyi.paimonsnotebook.common.components.placeholder.VideoPlayerPlaceholder
-import com.lianyi.paimonsnotebook.common.components.text.FoldTextContent
 import com.lianyi.paimonsnotebook.common.data.html.HtmlSpanData
 import com.lianyi.paimonsnotebook.common.data.html.HtmlTextData
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
@@ -176,12 +176,8 @@ fun HtmlTextLazyColumn(
 
                         FoldTextContent(titleSlot = {
                             TextBuildAnnotatedString(data = item.titleList, fontSize = fontSize)
-//                            TextBuildAnnotatedSpannableString(data = item.titleList, fontSize = fontSize)
-                        }, textContentSlot = {
-                            Column(modifier = Modifier.padding(10.dp)) {
-                                TextBuildAnnotatedString(data = item.textList, fontSize = fontSize)
-//                                TextBuildAnnotatedSpannableString(data = item.textList, fontSize = fontSize)
-                            }
+                        }, contentSlot = {
+                            TextBuildAnnotatedString(data = item.textList, fontSize = fontSize)
                         })
 
                     }

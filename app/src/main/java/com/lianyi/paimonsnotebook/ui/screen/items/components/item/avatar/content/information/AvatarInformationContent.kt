@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.common.components.layout.FoldContent
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
-import com.lianyi.paimonsnotebook.common.components.text.RichText
+import com.lianyi.core.ui.components.text.RichText
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.conveter.AvatarCardConverter
@@ -201,7 +201,10 @@ internal fun AvatarInformationContent(
                             fontWeight = FontWeight.SemiBold
                         )
                         Spacer(modifier = Modifier.height(6.dp))
-                        RichText(text = pair.second, fontSize = 12.sp)
+                        com.lianyi.core.ui.components.text.RichText(
+                            text = pair.second,
+                            fontSize = 12.sp
+                        )
                     }
 
                     if (avatar.fetterInfo.Fetters.size - 1 != index) {

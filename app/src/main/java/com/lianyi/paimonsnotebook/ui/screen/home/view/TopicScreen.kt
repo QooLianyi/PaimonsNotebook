@@ -31,8 +31,8 @@ import com.lianyi.paimonsnotebook.common.components.loading.ContentLoadingLayout
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
 import com.lianyi.paimonsnotebook.common.components.placeholder.EmptyPlaceholder
 import com.lianyi.paimonsnotebook.common.components.placeholder.ErrorPlaceholder
-import com.lianyi.paimonsnotebook.common.components.text.InfoText
-import com.lianyi.paimonsnotebook.common.components.text.PrimaryText
+import com.lianyi.core.ui.components.text.InfoText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.TabBar
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
@@ -110,11 +110,11 @@ class TopicScreen : BaseActivity() {
                                 Spacer(modifier = Modifier.width(8.dp))
 
                                 Column {
-                                    PrimaryText(text = "${viewModel.topicInfo?.topic?.name}")
+                                    com.lianyi.core.ui.components.text.PrimaryText(text = "${viewModel.topicInfo?.topic?.name}")
 
                                     Spacer(modifier = Modifier.height(4.dp))
 
-                                    InfoText(text = "${viewModel.topicInfo?.topic?.desc}")
+                                    com.lianyi.core.ui.components.text.InfoText(text = "${viewModel.topicInfo?.topic?.desc}")
                                 }
                             }
                         }

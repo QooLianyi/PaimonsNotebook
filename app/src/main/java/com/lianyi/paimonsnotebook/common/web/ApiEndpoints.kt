@@ -61,7 +61,9 @@ object ApiEndpoints {
     private const val PassportApiV4 = "https://passport-api-v4.mihoyo.com"
 
     private const val PassportApiAccountMaCnSession = "${PassportApi}/account/ma-cn-session"
+    private const val PassportApiAccountMaCnPassport = "${PassportApi}/account/ma-cn-passport"
 
+    private const val PassportApiMaCnVerifier = "${PassportApi}/account/ma-cn-verifier"
 
     private const val PassportApiStatic = "https://passport-api-static.mihoyo.com"
 
@@ -462,5 +464,10 @@ object ApiEndpoints {
 
     //通过gameToken获取SToken
     const val getTokenByGameToken = "${PassportApiAccountMaCnSession}/app/getTokenByGameToken"
+
+    const val loginByMobileCaptcha = "${PassportApiAccountMaCnPassport}/app/loginByMobileCaptcha"
+
+    const val createLoginCaptcha = "${PassportApiMaCnVerifier}/verifier/createLoginCaptcha"
+
 
 }
