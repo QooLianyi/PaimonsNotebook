@@ -18,7 +18,7 @@ data class DailyNoteData(
     val resin_recovery_time: String,
     val total_task_num: Int,
     val transformer: Transformer
-){
+) {
 
     data class DailyTask(
         val attendance_rewards: List<AttendanceReward>,
@@ -41,7 +41,33 @@ data class DailyNoteData(
         val obtained: Boolean,
         val recovery_time: RecoveryTime,
         val wiki: String
-    )
+    ) {
+        fun getRecoveryTimeText() =
+            if (recovery_time.reached) {
+                "准备完成"
+            } else {
+                with(StringBuilder()) {
+                    val day = recovery_time.Day
+                    val hour = recovery_time.Hour
+                    val minute = recovery_time.Minute
+                    val second = recovery_time.Second
+
+                    if (day != 0) {
+                        append("${day}天")
+                    }
+                    if (hour != 0) {
+                        append("${hour}小时")
+                    }
+                    if (minute != 0) {
+                        append("${minute}分钟")
+                    }
+                    if (second != 0) {
+                        append("${second}秒")
+                    }
+                    toString()
+                }
+            }
+    }
 
     data class AttendanceReward(
         val progress: Int,

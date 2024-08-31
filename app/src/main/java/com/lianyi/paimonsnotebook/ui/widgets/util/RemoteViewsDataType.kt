@@ -10,4 +10,6 @@ enum class RemoteViewsDataType {
     Abyss,
     Gacha,
     DailyMaterial,
+    Achievement,
+    NoNetworkUpdate
 }

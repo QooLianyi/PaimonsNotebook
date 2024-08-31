@@ -43,6 +43,7 @@ class GachaRecordScreenViewModel : ViewModel() {
             //总览数据流
             launch {
                 gachaRecordService.gachaRecordOverviewForCurrentUidFlow.collect { overview ->
+                    println("overview = ${overview}")
                     gachaRecordOverview = overview
 
                     loadingState = if (overview == null) {

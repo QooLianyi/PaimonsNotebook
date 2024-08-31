@@ -37,16 +37,15 @@ import com.lianyi.paimonsnotebook.common.data.hoyolab.user.UserAndUid
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.extension.intent.setComponentName
+import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.common.extension.string.notify
 import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
-import com.lianyi.paimonsnotebook.common.util.data_store.DataStoreHelper
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.util.data_store.dataStoreValues
 import com.lianyi.paimonsnotebook.common.util.file.FileHelper
 import com.lianyi.paimonsnotebook.common.util.metadata.genshin.uigf.UIGFHelper
 import com.lianyi.paimonsnotebook.common.util.system_service.SystemService
-import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
 import com.lianyi.paimonsnotebook.common.web.ApiEndpoints
 import com.lianyi.paimonsnotebook.common.web.hoyolab.hk4e.event.gacha_info.GachaInfoClient
 import com.lianyi.paimonsnotebook.common.web.hoyolab.hk4e.event.gacha_info.GachaQueryConfigData
@@ -60,6 +59,7 @@ import com.lianyi.paimonsnotebook.ui.screen.gacha.service.GachaItemsImportServic
 import com.lianyi.paimonsnotebook.ui.screen.gacha.service.GachaLogService
 import com.lianyi.paimonsnotebook.ui.screen.gacha.view.GachaRecordExportDataScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
+import com.lianyi.paimonsnotebook.ui.screen.setting.components.widgets.SettingsOptionSwitch
 import com.lianyi.paimonsnotebook.ui.screen.setting.data.OptionListData
 import com.lianyi.paimonsnotebook.ui.theme.Black_60
 import com.lianyi.paimonsnotebook.ui.theme.Gray_F5
@@ -71,9 +71,11 @@ import java.io.File
 
 class GachaRecordOptionScreenViewModel : ViewModel() {
 
-    private val gachaRecordGameUid = mutableStateListOf<String>()
+    val gachaRecordGameUidList = mutableStateListOf<String>()
 
     private var currentGameUid by mutableStateOf("")
+
+    private var gachaRecordExportToUIGFV3 by mutableStateOf(false)
 
     lateinit var startActivity: ActivityResultLauncher<Intent>
 
@@ -81,18 +83,25 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
         PaimonsNotebookDatabase.database.gachaItemsDao
     }
 
+
     init {
         viewModelScope.launch {
             launch {
                 dao.getAllGameUidFlow().collect {
-                    gachaRecordGameUid.clear()
-                    gachaRecordGameUid += it
+                    gachaRecordGameUidList.clear()
+                    gachaRecordGameUidList += it
                 }
             }
             launch {
                 dataStoreValues { preferences ->
                     currentGameUid =
                         preferences[PreferenceKeys.GachaRecordCurrentGameUid] ?: ""
+                }
+            }
+            launch {
+                dataStoreValues {
+                    gachaRecordExportToUIGFV3 =
+                        it[PreferenceKeys.GachaRecordExportToUIGFV3] ?: false
                 }
             }
         }
@@ -127,9 +136,10 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
 
     private var showSelectAccountGameRoleDialog by mutableStateOf(false)
 
-
     private var showImportUIGFJsonResultDialog by mutableStateOf(false)
     private var importUIGFJsonPropertyList = mutableStateListOf<Pair<String, String>>()
+
+    var showChooseExportUidDialog by mutableStateOf(false)
 
     private var activityResultFile: File? = null
 
@@ -154,7 +164,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
             name = "当前账号",
             description = "用于显示指定账号的祈愿记录",
             onClick = {
-                if (gachaRecordGameUid.isNotEmpty()) {
+                if (gachaRecordGameUidList.isNotEmpty()) {
                     expandedCurrentGameUidDropMenu = !expandedCurrentGameUidDropMenu
                 } else {
                     "当前祈愿记录为空".notify()
@@ -168,7 +178,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
                         expanded = expandedCurrentGameUidDropMenu,
                         onDismissRequest = { expandedCurrentGameUidDropMenu = false }
                     ) {
-                        gachaRecordGameUid.forEach {
+                        gachaRecordGameUidList.forEach {
                             Text(
                                 text = it,
                                 fontSize = 16.sp,
@@ -317,7 +327,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
             name = "UIGF Json导出",
             description = "将当前用户的祈愿记录从本地导出为UIGF Json",
             onClick = {
-                exportUIGFJson()
+                onClickExportUIGFJson()
             }
         ),
         OptionListData(
@@ -326,7 +336,22 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
             onClick = {
                 showGameRoleDialog()
             }
-        )
+        ),
+        OptionListData(
+            name = "启用UIGF V3标准导出",
+            description = "默认关闭,开启后,程序导出的JSON将为UIGF V3标准,以兼容未支持高版本UIGF标准的程序",
+            onClick = {
+                viewModelScope.launchIO {
+                    gachaRecordExportToUIGFV3 = !gachaRecordExportToUIGFV3
+                    PreferenceKeys.GachaRecordExportToUIGFV3.editValue(gachaRecordExportToUIGFV3)
+                }
+            },
+            slot = {
+                SettingsOptionSwitch(
+                    checked = gachaRecordExportToUIGFV3
+                )
+            }
+        ),
     )
 
     val aboutSettings = listOf(
@@ -358,6 +383,14 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
 
     fun dismissGameRoleDialog(index: Int = 0) {
         showGameRoleDialog = false
+    }
+
+    fun showChooseExportUidDialog() {
+        showChooseExportUidDialog = true
+    }
+
+    fun dismissChooseExportUidDialog() {
+        showChooseExportUidDialog = false
     }
 
     fun onSelectGameRole(user: User, role: UserGameRoleData.Role) {
@@ -457,22 +490,18 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
     }
 
     //重置内部变量
-    private fun resetLocalValues(gameUid: String = "") {
+    private fun resetLocalValues() {
         loadingDialogCurrentGachaLogIndex = 0
         loadingDialogProgressBarValue = 0f
         loadingDialogCurrentGachaLogType = UIGFHelper.gachaList.first()
         inputDialogValue = ""
         showLoadingDialog = false
 
-        viewModelScope.launch(Dispatchers.IO) {
-            PreferenceKeys.GachaRecordCurrentGameUid.editValue("")
-
-            val showUid =
-                gameUid.takeIf { currentGameUid.isEmpty() && gameUid.isNotEmpty() } ?: gameUid
-
-            PreferenceKeys.GachaRecordCurrentGameUid.editValue(showUid)
+        if (currentGameUid.isEmpty() && gachaRecordGameUidList.isNotEmpty()) {
+            viewModelScope.launch(Dispatchers.IO) {
+                PreferenceKeys.GachaRecordCurrentGameUid.editValue(gachaRecordGameUidList.first())
+            }
         }
-
     }
 
     //通过authKey获取祈愿记录
@@ -531,7 +560,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
                 //从记录中获取uid
                 if (shouldAddItemList.isNotEmpty()) {
                     //添加至数据库,此处的数据长度在[0,20]
-                    importService.gachaItemListFlush(shouldAddItemList.map {
+                    importService.gachaItemListFlushToDB(shouldAddItemList.map {
                         val model = gachaLogService.getModelByName(it.name)
                         it.asGachaItems(itemId = "${model?.id ?: ""}")
                     })
@@ -578,7 +607,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
                 "祈愿记录获取完毕".notify(closeable = true)
             }
 
-            resetLocalValues(gameUid = gameUid)
+            resetLocalValues()
         }
     }
 
@@ -626,33 +655,27 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
             activityResultFile = file
-
             showLoadingDialog = true
-            val resultInfo = importService.tryGetUIGFJsonInfo(file)
+
+            try {
+                importUIGFJsonPropertyList.clear()
+
+                importUIGFJsonPropertyList += importService.getUIGFJsonPropertyListCompat(file)
+
+            } catch (e: Exception) {
+                "${e.message}".errorNotify()
+            }
 
             showLoadingDialog = false
 
-            resultInfo?.apply {
-                importUIGFJsonPropertyList.clear()
-
-                importUIGFJsonPropertyList +=
-                    listOf(
-                        "记录UID" to uid,
-                        "记录语言" to lang,
-                        "记录来源" to export_app,
-                        "导出时间" to TimeHelper.getTime(export_timestamp),
-                        "导出程序版本" to export_app_version,
-                        "UIGF版本" to uigf_version,
-                        "时区" to "$region_time_zone",
-                    )
-
-                showImportUIGFJsonResultDialog = true
-            }
+            showImportUIGFJsonResultDialog = importUIGFJsonPropertyList.isNotEmpty()
         }
     }
 
     private fun saveGachaLogToDB() {
-        if (activityResultFile == null) {
+        val file = activityResultFile
+
+        if (file == null) {
             "还未选择文件".warnNotify()
             return
         }
@@ -661,27 +684,55 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
         loadingDialogDescription = "正在将数据保存至本地数据库"
 
         viewModelScope.launch(Dispatchers.IO) {
-            importService.importGachaRecordFromUIGFJson(activityResultFile!!, gachaLogService)
+            try {
+                importService.saveUIGFJsonItemsCompat(file, gachaLogService)
+                "祈愿记录导入结束".notify(closeable = true)
 
-            val uigfJsonInfo = importService.tryGetUIGFJsonInfo(activityResultFile!!)
+            } catch (e: Exception) {
+                "${e.message}".errorNotify()
 
-            val gameUid = uigfJsonInfo?.uid ?: ""
+            } finally {
+                showLoadingDialog = false
+                resetLocalValues()
 
-            //将时区存储本地
-            DataStoreHelper.applyLocalDataMap(PreferenceKeys.GachaRecordGameUidRegionMap) {
-                this[gameUid] = uigfJsonInfo?.region_time_zone ?: 0
             }
-
-            showLoadingDialog = false
-            "祈愿记录导入结束".notify(closeable = true)
-
-            resetLocalValues(gameUid)
         }
     }
 
-    private fun exportUIGFJson() {
-        if (currentGameUid == "") {
-            "当前没有选中用户".warnNotify(false)
+    private fun onClickExportUIGFJson() {
+        if (gachaRecordExportToUIGFV3) {
+
+            if (currentGameUid.isEmpty()) {
+                "请先选择一个uid".warnNotify(false)
+                return
+            }
+
+            exportUIGFJson(listOf(currentGameUid))
+
+            return
+        }
+
+        showChooseExportUidDialog()
+    }
+
+    fun confirmExportSelectedUidRecord(
+        uidList: List<String>
+    ) {
+        dismissChooseExportUidDialog()
+
+        if (uidList.isEmpty()) {
+            "必须选择至少一个uid".warnNotify(false)
+
+            return
+        }
+
+        exportUIGFJson(uidList)
+    }
+
+
+    private fun exportUIGFJson(uidList: List<String>) {
+        if (uidList.isEmpty()) {
+            "导出失败:uid列表为空".warnNotify(false)
             return
         }
 
@@ -691,14 +742,17 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
 
-            val fileName = "UIGF_${currentGameUid}_${System.currentTimeMillis()}"
+            val fileName = "UIGF_${uidList.joinToString()}_${System.currentTimeMillis()}"
 
             val file = FileHelper.getUIGFJsonSaveFile(fileName)
-            exportService.exportGachaRecordToUIGFJson(currentGameUid, file)
+
+            exportService.exportGachaRecordToUIGFJson(uidList, file, gachaRecordExportToUIGFV3)
 
             showLoadingDialog = false
 
-            "祈愿记录已导出,通过[导出的祈愿记录功能]管理已导出的祈愿记录文件".notify(autoDismissTime = 5000)
+            "祈愿记录已导出,可通过[导出的祈愿记录功能]管理已导出的祈愿记录文件".notify(
+                autoDismissTime = 5000
+            )
         }
     }
 

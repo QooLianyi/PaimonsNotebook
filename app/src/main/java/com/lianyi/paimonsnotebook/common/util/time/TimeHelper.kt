@@ -190,6 +190,14 @@ object TimeHelper {
 
         val formatString = HH_MM.format(finishTimeStamp)
 
+        return "${getDiffDayText(second)} $formatString"
+    }
+
+    private fun numberFormatter(number: Int): String = if (number < 10) "0${number}" else "$number"
+
+    fun getDiffDayText(second: Long, currentTimeStamp: Long = System.currentTimeMillis()): String {
+        val finishTimeStamp = currentTimeStamp + (second * 1000L)
+
         val todayDataString = YY_MM_DD.format(currentTimeStamp)
         val todayLimitTimeStamp =
             YY_MM_DD_HH_MM_SS.parse("$todayDataString 23:59:59")?.time
@@ -210,11 +218,8 @@ object TimeHelper {
             else -> "${days}天后"
         }
 
-        return "$dayString $formatString"
+        return dayString
     }
-
-    private fun numberFormatter(number: Int): String = if (number < 10) "0${number}" else "$number"
-
 
     /*
     * 获取相差的时间文本

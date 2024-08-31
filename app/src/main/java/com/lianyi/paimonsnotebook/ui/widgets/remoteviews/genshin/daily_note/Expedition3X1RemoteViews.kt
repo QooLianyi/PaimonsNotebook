@@ -18,14 +18,14 @@ internal class Expedition3X1RemoteViews(
 ) : BaseRemoteViews(
     appWidgetBinding.appWidgetId,
     AppWidgetCommon3X1::class.java,
-    R.layout.widget_layout_linear_horizontal_empty
+    R.layout.widget_layout_expedition_3_1
 ) {
     init {
         setOnClickPendingIntent(R.id.container, updatePendingIntent)
     }
 
     override suspend fun setDailyNote(dailyNoteData: DailyNoteData) {
-        removeAllViews(R.id.linear_layout)
+        removeAllViews(R.id.list)
 
         if (dailyNoteData.expeditions.isEmpty()) {
             val views = ErrorRemoteViews(
@@ -34,7 +34,7 @@ internal class Expedition3X1RemoteViews(
                 "没有派遣委托哦",
                 R.drawable.emotion_icon_nahida_drink
             )
-            addView(R.id.linear_layout, views)
+            addView(R.id.list, views)
             return
         }
 
@@ -47,7 +47,7 @@ internal class Expedition3X1RemoteViews(
 
         dailyNoteData.expeditions.forEach { expedition ->
             val itemView =
-                RemoteViews(context.packageName, R.layout.widget_layout_expedition_item).apply {
+                RemoteViews(context.packageName, R.layout.widget_item_expedition).apply {
                     val imageFile =
                         PaimonsNotebookImageLoader.getCacheImageFileByUrl(expedition.avatar_side_icon)
                     val bitmap = BitmapFactory.decodeFile(imageFile?.path)
@@ -74,7 +74,7 @@ internal class Expedition3X1RemoteViews(
 
                     textIds += R.id.text
                 }
-            addView(R.id.linear_layout, itemView)
+            addView(R.id.list, itemView)
         }
 
         setCommonStyle(appWidgetBinding.configuration,textIds.toIntArray())

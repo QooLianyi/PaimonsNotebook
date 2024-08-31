@@ -3,6 +3,7 @@ package com.lianyi.paimonsnotebook.ui.widgets.util
 import androidx.compose.runtime.Composable
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.RemoteViewsPreviewAnimData
 import com.lianyi.paimonsnotebook.ui.widgets.common.components.widget.genshin.daily_note.DailyNote2X1RemoteViewsPreview
+import com.lianyi.paimonsnotebook.ui.widgets.common.components.widget.genshin.daily_note.DailyNoteOverview3X2RemoteViewsPreview
 import com.lianyi.paimonsnotebook.ui.widgets.common.components.widget.genshin.daily_note.Expedition3X1RemoteViewsPreview
 import com.lianyi.paimonsnotebook.ui.widgets.common.components.widget.genshin.daily_note_widget.DailyNoteWidget2X1RemoteViewsPreview
 import com.lianyi.paimonsnotebook.ui.widgets.common.components.widget.genshin.daily_note_widget.HomeCoinRingProgressBar1X1RemoteViewsPreview
@@ -14,6 +15,7 @@ import com.lianyi.paimonsnotebook.ui.widgets.common.components.widget.genshin.ut
 import com.lianyi.paimonsnotebook.ui.widgets.common.components.widget.state.ErrorRemoteViewsPreview
 import com.lianyi.paimonsnotebook.ui.widgets.common.components.widget.util.Shortcut3X2Preview
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note.DailyNote2X1RemoteViews
+import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note.DailyNoteOverview3X2RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note.Expedition3X1RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.DailyNoteWidget2X1RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.HomeCoinRingProgressBar1X1RemoteViews
@@ -43,6 +45,7 @@ object RemoteViewsPreviewHelper {
             DailyNoteWidget2X1RemoteViews::class.java.name to { DailyNoteWidget2X1RemoteViewsPreview(it) },
             HomeCoinRingProgressBar1X1RemoteViews::class.java.name to { HomeCoinRingProgressBar1X1RemoteViewsPreview(it) },
             DailyMaterial3X2RemoteViews::class.java.name to { DailyMaterial3X2Preview(it) },
+            DailyNoteOverview3X2RemoteViews::class.java.name to { DailyNoteOverview3X2RemoteViewsPreview(it)}
         )
     }
 

@@ -65,6 +65,10 @@ object PreferenceKeys {
         stringPreferencesKey("gachaRecordGameUidRegionMap")
     }
 
+    //导出V3记录,兼容低版本
+    val GachaRecordExportToUIGFV3 by lazy {
+        booleanPreferencesKey("gachaRecordExportToUIGFV3")
+    }
 
     //当前祈愿记录最后的uid,用于生成无ID的记录
     val GenerateGachaRecordId by lazy {

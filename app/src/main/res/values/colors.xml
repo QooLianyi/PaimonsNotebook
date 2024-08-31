@@ -16,5 +16,8 @@
 
     <color name="resin_color">#FF8CC5FF</color>
     <color name="resin_color_track">#FFECF5FF</color>
+    <color name="success">#FF67C23A</color>
+    <color name="success_track">#FFE1F3D8</color>
+
 
 </resources>

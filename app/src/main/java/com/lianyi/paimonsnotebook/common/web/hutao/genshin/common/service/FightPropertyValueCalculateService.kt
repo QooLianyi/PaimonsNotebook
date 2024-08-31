@@ -2,8 +2,8 @@ package com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service
 
 import com.lianyi.paimonsnotebook.common.extension.list.takeFirstIf
 import com.lianyi.paimonsnotebook.common.util.json.JSON
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.GrowCurveData
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.PromoteData
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.wiki.GrowCurveData
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.wiki.PromoteData
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.format.FightPropertyFormat
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.wiki.PropertyCurveValue
 import org.json.JSONArray

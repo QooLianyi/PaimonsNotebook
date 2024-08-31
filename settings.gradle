@@ -34,4 +34,3 @@ dependencyResolutionManagement {
 rootProject.name = "PaimonsNotebook"
 include ':app'
 include ':core'
-include ':wubbaboo'

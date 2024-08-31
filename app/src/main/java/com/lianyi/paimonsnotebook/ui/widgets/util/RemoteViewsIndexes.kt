@@ -4,6 +4,7 @@ import com.lianyi.paimonsnotebook.common.database.app_widget_binding.entity.AppW
 import com.lianyi.paimonsnotebook.ui.widgets.common.data.RemoteViewsInfo
 import com.lianyi.paimonsnotebook.ui.widgets.core.BaseRemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note.DailyNote2X1RemoteViews
+import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note.DailyNoteOverview3X2RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note.Expedition3X1RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.DailyNoteWidget2X1RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.HomeCoinRingProgressBar1X1RemoteViews
@@ -51,6 +52,42 @@ object RemoteViewsIndexes {
 
     //远端视图索引信息
     private val remoteViewsIndexesInfo by lazy {
+        dailyNoteRemoteViewsInfoList +
+        mapOf(
+            Expedition3X1RemoteViews::class.java.name to RemoteViewsInfo(
+                appWidgetClass = AppWidgetCommon3X1::class.java,
+                remoteViewsClass = Expedition3X1RemoteViews::class.java,
+                dataType = setOf(RemoteViewsDataType.DailyNote),
+                remoteViewsName = "派遣委托3*1",
+                remoteViewsType = RemoteViewsType.DailyNoteExpedition,
+                configurationOptions = defaultConfigurationOptionsGameRole
+            ),
+            DailyMaterial3X2RemoteViews::class.java.name to RemoteViewsInfo(
+                appWidgetClass = AppWidgetCommon3X2::class.java,
+                remoteViewsClass = DailyMaterial3X2RemoteViews::class.java,
+                remoteViewsName = "每日材料3*2",
+                remoteViewsType = RemoteViewsType.DailyMaterial,
+                configurationOptions = setOf(
+                    AppWidgetConfigurationOption.BackgroundPatten,
+                    AppWidgetConfigurationOption.TextColor
+                )
+            ),
+            Shortcut3X2RemoteViews::class.java.name to RemoteViewsInfo(
+                appWidgetClass = AppWidgetCommon3X1::class.java,
+                remoteViewsClass = Shortcut3X2RemoteViews::class.java,
+                remoteViewsName = "快捷启动3*2",
+                remoteViewsType = RemoteViewsType.Util,
+                configurationOptions = setOf(
+                    AppWidgetConfigurationOption.BackgroundColor,
+                    AppWidgetConfigurationOption.TextColor,
+                    AppWidgetConfigurationOption.ImageTintColor
+                )
+            ),
+        )
+    }
+
+    //实时便笺桌面组件远端视图列表
+    private val dailyNoteRemoteViewsInfoList by lazy {
         mapOf(
             DailyNoteWidget2X1RemoteViews::class.java.name to RemoteViewsInfo(
                 appWidgetClass = AppWidgetCommon2X1::class.java,
@@ -58,6 +95,14 @@ object RemoteViewsIndexes {
                 dataType = setOf(RemoteViewsDataType.DailyNoteWidget),
                 remoteViewsName = "实时便笺2*1",
                 remoteViewsType = RemoteViewsType.DailyNote,
+                configurationOptions = defaultConfigurationOptionsUser
+            ),
+            HomeCoinRingProgressBar1X1RemoteViews::class.java.name to RemoteViewsInfo(
+                appWidgetClass = AppWidgetCommon1X1::class.java,
+                remoteViewsClass = HomeCoinRingProgressBar1X1RemoteViews::class.java,
+                dataType = setOf(RemoteViewsDataType.DailyNoteWidget),
+                remoteViewsName = "洞天宝钱环形进度条1*1",
+                remoteViewsType = RemoteViewsType.DailyNoteHomeIcon,
                 configurationOptions = defaultConfigurationOptionsUser
             ),
             DailyNote2X1RemoteViews::class.java.name to RemoteViewsInfo(
@@ -100,49 +145,22 @@ object RemoteViewsIndexes {
                 remoteViewsType = RemoteViewsType.DailyNoteResin,
                 configurationOptions = defaultConfigurationOptionsUser
             ),
-            HomeCoinRingProgressBar1X1RemoteViews::class.java.name to RemoteViewsInfo(
-                appWidgetClass = AppWidgetCommon1X1::class.java,
-                remoteViewsClass = HomeCoinRingProgressBar1X1RemoteViews::class.java,
-                dataType = setOf(RemoteViewsDataType.DailyNoteWidget),
-                remoteViewsName = "洞天宝钱环形进度条1*1",
-                remoteViewsType = RemoteViewsType.DailyNoteHomeIcon,
-                configurationOptions = defaultConfigurationOptionsUser
-            ),
-            Expedition3X1RemoteViews::class.java.name to RemoteViewsInfo(
-                appWidgetClass = AppWidgetCommon3X1::class.java,
-                remoteViewsClass = Expedition3X1RemoteViews::class.java,
-                dataType = setOf(RemoteViewsDataType.DailyNote),
-                remoteViewsName = "派遣委托3*1",
-                remoteViewsType = RemoteViewsType.DailyNoteExpedition,
-                configurationOptions = defaultConfigurationOptionsGameRole
-            ),
-            DailyMaterial3X2RemoteViews::class.java.name to RemoteViewsInfo(
+            DailyNoteOverview3X2RemoteViews::class.java.name to RemoteViewsInfo(
                 appWidgetClass = AppWidgetCommon3X2::class.java,
-                remoteViewsClass = DailyMaterial3X2RemoteViews::class.java,
-                remoteViewsName = "每日材料3*2",
-                remoteViewsType = RemoteViewsType.DailyMaterial,
-                configurationOptions = setOf(
-                    AppWidgetConfigurationOption.BackgroundPatten,
-                    AppWidgetConfigurationOption.TextColor
-                )
+                remoteViewsClass = DailyNoteOverview3X2RemoteViews::class.java,
+                dataType = setOf(RemoteViewsDataType.DailyNote),
+                remoteViewsName = "实时便笺3*2",
+                remoteViewsType = RemoteViewsType.DailyNote,
+                configurationOptions = defaultConfigurationOption
             ),
-            Shortcut3X2RemoteViews::class.java.name to RemoteViewsInfo(
-                appWidgetClass = AppWidgetCommon3X1::class.java,
-                remoteViewsClass = Shortcut3X2RemoteViews::class.java,
-                remoteViewsName = "快捷启动3*2",
-                remoteViewsType = RemoteViewsType.Util,
-                configurationOptions = setOf(
-                    AppWidgetConfigurationOption.BackgroundColor,
-                    AppWidgetConfigurationOption.TextColor,
-                    AppWidgetConfigurationOption.ImageTintColor
-                )
-            )
         )
     }
+
 
     //根据远端视图类名获取远端视图信息
     fun getRemoteViewsInfoByRemoteViewsClassName(clsName: String) = remoteViewsIndexesInfo[clsName]
 
+    //根据远端视图类名获取组件名称
     fun getAppWidgetClassNameByRemoteViewsClassName(clsName: String) =
         remoteViewsIndexesInfo[clsName]?.appWidgetClass?.name ?: ""
 
@@ -159,6 +177,10 @@ object RemoteViewsIndexes {
     fun getSupportRemoteViewsListByAppWidgetClsName(appwidgetClsName: String) =
         appWidgetRemoteViewsMap[appwidgetClsName] ?: listOf()
 
+    /*
+    * 通过反射创建一个新的远端视图
+    * 当目标类不存在时,返回空
+    * */
     fun getRemoteViews(appWidgetBinding: AppWidgetBinding): BaseRemoteViews? =
         try {
             Class.forName(appWidgetBinding.remoteViewsClassName)

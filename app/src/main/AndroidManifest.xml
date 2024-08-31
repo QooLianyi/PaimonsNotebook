@@ -54,6 +54,12 @@
         tools:targetApi="33">
 
         <activity
+            android:name=".ui.screen.player_character.view.PlayerCharacterDetailScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.player_character.view.PlayerCharacterScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
             android:name=".ui.screen.cultivate_project.view.CultivateProjectOptionScreen"
             android:theme="@style/Theme.PaimonsNotebook" />
         <activity

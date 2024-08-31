@@ -43,9 +43,6 @@ class PassportClient {
         buildRequest {
             url(ApiEndpoints.createLoginCaptcha)
 
-            setXRpcAppInfo()
-            setDeviceInfoHeaders()
-
             if (aigis.isNotEmpty()) {
                 setXRpcAigis(aigis)
             }
@@ -65,9 +62,6 @@ class PassportClient {
         aigis: String = ""
     ) = buildRequest {
         url(ApiEndpoints.loginByMobileCaptcha)
-
-        setXRpcAppInfo()
-        setDeviceInfoHeaders()
 
         if (aigis.isNotEmpty()) {
             setXRpcAigis(aigis)
@@ -89,8 +83,6 @@ class PassportClient {
         addHeader("x-rpc-game_biz", "bbs_cn")
         addHeader("x-rpc-aigis", "")
         addHeader("x-rpc-sdk_version", CoreEnvironment.SDKVersion)
-
-        setXRpcAppInfo()
 
         setDeviceInfoHeaders(CoreEnvironment.DeviceId40)
 

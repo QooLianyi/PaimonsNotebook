@@ -31,7 +31,9 @@ object MetadataHelper {
             FileNameMonster,
             FileNameTowerSchedule,
             FileNameAchievement,
-            FileNameAchievementGoal
+            FileNameAchievementGoal,
+            FileNameReliquary,
+            FileNameReliquarySet,
         )
     }
 

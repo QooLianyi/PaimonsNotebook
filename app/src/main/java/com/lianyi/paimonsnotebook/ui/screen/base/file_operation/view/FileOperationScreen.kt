@@ -20,14 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
+import com.lianyi.core.ui.components.text.InfoText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.FilePropertiesOperationDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.InputDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.LoadingDialog
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
-import com.lianyi.core.ui.components.text.InfoText
-import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.base.file_operation.viewmodel.FileOperationScreenViewModel
@@ -56,9 +56,8 @@ open class FileOperationScreen : BaseActivity() {
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     item {
-                        com.lianyi.core.ui.components.text.PrimaryText(text = viewModel.pageTitle)
+                        PrimaryText(text = viewModel.pageTitle)
                     }
-
 
                     itemsIndexed(viewModel.fileList) { index, item ->
                         Row(
@@ -91,10 +90,10 @@ open class FileOperationScreen : BaseActivity() {
                             )
 
                             Column {
-                                com.lianyi.core.ui.components.text.PrimaryText(text = item.name)
+                                PrimaryText(text = item.name)
                                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    com.lianyi.core.ui.components.text.InfoText(text = item.lastModifierTimeText)
-                                    com.lianyi.core.ui.components.text.InfoText(text = item.sizeText)
+                                    InfoText(text = item.lastModifierTimeText)
+                                    InfoText(text = item.sizeText)
                                 }
                             }
                         }

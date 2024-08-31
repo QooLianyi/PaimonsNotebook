@@ -16,7 +16,7 @@ internal class HomeCoinRingProgressBar1X1RemoteViews(
 ) : BaseRemoteViews(
     appWidgetBinding.appWidgetId,
     AppWidgetCommon1X1::class.java,
-    R.layout.widget_layout_1_1_progress_bar
+    R.layout.widget_layout_progress_bar_1_1
 ) {
     init {
         setOnClickPendingIntent(R.id.container, updatePendingIntent)

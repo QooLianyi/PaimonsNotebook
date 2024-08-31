@@ -4,7 +4,8 @@ object UIGFHelper {
 
     const val UIGF_HOME_PAGE = "https://uigf.org/"
 
-    const val UIGF_VERSION = "v3.0"
+    //支持的uigf版本
+    const val UIGF_VERSION = "v4.0"
 
     private const val NOVICE_WISH = "100"
     private const val PERMANENT_WISH = "200"
@@ -65,12 +66,21 @@ object UIGFHelper {
             const val ExportApp = "export_app"
             const val ExportAppVersion = "export_app_version"
             const val UIGFVersion = "uigf_version"
+            const val Version = "version"
             const val RegionTimeZone = "region_time_zone"
+            const val TimeZone = "timezone"
 
             //必须有的字段
             val requiredFields = arrayOf(
                 Uid,
                 UIGFVersion,
+            )
+
+            val requiredFieldsV4 = arrayOf(
+                ExportTimestamp,
+                ExportApp,
+                ExportAppVersion,
+                Version
             )
 
 //            val fields = arrayOf(

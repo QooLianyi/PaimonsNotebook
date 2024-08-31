@@ -34,11 +34,17 @@ import kotlinx.coroutines.withContext
 
 /*
 * 小组件远端视图基类
+*
+* appWidgetId:桌面组件id
+* targetCls:绑定的标准组件
+* layout:布局资源id
+* dpHeight:布局高度(dp),未指定时使用全部可用空间来显示背景
 * */
 open class BaseRemoteViews(
     protected val appWidgetId: Int,
     protected val targetCls: Class<out BaseAppWidget>,
     layout: Int,
+    private val dpHeight: Float = -1f
 ) : RemoteViews(PaimonsNotebookApplication.context.packageName, layout) {
 
     private val diskCacheDao by lazy {
@@ -66,7 +72,7 @@ open class BaseRemoteViews(
         get() {
             val extra = if (isPortrait) AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH
             else AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH
-            return pxToDp(manager.getAppWidgetOptions(appWidgetId).getInt(extra, 1))
+            return dpToPx(manager.getAppWidgetOptions(appWidgetId).getInt(extra, 1))
         }
 
     //桌面组件高度
@@ -74,10 +80,10 @@ open class BaseRemoteViews(
         get() {
             val extra = if (isPortrait) AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT
             else AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT
-            return pxToDp(manager.getAppWidgetOptions(appWidgetId).getInt(extra, 1))
+            return dpToPx(manager.getAppWidgetOptions(appWidgetId).getInt(extra, 1))
         }
 
-    private fun pxToDp(value: Int) = (value * resources.displayMetrics.density).toInt()
+    private fun dpToPx(value: Number) = (value.toFloat() * resources.displayMetrics.density).toInt()
 
     protected fun basePendingIntent(
         action: String,
@@ -160,7 +166,7 @@ open class BaseRemoteViews(
     }
 
     private fun setBackgroundStyle(configuration: AppWidgetConfiguration) {
-        val radius = pxToDp((configuration.background?.backgroundRadius ?: 8f).toInt()).toFloat()
+        val radius = dpToPx((configuration.background?.backgroundRadius ?: 8f).toInt()).toFloat()
         val backgroundColor = configuration.background?.backgroundColor ?: White.toArgb()
 
         val radii = floatArrayOf(
@@ -172,7 +178,8 @@ open class BaseRemoteViews(
 
         val bitmap = Bitmap.createBitmap(
             width,
-            height,
+            if (dpHeight == -1f) height
+            else dpToPx(dpHeight),
             Bitmap.Config.ARGB_8888
         )
 

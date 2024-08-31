@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="发生了一个错误"
+        android:text="发生错误"
         android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="16sp"

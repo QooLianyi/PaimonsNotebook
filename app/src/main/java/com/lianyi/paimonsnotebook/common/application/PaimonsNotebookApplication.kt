@@ -65,10 +65,6 @@ class PaimonsNotebookApplication : Application(), ImageLoaderFactory {
         val latestReleaseUrl by lazy {
             "https://api.github.com/repos/QooLianyi/PaimonsNotebook/releases/latest"
         }
-
-        val isDebug by lazy {
-            context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
-        }
     }
 
     override fun onCreate() {

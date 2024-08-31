@@ -23,12 +23,21 @@
     <string name="add_widget">Add widget</string>
 
     <!--桌面组件组件label-->
-    <string name="appwidget_label_common_1_1">标准桌面组件1*1</string>
-    <string name="appwidget_label_common_2_1">标准桌面组件2*1</string>
-    <string name="appwidget_label_common_2_2">标准桌面组件2*2</string>
-    <string name="appwidget_label_common_3_1">标准桌面组件3*1</string>
-    <string name="appwidget_label_common_3_2">标准桌面组件3*2</string>
-    <string name="appwidget_label_common_4_3">标准桌面组件4*3</string>
+    <string name="appwidget_label_common_1_1">桌面组件1*1</string>
+    <string name="appwidget_label_common_1_2">桌面组件1*2</string>
+
+    <string name="appwidget_label_common_2_1">桌面组件2*1</string>
+    <string name="appwidget_label_common_2_2">桌面组件2*2</string>
+
+    <string name="appwidget_label_common_3_1">桌面组件3*1</string>
+    <string name="appwidget_label_common_3_2">桌面组件3*2</string>
+
+    <string name="appwidget_label_common_4_2">桌面组件4*2</string>
+    <string name="appwidget_label_common_4_3">桌面组件4*3</string>
+
+    <string name="appwidget_label_common_5_1">桌面组件5*1</string>
+    <string name="appwidget_label_common_5_2">桌面组件5*2</string>
+    <string name="appwidget_label_common_5_3">桌面组件5*3</string>
 
     <!--远端视图描述-->
     <string name="remote_views_description_default">此组件没有特殊的要求</string>

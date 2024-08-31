@@ -79,7 +79,7 @@ class GachaRecordService {
 
             //遍历星级,根据星级设置对应的数据
             starWeight.map { pair ->
-                val overviewData = types["${pair.first}"] ?: return@forEach
+                val overviewData = types["${pair.first}"] ?: return@map
 
                 val count = overviewData.count
                 val star = pair.first

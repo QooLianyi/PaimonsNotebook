@@ -7,6 +7,9 @@
 # 将realse/app-release.apk,排除,更新用
 !release/app-release.apk
 
+# 取消test目录同步
+#src/test/java/
+
 # Files for the ART/Dalvik VM
 *.dex
 
@@ -23,9 +26,6 @@ out/
 # Gradle files
 .gradle/
 build/
-
-# 取消test目录同步
-src/test/java/
 
 # Local configuration file (sdk path, etc)
 local.properties

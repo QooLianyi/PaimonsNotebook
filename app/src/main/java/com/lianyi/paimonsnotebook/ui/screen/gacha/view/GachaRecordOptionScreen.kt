@@ -26,6 +26,7 @@ import com.lianyi.paimonsnotebook.common.components.widget.ProgressBar
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
 import com.lianyi.paimonsnotebook.ui.screen.account.components.dialog.UserGameRolesDialog
+import com.lianyi.paimonsnotebook.ui.screen.gacha.components.dialog.ChooseGameUidDialog
 import com.lianyi.paimonsnotebook.ui.screen.gacha.viewmodel.GachaRecordOptionScreenViewModel
 import com.lianyi.paimonsnotebook.ui.screen.setting.components.SettingOptionGroup
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
@@ -114,17 +115,13 @@ class GachaRecordOptionScreen : BaseActivity() {
             )
         }
 
-//        if (viewModel.showRequestPermissionDialog) {
-//            ConfirmDialog(title = "缺少权限",
-//                content = "使用相应功能需要存储权限,点击确定前往申请",
-//                onConfirm = {
-//                    viewModel.showRequestPermissionDialog = false
-//                    requestStoragePermission()
-//                },
-//                onCancel = {
-//                    viewModel.showRequestPermissionDialog = false
-//                })
-//        }
+        if(viewModel.showChooseExportUidDialog){
+            ChooseGameUidDialog(
+                uidList = viewModel.gachaRecordGameUidList,
+                onConfirm = viewModel::confirmExportSelectedUidRecord,
+                viewModel::dismissChooseExportUidDialog
+            )
+        }
     }
 
     override fun onRequestPermissionsResult(result: Boolean) {

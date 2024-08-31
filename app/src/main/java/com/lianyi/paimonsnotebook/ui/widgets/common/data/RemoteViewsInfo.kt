@@ -38,9 +38,9 @@ data class RemoteViewsInfo(
     val description by lazy {
         val list = mutableListOf<String>().apply {
 
-            if (dataType.contains(RemoteViewsDataType.DailyNote) ||
-                dataType.contains(RemoteViewsDataType.DailyNoteWidget)
-            ) {
+            if(dataType.contains(RemoteViewsDataType.NoNetworkUpdate)){
+                this += "更新时无需网络"
+            }else{
                 this += "更新时需要网络"
             }
 
