@@ -32,12 +32,12 @@ class AppWidgetScreen : BaseActivity() {
                     Crossfade(targetState = viewModel.currentTabIndex, label = "") {
                         when (it) {
                             0 -> {
-                                AppWidgetOverview()
+                                AppWidgetOverview(viewModel.enableMetadata)
                             }
 
                             else -> {
                                 if(viewModel.appWidgetBindingList.isEmpty()){
-                                    EmptyPlaceholder("暂时没有已绑定的小组件")
+                                    EmptyPlaceholder("暂时没有已创建的桌面组件")
                                 }else{
                                     AlreadyBindingAppWidgetPage(list = viewModel.appWidgetBindingList, onClick = viewModel::goAppWidgetConfigurationScreen)
                                 }

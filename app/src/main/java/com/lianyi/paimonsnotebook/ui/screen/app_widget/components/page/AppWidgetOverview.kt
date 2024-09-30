@@ -34,17 +34,22 @@ import com.lianyi.paimonsnotebook.ui.widgets.util.RemoteViewsPreviewHelper
 import com.lianyi.paimonsnotebook.ui.widgets.util.RemoteViewsTypeHelper
 
 @Composable
-internal fun AppWidgetOverview() {
+internal fun AppWidgetOverview(
+    enableMetadata: Boolean
+) {
 
     val list = remember {
-        RemoteViewsIndexes.list.groupBy { remoteViewsInfo ->
-            RemoteViewsTypeHelper.getTypeNameByType(remoteViewsInfo.remoteViewsType)
-        }.map {
-            it.key to it.value.map { remoteViewsInfo ->
-                val clsName = remoteViewsInfo.remoteViewsClass.name
-                clsName to RemoteViewsPreviewHelper.getPreviewByRemoteViewsClassName(clsName)
+        RemoteViewsIndexes.list
+            .filter {
+                it.requireMetadata == enableMetadata || enableMetadata
+            }.groupBy { remoteViewsInfo ->
+                RemoteViewsTypeHelper.getTypeNameByType(remoteViewsInfo.remoteViewsType)
+            }.map {
+                it.key to it.value.map { remoteViewsInfo ->
+                    val clsName = remoteViewsInfo.remoteViewsClass.name
+                    clsName to RemoteViewsPreviewHelper.getPreviewByRemoteViewsClassName(clsName)
+                }
             }
-        }
     }
 
     val tempPreviewAnim = RemoteViewsPreviewAnimData()
@@ -52,7 +57,7 @@ internal fun AppWidgetOverview() {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(6.dp),
-        contentPadding = PaddingValues(12.dp,6.dp)
+        contentPadding = PaddingValues(12.dp, 6.dp)
     ) {
         items(list) { pair ->
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -89,7 +94,10 @@ internal fun AppWidgetOverview() {
                                         AppWidgetHelper.PARAM_APPWIDGET_CLASS_NAME,
                                         remoteViewsInfo.appWidgetClass.name
                                     )
-                                    putInt(AppWidgetHelper.PARAM_ADD_FLAG, AppWidgetHelper.FLAG_ADD)
+                                    putInt(
+                                        AppWidgetHelper.PARAM_ADD_FLAG,
+                                        AppWidgetHelper.FLAG_ADD
+                                    )
                                 })
                         }
                     ) {

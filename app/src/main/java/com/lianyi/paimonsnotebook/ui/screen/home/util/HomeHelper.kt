@@ -12,12 +12,13 @@ import com.lianyi.paimonsnotebook.ui.screen.achievement.view.AchievementScreen
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.view.AppWidgetScreen
 import com.lianyi.paimonsnotebook.ui.screen.cultivate_project.view.CultivateProjectScreen
 import com.lianyi.paimonsnotebook.ui.screen.daily_note.view.DailyNoteScreen
-import com.lianyi.paimonsnotebook.ui.screen.develop.TypographyScreen
 import com.lianyi.paimonsnotebook.ui.screen.gacha.view.GachaRecordScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.data.ModalItemData
 import com.lianyi.paimonsnotebook.ui.screen.items.view.AvatarScreen
 import com.lianyi.paimonsnotebook.ui.screen.items.view.CultivationMaterialScreen
+import com.lianyi.paimonsnotebook.ui.screen.items.view.ReliquaryScreen
 import com.lianyi.paimonsnotebook.ui.screen.items.view.WeaponScreen
+import com.lianyi.paimonsnotebook.ui.screen.player_character.view.PlayerCharacterScreen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -26,7 +27,8 @@ object HomeHelper {
         PaimonsNotebookApplication.context
     }
 
-    val modalItemData = listOf(
+    //侧边栏所有功能
+    private val modalItemData = listOf(
         ModalItemData(
             name = "实时便笺",
             icon = R.drawable.ic_moon,
@@ -34,67 +36,93 @@ object HomeHelper {
             sortIndex = 10
         ),
         ModalItemData(
-            name = "祈愿记录",
-            icon = R.drawable.ic_genshin_game_wish,
-            target = GachaRecordScreen::class.java,
+            name = "我的角色",
+            icon = R.drawable.ic_genshin_game_sign_character,
+            target = PlayerCharacterScreen::class.java,
             sortIndex = 20,
             requireMetadata = true
         ),
         ModalItemData(
-            name = "角色资料",
-            icon = R.drawable.ic_genshin_game_character,
-            target = AvatarScreen::class.java,
+            name = "祈愿记录",
+            icon = R.drawable.ic_genshin_game_wish,
+            target = GachaRecordScreen::class.java,
             sortIndex = 30,
+            requireMetadata = true
+        ),
+        ModalItemData(
+            name = "角色资料",
+            icon = R.drawable.ic_genshin_game_character_card,
+            target = AvatarScreen::class.java,
+            sortIndex = 40,
             requireMetadata = true
         ),
         ModalItemData(
             name = "武器资料",
             icon = R.drawable.ic_genshin_game_equip,
             target = WeaponScreen::class.java,
-            sortIndex = 40,
+            sortIndex = 50,
+            requireMetadata = true
+        ),
+        ModalItemData(
+            name = "圣遗物资料",
+            icon = R.drawable.ic_genshin_game_sign_artifacts,
+            target = ReliquaryScreen::class.java,
+            sortIndex = 60,
             requireMetadata = true
         ),
         ModalItemData(
             name = "养成计划",
             icon = R.drawable.ic_genshin_game_ggc_book,
             target = CultivateProjectScreen::class.java,
-            sortIndex = 50,
+            sortIndex = 70,
             requireMetadata = true
         ),
         ModalItemData(
             name = "养成材料",
             icon = R.drawable.ic_genshin_game_material,
             target = CultivationMaterialScreen::class.java,
-            sortIndex = 60,
+            sortIndex = 80,
             requireMetadata = true
         ),
         ModalItemData(
             name = "深境螺旋",
             icon = R.drawable.ic_genshin_game_spiral_abyss,
             target = AbyssScreen::class.java,
-            sortIndex = 70,
+            sortIndex = 90,
             requireMetadata = true
         ),
         ModalItemData(
             name = "成就管理",
             icon = R.drawable.ic_genshin_game_sign_cup,
             target = AchievementScreen::class.java,
-            sortIndex = 80,
+            sortIndex = 100,
             requireMetadata = true
         ),
         ModalItemData(
             name = "桌面组件",
             icon = R.drawable.ic_appwidget,
             target = AppWidgetScreen::class.java,
-            sortIndex = 90,
-            requireMetadata = true
+            sortIndex = 110
         ),
     )
+
+    //获取显示的侧边栏数据
+    fun getShowModalItemData(enableMetadata: Boolean) =
+        modalItemData.filter { it.requireMetadata == enableMetadata || enableMetadata }
 
     private val ModalItemsStateFlow = MutableStateFlow<List<ModalItemData>>(listOf())
 
     //对外开放的modalItems流
     val modalItemsFlow = ModalItemsStateFlow.asStateFlow()
+
+    //更新侧边栏流
+    suspend fun updateShowModalItemData(enableMetadata: Boolean) {
+
+
+
+        val items = getShowModalItemData(enableMetadata)
+        ModalItemsStateFlow.emit(items)
+    }
 
     init {
 //        CoroutineScope(Dispatchers.IO).launchIO {

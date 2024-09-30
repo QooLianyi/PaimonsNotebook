@@ -469,7 +469,9 @@ object ApiEndpoints {
 
     const val createLoginCaptcha = "${PassportApiMaCnVerifier}/verifier/createLoginCaptcha"
 
+    //游戏角色列表
     const val gameRecordCharacterList = "${ApiTakumiRecordApi}/character/list"
 
+    //游戏角色详情
     const val gameRecordCharacterDetail = "${ApiTakumiRecordApi}/character/detail"
 }

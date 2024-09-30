@@ -4,11 +4,15 @@ import android.os.Bundle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.database.app_widget_binding.entity.AppWidgetBinding
+import com.lianyi.paimonsnotebook.common.extension.scope.launchMain
+import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
+import com.lianyi.paimonsnotebook.common.util.data_store.dataStoreValuesFirstLambda
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.AppWidgetAlreadyData
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.view.AppWidgetConfigurationScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
@@ -23,8 +27,16 @@ class AppWidgetScreenViewModel : ViewModel() {
 
     val appWidgetBindingList = mutableStateListOf<AppWidgetAlreadyData>()
 
+    var enableMetadata by mutableStateOf(false)
+        private set
+
     fun init() {
         viewModelScope.launch(Dispatchers.IO) {
+
+            enableMetadata = dataStoreValuesFirstLambda {
+                this[PreferenceKeys.EnableMetadata] ?: false
+            }
+
             appWidgetBindingDao.getAllAppWidgetBinding().collect { list ->
                 val userMap = userDao.getAllUser().associateBy { user ->
                     user.mid
@@ -58,7 +70,7 @@ class AppWidgetScreenViewModel : ViewModel() {
                 AppWidgetHelper.PARAM_REMOTE_VIEWS_CLASS_NAME,
                 appWidgetBinding.remoteViewsClassName
             )
-            putInt(AppWidgetHelper.PARAM_APPWIDGET_ID,appWidgetBinding.appWidgetId)
+            putInt(AppWidgetHelper.PARAM_APPWIDGET_ID, appWidgetBinding.appWidgetId)
             putString(
                 AppWidgetHelper.PARAM_APPWIDGET_CLASS_NAME,
                 RemoteViewsIndexes.getAppWidgetClassNameByRemoteViewsClassName(appWidgetBinding.remoteViewsClassName)

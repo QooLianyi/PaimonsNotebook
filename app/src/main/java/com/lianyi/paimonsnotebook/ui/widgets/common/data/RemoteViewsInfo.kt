@@ -20,7 +20,8 @@ data class RemoteViewsInfo(
     val configurationOptions: Set<AppWidgetConfigurationOption>,
     val remoteViewsName: String = "默认名称",
     val dataType: Set<RemoteViewsDataType> = setOf(),
-    val remoteViewsType: RemoteViewsType = RemoteViewsType.Default
+    val remoteViewsType: RemoteViewsType = RemoteViewsType.Default,
+    val requireMetadata:Boolean = false
 ) {
     companion object {
         //远端视图默认配置选项
@@ -47,6 +48,7 @@ data class RemoteViewsInfo(
             if (dataType.contains(RemoteViewsDataType.DailyNote)) {
                 this += "更新时可能需要进行验证"
             }
+
             if (configurationOptions.contains(AppWidgetConfigurationOption.User)) {
                 this += "此组件更新时只会更新用户账号下默认角色的信息"
             }

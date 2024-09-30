@@ -26,7 +26,9 @@ data class AchievementData(
     @SerializedName("Icon")
     val icon: String,
     @SerializedName("PreviousId")
-    val previousId: Int
+    val previousId: Int,
+//    @SerializedName("IsDailyQuest")
+//    val isDailyQuest: Boolean
 ) {
     data class FinishReward(
         val Count: Int,

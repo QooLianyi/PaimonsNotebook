@@ -291,7 +291,8 @@ class AppWidgetConfigurationScreen : BaseActivity() {
             remoteViewsClassName = viewModel.configuration.remoteViewsClassName,
             visible = viewModel.showRemoteViewsPickerPopup,
             onRequestDismiss = viewModel::dismissRemoteViewsPickPopup,
-            onSelect = viewModel::changeRemoteViews
+            onSelect = viewModel::changeRemoteViews,
+            enableMetadata = viewModel.enableMetadata
         )
 
         if (viewModel.showGameRoleSelectDialog) {

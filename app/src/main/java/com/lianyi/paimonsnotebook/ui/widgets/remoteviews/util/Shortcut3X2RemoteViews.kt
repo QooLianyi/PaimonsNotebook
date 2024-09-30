@@ -39,7 +39,10 @@ class Shortcut3X2RemoteViews(
             }
             PreferenceKeys.AppWidgetShortcutCurrentPage.editValue(tempValue)
 
-            val items = HomeHelper.modalItemData
+            //此处默认不启用元数据
+            val enableMetadata = it[PreferenceKeys.EnableMetadata] ?: false
+            val items = HomeHelper.getShowModalItemData(enableMetadata)
+
 
             val maxPage = items.size / count + if (items.size % count == 0) 0 else 1
 

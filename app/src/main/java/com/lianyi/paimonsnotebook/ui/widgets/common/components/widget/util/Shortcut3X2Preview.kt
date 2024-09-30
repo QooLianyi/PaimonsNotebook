@@ -108,7 +108,7 @@ internal fun Shortcut3X2Preview(
             listOf(
                 R.drawable.ic_moon to "实时便笺",
                 R.drawable.ic_genshin_game_wish to "祈愿记录",
-                R.drawable.ic_genshin_game_character to "角色资料",
+                R.drawable.ic_genshin_game_character_card to "角色资料",
                 R.drawable.ic_genshin_game_equip to "武器资料",
                 R.drawable.ic_genshin_game_material to "养成材料"
             )

@@ -2,13 +2,12 @@ package com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service
 
 import com.lianyi.paimonsnotebook.common.util.file.FileHelper
 import com.lianyi.paimonsnotebook.common.util.json.JSON
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util.MetadataHelper
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util.MetadataHelper
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.FightProperty
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.GrowCurveType
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.format.FightPropertyFormat
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.wiki.PropertyCurveValue
-import org.json.JSONArray
 import java.io.File
 
 /*
@@ -19,21 +18,33 @@ class AvatarService(onMissingFile: () -> Unit) {
     var avatarList = listOf<AvatarData>()
         private set
 
+    //key = avatarId , value = avatarData
+    val avatarMap by lazy {
+        avatarList.associateBy { it.id }
+    }
+
     lateinit var fightPropertyValueCalculateService: FightPropertyValueCalculateService
         private set
 
     init {
-        val avatarFile = FileHelper.getMetadata(MetadataHelper.FileNameAvatar)
+        val avatarDir = FileHelper.getMetadataDir(MetadataHelper.DirNameAvatar)
+        val avatarJsonFileList = avatarDir.listFiles() ?: arrayOf()
+
         val avatarCurveFile = FileHelper.getMetadata(MetadataHelper.FileNameAvatarCurve)
         val avatarPromoteFile = FileHelper.getMetadata(MetadataHelper.FileNameAvatarPromote)
 
-        if (avatarFile != null && avatarCurveFile != null && avatarPromoteFile != null) {
-            setAvatarList(JSONArray(avatarFile.readText()))
+        if (avatarJsonFileList.isNotEmpty() && avatarCurveFile != null && avatarPromoteFile != null) {
 
-            initFightPropertyValueCalculateService(avatarCurveFile, avatarPromoteFile)
+            try {
+                setAvatarList(avatarJsonFileList)
+                initFightPropertyValueCalculateService(avatarCurveFile, avatarPromoteFile)
+            } catch (_: Exception) {
+                onMissingFile.invoke()
+            }
         } else {
             onMissingFile.invoke()
         }
+
     }
 
     private fun initFightPropertyValueCalculateService(
@@ -97,11 +108,11 @@ class AvatarService(onMissingFile: () -> Unit) {
         )
     }
 
-    private fun setAvatarList(jsonArray: JSONArray) {
+    private fun setAvatarList(jsonFileList: Array<File>) {
         val list = mutableListOf<AvatarData>()
-        repeat(jsonArray.length()) {
-            val jsonString = jsonArray.getJSONObject(it).toString()
-            list += JSON.parse<AvatarData>(jsonString)
+
+        jsonFileList.forEach { file ->
+            list += JSON.parse<AvatarData>(file.readText())
         }
 
         list.sortBy { it.sort }

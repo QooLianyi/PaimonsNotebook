@@ -19,4 +19,9 @@ data class User(
 
     fun getSelectedGameRole(): UserGameRoleData.Role? = userGameRoles.takeFirstIf { it.is_chosen }
 
+    fun getUserAndUid(): UserAndUid? {
+        val role = getSelectedGameRole() ?: return null
+        return UserAndUid(userEntity = userEntity, playerUid = role.getPlayerUid())
+    }
+
 }

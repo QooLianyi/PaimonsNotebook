@@ -51,8 +51,14 @@
         android:roundIcon="@mipmap/ic_paimonsnotebook"
         android:supportsRtl="true"
         android:theme="@style/Theme.PaimonsNotebook"
-        tools:targetApi="33">
+        tools:targetApi="34">
 
+        <activity
+            android:name=".ui.screen.home.view.HomeDrawerManagerScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
+        <activity
+            android:name=".ui.screen.items.view.ReliquaryScreen"
+            android:theme="@style/Theme.PaimonsNotebook" />
         <activity
             android:name=".ui.screen.player_character.view.PlayerCharacterDetailScreen"
             android:theme="@style/Theme.PaimonsNotebook" />

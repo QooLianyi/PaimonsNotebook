@@ -102,7 +102,7 @@ class PaimonsNotebookApplication : Application(), ImageLoaderFactory {
         //debug环境
         if (BuildConfig.DEBUG) {
             //debug包启用activity生命周期回调
-            initActivityLifecycleCallbacks()
+//            initActivityLifecycleCallbacks()
 
 //            StrictMode.enableDefaults()
 

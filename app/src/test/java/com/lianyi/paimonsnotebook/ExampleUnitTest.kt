@@ -1,11 +1,18 @@
 package com.lianyi.paimonsnotebook
 
+import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
 import com.lianyi.paimonsnotebook.common.util.json.JSON
 import com.lianyi.paimonsnotebook.common.util.parameter.getParameterizedType
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.conveter.RelicIconConverter
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.ReliquaryType
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.reliquary.ReliquaryData
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.reliquary.ReliquarySetData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.junit.Test
 import java.io.File
 
@@ -15,6 +22,31 @@ import java.io.File
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
+
+    @Test
+    fun codeTest(): Unit =
+
+        runBlocking {
+
+            withContext(Dispatchers.IO){
+                repeat(10){
+                    launchIO {
+                        delayCall(it)
+                    }
+                }
+            }
+
+        }
+
+
+    private suspend fun delayCall(i:Int){
+        val r = (1..10).random()
+        println("i = ${i} r = ${r} start")
+        delay(r*1000L)
+        println("i = ${i} r = ${r} end")
+    }
+
+
     /*
 
     * */
@@ -41,6 +73,8 @@ class ExampleUnitTest {
                 println("null -- ${t} ${u}")
                 return@forEach
             }
+
+            println("${t} ${u}")
 
             println("${setData.Name} - ${setData.SetId}")
 

@@ -66,12 +66,21 @@ class HomeScreenViewModel : ViewModel() {
 
     private val updateService = UpdateService()
 
+    val modalItems = mutableStateListOf<ModalItemData>()
+
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             launch {
                 SettingsHelper.configurationFlow.collect {
                     configurationData = it
                     checkOverlayPermission()
+                }
+            }
+            launch {
+                HomeHelper.modalItemsFlow.collect {
+                    modalItems.clear()
+                    modalItems += it
                 }
             }
             launch {
@@ -85,32 +94,21 @@ class HomeScreenViewModel : ViewModel() {
                     dailyNoteList.addAll(it)
                 }
             }
-
             launch {
                 dataStoreValuesFirst {
                     val check = it[PreferenceKeys.EnableCheckNewVersion] ?: true
                     if (check) {
                         updateService.checkNewVersion(onFoundNewVersion = {
-                            "发现新版本,可前往设置进行更新[关于->派蒙笔记本]".notify()
+                            "发现新版本,可前往设置进行更新[关于->派蒙笔记本]".notify(closeable = true)
                         }, onFail = {
                         }, onNotFoundNewVersion = {
                         })
                     }
                 }
             }
-
             launch {
-                if (MetadataHelper.metadataNeedUpdate()) {
-                    "发现新的元数据,正在更新...".notify()
-                    MetadataHelper.updateMetadata(
-                        onFailed = {
-                            "更新元数据时发生错误,现在使用的仍是旧数据,显示的内容可能会与最新的游戏内容有所差异".errorNotify()
-                        },
-                        onSuccess = {
-                            "元数据更新完毕".notify()
-                        },
-                        onLoadMetadataFile = {}
-                    ) {}
+                if (configurationData.enableMetadata) {
+                    MetadataHelper.checkAndUpdateMetadata()
                 }
             }
         }
@@ -138,8 +136,6 @@ class HomeScreenViewModel : ViewModel() {
     var noticeStatus by mutableStateOf(LoadingState.Empty)
 
     var isRefreshing by mutableStateOf(false)
-
-    val modalItems = HomeHelper.modalItemData
 
     fun init() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -242,11 +238,7 @@ class HomeScreenViewModel : ViewModel() {
         return url.takeLast(takeCount).split("?").first().toLongOrNull() ?: 0L
     }
 
-    fun navigateScreen(modalItemData: ModalItemData) {
-        HomeHelper.goActivity(modalItemData.target)
-    }
-
-    fun <T : Activity> functionNavigate(cls: Class<T>) {
+    fun functionNavigate(cls: Class<out Activity>) {
         HomeHelper.goActivity(cls)
     }
 

@@ -24,7 +24,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
 import com.lianyi.paimonsnotebook.common.database.cultivate.data.CultivateEntityType
 import com.lianyi.paimonsnotebook.common.database.cultivate.entity.CultivateEntity
@@ -137,7 +136,7 @@ fun CultivateMaterialGroup(
             Icon(
                 painter = painterResource(
                     id = when (materialListDisplayState) {
-                        CultivateMaterialListDisplayState.Avatar -> R.drawable.ic_genshin_game_character
+                        CultivateMaterialListDisplayState.Avatar -> R.drawable.ic_genshin_game_character_card
                         CultivateMaterialListDisplayState.Skill -> R.drawable.ic_star_outline
                         CultivateMaterialListDisplayState.Weapon -> R.drawable.ic_genshin_game_equip
                         CultivateMaterialListDisplayState.Overall -> R.drawable.ic_list_square

@@ -85,11 +85,12 @@ object PreferenceKeys {
         intPreferencesKey("lastViewAvatarId")
     }
 
+    //最后查看的武器的id
     val LastViewWeaponId by lazy {
         intPreferencesKey("lastViewWeaponId")
     }
 
-    //第一次进入配置界面
+    //第一次进入桌面组件配置界面
     val FirstEntryAppWidgetConfigurationScreen by lazy {
         booleanPreferencesKey("firstEntryAppWidgetConfigurationScreen")
     }
@@ -104,6 +105,7 @@ object PreferenceKeys {
         booleanPreferencesKey("enableAutoCleanExpiredImages")
     }
 
+    //检查新版本
     val EnableCheckNewVersion by lazy {
         booleanPreferencesKey("enableCheckNewVersion")
     }
@@ -158,15 +160,35 @@ object PreferenceKeys {
         booleanPreferencesKey("enableMetadata")
     }
 
-    //所需的元数据
-    val RequireMetadata by lazy {
-        stringPreferencesKey("requireMetadata")
+    //是否显示元数据的提示
+    val OnLaunchShowEnableMetadataHint by lazy {
+        booleanPreferencesKey("onLaunchShowEnableMetadataHint")
     }
 
     //根据养成计划类型进行排序
     val CultivateProjectSortByEntityType by lazy {
         booleanPreferencesKey("cultivateProjectSortByEntityType")
     }
+
+    //是否完成了元数据的初始化下载
+    val InitialMetadataDownload by lazy {
+        booleanPreferencesKey("initialMetadataDownload")
+    }
+
+    val CheckMetadataNewVersion by lazy {
+        booleanPreferencesKey("checkMetadataNewVersion")
+    }
+
+    //是否启用自定义主页侧边栏
+    val EnableCustomHomeDrawer by lazy {
+        booleanPreferencesKey("enableCustomHomeDrawer")
+    }
+
+    
+    val CustomHomeDrawerList by lazy {
+        stringPreferencesKey("customHomeDrawerList")
+    }
+
 
     val widgetsCount by lazy {
         intPreferencesKey("widgetsCount")

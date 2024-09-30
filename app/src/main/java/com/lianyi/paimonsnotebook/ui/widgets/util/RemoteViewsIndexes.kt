@@ -70,7 +70,8 @@ object RemoteViewsIndexes {
                 configurationOptions = setOf(
                     AppWidgetConfigurationOption.BackgroundPatten,
                     AppWidgetConfigurationOption.TextColor
-                )
+                ),
+                requireMetadata = true
             ),
             Shortcut3X2RemoteViews::class.java.name to RemoteViewsInfo(
                 appWidgetClass = AppWidgetCommon3X1::class.java,

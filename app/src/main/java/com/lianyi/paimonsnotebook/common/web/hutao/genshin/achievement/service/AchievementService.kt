@@ -39,6 +39,7 @@ class AchievementService(onMissingFile: () -> Unit) {
                 var process = -1
                 var previousId = 0
                 var isDeleteWatcher = false
+                var isDailyQuest = false
                 var title = ""
                 var description = ""
                 var version = ""
@@ -81,6 +82,9 @@ class AchievementService(onMissingFile: () -> Unit) {
                             UIAFHelper.Field.Data.IsDeleteWatcherAfterFinish -> isDeleteWatcher =
                                 nextBoolean()
 
+                            UIAFHelper.Field.Data.IsDailyQuest -> isDailyQuest =
+                                nextBoolean()
+
                             UIAFHelper.Field.Data.Progress -> process = nextInt()
                             UIAFHelper.Field.Data.Version -> version = nextString()
                             UIAFHelper.Field.Data.Icon -> icon = nextString()
@@ -104,6 +108,9 @@ class AchievementService(onMissingFile: () -> Unit) {
                     icon,
                     previousId
                 )
+
+                //重置标识
+                isDailyQuest = false
             }
 
             it.endArray()

@@ -27,12 +27,13 @@ import com.lianyi.paimonsnotebook.common.database.user.util.AccountHelper
 import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.extension.list.takeFirstIf
 import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
+import com.lianyi.paimonsnotebook.common.extension.scope.launchMain
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.common.extension.string.notify
 import com.lianyi.paimonsnotebook.common.extension.string.showLong
 import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
 import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
-import com.lianyi.paimonsnotebook.common.util.data_store.datastorePf
+import com.lianyi.paimonsnotebook.common.util.data_store.dataStoreValuesFirst
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.binding.UserGameRoleData
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.data.AppWidgetConfigurationData
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.util.ColorPickerType
@@ -46,12 +47,26 @@ import com.lianyi.paimonsnotebook.ui.widgets.util.RemoteViewsIndexes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class AppWidgetConfigurationScreenViewModel : ViewModel() {
     private val dao by lazy {
         PaimonsNotebookDatabase.database.appWidgetBindingDao
+    }
+
+    var firstEntry by mutableStateOf(false)
+        private set
+
+    var enableMetadata = false
+        private set
+
+    init {
+        viewModelScope.launchMain {
+            dataStoreValuesFirst {
+                firstEntry = it[PreferenceKeys.FirstEntryAppWidgetConfigurationScreen] ?: true
+                enableMetadata = it[PreferenceKeys.EnableMetadata] ?: false
+            }
+        }
     }
 
     //当前组件配置
@@ -98,15 +113,6 @@ class AppWidgetConfigurationScreenViewModel : ViewModel() {
 
     private var colorPickerType = ColorPickerType.None
 
-    var firstEntry by mutableStateOf(false)
-
-    init {
-        viewModelScope.launchIO {
-            firstEntry =
-                context.datastorePf.data.first()[PreferenceKeys.FirstEntryAppWidgetConfigurationScreen]
-                    ?: true
-        }
-    }
 
     lateinit var finishActivity: () -> Unit
 

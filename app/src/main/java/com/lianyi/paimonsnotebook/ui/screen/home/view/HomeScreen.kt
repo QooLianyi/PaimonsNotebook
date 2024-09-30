@@ -6,13 +6,9 @@ import androidx.activity.result.ActivityResult
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.DrawerValue
@@ -33,20 +29,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
 import com.lianyi.paimonsnotebook.common.components.loading.LoadingAnimationPlaceholder
-import com.lianyi.paimonsnotebook.common.components.spacer.NavigationBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.account.components.dialog.UserDialog
-import com.lianyi.paimonsnotebook.ui.screen.account.view.AccountManagerScreen
-import com.lianyi.paimonsnotebook.ui.screen.home.components.card.account.AccountInfoCard
 import com.lianyi.paimonsnotebook.ui.screen.home.components.home.HomeContent
-import com.lianyi.paimonsnotebook.ui.screen.home.components.menu.SideBarMenuList
+import com.lianyi.paimonsnotebook.ui.screen.home.components.home.HomeDrawerContent
 import com.lianyi.paimonsnotebook.ui.screen.home.viewmodel.HomeScreenViewModel
 import com.lianyi.paimonsnotebook.ui.screen.setting.util.enums.HomeScreenDisplayState
-import com.lianyi.paimonsnotebook.ui.screen.setting.view.SettingsScreen
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
-import com.lianyi.paimonsnotebook.ui.theme.Black
 import com.lianyi.paimonsnotebook.ui.theme.PaimonsNotebookTheme
 import com.lianyi.paimonsnotebook.ui.theme.White
 
@@ -74,61 +65,13 @@ class HomeScreen : BaseActivity() {
                     modifier = Modifier.fillMaxSize(),
                     drawerState = drawerState,
                     drawerContent = {
-                        Column(Modifier.fillMaxSize()) {
-
-                            AccountInfoCard(viewModel.selectedUser, onAddAccount = {
-                                viewModel.functionNavigate(AccountManagerScreen::class.java)
-                            })
-
-                            SideBarMenuList(list = viewModel.modalItems) {
-                                viewModel.navigateScreen(it)
-                            }
-
-                            Spacer(modifier = Modifier.weight(1f))
-
-                            Row(
-                                modifier = Modifier
-                                    .padding(8.dp)
-                                    .fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(2.dp)
-                            ) {
-                                Icon(painter = painterResource(id = R.drawable.ic_settings),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .radius(2.dp)
-                                        .size(36.dp)
-                                        .clickable {
-                                            viewModel.functionNavigate(SettingsScreen::class.java)
-                                        }
-                                        .padding(4.dp), tint = Black
-                                )
-
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_scan),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .radius(2.dp)
-                                        .size(36.dp)
-                                        .clickable {
-                                            viewModel.onScanQRCode()
-                                        }
-                                        .padding(6.dp), tint = Black
-                                )
-
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_gift),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .radius(2.dp)
-                                        .size(36.dp)
-                                        .clickable {
-                                            viewModel.goSignWeb()
-                                        }
-                                        .padding(4.dp), tint = Black
-                                )
-                            }
-                            NavigationBarPaddingSpacer()
-                        }
+                        HomeDrawerContent(
+                            selectedUser = viewModel.selectedUser,
+                            modalItems = viewModel.modalItems,
+                            onScanQRCode = viewModel::onScanQRCode,
+                            goSignWeb = viewModel::onScanQRCode,
+                            functionNavigate = viewModel::functionNavigate
+                        )
                     },
                     drawerBackgroundColor = BackGroundColor
                 ) {

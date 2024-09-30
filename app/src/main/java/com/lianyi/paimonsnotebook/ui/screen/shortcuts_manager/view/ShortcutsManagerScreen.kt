@@ -22,11 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
+import com.lianyi.core.ui.components.text.InfoText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.spacer.NavigationBarPaddingSpacer
-import com.lianyi.core.ui.components.text.InfoText
-import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.TextButton
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
@@ -91,7 +91,7 @@ class ShortcutsManagerScreen : BaseActivity() {
                             Column(modifier = Modifier.animateItemPlacement()) {
 
                                 if (index == viewModel.selectedShortcutsCount) {
-                                    com.lianyi.core.ui.components.text.InfoText(
+                                    InfoText(
                                         text = "可选功能:",
                                         modifier = Modifier.padding(vertical = 4.dp)
                                     )
@@ -120,7 +120,7 @@ class ShortcutsManagerScreen : BaseActivity() {
 
                                     Spacer(modifier = Modifier.width(8.dp))
 
-                                    com.lianyi.core.ui.components.text.PrimaryText(
+                                    PrimaryText(
                                         text = item.modalItemData.name,
                                         modifier = Modifier.weight(1f)
                                     )

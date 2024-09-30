@@ -17,7 +17,9 @@ import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.extension.number.decimal.format.format
 import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
 import com.lianyi.paimonsnotebook.common.util.image.PaimonsNotebookImageLoader
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.withContext
 import java.io.BufferedInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -25,7 +27,6 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.util.zip.ZipFile
-import kotlin.coroutines.coroutineContext
 
 
 object FileHelper {
@@ -34,7 +35,7 @@ object FileHelper {
         PaimonsNotebookApplication.context
     }
 
-    val contentResolver by lazy {
+    private val contentResolver: ContentResolver by lazy {
         context.contentResolver
     }
 
@@ -70,7 +71,7 @@ object FileHelper {
             rootPath?.resolve("image")!!
 
     //存储元数据的路径
-    private val saveFileMetadataPath
+    val saveFileMetadataPath
         get() =
             privateStoragePath?.resolve("metadata")!!
 
@@ -205,12 +206,13 @@ object FileHelper {
         }
     }
 
+    fun getMetadataDir(dirName: String): File = saveFileMetadataPath.resolve(dirName)
 
     /*
     * 保存文件到公共存储路径下
     *
     * */
-    fun saveFileToPublicFolder(
+    private fun saveFileToPublicFolder(
         byteArray: ByteArray,
         name: String,
         extension: String,
@@ -292,7 +294,7 @@ object FileHelper {
     * 获取文件uri
     * scheme = content
     * */
-    fun getContentUriForFile(file: File) =
+    fun getContentUriForFile(file: File): Uri =
         FileProvider.getUriForFile(context, provider, file)
 
     /*
@@ -314,22 +316,25 @@ object FileHelper {
     * callback:返回已读字节数
     * */
     suspend fun saveFile(file: File, inputStream: InputStream, callback: (Long) -> Unit) {
-        val outputStream = FileOutputStream(file)
-        val bufferSize = 1024 * 8
-        val byteArray = ByteArray(bufferSize)
-        val buffer = BufferedInputStream(inputStream, bufferSize)
+        withContext(Dispatchers.IO) {
+            val outputStream = FileOutputStream(file)
 
-        var readLength = 0
-        var totalReadLength = 0L
+            val bufferSize = 1024 * 8
+            val byteArray = ByteArray(bufferSize)
+            val buffer = BufferedInputStream(inputStream, bufferSize)
 
-        while (coroutineContext.isActive &&
-            buffer.read(byteArray, 0, bufferSize).also {
-                readLength = it
-            } != -1
-        ) {
-            outputStream.write(byteArray, 0, readLength)
-            totalReadLength += readLength
-            callback.invoke(totalReadLength)
+            var readLength = 0
+            var totalReadLength = 0L
+
+            while (coroutineContext.isActive &&
+                buffer.read(byteArray, 0, bufferSize).also {
+                    readLength = it
+                } != -1
+            ) {
+                outputStream.write(byteArray, 0, readLength)
+                totalReadLength += readLength
+                callback.invoke(totalReadLength)
+            }
         }
     }
 
@@ -377,10 +382,21 @@ object FileHelper {
 
     /*
     * 获取元数据存储文件
-    * 验证元数据时也会用到该方法,onExistsDelete必须为false,否则会导致重复下载导致无法进入程序
+    * 验证元数据时也会用到该方法
     * */
-    fun getMetadataSaveFile(fileName: String) =
-        getSaveFile(saveFileMetadataPath, "${fileName}.json", false)
+    fun getMetadataSaveFile(fileName: String): File {
+        val index = fileName.indexOfLast { it == '/' }
+
+        val saveFileName = (fileName.takeLast(fileName.length - index - 1))
+
+        val path = if (index != -1) {
+            saveFileMetadataPath.resolve(fileName.take(index))
+        } else {
+            saveFileMetadataPath
+        }
+
+        return getSaveFile(path, "${saveFileName}.json", false)
+    }
 
 
     //获取uigf存储文件

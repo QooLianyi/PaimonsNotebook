@@ -1,5 +1,7 @@
 package com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.binding
 
+import com.lianyi.paimonsnotebook.common.data.hoyolab.PlayerUid
+
 data class UserGameRoleData(
     val list: List<Role>
 ) {
@@ -12,5 +14,7 @@ data class UserGameRoleData(
         val nickname: String,
         val region: String,
         val region_name: String,
-    )
+    ) {
+        fun getPlayerUid() = PlayerUid(game_uid, region_name)
+    }
 }

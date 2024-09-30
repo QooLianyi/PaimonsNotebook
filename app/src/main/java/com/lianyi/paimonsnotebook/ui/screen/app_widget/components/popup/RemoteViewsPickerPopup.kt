@@ -40,6 +40,7 @@ import com.lianyi.paimonsnotebook.ui.widgets.util.RemoteViewsTypeHelper
 
 @Composable
 internal fun RemoteViewsPickerPopup(
+    enableMetadata: Boolean,
     remoteViewsClassName: String,
     visible: Boolean,
     onRequestDismiss: () -> Unit,
@@ -49,12 +50,13 @@ internal fun RemoteViewsPickerPopup(
         RemoteViewsIndexes.getRemoteViewsInfoByRemoteViewsClassName(remoteViewsClassName)
 
     val list = remember {
-        RemoteViewsIndexes.list.filter { it.appWidgetClass.name == remoteViewsInfo?.appWidgetClass?.name }
-            .groupBy { remoteViewsInfo ->
-                RemoteViewsTypeHelper.getTypeNameByType(remoteViewsInfo.remoteViewsType)
-            }.map {
-                it.key to it.value
-            }
+        RemoteViewsIndexes.list.filter {
+            it.appWidgetClass.name == remoteViewsInfo?.appWidgetClass?.name && (it.requireMetadata == enableMetadata || enableMetadata)
+        }.groupBy { remoteViewsInfo ->
+            RemoteViewsTypeHelper.getTypeNameByType(remoteViewsInfo.remoteViewsType)
+        }.map {
+            it.key to it.value
+        }
     }
 
     BasePopup(visible = visible, onRequestDismiss = onRequestDismiss) {
@@ -69,8 +71,7 @@ internal fun RemoteViewsPickerPopup(
                         .background(BackGroundColor)
                 ) {
                     ContentSpacerLazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top = 6.dp)
                     ) {
                         items(list) { pair ->
@@ -98,8 +99,7 @@ internal fun RemoteViewsPickerPopup(
                                         .clickable {
                                             onSelect.invoke(item)
                                             onRequestDismiss.invoke()
-                                        }
-                                    ) {
+                                        }) {
                                         RemoteViewsPreviewHelper.getPreviewByRemoteViewsClassName(
                                             item.remoteViewsClass.name
                                         ).invoke(tempPreviewAnim)
@@ -110,23 +110,20 @@ internal fun RemoteViewsPickerPopup(
                     }
 
                     Column(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd),
+                        modifier = Modifier.align(Alignment.TopEnd),
                         horizontalAlignment = Alignment.End
                     ) {
 
                         StatusBarPaddingSpacer()
 
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_dismiss),
+                        Icon(painter = painterResource(id = R.drawable.ic_dismiss),
                             contentDescription = null,
                             modifier = Modifier
                                 .radius(2.dp)
                                 .size(32.dp)
                                 .clickable {
                                     onRequestDismiss.invoke()
-                                }
-                        )
+                                })
 
                     }
                 }

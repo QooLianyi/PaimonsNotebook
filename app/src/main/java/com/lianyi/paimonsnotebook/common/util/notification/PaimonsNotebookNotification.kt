@@ -6,12 +6,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 object PaimonsNotebookNotification {
 
     val notifications = mutableStateListOf<PaimonsNotebookNotificationData>()
 
     private const val randRange = "abcdefghijklmnopqrstuvwxyz1234567890"
+
+    private val mutex = Mutex()
 
     //显示一个通知,返回通知的ID
     fun add(
@@ -31,6 +35,8 @@ object PaimonsNotebookNotification {
         )
 
         CoroutineScope(Dispatchers.Unconfined).launch {
+            mutex.withLock {  }
+
             withContextMain {
                 notifications.add(data)
             }
@@ -47,12 +53,20 @@ object PaimonsNotebookNotification {
 
     private suspend fun delayRemove(data: PaimonsNotebookNotificationData, delayTime: Long = 500L) {
         data.isShowing.value = false
-        delay(delayTime)
+
         remove(data.notificationId)
     }
 
-    fun remove(id: String) {
-        notifications.removeIf { it.notificationId == id }
+    private suspend fun remove(id: String) {
+        mutex.withLock {
+            notifications.removeIf { it.notificationId == id }
+        }
+    }
+
+    fun removeNotifyById(id: String) {
+        CoroutineScope(Dispatchers.Unconfined).launch {
+            remove(id)
+        }
     }
 
     //用于生成通知ID

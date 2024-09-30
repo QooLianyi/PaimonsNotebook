@@ -17,10 +17,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lianyi.core.ui.components.text.InfoText
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
 import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
-import com.lianyi.core.ui.components.text.InfoText
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
@@ -34,6 +34,7 @@ import com.lianyi.paimonsnotebook.common.util.image.PaimonsNotebookImageLoader
 import com.lianyi.paimonsnotebook.common.util.system_service.SystemService
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util.MetadataHelper
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
+import com.lianyi.paimonsnotebook.ui.screen.home.view.HomeDrawerManagerScreen
 import com.lianyi.paimonsnotebook.ui.screen.resource_manager.view.ResourceManagerScreen
 import com.lianyi.paimonsnotebook.ui.screen.setting.components.dialog.ApplicationUpdateDialog
 import com.lianyi.paimonsnotebook.ui.screen.setting.components.widgets.SettingsOptionSwitch
@@ -82,6 +83,20 @@ class SettingScreenViewModel : ViewModel() {
             slot = {
                 SettingsOptionSwitch(
                     checked = configurationData.homeScreenDisplayState == HomeScreenDisplayState.Community
+                )
+            }
+        ),
+        OptionListData(
+            name = "首页侧边栏功能管理",
+            description = "管理首页侧边栏中显示的功能,可以禁用不使用的功能,使其不显示在侧边栏中",
+            onClick = {
+                HomeHelper.goActivity(HomeDrawerManagerScreen::class.java)
+            },
+            slot = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_chevron_right),
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
                 )
             }
         ),
@@ -143,43 +158,7 @@ class SettingScreenViewModel : ViewModel() {
             name = "清除失效图片",
             description = "此操作会立即清除所有无法显示的图片;当图片加载异常时,进行此操作后重新载入图片可能会得到改善",
             onClick = {
-                viewModelScope.launchIO {
-                    val dao = PaimonsNotebookDatabase.database.diskCacheDao
-                    var count = 0
-                    val list = dao.getAllData().first()
-                    val deleteUrls = mutableListOf<String>()
-
-                    //设置为只检查图片的像素尺寸
-                    val options = BitmapFactory.Options().apply {
-                        inJustDecodeBounds = true
-                    }
-
-                    list.forEach {
-                        val file = PaimonsNotebookImageLoader.getCacheImageFileByUrl(it.url)
-
-                        val fileAbsolutePath = file?.absolutePath ?: ""
-
-                        BitmapFactory.decodeFile(fileAbsolutePath, options)
-
-                        /*
-                        * 图片路径为空表明这个图片不存在
-                        * 如果编码的结果等于-1表示解析时出现错误,表明这个图片损坏了
-                        * */
-                        if (fileAbsolutePath.isEmpty() || options.outWidth == -1 && options.outHeight == -1) {
-                            PaimonsNotebookImageLoader.getCacheImageFileByUrl(it.url)?.delete()
-                            PaimonsNotebookImageLoader.getCacheImageMetadataFileByUrl(it.url)
-                                ?.delete()
-
-                            deleteUrls += it.url
-
-                            count++
-                        }
-                    }
-
-                    dao.deleteByUrls(deleteUrls)
-
-                    "在全部的${list.size}张图片中,清理了${count}张失效图片".warnNotify(false)
-                }
+                clearBrokenImage()
             },
             slot = {
             }
@@ -208,20 +187,16 @@ class SettingScreenViewModel : ViewModel() {
             name = "同步元数据",
             description = "连接互联网并同步本地存储的角色、武器等数据",
             onClick = {
-                "正在检查更新...".notify()
-                viewModelScope.launch(Dispatchers.IO) {
-                    MetadataHelper.updateMetadata(
-                        onSuccess = {
-                            "已更新到最新的元数据".notify()
-                        },
-                        onFailed = {
-                            "更新元数据时出现错误".errorNotify()
-                        },
-                        onLoadMetadataFile = {}
-                    ) {}
+                viewModelScope.launchIO {
+                    "正在检查元数据的信息...".notify()
+
+                    MetadataHelper.checkAndUpdateMetadata(true) {
+                        PreferenceKeys.EnableMetadata.editValue(true)
+                    }
                 }
             }
         ),
+
 //        OptionListData(
 //            name = "数据迁移(占位)",
 //            description = "将派蒙笔记本当前的设置与数据导出,以便迁移到其它设备",
@@ -303,7 +278,7 @@ class SettingScreenViewModel : ViewModel() {
                 }
             },
             slot = {
-                com.lianyi.core.ui.components.text.InfoText(text = PaimonsNotebookApplication.version,
+                InfoText(text = PaimonsNotebookApplication.version,
                     modifier = Modifier
                         .pointerInput(Unit) {
                             detectDragGestures { _, dragAmount ->
@@ -405,6 +380,49 @@ class SettingScreenViewModel : ViewModel() {
 //            }
 //        ),
     )
+
+    private fun clearBrokenImage() {
+        viewModelScope.launchIO {
+            "开始清理失效图片".notify()
+
+            val dao = PaimonsNotebookDatabase.database.diskCacheDao
+            var count = 0
+            val list = dao.getAllData().first()
+            val deleteUrls = mutableListOf<String>()
+
+            //设置为只检查图片的像素尺寸
+            val options = BitmapFactory.Options().apply {
+                inJustDecodeBounds = true
+            }
+
+            list.forEach {
+                val file = PaimonsNotebookImageLoader.getCacheImageFileByUrl(it.url)
+
+                val fileAbsolutePath = file?.absolutePath ?: ""
+
+                BitmapFactory.decodeFile(fileAbsolutePath, options)
+
+                /*
+                        * 图片路径为空表明这个图片不存在
+                        * 如果编码的结果等于-1表示解析时出现错误,表明这个图片损坏了
+                        * */
+                if (fileAbsolutePath.isEmpty() || options.outWidth == -1 && options.outHeight == -1) {
+                    PaimonsNotebookImageLoader.getCacheImageFileByUrl(it.url)?.delete()
+                    PaimonsNotebookImageLoader.getCacheImageMetadataFileByUrl(it.url)
+                        ?.delete()
+
+                    deleteUrls += it.url
+
+                    count++
+                }
+            }
+
+            dao.deleteByUrls(deleteUrls)
+
+            "在全部的${list.size}张图片中,清理了${count}张失效图片".warnNotify()
+        }
+    }
+
 
     //切换展示方式
     private fun setHomeScreenDisplayState(value: HomeScreenDisplayState) {

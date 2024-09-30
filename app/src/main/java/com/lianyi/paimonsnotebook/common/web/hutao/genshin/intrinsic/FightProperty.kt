@@ -4,16 +4,16 @@ import com.lianyi.paimonsnotebook.R
 
 object FightProperty {
 
-    fun getNameByProperty(value:Int) =
-        when(value){
+    fun getNameByProperty(value: Int) =
+        when (value) {
             FIGHT_PROP_BASE_HP -> "基础生命值"
-            FIGHT_PROP_HP,FIGHT_PROP_HP_PERCENT -> "生命值"
+            FIGHT_PROP_HP, FIGHT_PROP_HP_PERCENT -> "生命值"
 
             FIGHT_PROP_BASE_ATTACK -> "基础攻击力"
-            FIGHT_PROP_ATTACK,FIGHT_PROP_ATTACK_PERCENT -> "攻击力"
+            FIGHT_PROP_ATTACK, FIGHT_PROP_ATTACK_PERCENT -> "攻击力"
 
             FIGHT_PROP_BASE_DEFENSE -> "基础防御力"
-            FIGHT_PROP_DEFENSE,FIGHT_PROP_DEFENSE_PERCENT -> "防御力"
+            FIGHT_PROP_DEFENSE, FIGHT_PROP_DEFENSE_PERCENT -> "防御力"
 
             FIGHT_PROP_CRITICAL -> "暴击率"
             FIGHT_PROP_CRITICAL_HURT -> "暴击伤害"
@@ -32,38 +32,40 @@ object FightProperty {
             FIGHT_PROP_ROCK_ADD_HURT -> "岩元素伤害加成"
             FIGHT_PROP_ICE_ADD_HURT -> "冰元素伤害加成"
 
-            FIGHT_PROP_FIRE_SUB_HURT ->"火元素抗性"
-            FIGHT_PROP_ELEC_SUB_HURT ->"雷元素抗性"
+            FIGHT_PROP_FIRE_SUB_HURT -> "火元素抗性"
+            FIGHT_PROP_ELEC_SUB_HURT -> "雷元素抗性"
             FIGHT_PROP_WATER_SUB_HURT -> "水元素抗性"
             FIGHT_PROP_GRASS_SUB_HURT -> "草元素抗性"
-            FIGHT_PROP_WIND_SUB_HURT ->"风元素抗性"
-            FIGHT_PROP_ROCK_SUB_HURT ->"岩元素抗性"
+            FIGHT_PROP_WIND_SUB_HURT -> "风元素抗性"
+            FIGHT_PROP_ROCK_SUB_HURT -> "岩元素抗性"
             FIGHT_PROP_ICE_SUB_HURT -> "冰元素抗性"
 
             FIGHT_PROP_MAX_HP -> "生命值"
             FIGHT_PROP_CUR_ATTACK -> "攻击力"
             FIGHT_PROP_CUR_DEFENSE -> "防御力"
 
-            else-> ""
+            FIGHT_PROP_SP -> "体力上限"
+
+            else -> ""
         }
 
     //根据属性获取对应的图标资源id
     fun getIconResourceByProperty(value: Int) =
-        when(value){
-            FIGHT_PROP_BASE_HP,FIGHT_PROP_HP,FIGHT_PROP_HP_PERCENT -> R.drawable.ui_icon_maxhp
+        when (value) {
+            FIGHT_PROP_BASE_HP, FIGHT_PROP_HP, FIGHT_PROP_HP_PERCENT -> R.drawable.ui_property_icon_max_hp
 
-            FIGHT_PROP_BASE_ATTACK,FIGHT_PROP_ATTACK,FIGHT_PROP_ATTACK_PERCENT -> R.drawable.ui_icon_curattack
+            FIGHT_PROP_BASE_ATTACK, FIGHT_PROP_ATTACK, FIGHT_PROP_ATTACK_PERCENT -> R.drawable.ui_property_cur_attack
 
-            FIGHT_PROP_BASE_DEFENSE,FIGHT_PROP_DEFENSE,FIGHT_PROP_DEFENSE_PERCENT -> R.drawable.ui_icon_curdefense
+            FIGHT_PROP_BASE_DEFENSE, FIGHT_PROP_DEFENSE, FIGHT_PROP_DEFENSE_PERCENT -> R.drawable.ui_property_cur_defense
 
-            FIGHT_PROP_CRITICAL -> R.drawable.ui_icon_critical
-            FIGHT_PROP_CRITICAL_HURT -> R.drawable.ui_icon_critical
-            FIGHT_PROP_CHARGE_EFFICIENCY -> R.drawable.ui_icon_chargeefficiency
-            FIGHT_PROP_HEAL_ADD -> R.drawable.ui_icon_heal
-            FIGHT_PROP_ELEMENT_MASTERY -> R.drawable.ui_icon_element
+            FIGHT_PROP_CRITICAL -> R.drawable.ui_property_critical
+            FIGHT_PROP_CRITICAL_HURT -> R.drawable.ui_property_critical
+            FIGHT_PROP_CHARGE_EFFICIENCY -> R.drawable.ui_property_charge_efficiency
+            FIGHT_PROP_HEAL_ADD -> R.drawable.ui_property_heal
+            FIGHT_PROP_ELEMENT_MASTERY -> R.drawable.ui_property_element
 
-            FIGHT_PROP_PHYSICAL_SUB_HURT -> R.drawable.ui_icon_physicalattackup
-            FIGHT_PROP_PHYSICAL_ADD_HURT -> R.drawable.ui_icon_physicalattackup
+            FIGHT_PROP_PHYSICAL_SUB_HURT -> R.drawable.ui_property_physical_attack_up
+            FIGHT_PROP_PHYSICAL_ADD_HURT -> R.drawable.ui_property_physical_attack_up
 
             FIGHT_PROP_FIRE_ADD_HURT -> R.drawable.ic_genshin_game_element_fire
             FIGHT_PROP_ELEC_ADD_HURT -> R.drawable.ic_genshin_game_element_electric
@@ -81,11 +83,12 @@ object FightProperty {
             FIGHT_PROP_ROCK_SUB_HURT -> R.drawable.ic_genshin_game_element_rock
             FIGHT_PROP_ICE_SUB_HURT -> R.drawable.ic_genshin_game_element_ice
 
-            FIGHT_PROP_MAX_HP -> R.drawable.ui_icon_maxhp
-            FIGHT_PROP_CUR_ATTACK -> R.drawable.ui_icon_curattack
-            FIGHT_PROP_CUR_DEFENSE -> R.drawable.ui_icon_curdefense
+            FIGHT_PROP_MAX_HP -> R.drawable.ui_property_icon_max_hp
+            FIGHT_PROP_CUR_ATTACK -> R.drawable.ui_property_cur_attack
+            FIGHT_PROP_CUR_DEFENSE -> R.drawable.ui_property_cur_defense
+            FIGHT_PROP_SP -> R.drawable.ui_property_icon_sp
 
-            else-> R.drawable.ic_ring
+            else -> R.drawable.ic_ring
         }
 
     /// <summary>
@@ -567,4 +570,7 @@ object FightProperty {
     /// 总物理伤害加成
     /// </summary>
     const val FIGHT_PROP_NONEXTRA_PHYSICAL_ADD_HURT = 3024
+
+    //体力上限
+    const val FIGHT_PROP_SP = 999999
 }

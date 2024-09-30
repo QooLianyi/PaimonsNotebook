@@ -30,6 +30,7 @@ object UIAFHelper {
             const val Goal = "Goal"
             const val Id = "Id"
             const val IsDeleteWatcherAfterFinish = "IsDeleteWatcherAfterFinish"
+            const val IsDailyQuest = "IsDailyQuest"
             const val Order = "Order"
             const val Progress = "Progress"
             const val Title = "Title"

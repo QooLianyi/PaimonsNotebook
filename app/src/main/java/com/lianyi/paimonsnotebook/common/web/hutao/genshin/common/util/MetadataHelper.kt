@@ -1,8 +1,12 @@
 package com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util
 
+import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
+import com.lianyi.paimonsnotebook.common.extension.string.notify
+import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
 import com.lianyi.paimonsnotebook.common.util.file.FileHelper
 import com.lianyi.paimonsnotebook.common.util.hash.XXHash
 import com.lianyi.paimonsnotebook.common.util.json.JSON
+import com.lianyi.paimonsnotebook.common.util.notification.PaimonsNotebookNotification
 import com.lianyi.paimonsnotebook.common.util.parameter.getParameterizedType
 import com.lianyi.paimonsnotebook.common.util.request.applicationOkHttpClient
 import com.lianyi.paimonsnotebook.common.util.request.buildRequest
@@ -11,8 +15,8 @@ import com.lianyi.paimonsnotebook.common.util.request.getAsTextResult
 import com.lianyi.paimonsnotebook.common.web.HutaoEndpoints
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.LocaleNames
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.system.measureTimeMillis
 
 /*
 * 元数据名称
@@ -21,7 +25,7 @@ object MetadataHelper {
     //启动时检查的元数据列表
     private val metadataCheckList by lazy {
         listOf(
-            FileNameAvatar,
+//            FileNameAvatar, //角色拆分为单独的文件
             FileNameAvatarCurve,
             FileNameAvatarPromote,
             FileNameWeapon,
@@ -33,7 +37,7 @@ object MetadataHelper {
             FileNameAchievement,
             FileNameAchievementGoal,
             FileNameReliquary,
-            FileNameReliquarySet,
+            FileNameReliquarySet
         )
     }
 
@@ -50,86 +54,121 @@ object MetadataHelper {
         )
     }
 
-    private val hashMap = mutableMapOf<String, String>()
+    private val hashMap = mutableMapOf<String?, String?>()
 
 
     private var latestCheckHashMapTime = 0L
 
     //哈希表的检查时间
-    private const val HashMapCheckInterval = 600000L
+    private const val HashMapCheckInterval = 60000L
 
     /*
-    * 检查元数据,判断是否有元数据需要更新
-    *
-    * 返回需要更新的文件列表
+    * 返回map中哈希值不同的文件名集合
     * */
     @OptIn(ExperimentalStdlibApi::class)
-    private fun checkMetadata(): List<String> {
+    private fun getDownloadFileNameListFromMetadataMap(): List<String> {
         val updateFileList = mutableListOf<String>()
 
         val xxHash = XXHash()
-        metadataCheckList.forEach { name ->
-            val file = FileHelper.getMetadata(name)
+
+        hashMap.forEach { (fileName, hashValue) ->
+
+            val file = FileHelper.getMetadata(fileName ?: "")
             val arr = (file?.readText() ?: "").replace("\n", "\r\n").toByteArray()
 
             //此处使用.toString(16)会导致第一位如果为15会变F,导致无法与Map的0F对应
             val xxh64 = xxHash.hash64(arr).toULong().toHexString().uppercase()
-            val metaXxH64 = hashMap[name]
 
-            if (metaXxH64 != xxh64 && !metaXxH64.isNullOrEmpty()) {
-                updateFileList += name
+            if (hashValue != xxh64 && !hashValue.isNullOrEmpty() && !fileName.isNullOrEmpty()) {
+                updateFileList += fileName
             }
         }
 
         return updateFileList
     }
 
-    /*
-    * 判断所需的元数据文件是否全都存在
-    *
-    * true为全部存在
-    * */
-    fun allMetadataExists() =
-        metadataCheckList.map { name ->
-            FileHelper.getMetadata(name)
-        }.count { it != null }.let { count ->
-            count == metadataCheckList.size
-        }
-
-    suspend fun metadataNeedUpdate(): Boolean {
+    private suspend fun metadataNeedUpdate(): Boolean {
         updateMetadataHashMap()
 
-        return checkMetadata().isNotEmpty()
+        return getDownloadFileNameListFromMetadataMap().isNotEmpty()
+    }
+
+    private var isUpdating = false
+
+    suspend fun checkAndUpdateMetadata(
+        notify: Boolean = false,
+        onSuccess: suspend () -> Unit = {}
+    ) {
+        //防止重复更新
+        if (isUpdating) {
+            if (notify) {
+                "元数据正在进行更新".warnNotify(false)
+            }
+            return
+        }
+
+        isUpdating = true
+
+        if (!metadataNeedUpdate()) {
+            if (notify) {
+                "当前元数据已是最新".notify()
+            }
+
+            isUpdating = false
+            onSuccess.invoke()
+            return
+        }
+
+        val notifyId = "发现新的元数据,正在更新...".notify(keepShow = true)
+
+        updateMetadata(
+            onFailed = {
+                "更新元数据时发生错误,现在使用的仍是旧数据,显示的内容可能会与最新的游戏内容有所差异".warnNotify()
+            },
+            onSuccess = {
+                "元数据更新完毕".notify()
+                onSuccess.invoke()
+            },
+            onLoadMetadataFile = {},
+            finally = {
+                PaimonsNotebookNotification.removeNotifyById(notifyId)
+                isUpdating = false
+            }
+        )
     }
 
     /*
     * 更新元数据
     * */
     suspend fun updateMetadata(
+        updateMap: Boolean = false,
         onFailed: suspend () -> Unit,
         onSuccess: suspend () -> Unit,
         onLoadMetadataFile: (Int) -> Unit,
         finally: suspend () -> Unit
     ) {
-        updateMetadataHashMap()
-
-        //当元数据哈希表比所需列表小时,直接返回失败
-        if (hashMap.keys.size < metadataCheckList.size) {
-            onFailed.invoke()
-            finally.invoke()
-            return
+        if (updateMap) {
+            updateMetadataHashMap()
         }
 
         withContext(Dispatchers.IO) {
-            checkMetadata().forEach { name ->
-                launch {
-                    loadAndSaveFile(name)
-                    onLoadMetadataFile.invoke(metadataCheckList.size)
+            val downloadFileList = getDownloadFileNameListFromMetadataMap()
+
+            downloadFileList.forEachIndexed { index, name ->
+                launchIO {
+                    val time = measureTimeMillis {
+                        loadAndSaveFile(name)
+                        onLoadMetadataFile.invoke(downloadFileList.size)
+                    }
+                    println("name = ${name} , time = ${time}")
                 }
+//                if(index + 1 % 10 == 0){
+//                    delay(500)
+//                }
             }
         }
 
-        if (checkMetadata().isEmpty()) {
+        if (getDownloadFileNameListFromMetadataMap().isEmpty()) {
             onSuccess.invoke()
         } else {
             onFailed.invoke()
@@ -140,13 +179,23 @@ object MetadataHelper {
 
     //更新元数据map
     private suspend fun updateMetadataHashMap() {
-        val needCheckHashMap = System.currentTimeMillis() + latestCheckHashMapTime
+
+        println("updateMetadataHashMap = ${System.currentTimeMillis()}")
+
+        val skipUpdateHashMap =
+            System.currentTimeMillis() - latestCheckHashMapTime < HashMapCheckInterval
+
+        if (skipUpdateHashMap) {
+            return
+        }
 
         val metaJson = buildRequest {
             url(HutaoEndpoints.metadata(LocaleNames.CHS, "$MetaFileName.json"))
         }.getAsText(applicationOkHttpClient)
 
         hashMap.clear()
+
+//        try {
         hashMap.putAll(
             JSON.parse<Map<String, String>>(
                 metaJson,
@@ -155,11 +204,15 @@ object MetadataHelper {
         )
 
         latestCheckHashMapTime = System.currentTimeMillis()
+//        } catch (e: Exception) {
+//            hashMap += "error" to "${e.message}"
+//        }
+
+        println(hashMap)
     }
 
     //重新载入单个文件
     private suspend fun loadAndSaveFile(name: String) {
-
         val pair = buildRequest {
             url(HutaoEndpoints.metadata(LocaleNames.CHS, "${name}.json"))
         }.getAsTextResult(applicationOkHttpClient)
@@ -171,52 +224,54 @@ object MetadataHelper {
         }
     }
 
-    private val MetaFileName by lazy { "Meta" }
+    private const val MetaFileName = "Meta"
 
-    val FileNameAchievement by lazy { "Achievement" }
-    val FileNameAchievementGoal by lazy { "AchievementGoal" }
-    val FileNameAvatar by lazy { "Avatar" }
-    val FileNameAvatarCurve by lazy { "AvatarCurve" }
-    val FileNameAvatarPromote by lazy { "AvatarPromote" }
-    val FileNameDisplayItem by lazy { "DisplayItem" }
-    val FileNameGachaEvent by lazy { "GachaEvent" }
-    val FileNameMaterial by lazy { "Material" }
-    val FileNameMonster by lazy { "Monster" }
-    val FileNameMonsterCurve by lazy { "MonsterCurve" }
-    val FileNameReliquary by lazy { "Reliquary" }
-    val FileNameReliquaryAffixWeight by lazy { "ReliquaryAffixWeight" }
-    val FileNameReliquaryMainAffix by lazy { "ReliquaryMainAffix" }
-    val FileNameReliquaryMainAffixLevel by lazy { "ReliquaryMainAffixLevel" }
-    val FileNameReliquarySet by lazy { "ReliquarySet" }
-    val FileNameReliquarySubAffix by lazy { "ReliquarySubAffix" }
-    val FileNameTowerFloor by lazy { "TowerFloor" }
-    val FileNameTowerLevel by lazy { "TowerLevel" }
-    val FileNameTowerSchedule by lazy { "TowerSchedule" }
-    val FileNameWeapon by lazy { "Weapon" }
-    val FileNameWeaponCurve by lazy { "WeaponCurve" }
-    val FileNameWeaponPromote by lazy { "WeaponPromote" }
+    const val DirNameAvatar = "Avatar"
 
-    val ZipFileNameAchievementIcon by lazy { "AchievementIcon" }
-    val ZipFileNameAvatarCard by lazy { "AvatarCard" }
-    val ZipFileNameAvatarIcon by lazy { "AvatarIcon" }
-    val ZipFileNameBg by lazy { "Bg" }
-    val ZipFileNameChapterIcon by lazy { "ChapterIcon" }
-    val ZipFileNameCostume by lazy { "Costume" }
-    val ZipFileNameEmotionIcon by lazy { "EmotionIcon" }
-    val ZipFileNameEquipIcon by lazy { "EquipIcon" }
-    val ZipFileNameGachaAvatarIcon by lazy { "GachaAvatarIcon" }
-    val ZipFileNameGachaAvatarImg by lazy { "GachaAvatarImg" }
-    val ZipFileNameGachaEquipIcon by lazy { "GachaEquipIcon" }
-    val ZipFileNameIconElement by lazy { "IconElement" }
-    val ZipFileNameItemIcon by lazy { "ItemIcon" }
-    val ZipFileNameLoadingPic by lazy { "LoadingPic" }
-    val ZipFileNameMonsterIcon by lazy { "MonsterIcon" }
-    val ZipFileNameMonsterSmallIcon by lazy { "MonsterSmallIcon" }
-    val ZipFileNameNameCardIcon by lazy { "NameCardIcon" }
-    val ZipFileNameNameCardPic by lazy { "NameCardPic" }
-    val ZipFileNameProperty by lazy { "Property" }
-    val ZipFileNameRelicIcon by lazy { "RelicIcon" }
-    val ZipFileNameSkill by lazy { "Skill" }
-    val ZipFileNameTalent by lazy { "Talent" }
+    const val FileNameAchievement = "Achievement"
+    const val FileNameAchievementGoal = "AchievementGoal"
+    const val FileNameAvatar = "Avatar"
+    const val FileNameAvatarCurve = "AvatarCurve"
+    const val FileNameAvatarPromote = "AvatarPromote"
+    const val FileNameDisplayItem = "DisplayItem"
+    const val FileNameGachaEvent = "GachaEvent"
+    const val FileNameMaterial = "Material"
+    const val FileNameMonster = "Monster"
+    const val FileNameMonsterCurve = "MonsterCurve"
+    const val FileNameReliquary = "Reliquary"
+    const val FileNameReliquaryAffixWeight = "ReliquaryAffixWeight"
+    const val FileNameReliquaryMainAffix = "ReliquaryMainAffix"
+    const val FileNameReliquaryMainAffixLevel = "ReliquaryMainAffixLevel"
+    const val FileNameReliquarySet = "ReliquarySet"
+    const val FileNameReliquarySubAffix = "ReliquarySubAffix"
+    const val FileNameTowerFloor = "TowerFloor"
+    const val FileNameTowerLevel = "TowerLevel"
+    const val FileNameTowerSchedule = "TowerSchedule"
+    const val FileNameWeapon = "Weapon"
+    const val FileNameWeaponCurve = "WeaponCurve"
+    const val FileNameWeaponPromote = "WeaponPromote"
+
+    val ZipFileNameAchievementIcon = "AchievementIcon"
+    val ZipFileNameAvatarCard = "AvatarCard"
+    val ZipFileNameAvatarIcon = "AvatarIcon"
+    val ZipFileNameBg = "Bg"
+    val ZipFileNameChapterIcon = "ChapterIcon"
+    val ZipFileNameCostume = "Costume"
+    val ZipFileNameEmotionIcon = "EmotionIcon"
+    val ZipFileNameEquipIcon = "EquipIcon"
+    val ZipFileNameGachaAvatarIcon = "GachaAvatarIcon"
+    val ZipFileNameGachaAvatarImg = "GachaAvatarImg"
+    val ZipFileNameGachaEquipIcon = "GachaEquipIcon"
+    val ZipFileNameIconElement = "IconElement"
+    val ZipFileNameItemIcon = "ItemIcon"
+    val ZipFileNameLoadingPic = "LoadingPic"
+    val ZipFileNameMonsterIcon = "MonsterIcon"
+    val ZipFileNameMonsterSmallIcon = "MonsterSmallIcon"
+    val ZipFileNameNameCardIcon = "NameCardIcon"
+    val ZipFileNameNameCardPic = "NameCardPic"
+    val ZipFileNameProperty = "Property"
+    val ZipFileNameRelicIcon = "RelicIcon"
+    val ZipFileNameSkill = "Skill"
+    val ZipFileNameTalent = "Talent"
 
 }

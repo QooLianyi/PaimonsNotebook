@@ -24,6 +24,7 @@ import com.lianyi.paimonsnotebook.common.util.data_store.dataStoreValues
 import com.lianyi.paimonsnotebook.common.util.json.JSON
 import com.lianyi.paimonsnotebook.common.util.parameter.getParameterizedType
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
+import com.lianyi.paimonsnotebook.ui.screen.setting.util.SettingsHelper
 import com.lianyi.paimonsnotebook.ui.screen.shortcuts_manager.data.ShortcutsListData
 
 class ShortcutsManagerScreenViewModel : ViewModel() {
@@ -35,9 +36,10 @@ class ShortcutsManagerScreenViewModel : ViewModel() {
 
     init {
         //将所有侧边栏功能添加至列表
-        shortcutsList += HomeHelper.modalItemData.map {
-            ShortcutsListData(it)
-        }
+        shortcutsList += HomeHelper.getShowModalItemData(SettingsHelper.configurationFlow.value.enableMetadata)
+            .map {
+                ShortcutsListData(it)
+            }
 
         viewModelScope.launchMain {
             dataStoreValues { preferences ->
@@ -180,7 +182,7 @@ class ShortcutsManagerScreenViewModel : ViewModel() {
     }
 
     //提交
-    fun submit(notify:Boolean = true) {
+    fun submit(notify: Boolean = true) {
         if (!enableShortcutsList) return
 
         val context = PaimonsNotebookApplication.context
@@ -215,7 +217,7 @@ class ShortcutsManagerScreenViewModel : ViewModel() {
             PreferenceKeys.ShortcutsList.editValue(json)
         }
 
-        if(notify){
+        if (notify) {
             "已按照当前配置更新快捷方式列表".notify()
         }
     }

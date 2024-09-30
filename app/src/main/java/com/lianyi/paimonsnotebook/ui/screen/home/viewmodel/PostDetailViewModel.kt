@@ -54,6 +54,8 @@ class PostDetailViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val result = webHomeClient.getPostFull(articleId)
 
+            println(result)
+
             postLoadingState = if (result.success) {
                 postFullData = result.data
                 LoadingState.Success
