@@ -183,7 +183,7 @@ class AchievementOptionScreenViewModel : ViewModel() {
         user: AchievementUser
     ) {
         viewModelScope.launchIO {
-            val fileName = "UIAF_${user.name}_${System.currentTimeMillis()}"
+            val fileName = "PaimonsNotebook UIAF_${System.currentTimeMillis()}"
             val saveFile = FileHelper.getUIAFJsonSaveFile(fileName)
             exportService.exportAchievementToUIAF(file = saveFile, user)
 

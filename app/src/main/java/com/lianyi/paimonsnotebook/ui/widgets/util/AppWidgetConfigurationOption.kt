@@ -24,5 +24,7 @@ enum class AppWidgetConfigurationOption {
     //进度条颜色 主要
     ProgressBarColorPrimary,
     //进度条颜色 次要
-    ProgressBarColorSecond
+    ProgressBarColorSecond,
+
+    TimeFormat
 }

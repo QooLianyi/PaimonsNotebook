@@ -138,7 +138,7 @@ class GachaItemsExportService(
 
                     //如果为空,就设置为zh-cn
                     val lang =
-                        if (gachaLogItemList.isNotEmpty()) gachaLogItemList.first().lang else "zh-cn"
+                        (if (gachaLogItemList.isNotEmpty()) gachaLogItemList.first().lang else "zh-cn").ifBlank { "zh-cn" }
 
                     beginObject()
                     name(UIGFHelper.Field.Info.Uid).value(uid)
@@ -146,7 +146,7 @@ class GachaItemsExportService(
                     name(UIGFHelper.Field.Info.Lang).value(lang)
 
                     name("list")
-                    saveGachaItems(writer = writer, uid = uid)
+                    saveGachaItems(writer = writer, uid = uid, exportUIGFV3 = false)
                     endObject()
                 }
 
@@ -161,7 +161,8 @@ class GachaItemsExportService(
 
     private fun saveGachaItems(
         writer: JsonWriter,
-        uid: String
+        uid: String,
+        exportUIGFV3: Boolean = true
     ) {
         writer.apply {
             beginArray()
@@ -173,14 +174,18 @@ class GachaItemsExportService(
                 list = dao.getGachaLogItemByUidPage(uid, page, queryPageSize)
                 list.forEach { uigfGachaItem ->
                     beginObject()
+
+                    if (exportUIGFV3) {
+                        name(UIGFHelper.Field.Item.Count).value(uigfGachaItem.count)
+                        name(UIGFHelper.Field.Item.Name).value(uigfGachaItem.name)
+                        name(UIGFHelper.Field.Item.RankType).value(uigfGachaItem.rank_type)
+                        name(UIGFHelper.Field.Item.ItemType).value(uigfGachaItem.item_type)
+                    }
+
                     name(UIGFHelper.Field.Item.UigfGachaType).value(uigfGachaItem.uigf_gacha_type)
                     name(UIGFHelper.Field.Item.GachaType).value(uigfGachaItem.gacha_type)
                     name(UIGFHelper.Field.Item.ItemId).value(uigfGachaItem.item_id)
-                    name(UIGFHelper.Field.Item.Count).value(uigfGachaItem.count)
                     name(UIGFHelper.Field.Item.Time).value(uigfGachaItem.time)
-                    name(UIGFHelper.Field.Item.Name).value(uigfGachaItem.name)
-                    name(UIGFHelper.Field.Item.ItemType).value(uigfGachaItem.item_type)
-                    name(UIGFHelper.Field.Item.RankType).value(uigfGachaItem.rank_type)
                     name(UIGFHelper.Field.Item.Id).value(uigfGachaItem.id)
                     endObject()
                 }

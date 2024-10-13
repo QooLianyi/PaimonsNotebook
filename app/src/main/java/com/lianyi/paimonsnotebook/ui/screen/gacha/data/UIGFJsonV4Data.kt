@@ -8,6 +8,7 @@ data class UIGFJsonV4Data(
     val info: Info,
     val hk4e: List<HK4E>
 ) {
+
     data class Info(
         //此字段为number,string中的一种,此处都按照字符串来处理
         //秒级
@@ -38,6 +39,14 @@ data class UIGFJsonV4Data(
             )
 
     }
+
+
+    //简易的item,用于导入信息
+    data class SimpleHK4E(
+        val uid: String,
+        val lang: String,
+        val timezone: Long
+    )
 
     data class HK4E(
         val uid: String,

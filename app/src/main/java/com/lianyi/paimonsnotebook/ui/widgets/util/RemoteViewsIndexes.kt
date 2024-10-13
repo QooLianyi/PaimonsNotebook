@@ -152,7 +152,7 @@ object RemoteViewsIndexes {
                 dataType = setOf(RemoteViewsDataType.DailyNote),
                 remoteViewsName = "实时便笺3*2",
                 remoteViewsType = RemoteViewsType.DailyNote,
-                configurationOptions = defaultConfigurationOption
+                configurationOptions = defaultConfigurationOptionsUser
             ),
         )
     }

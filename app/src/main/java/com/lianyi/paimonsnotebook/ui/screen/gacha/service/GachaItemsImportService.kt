@@ -119,11 +119,13 @@ class GachaItemsImportService(
         //v3
         if (!uigfInfoCompat.uigfVersion.isNullOrBlank()) {
             saveUIGFV3Items(file, gachaLogService)
+            return
         }
 
         //v4
         if (!uigfInfoCompat.version.isNullOrBlank()) {
             saveHK4EItems(file, gachaLogService)
+            return
         }
     }
 
@@ -166,12 +168,16 @@ class GachaItemsImportService(
             error("数据结构错误:{data}中的[hk4e]字段未找到")
         }
 
-        jsonReader.apply {
+        val simpleHK4EList = mutableListOf<UIGFJsonV4Data.SimpleHK4E>()
+
+        //获取基本信息
+        file.createJsonReader().apply {
+            findField("hk4e")
+
             beginArray()
 
             while (hasNext()) {
                 beginObject()
-
                 var uid = ""
                 var lang = ""
                 var timezone = -1L
@@ -181,32 +187,57 @@ class GachaItemsImportService(
                         UIGFHelper.Field.Info.Uid -> uid = nextString()
                         UIGFHelper.Field.Info.Lang -> lang = nextString()
                         UIGFHelper.Field.Info.TimeZone -> timezone = nextLong()
+                        else -> {
+                            skipValue()
+                        }
+                    }
+                }
+
+                simpleHK4EList += UIGFJsonV4Data.SimpleHK4E(
+                    uid = uid,
+                    lang = lang,
+                    timezone = timezone
+                )
+                endObject()
+            }
+            endArray()
+            close()
+        }
+
+
+        var index = 0
+
+        //保存至数据库
+        jsonReader.apply {
+            beginArray()
+
+            while (hasNext()) {
+                beginObject()
+                val hk4eSimple = simpleHK4EList[index++]
+
+                while (hasNext()) {
+                    when (nextName()) {
                         "list" -> {
-                            if (uid.isBlank()) {
+                            if (hk4eSimple.uid.isBlank()) {
                                 error("字段缺失错误:{data}.items.list.item中的[${UIGFHelper.Field.Info.Uid}]字段未找到,或json顺序错误")
                             }
 
-                            if (timezone == -1L) {
+                            if (hk4eSimple.timezone == -1L) {
                                 error("字段缺失错误:{data}.items.list.item中的[${UIGFHelper.Field.Info.TimeZone}]字段未找到,或json顺序错误")
                             }
 
                             saveUIGFGachaItems(
-                                uid = uid,
-                                lang = lang,
+                                uid = hk4eSimple.uid,
+                                lang = hk4eSimple.lang,
                                 reader = jsonReader,
                                 gachaLogService = gachaLogService
                             )
 
                             //更新时区至本地
                             DataStoreHelper.applyLocalDataMap(PreferenceKeys.GachaRecordGameUidRegionMap) {
-                                this[uid] = timezone
+                                this[hk4eSimple.uid] = hk4eSimple.timezone
                             }
-
-                            uid = ""
-                            lang = ""
-                            timezone = -1L
                         }
-
                         else -> {
                             skipValue()
                         }

@@ -7,9 +7,9 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
-import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.LazyColumnDialog
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.loading.LoadingAnimationPlaceholder
@@ -59,8 +58,8 @@ class GachaRecordOptionScreen : BaseActivity() {
         ContentSpacerLazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(BackGroundColor)
-                .padding(12.dp, 8.dp)
+                .background(BackGroundColor),
+            contentPadding = PaddingValues(12.dp, 8.dp)
         ) {
             item {
                 Column(
@@ -115,7 +114,7 @@ class GachaRecordOptionScreen : BaseActivity() {
             )
         }
 
-        if(viewModel.showChooseExportUidDialog){
+        if (viewModel.showChooseExportUidDialog) {
             ChooseGameUidDialog(
                 uidList = viewModel.gachaRecordGameUidList,
                 onConfirm = viewModel::confirmExportSelectedUidRecord,

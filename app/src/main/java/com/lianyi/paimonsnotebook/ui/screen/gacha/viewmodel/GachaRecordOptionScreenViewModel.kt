@@ -46,6 +46,7 @@ import com.lianyi.paimonsnotebook.common.util.data_store.dataStoreValues
 import com.lianyi.paimonsnotebook.common.util.file.FileHelper
 import com.lianyi.paimonsnotebook.common.util.metadata.genshin.uigf.UIGFHelper
 import com.lianyi.paimonsnotebook.common.util.system_service.SystemService
+import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
 import com.lianyi.paimonsnotebook.common.web.ApiEndpoints
 import com.lianyi.paimonsnotebook.common.web.hoyolab.hk4e.event.gacha_info.GachaInfoClient
 import com.lianyi.paimonsnotebook.common.web.hoyolab.hk4e.event.gacha_info.GachaQueryConfigData
@@ -339,7 +340,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
         ),
         OptionListData(
             name = "启用UIGF V3标准导出",
-            description = "默认关闭,开启后,程序导出的JSON将为UIGF V3标准,以兼容未支持高版本UIGF标准的程序",
+            description = "默认关闭,开启后,程序导出的Json将为UIGF V3标准,以兼容未支持高版本UIGF标准的程序",
             onClick = {
                 viewModelScope.launchIO {
                     gachaRecordExportToUIGFV3 = !gachaRecordExportToUIGFV3
@@ -745,8 +746,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
         showLoadingDialog = true
 
         viewModelScope.launch(Dispatchers.IO) {
-            val fileName = "UIGF_${uidList.joinToString()}_${System.currentTimeMillis()}"
-
+            val fileName = "PaimonsNotebook UIGF_${System.currentTimeMillis()}"
             val file = FileHelper.getUIGFJsonSaveFile(fileName)
 
             exportService.exportGachaRecordToUIGFJson(uidList, file, gachaRecordExportToUIGFV3)
