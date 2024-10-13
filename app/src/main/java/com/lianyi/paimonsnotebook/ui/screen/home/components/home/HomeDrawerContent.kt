@@ -96,8 +96,8 @@ fun HomeDrawerContent(
                         .padding(4.dp), tint = Black
                 )
             }
-        }
 
-        NavigationBarPaddingSpacer()
+            NavigationBarPaddingSpacer()
+        }
     }
 }
