@@ -23,8 +23,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
-import com.lianyi.core.ui.components.text.InfoText
-import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.data.popup.IconTitleInformationPopupWindowData
 import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
 import com.lianyi.paimonsnotebook.ui.theme.Black
@@ -48,7 +46,7 @@ fun IconTitleInformationPopupWindow(
         Box {
 
             Column(modifier = Modifier
-                .width(180.dp)
+                .width(data.width)
                 .drawWithCache {
                     val indicatorWidth = popupProvider.indicatorWidthPx
                     val cornerRadius = 14.dp.toPx()
@@ -162,7 +160,7 @@ fun IconTitleInformationPopupWindow(
                     Column {
                         com.lianyi.core.ui.components.text.PrimaryText(
                             text = data.title,
-                            fontSize = 14.sp,
+                            textSize = 14.sp,
                             color = White
                         )
                         Spacer(modifier = Modifier.height(2.dp))

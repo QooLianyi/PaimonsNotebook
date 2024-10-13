@@ -77,7 +77,7 @@ class ShortcutsManagerScreen : BaseActivity() {
 
                         item {
                             if (viewModel.selectedShortcutsCount != 0) {
-                                com.lianyi.core.ui.components.text.InfoText(
+                                InfoText(
                                     text = "已选功能:",
                                     modifier = Modifier.padding(vertical = 4.dp)
                                 )

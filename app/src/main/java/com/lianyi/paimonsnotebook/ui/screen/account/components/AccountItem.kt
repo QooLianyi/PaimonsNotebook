@@ -17,9 +17,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
-import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.data.hoyolab.user.User
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.extension.modifier.action.pressureMonitor
@@ -106,8 +106,7 @@ fun AccountItem(
                         )
                         .fillMaxSize()
                         .background(Error)
-                ) {
-                }
+                )
 
                 //信息布局
                 Row(modifier = Modifier
@@ -152,16 +151,15 @@ fun AccountItem(
                             .weight(1f),
                         verticalArrangement = Arrangement.Center
                     ) {
-                        com.lianyi.core.ui.components.text.PrimaryText(text = user.userInfo.nickname)
+                        PrimaryText(text = user.userInfo.nickname)
 
                         Spacer(modifier = Modifier.height(3.dp))
 
-                        com.lianyi.core.ui.components.text.PrimaryText(
+                        PrimaryText(
                             text = user.userInfo.uid,
-                            fontSize = 14.sp,
+                            textSize = 14.sp,
                             bold = false
                         )
-
                     }
 
                     Icon(

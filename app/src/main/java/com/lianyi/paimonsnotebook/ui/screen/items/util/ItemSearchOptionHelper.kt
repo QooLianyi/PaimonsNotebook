@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.dp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.util.enums.ListLayoutStyle
 import com.lianyi.paimonsnotebook.common.util.enums.SortOrderBy
+import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.character.CharacterListData
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.AvatarService
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.WeaponService
@@ -22,6 +23,38 @@ object ItemSearchOptionHelper {
     private val list by lazy {
         mutableListOf<Pair<String, List<SearchOptionData>>>()
     }
+
+    fun getPlayerCharacterItemFilterVieModel(
+        list: List<AvatarData>,
+        getCharacterListDataById: (Int) -> CharacterListData.CharacterData?
+    ) = ItemFilterViewModel(
+        items = list,
+        searchOptionList = ItemSearchOptionHelper.apply {
+            setOrderBy(
+                options = listOf(
+                    ItemFilterType.Default,
+                    ItemFilterType.Level,
+                    ItemFilterType.Fetter,
+                    ItemFilterType.ActiveConstellation
+                )
+            )
+            setStar()
+            setWeapon()
+            setElement()
+            setAssociation()
+        }.get(),
+        getFilteredItemList = ItemSearchOptionHelper::filterAvatarList,
+        itemSortCompareBy = { avatar, type ->
+
+            val simpleCharacterListData =
+                getCharacterListDataById.invoke(avatar.id) ?: return@ItemFilterViewModel 0L
+
+            ItemContentFilterHelper.getPlayerGroupByKeyByType(
+                type = type,
+                characterListData = simpleCharacterListData
+            )
+        }
+    )
 
     fun getAvatarItemFilterViewModel(
         avatarService: AvatarService
@@ -103,7 +136,7 @@ object ItemSearchOptionHelper {
     }
 
     //排序列表
-    fun setOrderBy(
+    private fun setOrderBy(
         options: List<ItemFilterType>
     ) {
         val orderBy = SearchOptionData(
@@ -121,7 +154,7 @@ object ItemSearchOptionHelper {
     }
 
     //星级
-    fun setStar(starRange: IntProgression = 5 downTo 4) {
+    private fun setStar(starRange: IntProgression = 5 downTo 4) {
         list += "星级" to starRange.map {
             SearchOptionData(sortBy = ItemFilterType.Star, value = it, contentSlot = {
                 StarGroup(
@@ -134,7 +167,7 @@ object ItemSearchOptionHelper {
     }
 
     //武器类型
-    fun setWeapon() {
+    private fun setWeapon() {
         list += "武器" to listOf(
             WeaponType.WEAPON_SWORD_ONE_HAND,
             WeaponType.WEAPON_CLAYMORE,
@@ -152,7 +185,7 @@ object ItemSearchOptionHelper {
     }
 
     //元素类型
-    fun setElement() {
+    private fun setElement() {
         list += "元素" to listOf(
             ElementType.Fire,
             ElementType.Water,
@@ -172,14 +205,15 @@ object ItemSearchOptionHelper {
     }
 
     //地区
-    fun setAssociation() {
+    private fun setAssociation() {
         list += "地区" to listOf(
             AssociationType.ASSOC_TYPE_MONDSTADT,
             AssociationType.ASSOC_TYPE_LIYUE,
             AssociationType.ASSOC_TYPE_INAZUMA,
             AssociationType.ASSOC_TYPE_SUMERU,
             AssociationType.ASSOC_TYPE_FONTAINE,
-            AssociationType.ASSOC_TYPE_FATUI
+            AssociationType.ASSOC_TYPE_FATUI,
+            AssociationType.ASSOC_TYPE_NATLAN
         ).map {
             SearchOptionData(
                 sortBy = ItemFilterType.Association,

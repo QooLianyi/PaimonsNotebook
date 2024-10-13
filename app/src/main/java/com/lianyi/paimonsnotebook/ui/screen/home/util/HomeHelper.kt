@@ -7,12 +7,15 @@ import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.application.PaimonsNotebookApplication
+import com.lianyi.paimonsnotebook.common.util.json.JSON
+import com.lianyi.paimonsnotebook.common.util.parameter.getParameterizedType
 import com.lianyi.paimonsnotebook.ui.screen.abyss.view.AbyssScreen
 import com.lianyi.paimonsnotebook.ui.screen.achievement.view.AchievementScreen
 import com.lianyi.paimonsnotebook.ui.screen.app_widget.view.AppWidgetScreen
 import com.lianyi.paimonsnotebook.ui.screen.cultivate_project.view.CultivateProjectScreen
 import com.lianyi.paimonsnotebook.ui.screen.daily_note.view.DailyNoteScreen
 import com.lianyi.paimonsnotebook.ui.screen.gacha.view.GachaRecordScreen
+import com.lianyi.paimonsnotebook.ui.screen.home.data.HomeCustomDrawerData
 import com.lianyi.paimonsnotebook.ui.screen.home.data.ModalItemData
 import com.lianyi.paimonsnotebook.ui.screen.items.view.AvatarScreen
 import com.lianyi.paimonsnotebook.ui.screen.items.view.CultivationMaterialScreen
@@ -25,6 +28,10 @@ import kotlinx.coroutines.flow.asStateFlow
 object HomeHelper {
     private val context by lazy {
         PaimonsNotebookApplication.context
+    }
+
+    val modalItemMap by lazy {
+        modalItemData.associateBy { it.target.name }
     }
 
     //侧边栏所有功能
@@ -116,22 +123,28 @@ object HomeHelper {
     val modalItemsFlow = ModalItemsStateFlow.asStateFlow()
 
     //更新侧边栏流
-    suspend fun updateShowModalItemData(enableMetadata: Boolean) {
-
-
-
-        val items = getShowModalItemData(enableMetadata)
-        ModalItemsStateFlow.emit(items)
+    suspend fun updateShowModalItemData(
+        enableMetadata: Boolean,
+        customDrawerListJson: String,
+        enableCustomDrawer: Boolean
+    ) {
+        if (enableCustomDrawer) {
+            //再次根据元数据启用状态筛选一次列表
+            val list =
+                getCustomDrawerListFromJson(json = customDrawerListJson).filterNot { it.disable }
+                    .mapNotNull { modalItemMap[it.targetClass] }
+            ModalItemsStateFlow.emit(list)
+        } else {
+            val items = getShowModalItemData(enableMetadata)
+            ModalItemsStateFlow.emit(items)
+        }
     }
 
-    init {
-//        CoroutineScope(Dispatchers.IO).launchIO {
-//            val v = dataStoreValuesFirstLambda {
-//                this[PreferenceKeys.EnableMetadata] ?: false
-//            }
-//
-//        }
-    }
+    fun getCustomDrawerListFromJson(json: String) =
+        JSON.parse<List<HomeCustomDrawerData>>(
+            json = json,
+            type = getParameterizedType(List::class.java, HomeCustomDrawerData::class.java)
+        )
 
     fun <T : Activity> goActivity(
         cls: Class<T>,

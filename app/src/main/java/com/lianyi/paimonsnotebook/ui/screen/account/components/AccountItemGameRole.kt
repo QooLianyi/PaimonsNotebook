@@ -76,13 +76,13 @@ fun AccountItemGameRole(
         ) {
             PrimaryText(
                 text = role.nickname,
-                fontSize = 14.sp,
+                textSize = 14.sp,
                 color = Black
             )
             Spacer(modifier = Modifier.height(2.dp))
             PrimaryText(
                 text = "${role.game_uid} | ${role.region_name}",
-                fontSize = 12.sp,
+                textSize = 12.sp,
                 color = Info
             )
         }

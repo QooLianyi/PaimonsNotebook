@@ -58,14 +58,14 @@ object ElementType {
         getElementResourceIdByName(getElementNameByType(type))
 
     fun getElementColorByName(name: String) =
-        when (name) {
-            "火" -> ElementFireColor
-            "水" -> ElementWaterColor
-            "草" -> ElementGrassColor
-            "雷" -> ElementElectricColor
-            "冰" -> ElementIceColor
-            "风" -> ElementWindColor
-            "岩" -> ElementRockColor
+        when (name.lowercase()) {
+            "火","pyro" -> ElementFireColor
+            "水","hydro" -> ElementWaterColor
+            "草","dendro" -> ElementGrassColor
+            "雷","electro" -> ElementElectricColor
+            "冰","cryo" -> ElementIceColor
+            "风","anemo" -> ElementWindColor
+            "岩","geo" -> ElementRockColor
             else -> Primary
         }
 

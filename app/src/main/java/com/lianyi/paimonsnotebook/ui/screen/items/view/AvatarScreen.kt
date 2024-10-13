@@ -51,7 +51,7 @@ class AvatarScreen : ComponentActivity() {
                         itemFilterViewModel = viewModel.itemFilterViewModel,
                         onClickListButton = viewModel::toggleFilterContent,
                         getListItemDataContent = viewModel::getItemDataContent,
-                        informationContentSlot = { avatar ->
+                        listVerticalEndInformationContentSlot = { avatar ->
                             InformationItem(
                                 text = AssociationType.getAssociationNameByType(avatar.fetterInfo.Association),
                                 iconUrl = AssociationIconConverter.avatarAssociationToUrl(avatar.fetterInfo.Association),

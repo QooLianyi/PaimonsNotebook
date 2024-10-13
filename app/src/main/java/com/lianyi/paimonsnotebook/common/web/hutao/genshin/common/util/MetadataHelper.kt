@@ -1,6 +1,5 @@
 package com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util
 
-import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
 import com.lianyi.paimonsnotebook.common.extension.string.notify
 import com.lianyi.paimonsnotebook.common.extension.string.warnNotify
 import com.lianyi.paimonsnotebook.common.util.file.FileHelper
@@ -14,9 +13,12 @@ import com.lianyi.paimonsnotebook.common.util.request.getAsText
 import com.lianyi.paimonsnotebook.common.util.request.getAsTextResult
 import com.lianyi.paimonsnotebook.common.web.HutaoEndpoints
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.LocaleNames
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
-import kotlin.system.measureTimeMillis
 
 /*
 * 元数据名称
@@ -62,6 +64,11 @@ object MetadataHelper {
     //哈希表的检查时间
     private const val HashMapCheckInterval = 60000L
 
+    //协程最大并发数量
+    private val semaphore by lazy {
+        Semaphore(40)
+    }
+
     /*
     * 返回map中哈希值不同的文件名集合
     * */
@@ -95,7 +102,7 @@ object MetadataHelper {
 
     private var isUpdating = false
 
-    suspend fun checkAndUpdateMetadata(
+    fun checkAndUpdateMetadata(
         notify: Boolean = false,
         onSuccess: suspend () -> Unit = {}
     ) {
@@ -106,35 +113,36 @@ object MetadataHelper {
             }
             return
         }
-
         isUpdating = true
 
-        if (!metadataNeedUpdate()) {
-            if (notify) {
-                "当前元数据已是最新".notify()
-            }
+        CoroutineScope(Dispatchers.IO).launch {
+            if (!metadataNeedUpdate()) {
+                if (notify) {
+                    "当前元数据已是最新".notify()
+                }
 
-            isUpdating = false
-            onSuccess.invoke()
-            return
-        }
-
-        val notifyId = "发现新的元数据,正在更新...".notify(keepShow = true)
-
-        updateMetadata(
-            onFailed = {
-                "更新元数据时发生错误,现在使用的仍是旧数据,显示的内容可能会与最新的游戏内容有所差异".warnNotify()
-            },
-            onSuccess = {
-                "元数据更新完毕".notify()
-                onSuccess.invoke()
-            },
-            onLoadMetadataFile = {},
-            finally = {
-                PaimonsNotebookNotification.removeNotifyById(notifyId)
                 isUpdating = false
+                onSuccess.invoke()
+                return@launch
             }
-        )
+
+            val notifyId = "发现新的元数据,正在更新...".notify(keepShow = true)
+
+            updateMetadata(
+                onFailed = {
+                    "更新元数据时发生错误,现在使用的仍是旧数据,显示的内容可能会与最新的游戏内容有所差异".warnNotify()
+                },
+                onSuccess = {
+                    "元数据更新完毕".notify()
+                    onSuccess.invoke()
+                },
+                onLoadMetadataFile = {},
+                finally = {
+                    PaimonsNotebookNotification.removeNotifyById(notifyId)
+                    isUpdating = false
+                }
+            )
+        }
     }
 
     /*
@@ -154,17 +162,13 @@ object MetadataHelper {
         withContext(Dispatchers.IO) {
             val downloadFileList = getDownloadFileNameListFromMetadataMap()
 
-            downloadFileList.forEachIndexed { index, name ->
-                launchIO {
-                    val time = measureTimeMillis {
+            downloadFileList.forEach { name ->
+                semaphore.withPermit {
+                    launch {
                         loadAndSaveFile(name)
                         onLoadMetadataFile.invoke(downloadFileList.size)
                     }
-                    println("name = ${name} , time = ${time}")
                 }
-//                if(index + 1 % 10 == 0){
-//                    delay(500)
-//                }
             }
         }
 
@@ -179,9 +183,6 @@ object MetadataHelper {
 
     //更新元数据map
     private suspend fun updateMetadataHashMap() {
-
-        println("updateMetadataHashMap = ${System.currentTimeMillis()}")
-
         val skipUpdateHashMap =
             System.currentTimeMillis() - latestCheckHashMapTime < HashMapCheckInterval
 
@@ -195,7 +196,6 @@ object MetadataHelper {
 
         hashMap.clear()
 
-//        try {
         hashMap.putAll(
             JSON.parse<Map<String, String>>(
                 metaJson,
@@ -204,11 +204,6 @@ object MetadataHelper {
         )
 
         latestCheckHashMapTime = System.currentTimeMillis()
-//        } catch (e: Exception) {
-//            hashMap += "error" to "${e.message}"
-//        }
-
-        println(hashMap)
     }
 
     //重新载入单个文件

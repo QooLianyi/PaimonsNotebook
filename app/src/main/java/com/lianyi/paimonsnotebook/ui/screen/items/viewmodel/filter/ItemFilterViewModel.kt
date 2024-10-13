@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 class ItemFilterViewModel<T>(
     private val items: List<T>,
     val searchOptionList: List<Pair<String, List<SearchOptionData>>>,
-    val getFilteredItemList: (ItemFilterViewModel<T>,List<T>) -> List<T>,
+    val getFilteredItemList: (ItemFilterViewModel<T>, List<T>) -> List<T>,
     private val itemSortCompareBy: (T, type: ItemFilterType) -> Long
 ) {
 
@@ -48,6 +48,21 @@ class ItemFilterViewModel<T>(
             }
         }
     }
+
+    //判断是否显示清楚按钮时的忽略选项
+    private val onShowClearFilterIgnoreTypeSet = setOf(
+        ItemFilterType.ListLayout,
+        ItemFilterType.Default,
+        ItemFilterType.BaseATK,
+        ItemFilterType.BaseHp,
+        ItemFilterType.BaseDef,
+        ItemFilterType.BirthDay,
+        ItemFilterType.CostumeCount,
+
+        ItemFilterType.Level,
+        ItemFilterType.Fetter,
+        ItemFilterType.ActiveConstellation
+    )
 
     //是否显示过滤条件内容
     var showFilterContent: Boolean by mutableStateOf(false)
@@ -110,7 +125,7 @@ class ItemFilterViewModel<T>(
 
     //根据过滤方法获取过滤后的列表
     private fun filterItem() {
-        itemList = getFilteredItemList.invoke(this,items)
+        itemList = getFilteredItemList.invoke(this, items)
     }
 
     //根据当前的排序方法对列表进行排序
@@ -180,16 +195,19 @@ class ItemFilterViewModel<T>(
 
         listScrollToFirstItem()
     }
-    private fun listScrollToFirstItem(){
+
+    private fun listScrollToFirstItem() {
         CoroutineScope(Dispatchers.Main).launch {
             lazyListState.scrollToItem(0)
             lazyGridState.scrollToItem(0)
         }
     }
 
-    //如果已选中的选项keys不等于2并且输入的名称不为空则显示清除筛选按钮
+    //如果已选中的选项keys不等于忽略的选项数量，并且输入的名称不为空则显示清除筛选按钮
     private fun checkShowClearFilter() {
-        showClearFilter = selectedOptionMap.keys.size != 2 || inputNameValue.isNotEmpty()
+        val ignoreCount =
+            selectedOptionMap.keys.count { onShowClearFilterIgnoreTypeSet.contains(it) }
+        showClearFilter = selectedOptionMap.keys.size != ignoreCount || inputNameValue.isNotEmpty()
     }
 
     //当选择选项时,根据不同的选项类型进行不同的处理

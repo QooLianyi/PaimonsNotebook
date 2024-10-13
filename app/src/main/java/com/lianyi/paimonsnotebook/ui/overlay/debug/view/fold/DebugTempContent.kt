@@ -6,7 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.common.data.hoyolab.PlayerUid
 import com.lianyi.paimonsnotebook.common.database.user.util.AccountHelper
+import com.lianyi.paimonsnotebook.common.extension.data_store.editValue
 import com.lianyi.paimonsnotebook.common.extension.string.show
+import com.lianyi.paimonsnotebook.common.util.data_store.PreferenceKeys
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.GameRecordClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,5 +24,12 @@ fun DebugTempContent() {
         error("crash-test")
     }) {
         Text(text = "崩溃测试", fontSize = 18.sp)
+    }
+    Button(onClick = {
+        CoroutineScope(Dispatchers.IO).launch {
+            PreferenceKeys.CustomHomeDrawerList.editValue("[]")
+        }
+    }) {
+        Text(text = "清空自定义侧边栏", fontSize = 18.sp)
     }
 }

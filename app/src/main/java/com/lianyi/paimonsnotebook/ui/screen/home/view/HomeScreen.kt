@@ -69,7 +69,7 @@ class HomeScreen : BaseActivity() {
                             selectedUser = viewModel.selectedUser,
                             modalItems = viewModel.modalItems,
                             onScanQRCode = viewModel::onScanQRCode,
-                            goSignWeb = viewModel::onScanQRCode,
+                            goSignWeb = viewModel::goSignWeb,
                             functionNavigate = viewModel::functionNavigate
                         )
                     },

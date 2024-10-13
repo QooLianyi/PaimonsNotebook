@@ -1,20 +1,15 @@
 package com.lianyi.paimonsnotebook
 
-import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
 import com.lianyi.paimonsnotebook.common.util.json.JSON
 import com.lianyi.paimonsnotebook.common.util.parameter.getParameterizedType
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.conveter.RelicIconConverter
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.ReliquaryType
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.reliquary.ReliquaryData
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.reliquary.ReliquarySetData
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import org.junit.Test
 import java.io.File
+import java.nio.charset.Charset
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -24,25 +19,26 @@ import java.io.File
 class ExampleUnitTest {
 
     @Test
-    fun codeTest(): Unit =
+    fun codeTest(): Unit {
 
-        runBlocking {
-
-            withContext(Dispatchers.IO){
-                repeat(10){
-                    launchIO {
-                        delayCall(it)
-                    }
-                }
-            }
-
+        JSONObject().apply {
+            put("ee","ww")
+            put("ext",JSONObject(buildMap {
+                put("a","1")
+                put("c","2")
+                put("b","3")
+            }).toString())
+        }.apply {
+            println(this.toString())
         }
 
+    }
 
-    private suspend fun delayCall(i:Int){
+
+    private suspend fun delayCall(i: Int) {
         val r = (1..10).random()
         println("i = ${i} r = ${r} start")
-        delay(r*1000L)
+        delay(r * 1000L)
         println("i = ${i} r = ${r} end")
     }
 
@@ -52,11 +48,19 @@ class ExampleUnitTest {
     * */
     @Test
     fun test() {
-        val reliquaryFile = File("D:\\Project\\PaimonsNotebook\\project\\PaimonsNotebook\\app\\src\\test\\java\\com\\lianyi\\paimonsnotebook\\Reliquary.json")
-        val reliquarySetFile = File("D:\\Project\\PaimonsNotebook\\project\\PaimonsNotebook\\app\\src\\test\\java\\com\\lianyi\\paimonsnotebook\\ReliquarySet.json")
+        val reliquaryFile =
+            File("D:\\Project\\PaimonsNotebook\\project\\PaimonsNotebook\\app\\src\\test\\java\\com\\lianyi\\paimonsnotebook\\Reliquary.json")
+        val reliquarySetFile =
+            File("D:\\Project\\PaimonsNotebook\\project\\PaimonsNotebook\\app\\src\\test\\java\\com\\lianyi\\paimonsnotebook\\ReliquarySet.json")
 
-        val list = JSON.parse<List<ReliquaryData>>(reliquaryFile.readText(), getParameterizedType(List::class.java,ReliquaryData::class.java))
-        val setList = JSON.parse<List<ReliquarySetData>>(reliquarySetFile.readText(), getParameterizedType(List::class.java,ReliquarySetData::class.java))
+        val list = JSON.parse<List<ReliquaryData>>(
+            reliquaryFile.readText(),
+            getParameterizedType(List::class.java, ReliquaryData::class.java)
+        )
+        val setList = JSON.parse<List<ReliquarySetData>>(
+            reliquarySetFile.readText(),
+            getParameterizedType(List::class.java, ReliquarySetData::class.java)
+        )
 
         val map = list.groupBy { it.SetId }.mapValues { entry ->
             //只保留最高等级的圣遗物
@@ -69,7 +73,7 @@ class ExampleUnitTest {
         map.forEach { (t, u) ->
             //圣遗物套装效果
             val setData = setMap[t]
-            if(setData == null){
+            if (setData == null) {
                 println("null -- ${t} ${u}")
                 return@forEach
             }
@@ -79,9 +83,9 @@ class ExampleUnitTest {
             println("${setData.Name} - ${setData.SetId}")
 
             setData.NeedNumber.forEachIndexed { index, i ->
-                if(index < setData.Descriptions.size){
+                if (index < setData.Descriptions.size) {
                     println("${i}件套效果 : ${setData.Descriptions[index]}")
-                }else{
+                } else {
                     println("index = ${index} 圣遗物效果索引溢出")
                 }
             }

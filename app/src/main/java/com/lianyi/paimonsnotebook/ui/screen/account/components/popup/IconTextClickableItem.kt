@@ -44,7 +44,7 @@ fun IconTextClickableItem(
 
         PrimaryText(
             text = text,
-            fontSize = 13.sp
+            textSize = 13.sp
         )
     }
 }

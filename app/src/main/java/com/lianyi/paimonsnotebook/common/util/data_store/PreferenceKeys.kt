@@ -26,6 +26,14 @@ object PreferenceKeys {
         stringPreferencesKey("bbs_device_id")
     }
 
+    val DeviceIdSeed by lazy {
+        stringPreferencesKey("device_id_seed")
+    }
+
+    val DeviceIdSeedTime by lazy {
+        longPreferencesKey("device_id_seed_time")
+    }
+
     //外部存储权限申请标识
     val PermissionRequestFlag by lazy {
         booleanPreferencesKey("permissionRequestFlag")
@@ -184,7 +192,7 @@ object PreferenceKeys {
         booleanPreferencesKey("enableCustomHomeDrawer")
     }
 
-    
+
     val CustomHomeDrawerList by lazy {
         stringPreferencesKey("customHomeDrawerList")
     }

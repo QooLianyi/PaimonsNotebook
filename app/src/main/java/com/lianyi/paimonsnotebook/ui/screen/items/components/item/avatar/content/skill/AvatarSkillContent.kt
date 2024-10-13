@@ -25,13 +25,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lianyi.core.ui.components.text.RichText
 import com.lianyi.paimonsnotebook.common.components.layout.blur_card.widget.ItemLevelSlider
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
-import com.lianyi.core.ui.components.text.RichText
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.util.compose.provider.NoRippleThemeProvides
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.format.AvatarSkillFormat
 import com.lianyi.paimonsnotebook.ui.theme.Black_10
+import com.lianyi.paimonsnotebook.ui.theme.Transparent
 import com.lianyi.paimonsnotebook.ui.theme.White
 import com.lianyi.paimonsnotebook.ui.theme.White_40
 
@@ -62,11 +63,9 @@ internal fun AvatarSkillContent(
                         url = skill.iconUrl,
                         modifier = Modifier
                             .clip(CircleShape)
-                            .apply {
-                                if (enabledIconBorder) {
-                                    this.border(3.dp, White, CircleShape)
-                                }
-                            }
+                            .border(
+                                2.dp, if (enabledIconBorder) White else Transparent, CircleShape
+                            )
                             .size(55.dp)
                             .background(iconBackgroundColor)
                             .padding(4.dp),
@@ -89,7 +88,7 @@ internal fun AvatarSkillContent(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                com.lianyi.core.ui.components.text.RichText(
+                RichText(
                     text = skill.description,
                     fontSize = 14.sp
                 )

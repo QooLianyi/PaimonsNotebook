@@ -15,7 +15,7 @@ import com.lianyi.core.ui.theme.Font_Primary
 fun PrimaryText(
     modifier: Modifier = Modifier,
     text: String,
-    fontSize: TextUnit = 15.sp,
+    textSize: TextUnit = 15.sp,
     bold: Boolean = true,
     maxLines: Int = 1,
     color: Color = Font_Primary,
@@ -23,7 +23,7 @@ fun PrimaryText(
 ) {
     Text(
         text = text,
-        fontSize = fontSize,
+        fontSize = textSize,
         modifier = modifier,
         fontWeight = if (bold) FontWeight.Bold else FontWeight.Normal,
         color = color,

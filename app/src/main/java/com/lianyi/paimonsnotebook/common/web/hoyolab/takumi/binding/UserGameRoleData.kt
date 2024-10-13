@@ -15,6 +15,6 @@ data class UserGameRoleData(
         val region: String,
         val region_name: String,
     ) {
-        fun getPlayerUid() = PlayerUid(game_uid, region_name)
+        fun getPlayerUid() = PlayerUid(game_uid, region)
     }
 }

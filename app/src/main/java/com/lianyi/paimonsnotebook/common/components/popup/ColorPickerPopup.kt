@@ -38,7 +38,6 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.spacer.NavigationBarPaddingSpacer
 import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
-import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.TextButton
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.theme.BackGroundColor
@@ -170,7 +169,7 @@ fun ColorPickerPopup(
 
                         com.lianyi.core.ui.components.text.PrimaryText(
                             text = text,
-                            fontSize = 12.sp
+                            textSize = 12.sp
                         )
                     }
                 }

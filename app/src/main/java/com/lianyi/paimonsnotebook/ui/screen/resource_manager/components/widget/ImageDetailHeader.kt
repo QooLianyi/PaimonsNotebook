@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.spacer.StatusBarPaddingSpacer
-import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.theme.Black
@@ -64,7 +63,7 @@ fun ImageDetailHeader(
             Column(modifier = Modifier.weight(1f)) {
                 com.lianyi.core.ui.components.text.PrimaryText(
                     text = diskCache.name,
-                    fontSize = 14.sp
+                    textSize = 14.sp
                 )
 
                 Spacer(modifier = Modifier.height(1.dp))

@@ -3,6 +3,7 @@ package com.lianyi.paimonsnotebook.ui.screen.app_widget.view
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.common.components.layout.column.TabBarColumnLayout
 import com.lianyi.paimonsnotebook.common.components.placeholder.EmptyPlaceholder
@@ -28,6 +29,7 @@ class AppWidgetScreen : BaseActivity() {
                 TabBarColumnLayout(
                     tabs = viewModel.tabs,
                     onTabBarSelect = viewModel::changeTab,
+                    tabsSpace = 12.dp
                 ){
                     Crossfade(targetState = viewModel.currentTabIndex, label = "") {
                         when (it) {

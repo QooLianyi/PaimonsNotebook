@@ -52,6 +52,8 @@ object SystemService {
         context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     }
 
+
+
     //设置剪切板内容
     fun setClipBoardText(text: String, label: String? = null) {
         clipboardManager.setPrimaryClip(ClipData.newPlainText(label, text))

@@ -26,4 +26,9 @@ data class ModalItemData(
     val target: Class<out Activity>,
     val sortIndex: Int = 0,
     val requireMetadata: Boolean = false
-)
+) {
+    fun toCustomDrawerData() = HomeCustomDrawerData(
+        targetClass = target.name,
+        sort = sortIndex
+    )
+}

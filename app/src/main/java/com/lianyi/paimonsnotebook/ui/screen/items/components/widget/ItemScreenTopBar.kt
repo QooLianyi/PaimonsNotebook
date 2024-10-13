@@ -32,6 +32,7 @@ internal fun BoxWithConstraintsScope.ItemScreenTopBar(
     text: String = "",
     lazyListState: LazyListState,
     added: Boolean = false,
+    showAddButton:Boolean = true,
     onClickListButton: () -> Unit,
     onClickAddButton: () -> Unit = {}
 ) {
@@ -82,38 +83,14 @@ internal fun BoxWithConstraintsScope.ItemScreenTopBar(
                 onClick = onClickListButton
             )
 
-            ItemActionButton(
-                iconResId = if (added) R.drawable.ic_checkmark_circle_full else R.drawable.ic_add_circle,
-                onClick = onClickAddButton,
-                iconTint = if (added) White else Black,
-                backgroundColor = if (added) Black_60 else BlurCardBackgroundColor
-            )
-
-//        val addBackgroundColorAnim by animateColorAsState(
-//            targetValue = if (added) Black else BlurCardBackgroundColor,
-//            animationSpec = tween(100)
-//        )
-//        val addIconTintColorAnim by animateColorAsState(
-//            targetValue = if (added) White else Black,
-//            animationSpec = tween(100)
-//        )
-//
-//        Row(
-//            modifier = Modifier
-//                .clip(RoundedCornerShape(4.dp))
-//                .background(addBackgroundColorAnim)
-//                .clickable {
-//                    onClickAddButton.invoke()
-//                }
-//                .padding(8.dp)
-//        ) {
-//            Icon(
-//                painter = painterResource(id = if (added) R.drawable.ic_checkmark_circle else R.drawable.ic_add_circle),
-//                contentDescription = null,
-//                modifier = Modifier.size(23.dp),
-//                tint = addIconTintColorAnim
-//            )
-//        }
+            if(showAddButton){
+                ItemActionButton(
+                    iconResId = if (added) R.drawable.ic_checkmark_circle_full else R.drawable.ic_add_circle,
+                    onClick = onClickAddButton,
+                    iconTint = if (added) White else Black,
+                    backgroundColor = if (added) Black_60 else BlurCardBackgroundColor
+                )
+            }
         }
     }
 }

@@ -10,8 +10,8 @@ import kotlin.math.pow
 *
 * */
 object DynamicSecret {
-    const val K2 = "rtvTthKxEyreVXQCnhluFgLXPOFKPHlA"
-    const val LK2 = "EJncUPGnOHajenjLhBOsdpwEMZmiCmQX"
+    const val K2 = "oqrJbPCoFhWhFBNDvVRuldbrbiVxyWsP"
+    const val LK2 = "zZDfHqEcwTqvvKDmqRcHyqqurxGgLfBV"
     const val X4 = "xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs"
     const val X6 = "t0qEgfub6cvueAPgR5m9aQWWVciEer7v"
     const val PROD = "JwYDpKvLj6MrMqqYU6jTKF17KNO2PXoS"

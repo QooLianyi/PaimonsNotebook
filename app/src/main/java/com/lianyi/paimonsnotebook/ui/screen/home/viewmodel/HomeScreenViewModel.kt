@@ -96,19 +96,22 @@ class HomeScreenViewModel : ViewModel() {
             }
             launch {
                 dataStoreValuesFirst {
-                    val check = it[PreferenceKeys.EnableCheckNewVersion] ?: true
-                    if (check) {
-                        updateService.checkNewVersion(onFoundNewVersion = {
-                            "发现新版本,可前往设置进行更新[关于->派蒙笔记本]".notify(closeable = true)
-                        }, onFail = {
-                        }, onNotFoundNewVersion = {
-                        })
+                    val checkAppNewVersion = it[PreferenceKeys.EnableCheckNewVersion] ?: true
+                    val checkMetadataNewVersion = it[PreferenceKeys.EnableMetadata] ?: true
+
+                    if (checkAppNewVersion) {
+                        viewModelScope.launchIO {
+                            updateService.checkNewVersion(onFoundNewVersion = {
+                                "发现新版本,可前往设置进行更新[关于->派蒙笔记本]".notify(closeable = true)
+                            }, onFail = {
+                            }, onNotFoundNewVersion = {
+                            })
+                        }
                     }
-                }
-            }
-            launch {
-                if (configurationData.enableMetadata) {
-                    MetadataHelper.checkAndUpdateMetadata()
+
+                    if(checkMetadataNewVersion){
+                        MetadataHelper.checkAndUpdateMetadata()
+                    }
                 }
             }
         }

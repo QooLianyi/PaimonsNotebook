@@ -129,7 +129,7 @@ fun CultivateMaterialGroup(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            com.lianyi.core.ui.components.text.PrimaryText(text = groupName, fontSize = 14.sp)
+            com.lianyi.core.ui.components.text.PrimaryText(text = groupName, textSize = 14.sp)
 
             Spacer(modifier = Modifier.weight(1f))
 

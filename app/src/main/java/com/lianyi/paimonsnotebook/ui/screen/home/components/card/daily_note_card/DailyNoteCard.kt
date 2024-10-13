@@ -12,7 +12,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.data.hoyolab.game_record.DailyNote
 import com.lianyi.paimonsnotebook.common.extension.modifier.animation.drawArcBorder
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
@@ -29,7 +28,7 @@ internal fun DailyNoteCard(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            com.lianyi.core.ui.components.text.PrimaryText(text = "实时便笺", fontSize = 16.sp)
+            com.lianyi.core.ui.components.text.PrimaryText(text = "实时便笺", textSize = 16.sp)
 
             Text(
                 text = "${item.role.nickname} | ${item.role.region_name} | Lv.${item.role.level}",
@@ -72,7 +71,7 @@ internal fun DailyNoteCard(
 
                 com.lianyi.core.ui.components.text.PrimaryText(
                     text = "${item.dailyNoteEntity.dailyNote.current_resin}/${item.dailyNoteEntity.dailyNote.max_resin}",
-                    fontSize = 20.sp
+                    textSize = 20.sp
                 )
             }
 

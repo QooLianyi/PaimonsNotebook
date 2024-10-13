@@ -474,4 +474,11 @@ object ApiEndpoints {
 
     //游戏角色详情
     const val gameRecordCharacterDetail = "${ApiTakumiRecordApi}/character/detail"
+
+
+    //保存设备
+    const val saveDevice = "${BbsApiMiYouSheApiHub}/api/saveDevice"
+
+    //设备登录
+    const val deviceLogin = "${BbsApiMiYouSheApiHub}/api/deviceLogin"
 }

@@ -13,6 +13,7 @@ object AssociationIconConverter {
             AssociationType.ASSOC_TYPE_LIYUE-> "LiYue"
             AssociationType.ASSOC_TYPE_SUMERU-> "Sumeru"
             AssociationType.ASSOC_TYPE_FONTAINE-> "Fontaine"
+            AssociationType.ASSOC_TYPE_NATLAN-> "Natlan"
             else-> "GoldenAppleIsles"
         }
 

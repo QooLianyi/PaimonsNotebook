@@ -13,6 +13,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.ConnectionPool
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -62,6 +63,11 @@ val applicationOkHttpClient by lazy {
         writeTimeout(60, TimeUnit.SECONDS)
         callTimeout(60, TimeUnit.SECONDS)
 
+        //设置最大连接数量
+        connectionPool(
+            ConnectionPool(40, 5, TimeUnit.MINUTES)
+        )
+
         addInterceptor {
             val request = it.request().newBuilder()
             request.setUserAgent(CoreEnvironment.PaimonsNotebookUA)
@@ -76,7 +82,9 @@ fun buildRequest(block: Request.Builder.() -> Unit) = Request.Builder().apply(bl
 fun <K, V> Map<K, V>.toJson(): String = gson.toJson(this)
 
 fun <K, V> Map<K, V>.post(builder: Request.Builder) =
-    builder.post(toJson().toRequestBody("application/json".toMediaType()))
+    builder.post(toJson().toRequestBody())
+
+fun String.toRequestBody() = this.toRequestBody("application/json".toMediaType())
 
 //获取字节流
 suspend fun Request.getAsByte(client: OkHttpClient = emptyOkHttpClient) =

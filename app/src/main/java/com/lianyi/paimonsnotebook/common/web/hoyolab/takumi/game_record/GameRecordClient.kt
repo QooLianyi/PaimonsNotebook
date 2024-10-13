@@ -1,11 +1,14 @@
 package com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record
 
+import com.lianyi.paimonsnotebook.common.core.enviroment.EnvironmentClientType
 import com.lianyi.paimonsnotebook.common.data.hoyolab.PlayerUid
 import com.lianyi.paimonsnotebook.common.data.hoyolab.user.UserAndUid
 import com.lianyi.paimonsnotebook.common.extension.request.setDynamicSecret
 import com.lianyi.paimonsnotebook.common.extension.request.setUser
 import com.lianyi.paimonsnotebook.common.extension.request.setXRpcChallenge
+import com.lianyi.paimonsnotebook.common.extension.request.setXRpcClientType
 import com.lianyi.paimonsnotebook.common.util.hoyolab.DynamicSecret
+import com.lianyi.paimonsnotebook.common.util.json.JSON
 import com.lianyi.paimonsnotebook.common.util.request.buildRequest
 import com.lianyi.paimonsnotebook.common.util.request.getAsJson
 import com.lianyi.paimonsnotebook.common.util.request.post
@@ -79,9 +82,11 @@ class GameRecordClient {
 
         setUser(user.userEntity, CookieHelper.Type.Cookie)
 
+        setXRpcClientType(EnvironmentClientType.WEB)
+
         buildMap {
-            put("role_id", user.playerUid.value)
             put("server", user.playerUid.region)
+            put("role_id", user.playerUid.value)
             put("sort_type", sortType)
         }.post(this)
 
@@ -94,6 +99,8 @@ class GameRecordClient {
         url(ApiEndpoints.gameRecordCharacterDetail)
 
         setUser(user.userEntity, CookieHelper.Type.Cookie)
+
+        setXRpcClientType(EnvironmentClientType.WEB)
 
         buildMap {
             put("role_id", user.playerUid.value)

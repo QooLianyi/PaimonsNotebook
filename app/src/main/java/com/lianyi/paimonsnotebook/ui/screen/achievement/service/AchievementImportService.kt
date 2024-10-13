@@ -141,6 +141,8 @@ class AchievementImportService(
                         objectEnd = true
                     }
                 )
+
+                reader.close()
             }
         } catch (e: Exception) {
             "发生了异常:${e.message}".errorNotify()

@@ -1,26 +1,22 @@
 package com.lianyi.paimonsnotebook.ui.screen.gacha.service
 
-import com.lianyi.paimonsnotebook.common.util.file.FileHelper
-import com.lianyi.paimonsnotebook.common.util.json.JSON
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.util.MetadataHelper
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.weapon.WeaponData
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.AvatarService
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.WeaponService
 import com.lianyi.paimonsnotebook.ui.screen.gacha.data.GachaModel
-import org.json.JSONArray
 
 class GachaLogService {
 
     private val itemMap = mutableMapOf<String, GachaModel>()
     private val gachaModelMap = mutableMapOf<Int, GachaModel>()
+    private val avatarService = AvatarService(onMissingFile = this::onMissingFile)
+    private val weaponService = WeaponService(onMissingFile = this::onMissingFile)
 
+    //判断该service是否可用
+    var isAvailable = true
+        private set
 
     init {
-        val avatarJson = FileHelper.getMetadata(MetadataHelper.FileNameAvatar)?.readText() ?: "[]"
-        val weaponJson = FileHelper.getMetadata(MetadataHelper.FileNameWeapon)?.readText() ?: "[]"
-
-        val avatarJsonArray = JSONArray(avatarJson)
-        repeat(avatarJsonArray.length()) {
-            val data = JSON.parse<AvatarData>(avatarJsonArray.getJSONObject(it).toString())
+        avatarService.avatarList.forEach { data ->
             val model = GachaModel(
                 name = data.name,
                 id = data.id,
@@ -31,9 +27,7 @@ class GachaLogService {
             gachaModelMap[data.id] = model
         }
 
-        val weaponJsonArray = JSONArray(weaponJson)
-        repeat(weaponJsonArray.length()) {
-            val data = JSON.parse<WeaponData>(weaponJsonArray.getJSONObject(it).toString())
+        weaponService.weaponList.forEach { data ->
             val model = GachaModel(
                 name = data.name,
                 id = data.id,
@@ -43,6 +37,10 @@ class GachaLogService {
             itemMap[data.name] = model
             gachaModelMap[data.id] = model
         }
+    }
+
+    private fun onMissingFile() {
+        isAvailable = false
     }
 
     fun getModelByName(name: String) = itemMap[name]

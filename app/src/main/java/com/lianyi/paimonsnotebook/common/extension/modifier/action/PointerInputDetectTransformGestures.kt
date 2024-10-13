@@ -8,7 +8,7 @@ fun Modifier.pointerInputDetectTransformGestures(
     onGesture: (centroid: Offset, pan: Offset, zoom: Float, rotation: Float) -> Unit,
     onGestureEnd: () -> Unit
 ): Modifier {
-    return pointerInput(Unit) {
+    return this then pointerInput(Unit) {
         detectTransformGesturesAndEnd(
             panZoomLock = false,
             onGesture = { offset, pan, gestureZoom, gestureRotate ->

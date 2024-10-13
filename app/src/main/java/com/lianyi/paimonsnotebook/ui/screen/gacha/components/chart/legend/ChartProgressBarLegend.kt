@@ -6,7 +6,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.ProgressBar
 import com.lianyi.paimonsnotebook.ui.theme.Black_60
 
@@ -27,12 +26,12 @@ fun ChartProgressBarLegend(
         ) {
             com.lianyi.core.ui.components.text.PrimaryText(
                 text = name,
-                fontSize = 14.sp,
+                textSize = 14.sp,
                 color = Black_60
             )
             com.lianyi.core.ui.components.text.PrimaryText(
                 text = value,
-                fontSize = 14.sp,
+                textSize = 14.sp,
                 color = Black_60
             )
         }

@@ -8,14 +8,14 @@ data class CharacterDetailData(
 
     data class DetailItem(
         val base: Base,
-        val base_properties: List<BaseProperty>,
+        val base_properties: List<Property>,
         val constellations: List<Constellation>,
         val costumes: List<Any>,
-        val element_properties: List<ElementProperty>,
-        val extra_properties: List<ExtraProperty>,
+        val element_properties: List<Property>,
+        val extra_properties: List<Property>,
         val recommend_relic_property: RecommendRelicProperty,
         val relics: List<Relic>,
-        val selected_properties: List<SelectedProperty>,
+        val selected_properties: List<Property>,
         val skills: List<Skill>,
         val weapon: WeaponX
     )
@@ -51,7 +51,7 @@ data class CharacterDetailData(
         val weapon_type: Int
     )
 
-    data class BaseProperty(
+    data class Property(
         val add: String,
         val base: String,
         val `final`: String,
@@ -65,20 +65,6 @@ data class CharacterDetailData(
         val is_actived: Boolean,
         val name: String,
         val pos: Int
-    )
-
-    data class ElementProperty(
-        val add: String,
-        val base: String,
-        val `final`: String,
-        val property_type: Int
-    )
-
-    data class ExtraProperty(
-        val add: String,
-        val base: String,
-        val `final`: String,
-        val property_type: Int
     )
 
     data class RecommendRelicProperty(
@@ -100,13 +86,6 @@ data class CharacterDetailData(
         val sub_property_list: List<SubProperty>
     )
 
-    data class SelectedProperty(
-        val add: String,
-        val base: String,
-        val `final`: String,
-        val property_type: Int
-    )
-
     data class Skill(
         val desc: String,
         val icon: String,
@@ -124,11 +103,11 @@ data class CharacterDetailData(
         val icon: String,
         val id: Int,
         val level: Int,
-        val main_property: MainPropertyX,
+        val main_property: Property,
         val name: String,
         val promote_level: Int,
         val rarity: Int,
-        val sub_property: SubPropertyX,
+        val sub_property: Property,
         val type: Int,
         val type_name: String
     )
@@ -175,20 +154,6 @@ data class CharacterDetailData(
     data class SkillAffix(
         val name: String,
         val value: String
-    )
-
-    data class MainPropertyX(
-        val add: String,
-        val base: String,
-        val `final`: String,
-        val property_type: Int
-    )
-
-    data class SubPropertyX(
-        val add: String,
-        val base: String,
-        val `final`: String,
-        val property_type: Int
     )
 
 }

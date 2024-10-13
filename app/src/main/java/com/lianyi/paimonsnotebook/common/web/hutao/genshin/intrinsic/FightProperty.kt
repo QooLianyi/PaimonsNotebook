@@ -19,7 +19,11 @@ object FightProperty {
             FIGHT_PROP_CRITICAL_HURT -> "暴击伤害"
             FIGHT_PROP_CHARGE_EFFICIENCY -> "元素充能效率"
             FIGHT_PROP_HEAL_ADD -> "治疗加成"
+            FIGHT_PROP_HEALED_ADD -> "受治疗加成"
             FIGHT_PROP_ELEMENT_MASTERY -> "元素精通"
+
+            FIGHT_PROP_SKILL_CD_MINUS_RATIO ->"冷却缩短"
+            FIGHT_PROP_SHIELD_COST_MINUS_RATIO ->"护盾强效"
 
             FIGHT_PROP_PHYSICAL_SUB_HURT -> "物理抗性"
             FIGHT_PROP_PHYSICAL_ADD_HURT -> "物理伤害加成"
@@ -59,10 +63,14 @@ object FightProperty {
             FIGHT_PROP_BASE_DEFENSE, FIGHT_PROP_DEFENSE, FIGHT_PROP_DEFENSE_PERCENT -> R.drawable.ui_property_cur_defense
 
             FIGHT_PROP_CRITICAL -> R.drawable.ui_property_critical
-            FIGHT_PROP_CRITICAL_HURT -> R.drawable.ui_property_critical
+            FIGHT_PROP_CRITICAL_HURT -> R.drawable.ui_property_critical_hurt
             FIGHT_PROP_CHARGE_EFFICIENCY -> R.drawable.ui_property_charge_efficiency
             FIGHT_PROP_HEAL_ADD -> R.drawable.ui_property_heal
+            FIGHT_PROP_HEALED_ADD -> R.drawable.ui_property_heal
             FIGHT_PROP_ELEMENT_MASTERY -> R.drawable.ui_property_element
+
+            FIGHT_PROP_SKILL_CD_MINUS_RATIO->R.drawable.ui_property_cd_reduce
+            FIGHT_PROP_SHIELD_COST_MINUS_RATIO->R.drawable.ui_property_icon_shield_cost_minus
 
             FIGHT_PROP_PHYSICAL_SUB_HURT -> R.drawable.ui_property_physical_attack_up
             FIGHT_PROP_PHYSICAL_ADD_HURT -> R.drawable.ui_property_physical_attack_up

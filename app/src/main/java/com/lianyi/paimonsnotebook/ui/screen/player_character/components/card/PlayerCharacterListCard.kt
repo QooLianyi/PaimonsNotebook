@@ -1,6 +1,7 @@
-package com.lianyi.paimonsnotebook.ui.screen.player_character.components.popup
+package com.lianyi.paimonsnotebook.ui.screen.player_character.components.card
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -21,45 +21,62 @@ import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
-import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.character.CharacterDetailData
+import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.character.CharacterListData
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.FightProperty
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.format.FightPropertyFormat
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.weapon.WeaponData
 import com.lianyi.paimonsnotebook.ui.screen.items.components.information.InformationItem
 import com.lianyi.paimonsnotebook.ui.screen.items.components.widget.StarGroup
+import com.lianyi.paimonsnotebook.ui.screen.player_character.components.card.item.PlayerCharacterDetailTalentCard
+import com.lianyi.paimonsnotebook.ui.screen.player_character.components.card.item.PlayerCharacterDetailWeaponCard
 import com.lianyi.paimonsnotebook.ui.theme.Black
-import com.lianyi.paimonsnotebook.ui.theme.GachaStar5Color
+import com.lianyi.paimonsnotebook.ui.theme.CardBackGroundColor
+import com.lianyi.paimonsnotebook.ui.theme.FetterColor
 import com.lianyi.paimonsnotebook.ui.theme.White
 
 @Composable
-fun CharacterDetailPopupWindow(
-    characterDetailData: CharacterDetailData,
-    getAvatarDataById: (Int) -> AvatarData,
-    getWeaponDataById: (Int) -> WeaponData,
-    getPropertyDataById: (Int) -> CharacterDetailData.PropertyMapData?
+fun PlayerCharacterListCard(
+    characterData: CharacterListData.CharacterData,
+    getAvatarDataById: (Int) -> AvatarData?,
+    getWeaponDataById: (Int) -> WeaponData?,
+    getWeaponFightPropertyFormatList: (WeaponData, Int, Boolean) -> List<FightPropertyFormat>,
+    onClick: (CharacterListData.CharacterData) -> Unit
 ) {
-    val detailItem = remember(Unit) {
-        characterDetailData.list.first()
+    val avatarData = remember(characterData.id) {
+        getAvatarDataById.invoke(characterData.id)
     }
 
-    val avatarData = remember(detailItem.base.id) {
-        getAvatarDataById.invoke(detailItem.base.id)
+    val weaponData = remember(characterData.weapon.id) {
+        getWeaponDataById.invoke(characterData.weapon.id)
     }
 
-    val weaponData = remember(detailItem.base.id) {
-        getWeaponDataById.invoke(detailItem.weapon.id)
+    //当武器或角色资料为空时,直接返回,不进行渲染
+    if (avatarData == null || weaponData == null) {
+        return
     }
 
+    //武器战斗属性格式化列表
+    val weaponFightPropertyFormatList = remember(weaponData.id) {
+        getWeaponFightPropertyFormatList.invoke(weaponData, characterData.weapon.level, true)
+    }
 
-    Row(modifier = Modifier.height(IntrinsicSize.Min)) {
+    Row(
+        modifier = Modifier
+            .radius(6.dp)
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+            .background(CardBackGroundColor)
+            .clickable {
+                onClick.invoke(characterData)
+            }
+            .padding(12.dp)
+    ) {
 
         NetworkImageForMetadata(
             url = avatarData.gachaAvatarIcon,
@@ -74,25 +91,22 @@ fun CharacterDetailPopupWindow(
         Spacer(modifier = Modifier.width(8.dp))
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(
-                8.dp
-            )
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
 
+//            基本信息
             Row(
-                horizontalArrangement = Arrangement.spacedBy(
-                    8.dp
-                )
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = detailItem.base.name,
+                    text = avatarData.name,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Black
                 )
 
                 InformationItem(
-                    text = "Lv.${detailItem.base.level}",
+                    text = "Lv.${characterData.level}",
                     backgroundColor = White,
                     textSize = 13.sp,
                     paddingValues = PaddingValues(
@@ -102,21 +116,21 @@ fun CharacterDetailPopupWindow(
                 )
 
                 InformationItem(
-                    text = "${detailItem.base.fetter}",
+                    text = "${characterData.fetter}",
                     iconResId = R.drawable.icon_fetter,
                     backgroundColor = White,
                     textSize = 13.sp,
                     paddingValues = PaddingValues(
                         6.dp,
                         2.5.dp
-                    )
+                    ),
+                    tint = FetterColor,
+                    textColor = FetterColor
                 )
             }
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(
-                    8.dp
-                )
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
 
                 InformationItem(
@@ -141,62 +155,21 @@ fun CharacterDetailPopupWindow(
                 )
             }
 
+            //命座信息
+            PlayerCharacterDetailTalentCard(
+                talents = avatarData.skillDepot.Talents,
+                elementTypeName = avatarData.fetterInfo.VisionBefore,
+                activateCount = characterData.actived_constellation_num
+            )
 
-            Row {
 
-                NetworkImageForMetadata(url = weaponData.iconUrl)
-
-                Column {
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        PrimaryText(
-                            text = "${weaponData.name}  ${detailItem.weapon.level}",
-                            fontSize = 12.sp
-                        )
-                        InformationItem(
-                            text = "R${detailItem.weapon.affix_level}",
-                            backgroundColor = GachaStar5Color,
-                            textSize = 12.sp,
-                            paddingValues = PaddingValues(
-                                3.dp,
-                                1.25.dp
-                            )
-                        )
-                    }
-
-                    Row {
-                        Icon(
-                            painter = painterResource(
-                                id = FightProperty.getIconResourceByProperty(
-                                    detailItem.weapon.main_property.property_type
-                                )
-                            ),
-                            contentDescription = ""
-                        )
-
-                        PrimaryText(text = detailItem.weapon.main_property.final, fontSize = 12.sp)
-
-                        Icon(
-                            painter = painterResource(
-                                id = FightProperty.getIconResourceByProperty(
-                                    detailItem.weapon.sub_property.property_type
-                                )
-                            ),
-                            contentDescription = ""
-                        )
-
-                        PrimaryText(text = detailItem.weapon.main_property.final, fontSize = 12.sp)
-
-                    }
-
-                }
-
-            }
-
+            //武器信息
+            PlayerCharacterDetailWeaponCard(
+                weaponData = weaponData,
+                level = characterData.weapon.level,
+                affixLevel = characterData.weapon.affix_level,
+                weaponFightPropertyFormatList = weaponFightPropertyFormatList
+            )
         }
     }
-
 }

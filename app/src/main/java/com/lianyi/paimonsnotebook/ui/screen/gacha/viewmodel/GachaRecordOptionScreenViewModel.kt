@@ -509,6 +509,7 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
         var success = true
 
         viewModelScope.launch(Dispatchers.IO) {
+            if (!checkGachaLogServiceAvailable()) return@launch
 
             var endId = "0"
 
@@ -557,9 +558,10 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
                     it.id != currentGameUidGachaTypeEndId
                 }
 
-                //从记录中获取uid
+                //从记录中获取item_id
                 if (shouldAddItemList.isNotEmpty()) {
-                    //添加至数据库,此处的数据长度在[0,20]
+                    //添加至数据库,并通过名称获取item_id
+                    //此处的数据长度在[0,20]
                     importService.gachaItemListFlushToDB(shouldAddItemList.map {
                         val model = gachaLogService.getModelByName(it.name)
                         it.asGachaItems(itemId = "${model?.id ?: ""}")
@@ -684,6 +686,8 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
         loadingDialogDescription = "正在将数据保存至本地数据库"
 
         viewModelScope.launch(Dispatchers.IO) {
+            if(!checkGachaLogServiceAvailable()) return@launch
+
             try {
                 importService.saveUIGFJsonItemsCompat(file, gachaLogService)
                 "祈愿记录导入结束".notify(closeable = true)
@@ -741,7 +745,6 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
         showLoadingDialog = true
 
         viewModelScope.launch(Dispatchers.IO) {
-
             val fileName = "UIGF_${uidList.joinToString()}_${System.currentTimeMillis()}"
 
             val file = FileHelper.getUIGFJsonSaveFile(fileName)
@@ -761,6 +764,14 @@ class GachaRecordOptionScreenViewModel : ViewModel() {
         HomeHelper.goActivityByIntentNewTask {
             setComponentName(GachaRecordExportDataScreen::class.java)
         }
+    }
+
+    private fun checkGachaLogServiceAvailable(): Boolean {
+        if (!gachaLogService.isAvailable) {
+            "祈愿服务不可用,请检查元数据完整性后再次尝试".errorNotify()
+        }
+
+        return gachaLogService.isAvailable
     }
 
 }

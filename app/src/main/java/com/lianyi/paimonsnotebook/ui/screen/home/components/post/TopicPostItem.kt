@@ -27,8 +27,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
-import com.lianyi.core.ui.components.text.InfoText
-import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.RoundedTag
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
@@ -82,7 +80,7 @@ fun TopicPostItem(
             Column(modifier = Modifier.weight(1f)) {
                 com.lianyi.core.ui.components.text.PrimaryText(
                     text = item.post.user.nickname,
-                    fontSize = 13.sp
+                    textSize = 13.sp
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 com.lianyi.core.ui.components.text.InfoText(text = "uid:${item.post.user.uid}")

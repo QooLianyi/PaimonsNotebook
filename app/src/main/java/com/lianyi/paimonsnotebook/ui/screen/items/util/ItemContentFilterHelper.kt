@@ -1,8 +1,9 @@
 package com.lianyi.paimonsnotebook.ui.screen.items.util
 
 import com.lianyi.paimonsnotebook.common.extension.list.takeFirstIf
-import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.FightPropertyValueCalculateService
+import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.character.CharacterListData
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
+import com.lianyi.paimonsnotebook.common.web.hutao.genshin.common.service.FightPropertyValueCalculateService
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.AssociationType
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.FightProperty
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.intrinsic.WeaponType
@@ -27,6 +28,10 @@ object ItemContentFilterHelper {
             ItemFilterType.Star -> "星级"
             ItemFilterType.Weapon -> "武器"
             ItemFilterType.BirthDay -> "生日"
+
+            ItemFilterType.Level -> "等级"
+            ItemFilterType.Fetter -> "好感等级"
+            ItemFilterType.ActiveConstellation -> "激活的命之座"
             else -> ""
         }
 
@@ -82,6 +87,19 @@ object ItemContentFilterHelper {
         level = 90,
         promoteId = promoteId
     ).roundToInt()
+
+    fun getPlayerGroupByKeyByType(
+        type: ItemFilterType,
+        characterListData: CharacterListData.CharacterData
+    ): Long = when (type) {
+        ItemFilterType.Level -> characterListData.rarity * 10 + characterListData.level + characterListData.id
+        ItemFilterType.Fetter -> characterListData.fetter * 100 + characterListData.rarity * 10 + characterListData.id
+        ItemFilterType.ActiveConstellation -> characterListData.actived_constellation_num
+        //默认排序,星级占比最大，其次是等级，最后是好感度与角色id
+        //相同星级，等级，好感时，按照角色id大小排序
+        ItemFilterType.Default -> characterListData.rarity * 10000000 + characterListData.level * 100000 + characterListData.fetter * 10000 + characterListData.id
+        else -> 0
+    }.toLong()
 
     fun getWeaponGroupByKeyByType(
         type: ItemFilterType,

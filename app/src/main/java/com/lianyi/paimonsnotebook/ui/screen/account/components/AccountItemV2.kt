@@ -112,7 +112,7 @@ fun AccountItemV2(
 
                     PrimaryText(
                         text = user.userInfo.uid,
-                        fontSize = 14.sp,
+                        textSize = 14.sp,
                         bold = false
                     )
 
@@ -125,7 +125,7 @@ fun AccountItemV2(
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
                 ) {
 
-                    if (!user.isSelected) {
+                    if (user.isAvailable && !user.isSelected) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_user_circle_outline),
                             contentDescription = null,
@@ -149,17 +149,18 @@ fun AccountItemV2(
                             }, tint = Black
                     )
 
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_arrow_sync_circle),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .radius(2.dp)
-                            .size(30.dp)
-                            .clickable {
-                                onRefreshCookie.invoke(user)
-                            }, tint = Black
-                    )
-
+                    if(user.isAvailable){
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_arrow_sync_circle),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .radius(2.dp)
+                                .size(30.dp)
+                                .clickable {
+                                    onRefreshCookie.invoke(user)
+                                }, tint = Black
+                        )
+                    }
 
                     Icon(
                         painter = painterResource(id = R.drawable.ic_delete),

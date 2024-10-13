@@ -30,7 +30,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
-import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.ExpansionIndicator
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
@@ -252,7 +251,7 @@ private fun FloorHalf(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            com.lianyi.core.ui.components.text.PrimaryText(text = subText, fontSize = 14.sp)
+            com.lianyi.core.ui.components.text.PrimaryText(text = subText, textSize = 14.sp)
         }
     }
 }

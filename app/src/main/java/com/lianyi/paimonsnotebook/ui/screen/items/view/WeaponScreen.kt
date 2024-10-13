@@ -23,7 +23,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
 import com.lianyi.paimonsnotebook.common.components.dialog.LazyColumnDialog
 import com.lianyi.paimonsnotebook.common.components.layout.blur_card.widget.ItemLevelSlider
-import com.lianyi.core.ui.components.text.RichText
 import com.lianyi.paimonsnotebook.ui.screen.items.components.content.ItemScreenContent
 import com.lianyi.paimonsnotebook.ui.screen.items.components.cultivate.WeaponCultivateConfigCard
 import com.lianyi.paimonsnotebook.ui.screen.items.components.information.InformationItem
@@ -64,7 +63,7 @@ class WeaponScreen : ComponentActivity() {
                         itemFilterViewModel = viewModel.itemFilterViewModel,
                         onClickListButton = viewModel::toggleFilterContent,
                         getListItemDataContent = viewModel::getItemDataContent,
-                        informationContentSlot = { weapon ->
+                        listVerticalEndInformationContentSlot = { weapon ->
                             InformationItem(
                                 text = weapon.weaponTypeName,
                                 iconUrl = weapon.weaponIconUrl,

@@ -115,6 +115,7 @@ val ElementRockColor = Color(0xFFC09257)
 val ElementWindColor = Color(0xFF378383)
 val ElementWaterColor = Color(0xFF518ABB)
 
+val FetterColor = Color(0XFFA994F5)
 
 val Quality1Color = Color(0XFFBDC5D0)
 val Quality2Color = Color(0XFF7FC2A3)

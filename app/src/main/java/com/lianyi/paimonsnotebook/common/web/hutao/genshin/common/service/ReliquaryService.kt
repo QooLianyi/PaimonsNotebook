@@ -18,8 +18,12 @@ class ReliquaryService(onMissingFile: () -> Unit) {
     var reliquarySetListMap = mapOf<Int, List<ReliquaryData>>()
         private set
 
-    //key = reliquaryId , value = reliquaryData
+    //key = reliquaryId , value = reliquaryData，同名圣遗物只保留最高星级的
     var reliquaryMap = mapOf<Int, ReliquaryData>()
+        private set
+
+    //key = reliquaryId , value = reliquaryData，包含全部圣遗物的map
+    var reliquaryFullMap = mapOf<Int, ReliquaryData>()
         private set
 
     //key = setId , value = setData
@@ -46,6 +50,7 @@ class ReliquaryService(onMissingFile: () -> Unit) {
         val list = mutableListOf<ReliquaryData>()
         val maxStarMap = mutableMapOf<Int, Int>()
         val reliquaryMap = mutableMapOf<Int, ReliquaryData>()
+        val reliquaryFullMap = mutableMapOf<Int, ReliquaryData>()
         val jsonArray = JSONArray(file.readText())
 
         repeat(jsonArray.length()) {
@@ -66,11 +71,16 @@ class ReliquaryService(onMissingFile: () -> Unit) {
                 this.forEach { reliquary ->
                     val lastId = reliquary.Ids.last()
                     reliquaryMap[lastId] = reliquary
+
+                    reliquary.Ids.forEach {
+                        reliquaryFullMap[it] = reliquary
+                    }
                 }
             }
         }
         this.reliquaryMaxStarMap = maxStarMap
         this.reliquaryMap = reliquaryMap
+        this.reliquaryFullMap = reliquaryFullMap
     }
 
     private fun setReliquarySetMap(file: File) {

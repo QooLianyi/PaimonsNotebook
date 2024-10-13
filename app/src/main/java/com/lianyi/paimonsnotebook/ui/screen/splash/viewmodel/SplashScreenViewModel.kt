@@ -34,8 +34,10 @@ class SplashScreenViewModel : ViewModel() {
 
     var initialMetadataDownload = false
 
-
-    fun initParam(callback: () -> Unit) {
+    fun initParam(
+        onGoTargetScreen: () -> Unit,
+        onDownload: () -> Unit
+    ) {
         viewModelScope.launchIO {
             dataStoreValuesFirst {
                 enableMetadata = it[PreferenceKeys.EnableMetadata] ?: true
@@ -43,11 +45,18 @@ class SplashScreenViewModel : ViewModel() {
                 initialMetadataDownload = it[PreferenceKeys.InitialMetadataDownload] ?: false
             }
 
-            println("enableMetadata = ${enableMetadata}")
-            println("showEnableMetadataHint = ${showEnableMetadataHint}")
-            println("initialMetadataDownload = ${initialMetadataDownload}")
+            //禁用元数据或者完成下载时,直接进入主界面
+            if(!enableMetadata || initialMetadataDownload){
+                onGoTargetScreen.invoke()
+                return@launchIO
+            }
 
-            callback.invoke()
+            //当条件为false时,代表已经进行了选择
+            //到此分支时代表已经开始metadata下载,继续下载
+            if (!showEnableMetadataHint) {
+                onDownload.invoke()
+                return@launchIO
+            }
         }
     }
 
@@ -60,6 +69,9 @@ class SplashScreenViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             //启用元数据
             PreferenceKeys.EnableMetadata.editValue(true)
+            PreferenceKeys.OnLaunchShowEnableMetadataHint.editValue(false)
+
+            showEnableMetadataHint = false
 
             val initialMetadataDownload = dataStoreValuesFirstLambda {
                 this[PreferenceKeys.InitialMetadataDownload] ?: false
@@ -95,6 +107,7 @@ class SplashScreenViewModel : ViewModel() {
     fun onSkipMetadataDownload(callback: () -> Unit) {
         viewModelScope.launchIO {
             PreferenceKeys.EnableMetadata.editValue(false)
+            PreferenceKeys.OnLaunchShowEnableMetadataHint.editValue(false)
 
             callback.invoke()
         }

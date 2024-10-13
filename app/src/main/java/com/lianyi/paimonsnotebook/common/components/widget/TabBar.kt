@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.material.Text
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lianyi.paimonsnotebook.common.extension.value.toDp
 import com.lianyi.paimonsnotebook.common.util.compose.animate.animateTextStyleAsState
 import com.lianyi.paimonsnotebook.ui.theme.Black
 import com.lianyi.paimonsnotebook.ui.theme.Black_20
@@ -48,19 +50,11 @@ fun TabBar(
     Row(
         modifier = Modifier.padding(tabBarPadding)
     ) {
-
         //以选中的字体样式撑起高度
-        Text(
-            text = "", style = TextStyle(
-                color = textSelectColor,
-                fontSize = textSelectSize,
-                fontWeight = FontWeight.SemiBold
-            )
-        )
-
         Row(
             horizontalArrangement = Arrangement.spacedBy(tabsSpace),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.height(textSelectSize.toDp())
         ) {
             tabs.forEachIndexed { index, s ->
 

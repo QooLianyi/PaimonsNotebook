@@ -56,7 +56,7 @@ internal fun AppWidgetOverview(
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(6.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(12.dp, 6.dp)
     ) {
         items(list) { pair ->

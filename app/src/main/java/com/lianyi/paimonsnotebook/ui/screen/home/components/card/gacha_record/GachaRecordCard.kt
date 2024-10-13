@@ -24,7 +24,7 @@ internal fun GachaRecordCard(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            PrimaryText(text = "祈愿记录", fontSize = 16.sp)
+            PrimaryText(text = "祈愿记录", textSize = 16.sp)
 
             Text(text = item.uid, fontSize = 14.sp)
         }

@@ -44,10 +44,10 @@ fun DailyNoteOverview3X2RemoteViewsPreview(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.width(240.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Row {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
                     painter = painterResource(id = R.drawable.icon_paimon),
                     contentDescription = null,
@@ -59,7 +59,7 @@ fun DailyNoteOverview3X2RemoteViewsPreview(
                 Text(text = "角色昵称", fontSize = 14.sp, color = previewAnimData.textColor.value)
             }
 
-            Row {
+            Row(verticalAlignment = Alignment.Bottom) {
                 Text(
                     text = "180",
                     fontSize = 42.sp,
@@ -70,15 +70,15 @@ fun DailyNoteOverview3X2RemoteViewsPreview(
                 Image(
                     painter = painterResource(id = R.drawable.icon_resin),
                     contentDescription = null,
-                    modifier = Modifier.size(22.dp)
+                    modifier = Modifier.size(20.dp)
                 )
             }
 
-            Row {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_clock_outline),
                     contentDescription = null,
-                    modifier = Modifier.size(22.dp),
+                    modifier = Modifier.size(20.dp),
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -86,18 +86,18 @@ fun DailyNoteOverview3X2RemoteViewsPreview(
                 Text(
                     text = "99小时99分钟\n明天23:59回满",
                     color = previewAnimData.textColor.value,
-                    fontSize = 14.sp
+                    fontSize = 12.sp
                 )
             }
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
             icons.forEach {
-                Row {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
                         painter = painterResource(id = it.first),
                         contentDescription = null,
-                        modifier = Modifier.size(26.dp),
+                        modifier = Modifier.size(24.dp),
                     )
 
                     Spacer(modifier = Modifier.width(6.dp))
@@ -105,7 +105,7 @@ fun DailyNoteOverview3X2RemoteViewsPreview(
                     Text(
                         text = it.second,
                         color = previewAnimData.textColor.value,
-                        fontSize = 16.sp
+                        fontSize = 14.sp
                     )
                 }
             }

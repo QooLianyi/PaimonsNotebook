@@ -68,7 +68,7 @@ class ReliquaryScreen : BaseActivity() {
 
                                 Spacer(modifier = Modifier.width(8.dp))
 
-                                PrimaryText(text = reliquarySet.Name, fontSize = 14.sp)
+                                PrimaryText(text = reliquarySet.Name, textSize = 14.sp)
                             }
 
                             Spacer(modifier = Modifier.height(8.dp))
@@ -81,7 +81,7 @@ class ReliquaryScreen : BaseActivity() {
                                         return@items
                                     }
                                     Column {
-                                        PrimaryText(text = "${setNum}件套", fontSize = 12.sp)
+                                        PrimaryText(text = "${setNum}件套", textSize = 12.sp)
                                         Spacer(modifier = Modifier.height(2.dp))
                                         InfoText(text = reliquarySet.Descriptions[index])
                                     }

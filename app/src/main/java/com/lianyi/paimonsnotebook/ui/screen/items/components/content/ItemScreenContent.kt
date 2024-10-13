@@ -52,15 +52,41 @@ internal fun <T> ItemScreenContent(
     tabs: Array<String>,
     enabledItemShadow: Boolean = false,
     itemAddedCurrentCultivateProject: Boolean = false,
+    showAddButton: Boolean = true,
     itemBackgroundResId: Int = -1,
     itemFilterViewModel: ItemFilterViewModel<T>,
     onClickListButton: () -> Unit,
     itemImageContentScale: ContentScale = ContentScale.Crop,
     getListItemDataContent: (T, ItemFilterType, Boolean) -> String,
     getItemListCardData: (T) -> ItemListCardData,
-    informationContentSlot: @Composable (T) -> Unit,
+    baseInfoSlot: @Composable () -> Unit = {},
+    listVerticalStartInformationContentSlot: @Composable (T) -> Unit = {},
+    listVerticalEndInformationContentSlot: @Composable (T) -> Unit = {},
     onClickListItemCard: (T) -> Unit,
     onClickAddButton: () -> Unit,
+
+    verticalListCardContent: @Composable (T, String) -> Unit = { data, dataContent ->
+        ItemListCard(
+            data = data,
+            dataContent = dataContent,
+            onClick = onClickListItemCard,
+            itemListCardData = getItemListCardData.invoke(data),
+            startInformationContentSlot = {
+                listVerticalStartInformationContentSlot.invoke(data)
+            },
+            endInformationContentSlot = {
+                listVerticalEndInformationContentSlot.invoke(data)
+            }
+        )
+    },
+    horizontalListCardContent: @Composable (T, String) -> Unit = { data, dataContent ->
+        ItemGridListCard(
+            data = data,
+            dataContent = dataContent,
+            onClick = onClickListItemCard,
+            itemListCardData = getItemListCardData.invoke(data),
+        )
+    },
     cardContent: @Composable (Int) -> Unit
 ) {
     var showFullScreenImg by remember {
@@ -117,7 +143,8 @@ internal fun <T> ItemScreenContent(
                     ItemBaseInfo(
                         name = baseInfoName,
                         starCount = baseInfoStarCount,
-                        iconUrl = baseInfoIconUrl
+                        iconUrl = baseInfoIconUrl,
+                        baseInfoSlot = baseInfoSlot
                     )
 
                     var currentTabIndex by remember {
@@ -142,7 +169,8 @@ internal fun <T> ItemScreenContent(
             lazyListState = lazyListState,
             text = listButtonText,
             onClickAddButton = onClickAddButton,
-            added = itemAddedCurrentCultivateProject
+            added = itemAddedCurrentCultivateProject,
+            showAddButton = showAddButton
         )
 
         ItemFilterContent(
@@ -159,24 +187,11 @@ internal fun <T> ItemScreenContent(
 
                 when (layoutStyle) {
                     ListLayoutStyle.ListVertical -> {
-                        ItemListCard(
-                            data = data,
-                            dataContent = dataContent,
-                            onClick = onClickListItemCard,
-                            itemListCardData = getItemListCardData.invoke(data),
-                            informationContentSlot = {
-                                informationContentSlot.invoke(data)
-                            }
-                        )
+                        verticalListCardContent.invoke(data, dataContent)
                     }
 
                     ListLayoutStyle.GridVertical -> {
-                        ItemGridListCard(
-                            data = data,
-                            dataContent = dataContent,
-                            onClick = onClickListItemCard,
-                            itemListCardData = getItemListCardData.invoke(data),
-                        )
+                        horizontalListCardContent.invoke(data, dataContent)
                     }
 
                     else -> {}

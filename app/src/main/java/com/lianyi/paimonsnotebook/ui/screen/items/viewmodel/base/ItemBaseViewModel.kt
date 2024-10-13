@@ -36,8 +36,10 @@ import com.lianyi.paimonsnotebook.ui.screen.items.util.ItemFilterType
 
 /*
 * item基本viewModel
+*
+* observeCurrentItemState:是否观测当前item的状态
 * */
-open class ItemBaseViewModel<T> : ViewModel() {
+open class ItemBaseViewModel<T>(private val observeCurrentItemState: Boolean = true) : ViewModel() {
 
     var currentItem: T? by mutableStateOf(null)
 
@@ -70,15 +72,17 @@ open class ItemBaseViewModel<T> : ViewModel() {
     private var currentGameRoleCache: UserGameRoleData.Role? = null
 
     init {
-        viewModelScope.launchIO {
-            snapshotFlow { currentItem }.collect {
-                if (it == null) {
-                    itemAddedToCurrentCultivateProject = false
-                    return@collect
-                }
+        if (observeCurrentItemState) {
+            viewModelScope.launchIO {
+                snapshotFlow { currentItem }.collect {
+                    if (it == null) {
+                        itemAddedToCurrentCultivateProject = false
+                        return@collect
+                    }
 
-                itemAddedToCurrentCultivateProject =
-                    getEntityHasAddedSelectedProject(getCurrentItemId())
+                    itemAddedToCurrentCultivateProject =
+                        getEntityHasAddedSelectedProject(getCurrentItemId())
+                }
             }
         }
     }

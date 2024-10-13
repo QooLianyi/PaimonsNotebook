@@ -29,5 +29,13 @@ enum class ItemFilterType {
     //区域
     Association,
     //列表布局类型
-    ListLayout
+    ListLayout,
+
+
+    //等级
+    Level,
+    //好感
+    Fetter,
+    //解锁的名座个数
+    ActiveConstellation,
 }

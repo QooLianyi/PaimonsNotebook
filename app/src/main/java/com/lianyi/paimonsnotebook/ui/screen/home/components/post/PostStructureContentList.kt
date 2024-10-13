@@ -70,7 +70,7 @@ internal fun PostStructureContentList(
             Column(modifier = Modifier.fillMaxWidth()) {
                 PrimaryText(
                     text = postFull.post.post.subject,
-                    fontSize = 18.sp
+                    textSize = 18.sp
                 )
 
                 DividerText(

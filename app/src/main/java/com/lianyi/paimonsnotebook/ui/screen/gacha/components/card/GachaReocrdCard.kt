@@ -28,8 +28,6 @@ import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.layout.card.MaterialCard
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
-import com.lianyi.core.ui.components.text.AutoSizeText
-import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.widget.ExpansionIndicator
 import com.lianyi.paimonsnotebook.common.database.gacha.data.GachaRecordOverview
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
@@ -72,7 +70,7 @@ fun GachaRecordCard(
             ) {
                 com.lianyi.core.ui.components.text.PrimaryText(
                     text = item.uigfGachaTypeName,
-                    fontSize = 16.sp
+                    textSize = 16.sp
                 )
 
                 Row {

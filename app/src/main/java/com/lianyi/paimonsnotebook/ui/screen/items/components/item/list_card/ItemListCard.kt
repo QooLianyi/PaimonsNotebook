@@ -34,7 +34,8 @@ internal fun <T> ItemListCard(
     itemListCardData: ItemListCardData,
     dataContent: String,
     onClick: (T) -> Unit,
-    informationContentSlot: @Composable () -> Unit
+    startInformationContentSlot: @Composable () -> Unit = {},
+    endInformationContentSlot: @Composable () -> Unit
 ) {
 
     Row(modifier = Modifier
@@ -70,9 +71,11 @@ internal fun <T> ItemListCard(
             ) {
                 Text(text = itemListCardData.name, fontSize = 14.sp)
 
+                startInformationContentSlot.invoke()
+
                 Spacer(modifier = Modifier.weight(1f))
 
-                informationContentSlot.invoke()
+                endInformationContentSlot.invoke()
             }
 
             if (dataContent.isNotEmpty()) {

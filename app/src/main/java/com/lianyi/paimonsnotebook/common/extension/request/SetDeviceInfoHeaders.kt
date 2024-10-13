@@ -10,7 +10,7 @@ import okhttp3.Request
 fun Request.Builder.setDeviceInfoHeaders(deviceId: String = CoreEnvironment.DeviceId) {
     this.apply {
         addHeader("x-rpc-device_fp", CoreEnvironment.DeviceFp)
-        addHeader("x-rpc-device_name", "${Build.BRAND} ${Build.MODEL}")
+        addHeader("x-rpc-device_name", "${Build.BRAND}%20${Build.MODEL}")
         addHeader("x-rpc-device_id", deviceId)
         addHeader("x-rpc-device_model", Build.MODEL)
     }

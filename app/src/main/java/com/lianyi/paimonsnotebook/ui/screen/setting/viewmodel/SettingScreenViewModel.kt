@@ -185,7 +185,7 @@ class SettingScreenViewModel : ViewModel() {
     val dataSettings = listOf(
         OptionListData(
             name = "同步元数据",
-            description = "连接互联网并同步本地存储的角色、武器等数据",
+            description = "连接互联网并同步本地存储的角色、武器等数据;当完成下载后将启用元数据",
             onClick = {
                 viewModelScope.launchIO {
                     "正在检查元数据的信息...".notify()

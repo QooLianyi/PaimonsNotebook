@@ -83,7 +83,7 @@ class AccountManagerScreen : BaseActivity() {
                     ContentSpacerLazyColumn(state = state, modifier = Modifier.fillMaxSize()) {
                         item {
                             PrimaryText(
-                                text = "账号列表", fontSize = 20.sp, modifier = Modifier
+                                text = "账号列表", textSize = 20.sp, modifier = Modifier
                                     .paddingStart(8.dp)
                                     .padding(8.dp)
                             )

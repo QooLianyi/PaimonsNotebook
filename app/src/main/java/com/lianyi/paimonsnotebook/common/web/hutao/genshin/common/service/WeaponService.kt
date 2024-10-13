@@ -28,6 +28,10 @@ class WeaponService(onMissingFile: () -> Unit) {
     var weaponList = listOf<WeaponData>()
         private set
 
+    val weaponMap by lazy {
+        weaponList.associateBy { it.id }
+    }
+
     lateinit var fightPropertyValueCalculateService: FightPropertyValueCalculateService
         private set
 
@@ -58,7 +62,7 @@ class WeaponService(onMissingFile: () -> Unit) {
     /*
     * 获得格式化的战斗属性列表
     *
-    * avatar:角色
+    * weapon:武器
     * level:等级
     * promoted:是否突破
     * */

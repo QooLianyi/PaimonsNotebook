@@ -1,7 +1,6 @@
 package com.lianyi.paimonsnotebook.common.extension.modifier.action
 
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
@@ -12,7 +11,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 *
 *
 * */
-fun Modifier.doubleClick(clickBlock:(Offset)->Unit, doubleClickBlock:(Offset)->Unit) =
-    pointerInput(Unit){
-        detectTapGestures(onTap = clickBlock,onDoubleTap = doubleClickBlock)
-    }
+fun Modifier.doubleClick(clickBlock: (Offset) -> Unit, doubleClickBlock: (Offset) -> Unit) =
+    then(Modifier.pointerInput(Unit) {
+        detectTapGestures(onTap = clickBlock, onDoubleTap = doubleClickBlock)
+    })

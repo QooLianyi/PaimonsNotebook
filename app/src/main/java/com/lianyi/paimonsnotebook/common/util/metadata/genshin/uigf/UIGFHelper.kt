@@ -111,8 +111,7 @@ object UIGFHelper {
                 GachaType,
                 ItemId,
                 Id,
-                Time,
-                Name
+                Time
             )
 //
 //            val fields = arrayOf(

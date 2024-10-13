@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.core.ui.components.text.PrimaryText
+import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.ui.screen.items.components.widget.StarGroup
 import com.lianyi.paimonsnotebook.ui.theme.White_40
 
@@ -23,7 +23,8 @@ import com.lianyi.paimonsnotebook.ui.theme.White_40
 internal fun ItemBaseInfo(
     name: String,
     starCount: Int,
-    iconUrl: String = ""
+    iconUrl: String = "",
+    baseInfoSlot: @Composable () -> Unit = {}
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -35,10 +36,14 @@ internal fun ItemBaseInfo(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
-            com.lianyi.core.ui.components.text.PrimaryText(
-                text = name,
-                fontSize = 20.sp
-            )
+            Row {
+                PrimaryText(
+                    text = name,
+                    textSize = 20.sp
+                )
+
+                baseInfoSlot.invoke()
+            }
 
             StarGroup(
                 starCount = starCount,
