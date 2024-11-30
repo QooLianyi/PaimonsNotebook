@@ -34,9 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.common.components.popup.IconTitleInformationPopupWindow
-import com.lianyi.core.ui.components.text.AutoSizeText
 import com.lianyi.paimonsnotebook.common.data.popup.IconTitleInformationPopupWindowData
-import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
+import com.lianyi.paimonsnotebook.common.data.popup.PopupWindowPositionProvider
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.item.Material
 import com.lianyi.paimonsnotebook.ui.theme.Black_10
@@ -57,7 +56,7 @@ internal fun ItemMaterialContent(
     }
 
     var provider by remember {
-        mutableStateOf<InformationPopupPositionProvider?>(null)
+        mutableStateOf<PopupWindowPositionProvider?>(null)
     }
 
     Box(modifier = Modifier.fillMaxWidth()) {
@@ -85,7 +84,7 @@ internal fun ItemMaterialContent(
                         .size(60.dp, 80.dp)
                         .border(1.dp, Black_10, RoundedCornerShape(4.dp))
                         .clickable {
-                            provider = InformationPopupPositionProvider(
+                            provider = PopupWindowPositionProvider(
                                 contentOffset = Offset(
                                     currentPosition.x,
                                     currentPosition.y

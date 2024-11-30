@@ -26,5 +26,13 @@ enum class AppWidgetConfigurationOption {
     //进度条颜色 次要
     ProgressBarColorSecond,
 
-    TimeFormat
+    //时间格式
+    TimeFormat,
+    //自定义背景图片
+    CustomBackgroundImage,
+    //自定义图片背景
+    CustomBackgroundImageUrl,
+
+    //绑定功能
+    BindFeature
 }

@@ -19,7 +19,7 @@ import com.lianyi.paimonsnotebook.ui.theme.White
 import com.lianyi.paimonsnotebook.ui.widgets.common.data.RemoteViewsInfo
 import com.lianyi.paimonsnotebook.ui.widgets.util.AppWidgetConfigurationOption
 import com.lianyi.paimonsnotebook.ui.widgets.util.AppWidgetHelper
-import com.lianyi.paimonsnotebook.ui.widgets.util.RemoteViewsDataType
+import com.lianyi.paimonsnotebook.ui.widgets.util.enums.RemoteViewsDataType
 import com.lianyi.paimonsnotebook.ui.widgets.util.RemoteViewsPreviewHelper
 
 /*
@@ -55,6 +55,8 @@ class AppWidgetConfigurationData {
         private set
     var customImageTintColor by mutableStateOf(imageTintColorDefault)
 
+    var customBackgroundImage by mutableStateOf("")
+    var customBackgroundImageUrl by mutableStateOf("https://i1.hdslb.com/bfs/archive/bb7538a835e5cd8fa494cac755236901d56622e8.jpg")
 
     var bindGameRole by mutableStateOf<AppWidgetConfiguration.BindingGameRole?>(null)
         private set
@@ -110,6 +112,11 @@ class AppWidgetConfigurationData {
     val showProcessColorSecond
         get() = configurationOptions.contains(AppWidgetConfigurationOption.ProgressBarColorSecond)
 
+    val showTimeFormat
+        get() = configurationOptions.contains(AppWidgetConfigurationOption.TimeFormat)
+
+    val showCustomBackgroundImage
+        get() = configurationOptions.contains(AppWidgetConfigurationOption.CustomBackgroundImage)
 
     @Composable
     fun ShowPreview() {
@@ -191,7 +198,8 @@ class AppWidgetConfigurationData {
             imageTintColor = if (imageTintColor != imageTintColorDefault) imageTintColor.toArgb() else null,
             background = AppWidgetConfiguration.AppWidgetBackground(
                 backgroundColor = if(backgroundColor != backgroundColorDefault) backgroundColor.toArgb() else null,
-                backgroundRadius = if (backgroundRadius != backgroundRadiusDefault) backgroundRadius else null
+                backgroundRadius = if (backgroundRadius != backgroundRadiusDefault) backgroundRadius else null,
+                backgroundImageUrl = customBackgroundImageUrl.takeIf { it.isNotEmpty() }
             )
         )
 

@@ -25,7 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyVerticalGrid
-import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
+import com.lianyi.paimonsnotebook.common.data.popup.PopupWindowPositionProvider
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.item.Material
 import com.lianyi.paimonsnotebook.ui.screen.cultivate_project.components.group.CultivateMaterialGroupHeader
@@ -41,8 +41,8 @@ fun CultivateProjectOverallPage(
     overallMaterialBaseInfoGroupList: List<List<MaterialBaseInfo>>,
     overallMaterialBaseInfoGroupListFlatten: List<MaterialBaseInfo>,
     getOverallEntityBaseInfoListByMaterialId: (Int) -> List<EntityBaseInfo>,
-    onShowMaterialInfoPopupDialog: (Material, InformationPopupPositionProvider) -> Unit,
-    onShowEntityInfoPopupDialog: (Int, InformationPopupPositionProvider) -> Unit
+    onShowMaterialInfoPopupDialog: (Material, PopupWindowPositionProvider) -> Unit,
+    onShowEntityInfoPopupDialog: (Int, PopupWindowPositionProvider) -> Unit
 ) {
     Crossfade(targetState = showGridLayout, label = "") {
         if (it) {

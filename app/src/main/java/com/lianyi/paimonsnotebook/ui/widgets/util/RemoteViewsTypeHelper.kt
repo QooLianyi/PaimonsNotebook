@@ -1,5 +1,7 @@
 package com.lianyi.paimonsnotebook.ui.widgets.util
 
+import com.lianyi.paimonsnotebook.ui.widgets.util.enums.RemoteViewsType
+
 object RemoteViewsTypeHelper {
 
     fun getTypeNameByType(type: RemoteViewsType) =

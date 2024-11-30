@@ -9,7 +9,7 @@ import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.database.app_widget_binding.data.AppWidgetConfiguration
 import com.lianyi.paimonsnotebook.common.database.app_widget_binding.type_converter.AppWidgetConfigurationConverter
 import com.lianyi.paimonsnotebook.common.database.app_widget_binding.type_converter.SetRemoteViewsTypeConverter
-import com.lianyi.paimonsnotebook.ui.widgets.util.RemoteViewsDataType
+import com.lianyi.paimonsnotebook.ui.widgets.util.enums.RemoteViewsDataType
 
 
 /*
@@ -40,7 +40,7 @@ data class AppWidgetBinding(
     val dataType: Set<RemoteViewsDataType>,
     @ColumnInfo("remote_views_class_name")
     val remoteViewsClassName: String,
-    val configuration: AppWidgetConfiguration,
+    val configuration: AppWidgetConfiguration
 ) {
     companion object {
         private val userDao by lazy {

@@ -1,6 +1,8 @@
 package com.lianyi.paimonsnotebook.common.database.app_widget_binding.data
 
 import com.lianyi.paimonsnotebook.common.data.hoyolab.PlayerUid
+import com.lianyi.paimonsnotebook.ui.widgets.util.enums.AppWidgetBackgroundScaleType
+import com.lianyi.paimonsnotebook.ui.widgets.util.enums.AppWidgetTimeFormat
 
 /*
 * 桌面组件配置
@@ -15,12 +17,17 @@ data class AppWidgetConfiguration(
     val textColor: Int? = null,
     val bindingGameRole: BindingGameRole? = null,
     val imageTintColor: Int? = null,
-    val background: AppWidgetBackground? = null
+    val background: AppWidgetBackground? = null,
+    val textFormat: AppWidgetTimeFormat? = null
 ) {
     data class AppWidgetBackground(
         val backgroundPattern: String? = null,
         val backgroundColor: Int? = null,
-        val backgroundRadius: Float? = null
+        val backgroundRadius: Float? = null,
+        val backgroundImage: String? = null,
+        val backgroundImageUrl: String? = null,
+        val backgroundImageIsUrl: Boolean? = null,
+        val backgroundScaleType: AppWidgetBackgroundScaleType? = null
     )
 
     /*

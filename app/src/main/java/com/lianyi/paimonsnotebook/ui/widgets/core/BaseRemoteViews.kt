@@ -7,9 +7,18 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
+import android.graphics.RectF
+import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.util.TypedValue
 import android.widget.RemoteViews
 import androidx.compose.ui.graphics.toArgb
 import coil.imageLoader
@@ -20,6 +29,7 @@ import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.database.app_widget_binding.data.AppWidgetConfiguration
 import com.lianyi.paimonsnotebook.common.database.disk_cache.entity.DiskCache
 import com.lianyi.paimonsnotebook.common.database.disk_cache.util.DiskCacheDataType
+import com.lianyi.paimonsnotebook.common.util.convert.TypeUnitConvert
 import com.lianyi.paimonsnotebook.common.util.image.PaimonsNotebookImageLoader
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.daily_note.DailyNoteData
 import com.lianyi.paimonsnotebook.common.web.hoyolab.takumi.game_record.daily_note.DailyNoteWidgetData
@@ -27,10 +37,14 @@ import com.lianyi.paimonsnotebook.ui.theme.White
 import com.lianyi.paimonsnotebook.ui.widgets.common.extensions.setImageTint
 import com.lianyi.paimonsnotebook.ui.widgets.common.extensions.setTextColor
 import com.lianyi.paimonsnotebook.ui.widgets.util.AppWidgetHelper
+import com.lianyi.paimonsnotebook.ui.widgets.util.enums.AppWidgetBackgroundScaleType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 /*
 * 小组件远端视图基类
@@ -83,7 +97,16 @@ open class BaseRemoteViews(
             return dpToPx(manager.getAppWidgetOptions(appWidgetId).getInt(extra, 1))
         }
 
-    private fun dpToPx(value: Number) = (value.toFloat() * resources.displayMetrics.density).toInt()
+    private fun dpToPx(value: Number) = TypeUnitConvert.dpToPx(value,resources.displayMetrics).toInt()
+
+    private fun spToPx(value: Number) = TypeUnitConvert.spToPx(value,resources.displayMetrics)
+        /*
+        *
+        * TypedValue.convertDimensionToPixels(
+        TypedValue.COMPLEX_UNIT_SP,
+        value.toFloat(),
+        resources.displayMetrics
+    )*/
 
     protected fun basePendingIntent(
         action: String,
@@ -153,7 +176,7 @@ open class BaseRemoteViews(
     * textIds:字体id
     * tintImageIds:设置前景色的图片id
     * */
-    fun setCommonStyle(
+    suspend fun setCommonStyle(
         configuration: AppWidgetConfiguration,
         textIds: IntArray = intArrayOf(),
         tintImageIds: IntArray = intArrayOf()
@@ -163,9 +186,10 @@ open class BaseRemoteViews(
         setTextColor(configuration, textIds)
 
         setImageTintColor(configuration, tintImageIds)
+
     }
 
-    private fun setBackgroundStyle(configuration: AppWidgetConfiguration) {
+    private suspend fun setBackgroundStyle(configuration: AppWidgetConfiguration) {
         val radius = dpToPx((configuration.background?.backgroundRadius ?: 8f).toInt()).toFloat()
         val backgroundColor = configuration.background?.backgroundColor ?: White.toArgb()
 
@@ -185,18 +209,95 @@ open class BaseRemoteViews(
 
         val canvas = Canvas(bitmap)
 
-        GradientDrawable().apply {
-            shape = GradientDrawable.RECTANGLE
-            cornerRadii = radii
+        val backgroundImage = configuration.background?.backgroundImageUrl
 
-            setColor(backgroundColor)
-            setSize(width, height)
-            setBounds(0, 0, intrinsicWidth, intrinsicHeight)
+        //如果自定义背景图片不为空的话就显示图片
+        if (backgroundImage?.isEmpty() == false) {
+            loadImage(backgroundImage)
 
-            draw(canvas)
+            val imageFile =
+                PaimonsNotebookImageLoader.getCacheImageFileByUrl(backgroundImage)
+
+            val imageFileBitmap = BitmapFactory.decodeFile(imageFile?.path)
+
+            val widthScale = bitmap.width.toFloat() / imageFileBitmap.width
+            val heightScale = bitmap.height.toFloat() / imageFileBitmap.height
+
+            val scaleType = configuration.background.backgroundScaleType
+                ?: AppWidgetBackgroundScaleType.CropCenter
+
+            val scale = getImageScaleByScaleType(
+                scaleType,
+                widthScale,
+                heightScale
+            )
+
+            val imageWidth = (scale * imageFileBitmap.width).roundToInt()
+            val imageHeight = (scale * imageFileBitmap.height).roundToInt()
+
+            val imageBitmap =
+                Bitmap.createScaledBitmap(imageFileBitmap, imageWidth, imageHeight, false)
+
+            val paint = Paint().apply {
+                isAntiAlias = true
+            }
+
+            //设置偏移量,实现居中的效果
+            val offsetX = (bitmap.width - imageWidth) / 2
+            val offsetY = (bitmap.height - imageHeight) / 2
+
+            println("offsetX = ${offsetX}")
+            println("offsetY = ${offsetY}")
+
+            println("image = ${imageBitmap.width} ${imageBitmap.height}")
+            println("widget = ${bitmap.width} ${bitmap.height}")
+
+            val rect =
+                Rect(
+                    offsetX.coerceAtLeast(0),
+                    offsetY.coerceAtLeast(0),
+                    //当某个轴小于零时,将被强制设置为0,同时尺寸要乘以2倍来适配组件的尺寸,也可以直接设置为组件的宽高
+                    (imageBitmap.width + offsetX).coerceAtMost(bitmap.width),
+                    (imageBitmap.height + offsetY).coerceAtMost(bitmap.height)
+                )
+            val rectF = RectF(rect)
+
+            //绘制一个圆角矩形
+            canvas.drawRoundRect(rectF, radius, radius, paint)
+            //只保留重叠的部分
+            paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+
+            canvas.drawBitmap(imageBitmap, offsetX.toFloat(), offsetY.toFloat(), paint)
+
+            imageFileBitmap.recycle()
+            imageBitmap.recycle()
+        } else {
+            GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadii = radii
+                setSize(width, height)
+                setBounds(0, 0, intrinsicWidth, intrinsicHeight)
+
+                setColor(backgroundColor)
+
+                draw(canvas)
+            }
         }
 
+        val textPaint = Paint().apply {
+            color = Color.RED
+            textSize = spToPx(30)
+            textAlign = Paint.Align.LEFT
+            isStrikeThruText = true
+            isUnderlineText = true
+
+            typeface = Typeface.create(Typeface.DEFAULT,Typeface.BOLD)
+        }
+
+        canvas.drawText("id:${appWidgetId}", bitmap.width / 2f, bitmap.height / 2f, textPaint)
+
         setImageViewBitmap(R.id.background, bitmap)
+        bitmap.recycle()
     }
 
     private fun setTextColor(configuration: AppWidgetConfiguration, textIds: IntArray) {
@@ -210,6 +311,16 @@ open class BaseRemoteViews(
         tintImageIds.forEach {
             setImageTint(it, tintColor)
         }
+    }
+
+    private fun getImageScaleByScaleType(
+        type: AppWidgetBackgroundScaleType,
+        widthScale: Float,
+        heightScale: Float
+    ) = when (type) {
+        AppWidgetBackgroundScaleType.FitCenter -> min(widthScale, heightScale)
+        AppWidgetBackgroundScaleType.CropCenter -> max(widthScale, heightScale)
+        else -> 1f
     }
 
     open suspend fun onUpdateContent(intent: Intent?): RemoteViews? = null

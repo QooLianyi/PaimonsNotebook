@@ -40,7 +40,6 @@ import com.lianyi.paimonsnotebook.common.components.dialog.ConfirmDialog
 import com.lianyi.paimonsnotebook.common.components.layout.column.TopSlotColumnLayout
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImage
-import com.lianyi.core.ui.components.text.InfoText
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
@@ -146,7 +145,7 @@ class AchievementGoalScreen : BaseActivity() {
                                     )
 
 
-                                    AchievementActionButton(resId = R.drawable.ic_lock) {
+                                    AchievementActionButton(resId = R.drawable.ic_lock_outline) {
                                         viewModel.onAchievementActionInvoke(
                                             AchievementEditActionType.EnableInteraction
                                         )

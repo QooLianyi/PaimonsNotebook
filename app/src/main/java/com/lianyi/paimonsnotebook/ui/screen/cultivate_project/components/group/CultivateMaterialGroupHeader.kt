@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
+import com.lianyi.paimonsnotebook.common.data.popup.PopupWindowPositionProvider
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.item.Material
 import com.lianyi.paimonsnotebook.ui.screen.cultivate_project.data.MaterialBaseInfo
@@ -30,7 +30,7 @@ import com.lianyi.paimonsnotebook.ui.theme.White
 fun CultivateMaterialGroupHeader(
     materialBaseInfo: MaterialBaseInfo,
     imageSize:Dp = 46.dp,
-    onShowMaterialInfoPopupDialog: (Material, InformationPopupPositionProvider) -> Unit
+    onShowMaterialInfoPopupDialog: (Material, PopupWindowPositionProvider) -> Unit
 ) {
     val material = materialBaseInfo.material
 
@@ -52,7 +52,7 @@ fun CultivateMaterialGroupHeader(
                 }
                 .clickable {
                     onShowMaterialInfoPopupDialog.invoke(
-                        material, InformationPopupPositionProvider(
+                        material, PopupWindowPositionProvider(
                             contentOffset = offset,
                             itemSize = size,
                             itemSpace = 8.dp

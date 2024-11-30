@@ -24,13 +24,12 @@ fun ContentSpacerLazyColumn(
     state: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     reverseLayout: Boolean = false,
-    verticalArrangement: Arrangement.Vertical =
-        if (!reverseLayout) Arrangement.Top else Arrangement.Bottom,
+    verticalArrangement: Arrangement.Vertical = if (!reverseLayout) Arrangement.Top else Arrangement.Bottom,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior(),
     userScrollEnabled: Boolean = true,
-    statusBarPaddingEnabled:Boolean = true,
-    navigationBarPaddingEnabled:Boolean = true,
+    statusBarPaddingEnabled: Boolean = true,
+    navigationBarPaddingEnabled: Boolean = true,
     content: LazyListScope.() -> Unit
 ) {
     LazyColumn(
@@ -43,7 +42,7 @@ fun ContentSpacerLazyColumn(
         flingBehavior = flingBehavior,
         userScrollEnabled = userScrollEnabled
     ) {
-        if(statusBarPaddingEnabled){
+        if (statusBarPaddingEnabled) {
             item {
                 StatusBarPaddingSpacer()
             }
@@ -51,7 +50,7 @@ fun ContentSpacerLazyColumn(
 
         content.invoke(this)
 
-        if(navigationBarPaddingEnabled){
+        if (navigationBarPaddingEnabled) {
             item {
                 NavigationBarPaddingSpacer()
             }

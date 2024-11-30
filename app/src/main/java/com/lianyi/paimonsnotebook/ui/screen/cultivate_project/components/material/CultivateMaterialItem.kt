@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
+import com.lianyi.paimonsnotebook.common.data.popup.PopupWindowPositionProvider
 import com.lianyi.paimonsnotebook.common.database.cultivate.entity.CultivateItemMaterials
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.item.Material
@@ -31,7 +31,7 @@ fun VerticalCultivateMaterialItem(
     cultivateItemMaterials: CultivateItemMaterials,
     getMaterialInfo: (Int) -> Material,
     showLackNum: Boolean = true,
-    onShowMaterialInfoPopupDialog: (Material, InformationPopupPositionProvider) -> Unit,
+    onShowMaterialInfoPopupDialog: (Material, PopupWindowPositionProvider) -> Unit,
     onClickMaterialItem: (CultivateItemMaterials) -> Unit = {}
 ) {
     val material = getMaterialInfo.invoke(cultivateItemMaterials.itemId)
@@ -59,7 +59,7 @@ fun VerticalCultivateMaterialItem(
                 }
                 .clickable {
                     onShowMaterialInfoPopupDialog.invoke(
-                        material, InformationPopupPositionProvider(
+                        material, PopupWindowPositionProvider(
                             contentOffset = offset,
                             itemSize = size,
                             itemSpace = 8.dp

@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
-import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
+import com.lianyi.paimonsnotebook.common.data.popup.PopupWindowPositionProvider
 import com.lianyi.paimonsnotebook.common.database.cultivate.entity.CultivateEntity
 import com.lianyi.paimonsnotebook.common.database.cultivate.entity.CultivateItemMaterials
 import com.lianyi.paimonsnotebook.common.database.cultivate.entity.CultivateItems
@@ -59,7 +59,7 @@ fun CultivateAvatarCard(
     getMaterialInfo: (Int) -> Material,
     onClickDelete: (CultivateEntity, String) -> Unit,
     onEmitMaterialItemUpdateQueue: (CultivateItems, List<CultivateItemMaterials>) -> Unit,
-    onShowMaterialInfoPopupDialog: (Material, InformationPopupPositionProvider) -> Unit,
+    onShowMaterialInfoPopupDialog: (Material, PopupWindowPositionProvider) -> Unit,
 ) {
     var showMaterialGroup by remember {
         mutableStateOf(false)

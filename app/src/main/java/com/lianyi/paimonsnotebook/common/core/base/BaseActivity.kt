@@ -24,6 +24,8 @@ import com.lianyi.paimonsnotebook.common.core.listener.ScreenOrientationEventLis
 * */
 open class BaseActivity(
     private val enableGesture: Boolean = true,
+    private val enableSensor: Boolean = true,
+    private val initOrientation: Int = -1
 ) : ComponentActivity() {
     private val storagePermissions by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -55,14 +57,19 @@ open class BaseActivity(
         }
     }
 
-    //设置通过传感器控制屏幕旋转方向
-    @SuppressLint("SourceLockedOrientationActivity")
+    @SuppressLint("SourceLockedOrientationActivity", "WrongConstant")
     private fun setRequestedOrientation() {
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        //设置通过传感器控制屏幕旋转方向
+        if (enableSensor) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        ScreenOrientationEventListener(this) {
-            requestedOrientation = it
-        }.enable()
+            ScreenOrientationEventListener(this) {
+                requestedOrientation = it
+            }.enable()
+        } else if (initOrientation != -1) {
+            //锁定方向
+            requestedOrientation = initOrientation
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,7 +89,7 @@ open class BaseActivity(
     protected fun registerStartActivityForResult() =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             val intent = it.data
-            onStartActivityForResult(ActivityResult(it.resultCode,intent))
+            onStartActivityForResult(ActivityResult(it.resultCode, intent))
         }
 
     protected fun registerPressedCallback() =

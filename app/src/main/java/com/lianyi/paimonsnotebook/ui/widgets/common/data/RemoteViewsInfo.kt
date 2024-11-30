@@ -3,8 +3,8 @@ package com.lianyi.paimonsnotebook.ui.widgets.common.data
 import com.lianyi.paimonsnotebook.ui.widgets.core.BaseAppWidget
 import com.lianyi.paimonsnotebook.ui.widgets.core.BaseRemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.util.AppWidgetConfigurationOption
-import com.lianyi.paimonsnotebook.ui.widgets.util.RemoteViewsDataType
-import com.lianyi.paimonsnotebook.ui.widgets.util.RemoteViewsType
+import com.lianyi.paimonsnotebook.ui.widgets.util.enums.RemoteViewsDataType
+import com.lianyi.paimonsnotebook.ui.widgets.util.enums.RemoteViewsType
 
 /*
 * 远端视图信息

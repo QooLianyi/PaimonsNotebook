@@ -22,9 +22,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import com.lianyi.core.ui.components.text.InfoText
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.common.components.media.NetworkImageForMetadata
 import com.lianyi.paimonsnotebook.common.data.popup.IconTitleInformationPopupWindowData
-import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
+import com.lianyi.paimonsnotebook.common.data.popup.PopupWindowPositionProvider
 import com.lianyi.paimonsnotebook.ui.theme.Black
 import com.lianyi.paimonsnotebook.ui.theme.White
 
@@ -34,7 +36,7 @@ import com.lianyi.paimonsnotebook.ui.theme.White
 @Composable
 fun IconTitleInformationPopupWindow(
     data: IconTitleInformationPopupWindowData,
-    popupProvider: InformationPopupPositionProvider,
+    popupProvider: PopupWindowPositionProvider,
     onDismissRequest: () -> Unit
 ) {
     Popup(
@@ -158,13 +160,13 @@ fun IconTitleInformationPopupWindow(
                     Spacer(modifier = Modifier.width(6.dp))
 
                     Column {
-                        com.lianyi.core.ui.components.text.PrimaryText(
+                        PrimaryText(
                             text = data.title,
                             textSize = 14.sp,
                             color = White
                         )
                         Spacer(modifier = Modifier.height(2.dp))
-                        com.lianyi.core.ui.components.text.InfoText(
+                        InfoText(
                             text = data.subTitle,
                             fontSize = 10.sp
                         )
@@ -173,7 +175,7 @@ fun IconTitleInformationPopupWindow(
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                com.lianyi.core.ui.components.text.InfoText(
+                InfoText(
                     text = data.content,
                     maxLines = data.maxLine
                 )

@@ -29,10 +29,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
+import com.lianyi.core.ui.components.text.PrimaryText
 import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.common.components.dialog.InformationDialog
 import com.lianyi.paimonsnotebook.common.components.layout.ShowIf
 import com.lianyi.paimonsnotebook.common.components.lazy.ContentSpacerLazyColumn
+import com.lianyi.paimonsnotebook.common.components.placeholder.TextPlaceholder
 import com.lianyi.paimonsnotebook.common.components.popup.ColorPickerPopup
 import com.lianyi.paimonsnotebook.common.components.widget.TextButton
 import com.lianyi.paimonsnotebook.common.components.widget.TextSlider
@@ -105,7 +107,7 @@ class AppWidgetConfigurationScreen : BaseActivity() {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        com.lianyi.core.ui.components.text.PrimaryText(
+                        PrimaryText(
                             text = viewModel.configuration.remoteViewsName,
                             textSize = 16.sp
                         )
@@ -242,6 +244,13 @@ class AppWidgetConfigurationScreen : BaseActivity() {
             }
 
             item {
+                ShowIf(show = viewModel.configuration.showCustomBackgroundImage) {
+                    TextPlaceholder("修改背景图片占位")
+                }
+            }
+
+
+            item {
                 ShowIf(show = viewModel.configuration.showImageTintColor) {
                     AppWidgetColorConfiguration(
                         title = "图片颜色",
@@ -268,12 +277,17 @@ class AppWidgetConfigurationScreen : BaseActivity() {
             }
 
             item {
+                ShowIf(show = viewModel.configuration.showTimeFormat) {
+                    TextPlaceholder("时间格式功能占位")
+                }
+            }
+
+            item {
                 TextButton(
                     if (viewModel.configuration.add) "保存并添加到桌面" else "保存修改并更新",
-                    modifier = Modifier.padding(0.dp, 12.dp)
-                ) {
-                    viewModel.submit()
-                }
+                    modifier = Modifier.padding(0.dp, 12.dp),
+                    onClick = viewModel::submit
+                )
             }
         }
 

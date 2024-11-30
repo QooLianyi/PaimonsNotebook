@@ -1,7 +1,7 @@
 package com.lianyi.paimonsnotebook.ui.theme
 
 import android.app.Activity
-import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
@@ -9,6 +9,7 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
@@ -18,7 +19,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.lianyi.paimonsnotebook.common.components.components.PaimonsNotebookNotificationComponents
 import com.lianyi.paimonsnotebook.common.components.components.SlideExitBox
-import com.lianyi.paimonsnotebook.common.extension.context.findActivity
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
@@ -44,9 +44,9 @@ private val LightColorPalette = lightColors(
 @Composable
 fun PaimonsNotebookTheme(
     activity: Activity? = null,
-    hideStatusBar:Boolean = false,
-    hideNavigationBar:Boolean = false,
-    lightStatusBar:Boolean = false,
+    hideStatusBar: Boolean = false,
+    hideNavigationBar: Boolean = false,
+    lightStatusBar: Boolean = false,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
@@ -67,16 +67,16 @@ fun PaimonsNotebookTheme(
                 isAppearanceLightNavigationBars = true
 
                 //隐藏状态栏
-                if(hideStatusBar){
+                if (hideStatusBar) {
                     hide(WindowInsetsCompat.Type.statusBars())
                 }
 
                 //隐藏导航栏
-                if(hideNavigationBar){
+                if (hideNavigationBar) {
                     hide(WindowInsetsCompat.Type.navigationBars())
                 }
 
-                if(hideStatusBar || hideNavigationBar){
+                if (hideStatusBar || hideNavigationBar) {
                     systemBarsBehavior =
                         WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
                 }
@@ -95,9 +95,14 @@ fun PaimonsNotebookTheme(
         typography = Typography,
         shapes = Shapes,
         content = {
+
+            //如果为横屏就将基础值设置为二倍
+            val baseDensity =
+                360f * if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) 2 else 1
+
             CompositionLocalProvider(
                 LocalDensity provides Density(
-                    density = widthPixels / 360f,
+                    density = widthPixels / baseDensity,
                     fontScale = fontScale
                 )
             ) {

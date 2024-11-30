@@ -14,7 +14,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
+import com.lianyi.paimonsnotebook.common.data.popup.PopupWindowPositionProvider
 import com.lianyi.paimonsnotebook.common.extension.modifier.radius.radius
 import com.lianyi.paimonsnotebook.ui.screen.cultivate_project.data.EntityBaseInfo
 import com.lianyi.paimonsnotebook.ui.screen.items.components.item.icon.ItemIconCard
@@ -24,7 +24,7 @@ import com.lianyi.paimonsnotebook.ui.theme.White
 @Composable
 fun CultivateMaterialGroupItem(
     entityBaseInfo: EntityBaseInfo,
-    onShowEntityInfoPopupDialog: (Int, InformationPopupPositionProvider) -> Unit
+    onShowEntityInfoPopupDialog: (Int, PopupWindowPositionProvider) -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -44,7 +44,7 @@ fun CultivateMaterialGroupItem(
                 }
                 .clickable {
                     onShowEntityInfoPopupDialog.invoke(
-                        entityBaseInfo.id, InformationPopupPositionProvider(
+                        entityBaseInfo.id, PopupWindowPositionProvider(
                             contentOffset = offset,
                             itemSize = size,
                             itemSpace = 8.dp

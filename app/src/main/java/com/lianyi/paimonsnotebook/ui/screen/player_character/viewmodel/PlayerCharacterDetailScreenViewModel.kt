@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import com.lianyi.paimonsnotebook.common.data.hoyolab.user.UserAndUid
 import com.lianyi.paimonsnotebook.common.data.popup.IconTitleInformationPopupWindowData
-import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
+import com.lianyi.paimonsnotebook.common.data.popup.PopupWindowPositionProvider
 import com.lianyi.paimonsnotebook.common.extension.scope.launchIO
 import com.lianyi.paimonsnotebook.common.extension.string.errorNotify
 import com.lianyi.paimonsnotebook.common.util.enums.LoadingState
@@ -74,7 +74,7 @@ class PlayerCharacterDetailScreenViewModel : ItemBaseViewModel<AvatarData>() {
 
     lateinit var reliquarySetInfoDataSet: IconTitleInformationPopupWindowData
 
-    lateinit var reliquarySetInfoPopupWindowProvider: InformationPopupPositionProvider
+    lateinit var reliquarySetInfoPopupWindowProvider: PopupWindowPositionProvider
 
     override val tabs = arrayOf<String>()
 
@@ -163,7 +163,7 @@ class PlayerCharacterDetailScreenViewModel : ItemBaseViewModel<AvatarData>() {
     fun onClickRelicIcon(reliquaryData: ReliquaryData, size: IntSize, offset: Offset) {
         showReliquarySetInfoPopupWindow = true
 
-        reliquarySetInfoPopupWindowProvider = InformationPopupPositionProvider(
+        reliquarySetInfoPopupWindowProvider = PopupWindowPositionProvider(
             contentOffset = offset,
             itemSize = size,
             itemSpace = 12.dp

@@ -58,15 +58,13 @@ fun IconButton(
                     .padding(12.dp, 5.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (icon != null) {
-                    Icon(
-                        painter = icon,
-                        contentDescription = text,
-                        modifier = Modifier.size(24.dp),
-                        tint = color
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                }
+                Icon(
+                    painter = icon,
+                    contentDescription = text,
+                    modifier = Modifier.size(24.dp),
+                    tint = color
+                )
+                Spacer(modifier = Modifier.width(4.dp))
                 Text(text = text, color = color, fontSize = fontSize)
             }
         }

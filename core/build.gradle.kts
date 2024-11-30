@@ -40,7 +40,9 @@ android {
 }
 
 dependencies {
-    api("androidx.core:core-ktx:1.13.1")
+    api("androidx.core:core-ktx:1.15.0")
+    api("org.jetbrains.kotlin:kotlin-reflect:1.9.24")
+
     //Compose Activity
     api("androidx.activity:activity-compose:1.9.0")
     api("androidx.appcompat:appcompat:1.6.1")
@@ -82,7 +84,7 @@ dependencies {
     // optional - Kotlin Extensions and Coroutines support for Room
     api("androidx.room:room-ktx:$roomVersion")
     api("androidx.room:room-runtime:$roomVersion")
-    ksp("androidx.room:room-compiler:$roomVersion")
+//    ksp("androidx.room:room-compiler:$roomVersion")
 
     val appCenterSdkVersion = "5.0.4"
     api("com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}")
@@ -90,7 +92,7 @@ dependencies {
 
     //Jsoup
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
-    api("org.jsoup:jsoup:1.17.2")
+    api("org.jsoup:jsoup:1.18.1")
 
     //Gson
     api("com.google.code.gson:gson:2.11.0")
@@ -106,5 +108,4 @@ dependencies {
 
     //CustomActivityOnCrash
     api("cat.ereza:customactivityoncrash:2.4.0")
-
 }

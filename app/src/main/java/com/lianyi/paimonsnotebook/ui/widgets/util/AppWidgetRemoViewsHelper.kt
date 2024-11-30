@@ -10,6 +10,7 @@ import com.lianyi.paimonsnotebook.ui.widgets.core.BaseRemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.state.EmptyRemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.state.ErrorRemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.state.ValidateRemoteViews
+import com.lianyi.paimonsnotebook.ui.widgets.util.enums.RemoteViewsDataType
 
 object AppWidgetRemoViewsHelper {
     /*
@@ -26,12 +27,10 @@ object AppWidgetRemoViewsHelper {
     ): RemoteViews {
         val views = RemoteViewsIndexes.getRemoteViews(appWidgetBinding) ?: return EmptyRemoteViews()
 
-        val updateResultViews = views.onUpdateContent(intent)
+        //调用组件更新
+        views.onUpdateContent(intent)
 
-        if (updateResultViews != null) {
-            return updateResultViews
-        }
-
+        //用户不为空代表需要使用用户进行更新
         if (user != null) {
             val resultViews = setRemoteViewsContentWithUser(views, appWidgetBinding, user)
             if (resultViews != null) return resultViews

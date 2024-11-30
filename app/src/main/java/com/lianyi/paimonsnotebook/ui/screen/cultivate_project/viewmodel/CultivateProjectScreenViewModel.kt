@@ -9,7 +9,7 @@ import androidx.compose.ui.util.fastMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lianyi.paimonsnotebook.common.data.popup.IconTitleInformationPopupWindowData
-import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
+import com.lianyi.paimonsnotebook.common.data.popup.PopupWindowPositionProvider
 import com.lianyi.paimonsnotebook.common.database.PaimonsNotebookDatabase
 import com.lianyi.paimonsnotebook.common.database.cultivate.data.CultivateEntityType
 import com.lianyi.paimonsnotebook.common.database.cultivate.entity.CultivateEntity
@@ -186,7 +186,7 @@ class CultivateProjectScreenViewModel : ViewModel() {
     lateinit var showPopupWindowInfo: IconTitleInformationPopupWindowData
         private set
 
-    var popupWindowProvider by mutableStateOf(InformationPopupPositionProvider())
+    var popupWindowProvider by mutableStateOf(PopupWindowPositionProvider())
         private set
 
     private suspend fun withMutexLockUpdateData() {
@@ -252,7 +252,7 @@ class CultivateProjectScreenViewModel : ViewModel() {
 
     fun onShowMaterialInfoPopupDialog(
         material: Material,
-        provider: InformationPopupPositionProvider
+        provider: PopupWindowPositionProvider
     ) {
         showPopupWindowInfo = material.getShowPopupWindowInfo()
         popupWindowProvider = provider
@@ -261,7 +261,7 @@ class CultivateProjectScreenViewModel : ViewModel() {
 
     fun onShowEntityInfoPopupDialog(
         id: Int,
-        provider: InformationPopupPositionProvider
+        provider: PopupWindowPositionProvider
     ) {
         val weaponData = getWeaponData(id)
         val avatarData = getAvatarData(id)

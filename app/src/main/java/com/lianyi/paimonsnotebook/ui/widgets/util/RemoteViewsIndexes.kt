@@ -13,7 +13,10 @@ import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widg
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.ResinRecoverTime2X1RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.daily_note_widget.ResinRingProgressBar1X1RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.genshin.util.DailyMaterial3X2RemoteViews
+import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.test.Test2X1RemoteViews
 import com.lianyi.paimonsnotebook.ui.widgets.remoteviews.util.Shortcut3X2RemoteViews
+import com.lianyi.paimonsnotebook.ui.widgets.util.enums.RemoteViewsDataType
+import com.lianyi.paimonsnotebook.ui.widgets.util.enums.RemoteViewsType
 import com.lianyi.paimonsnotebook.ui.widgets.widget.AppWidgetCommon1X1
 import com.lianyi.paimonsnotebook.ui.widgets.widget.AppWidgetCommon2X1
 import com.lianyi.paimonsnotebook.ui.widgets.widget.AppWidgetCommon3X1
@@ -84,6 +87,13 @@ object RemoteViewsIndexes {
                     AppWidgetConfigurationOption.ImageTintColor
                 )
             ),
+            Test2X1RemoteViews::class.java.name to RemoteViewsInfo(
+                appWidgetClass = AppWidgetCommon2X1::class.java,
+                remoteViewsClass = Test2X1RemoteViews::class.java,
+                remoteViewsName = "测试组件",
+                remoteViewsType = RemoteViewsType.None,
+                configurationOptions = defaultConfigurationOption
+            )
         )
     }
 

@@ -13,11 +13,12 @@ import androidx.compose.ui.window.PopupPositionProvider
 import com.lianyi.paimonsnotebook.common.extension.value.toPx
 import kotlin.math.roundToInt
 
-class InformationPopupPositionProvider(
+class PopupWindowPositionProvider(
     private val contentOffset: Offset = Offset.Zero,
     private val itemSize: IntSize = IntSize.Zero,
     private val itemSpace: Dp = Dp(0f),
     private val indicatorWidth: Dp = Dp(10f),
+    val alignBottom:Boolean = false,
     private val contentPaddingValue: PaddingValues = PaddingValues(Dp(0f)),
 ) : PopupPositionProvider {
 
@@ -59,7 +60,6 @@ class InformationPopupPositionProvider(
 
         val itemHeightPx = itemSize.height
 
-
         //弹窗尺寸
         val popupContentWidthPxHalf = popupContentSize.width / 2
 
@@ -100,7 +100,7 @@ class InformationPopupPositionProvider(
         //判断是否超出窗口两边
 
         //当超出窗口顶部时,将窗口开始位置移动至item的底部
-        val y = if (overWindowTop) {
+        val y = if (overWindowTop || alignBottom) {
             contentOffset.y + itemSpacePx + itemHeightPx
         } else {
             contentOffset.y - popupContentSize.height - itemSpace.toPx().roundToInt()

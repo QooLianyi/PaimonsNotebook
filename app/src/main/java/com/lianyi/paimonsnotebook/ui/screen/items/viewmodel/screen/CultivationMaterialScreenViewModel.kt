@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lianyi.paimonsnotebook.common.data.popup.IconTitleInformationPopupWindowData
-import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
+import com.lianyi.paimonsnotebook.common.data.popup.PopupWindowPositionProvider
 import com.lianyi.paimonsnotebook.common.extension.list.takeFirstIf
 import com.lianyi.paimonsnotebook.common.util.enums.LoadingState
 import com.lianyi.paimonsnotebook.common.util.time.TimeHelper
@@ -88,7 +88,7 @@ class CultivationMaterialScreenViewModel : ViewModel() {
     var showMaterialPopupWindow by mutableStateOf(false)
         private set
 
-    var popupWindowProvider by mutableStateOf(InformationPopupPositionProvider())
+    var popupWindowProvider by mutableStateOf(PopupWindowPositionProvider())
         private set
 
     lateinit var popupWindowData: IconTitleInformationPopupWindowData
@@ -206,7 +206,7 @@ class CultivationMaterialScreenViewModel : ViewModel() {
     }
 
     fun onClickMaterialItem(material: Material, intSize: IntSize, offset: Offset) {
-        popupWindowProvider = InformationPopupPositionProvider(
+        popupWindowProvider = PopupWindowPositionProvider(
             contentOffset = offset,
             itemSize = intSize,
             itemSpace = 8.dp

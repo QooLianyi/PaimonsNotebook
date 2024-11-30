@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.lianyi.paimonsnotebook.common.components.loading.ContentLoadingPlaceholder
 import com.lianyi.paimonsnotebook.common.core.base.BaseActivity
 import com.lianyi.paimonsnotebook.common.extension.intent.setComponentName
+import com.lianyi.paimonsnotebook.ui.screen.app_widget.view.AppWidgetEditScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.util.HomeHelper
 import com.lianyi.paimonsnotebook.ui.screen.home.view.HomeDrawerManagerScreen
 import com.lianyi.paimonsnotebook.ui.screen.home.view.HomeScreen
@@ -110,7 +111,7 @@ class SplashScreen : BaseActivity(false) {
 
     private fun goDebugPage() {
         HomeHelper.goActivityByIntentNewTask {
-            setComponentName(HomeDrawerManagerScreen::class.java)
+            setComponentName(AppWidgetEditScreen::class.java)
         }
         finish()
     }

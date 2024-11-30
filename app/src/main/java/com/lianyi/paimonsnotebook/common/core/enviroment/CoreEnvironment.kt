@@ -32,6 +32,8 @@ object CoreEnvironment {
 //            }
             launch {
                 dataStoreValuesFirst {
+//                    return@dataStoreValuesFirst
+
                     DeviceId = it[PreferenceKeys.DeviceId] ?: ""
                     BBSDeviceId = it[PreferenceKeys.BBSDeviceId] ?: ""
                     DeviceId40 = it[PreferenceKeys.DeviceId40] ?: ""
@@ -169,7 +171,6 @@ object CoreEnvironment {
                     AuthorizeAppSignVersion = this
                 }
             }
-
 
             //当本地的值为不空表示需要使用本地的app_sign
             if (value.isNotEmpty()) {

@@ -14,7 +14,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.lianyi.paimonsnotebook.common.data.popup.InformationPopupPositionProvider
+import com.lianyi.paimonsnotebook.common.data.popup.PopupWindowPositionProvider
 import com.lianyi.paimonsnotebook.common.database.cultivate.entity.CultivateItemMaterials
 import com.lianyi.paimonsnotebook.common.database.cultivate.entity.CultivateItems
 import com.lianyi.paimonsnotebook.common.web.hutao.genshin.avatar.AvatarData
@@ -26,7 +26,7 @@ import com.lianyi.paimonsnotebook.ui.screen.cultivate_project.components.items.C
 fun CultivateVerticalMaterialList(
     list: List<CultivateItemMaterials>,
     showLackNum: Boolean,
-    onShowMaterialInfoPopupDialog: (Material, InformationPopupPositionProvider) -> Unit,
+    onShowMaterialInfoPopupDialog: (Material, PopupWindowPositionProvider) -> Unit,
     getMaterialInfo: (Int) -> Material,
     onClickMaterialItem: (CultivateItemMaterials) -> Unit
 ) {
@@ -66,7 +66,7 @@ fun CultivateVerticalSkillMaterialList(
     cultivateItems: List<CultivateItems>,
     showLackNum: Boolean,
     skillIdMap: Map<Int, AvatarData.Skill>,
-    onShowMaterialInfoPopupDialog: (Material, InformationPopupPositionProvider) -> Unit,
+    onShowMaterialInfoPopupDialog: (Material, PopupWindowPositionProvider) -> Unit,
     getMaterialsByCultivateItemId: (Int) -> List<CultivateItemMaterials>,
     getMaterialInfo: (Int) -> Material,
 ) {

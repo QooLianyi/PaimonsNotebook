@@ -53,6 +53,10 @@
         android:theme="@style/Theme.PaimonsNotebook"
         tools:targetApi="34">
 
+        <activity android:name=".ui.screen.app_widget.view.AppWidgetEditScreen"
+            android:theme="@style/Theme.PaimonsNotebook"
+            android:screenOrientation="landscape"
+            />
         <activity
             android:name=".ui.screen.home.view.HomeDrawerManagerScreen"
             android:theme="@style/Theme.PaimonsNotebook" />
@@ -92,7 +96,8 @@
         <activity
             android:name=".common.view.QRCodeScanActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.PaimonsNotebookFullScreen" />
+            android:theme="@style/Theme.PaimonsNotebookFullScreen"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".common.view.CrashScreen"
             android:theme="@style/Theme.PaimonsNotebook" />

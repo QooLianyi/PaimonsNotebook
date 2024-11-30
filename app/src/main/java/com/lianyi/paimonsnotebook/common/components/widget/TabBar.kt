@@ -48,16 +48,16 @@ fun TabBar(
     }
 
     Row(
-        modifier = Modifier.padding(tabBarPadding)
+        modifier = Modifier
+            .padding(tabBarPadding)
+            .height(textSelectSize.toDp() + tabBarPadding.let { it.calculateTopPadding() + it.calculateBottomPadding() })
     ) {
         //以选中的字体样式撑起高度
         Row(
             horizontalArrangement = Arrangement.spacedBy(tabsSpace),
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.height(textSelectSize.toDp())
+            verticalAlignment = Alignment.CenterVertically
         ) {
             tabs.forEachIndexed { index, s ->
-
                 val textStyle by animateTextStyleAsState(
                     targetValue = if (currentIndex == index) TextStyle(
                         color = textSelectColor,

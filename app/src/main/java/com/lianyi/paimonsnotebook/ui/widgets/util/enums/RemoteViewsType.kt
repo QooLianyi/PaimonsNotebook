@@ -1,4 +1,4 @@
-package com.lianyi.paimonsnotebook.ui.widgets.util
+package com.lianyi.paimonsnotebook.ui.widgets.util.enums
 
 /*
 * 远端视图类型
@@ -14,4 +14,5 @@ enum class RemoteViewsType {
     DailyNoteHomeIcon,
     DailyNoteExpedition,
     DailyMaterial,
+    None
 }

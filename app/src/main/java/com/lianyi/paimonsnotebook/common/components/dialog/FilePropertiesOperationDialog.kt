@@ -34,8 +34,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.lianyi.paimonsnotebook.R
 import com.lianyi.core.ui.components.text.PrimaryText
+import com.lianyi.paimonsnotebook.R
 import com.lianyi.paimonsnotebook.ui.theme.Black
 import com.lianyi.paimonsnotebook.ui.theme.Primary_1
 import com.lianyi.paimonsnotebook.ui.theme.White
@@ -173,7 +173,7 @@ fun FilePropertiesOperationDialog(
 
                                     Spacer(modifier = Modifier.width(6.dp))
 
-                                    com.lianyi.core.ui.components.text.PrimaryText(text = pair.second)
+                                    PrimaryText(text = pair.second)
                                 }
                             }
                         }
